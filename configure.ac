@@ -19,6 +19,7 @@ LIBTOOL="$LIBTOOL --silent"
 AC_PROG_AWK
 AC_PROG_EGREP
 AC_PATH_PROG([TAIL],[tail])
+AM_PROG_CC_C_O
 
 # Checks for libraries.
 
@@ -32,8 +33,6 @@ AC_C_VOLATILE
 AC_C_BIGENDIAN
 
 # Checks for library functions.
-AC_CHECK_FUNC([strlcat],[AC_DEFINE([HAVE_STRLCAT],[1],[Define to 1 if you have the strlcat() function.])])
-AC_CHECK_FUNC([strlcpy],[AC_DEFINE([HAVE_STRLCPY],[1],[Define to 1 if you have the strlcpy() function.])])
 
 # Argument processing.
 
@@ -43,8 +42,12 @@ AC_DEFINE_DIR([LIBDIR],[libdir],[Set to libdir.])
 AC_DEFINE_DIR([DATADIR],[datadir],[Set to datadir.])
 AC_DEFINE_DIR([LOCALSTATEDIR],[localstatedir],[Set to localstatedir.])
 
-AC_CONFIG_FILES(               \
-       Makefile                \
+AC_CONFIG_SUBDIRS(libevent)
+
+AC_CONFIG_FILES(                \
+       Makefile                 \
+       include/Makefile         \
+       src/Makefile             \
 )
 
 AC_OUTPUT

@@ -26,3 +26,4 @@ libltdl
 libtool
 ltmain.sh
 missing
+src/ircd
