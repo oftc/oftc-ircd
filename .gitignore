@@ -27,3 +27,4 @@ libtool
 ltmain.sh
 missing
 src/ircd
+libevent/test/rpcgen-attempted
