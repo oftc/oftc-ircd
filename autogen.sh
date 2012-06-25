@@ -71,4 +71,9 @@ run $AUTOHEADER
 run $AUTOMAKE $AUTOMAKE_FLAGS
 run $AUTOCONF
 
+cd libevent && ./autogen.sh
+cd ..
+cd json-c && ./autogen.sh
+cd ..
+
 test "$ARGS" = "" && echo "Now type './configure ...' and 'make' to compile."
