@@ -23,8 +23,13 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef STDINC_H_INC
+#define STDINC_H_INC
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #define FALSE 0
 #define TRUE 1
+
+#endif
