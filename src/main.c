@@ -23,8 +23,12 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include <unistd.h>
+#include "stdinc.h"
+#include <getopt.h>
+#include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 static int 
 parse_args(int argc, char* const argv[])

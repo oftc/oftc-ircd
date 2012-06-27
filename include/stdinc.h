@@ -26,6 +26,7 @@
 #ifndef STDINC_H_INC
 #define STDINC_H_INC
 
+#include "setup.h"
 #include <stdio.h>
 #include <stdlib.h>
 
