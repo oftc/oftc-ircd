@@ -20,6 +20,7 @@ AC_PROG_AWK
 AC_PROG_EGREP
 AC_PATH_PROG([TAIL],[tail])
 AM_PROG_CC_C_O
+AX_ARG_ENABLE_DEBUGGING
 
 # Checks for libraries.
 
