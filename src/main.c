@@ -33,8 +33,6 @@
 static int 
 parse_args(int argc, char* const argv[])
 {
-  char *cvalue = NULL;
-  int index;
   int c;
 
   while((c = getopt (argc, argv, "")) != -1)

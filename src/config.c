@@ -32,10 +32,14 @@ struct config_section config_sections[] = {
   { CONF_SECTION_END }
 };
 
+/* external functions */
+
 void
 config_init()
 {
 }
+
+/* internal functions */
 
 static struct config_section *
 find_section(const char *name)
