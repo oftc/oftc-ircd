@@ -99,5 +99,11 @@ main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
+  if(!config_init())
+  {
+    perror("Error starting config");
+    return EXIT_FAILURE;
+  }
+
   return EXIT_SUCCESS;
 }

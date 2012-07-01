@@ -29,15 +29,8 @@
 #include "config.h"
 
 struct config_section config_sections[] = {
-  { CONF_SECTION_END }
+  { CONFIG_SECTION_END }
 };
-
-/* external functions */
-
-void
-config_init()
-{
-}
 
 /* internal functions */
 
@@ -73,8 +66,10 @@ find_section_entry(struct config_section_entry *list, const char *name)
   return NULL;
 }
 
-static void
-section_process(void *obj, char *ptr, struct config_section_entry *entry_list)
+/* external functions */
+
+void
+config_section_process(void *obj, char *ptr, struct config_section_entry *entry_list)
 {
   json_object_object_foreach(obj, key, value)
   {
@@ -128,3 +123,44 @@ section_process(void *obj, char *ptr, struct config_section_entry *entry_list)
     }
   }
 }
+
+int
+config_init()
+{
+  json_object *config_object;
+  json_type conftype;
+
+  config_object = json_object_from_file(CONFIG_PATH);
+  if(config_object == NULL)
+  {
+    return FALSE;
+  }
+
+  conftype = json_object_get_type(config_object);
+  if(conftype != json_type_object)
+  {
+    return FALSE;
+  }
+
+  json_object_object_foreach(config_object, key, value)
+  {
+    struct config_section *section;
+
+    section = find_section(key);
+
+    if(section == NULL)
+    {
+      return FALSE;
+    }
+
+    (section->config_section_init)();
+
+    (section->config_section_set_defaults)();
+    (section->config_section_process)(value);
+    (section->config_section_validate)();
+  }
+
+  return TRUE;
+}
+
+

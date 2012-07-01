@@ -26,36 +26,38 @@
 #ifndef CONFIG_H_INC
 #define CONFIG_H_INC
 
-#define MAX_CONF_SECTION_NAME 64
-#define MAX_CONF_SECTION_ENTRY_NAME 128
+#define MAX_CONFIG_SECTION_NAME 64
+#define MAX_CONFIG_SECTION_ENTRY_NAME 128
+#define CONFIG_PATH SYSCONFDIR "/ircd.conf"
 
 #define ssizeof(t, m) sizeof(((t *)0)->m)
 
-#define CONF_SECTION(name) #name, name##_section_init, name##_section_process, name##_section_clearout, name##_section_validate, name##_section_set_defaults
-#define CONF_SECTION_END "", NULL, NULL, NULL, NULL, NULL
-#define CONF_ENTRY_END "", 0, 0, 0
+#define CONFIG_SECTION(name) #name, name##_section_init, name##_section_process, name##_section_clearout, name##_section_validate, name##_section_set_defaults
+#define CONFIG_SECTION_END "", NULL, NULL, NULL, NULL, NULL
+#define CONFIG_ENTRY_END "", 0, 0, 0
 
 typedef void config_process_cb(void *);
 typedef void config_function_cb(void);
 
 struct config_section
 {
-  char name[MAX_CONF_SECTION_NAME];
+  char name[MAX_CONFIG_SECTION_NAME];
   config_function_cb *config_section_init;
   config_process_cb *config_section_process;
-  config_function_cb *config_section_valdate;
+  config_function_cb *config_section_validate;
   config_function_cb *config_section_clearout;
   config_function_cb *config_section_set_defaults;
 };
 
 struct config_section_entry
 {
-  char name[MAX_CONF_SECTION_ENTRY_NAME];
+  char name[MAX_CONFIG_SECTION_ENTRY_NAME];
   int type;
   int offset;
   int length;
 };
 
-void config_init();
+int config_init();
+void config_section_process(void *, char *, struct config_section_entry *);
 
 #endif
