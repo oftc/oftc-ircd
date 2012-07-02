@@ -30,6 +30,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+/* internal functions */
+
 static int 
 parse_args(int argc, char* const argv[])
 {
@@ -83,6 +85,8 @@ daemonize()
 
   return TRUE;
 }
+
+/* external functions */
 
 int 
 main(int argc, char *argv[])
