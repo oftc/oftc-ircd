@@ -97,11 +97,11 @@ main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  if(!daemonize())
-  {
-    perror("Error making the process a daemon");
-    return EXIT_FAILURE;
-  }
+//  if(!daemonize())
+//  {
+//    perror("Error making the process a daemon");
+//    return EXIT_FAILURE;
+//  }
 
   if(!config_init())
   {
