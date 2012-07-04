@@ -134,6 +134,13 @@ config_init()
 {
   json_object *config_object;
   json_type conftype;
+  struct config_section *section = config_sections;
+
+  while(section->name[0] != '\0')
+  {
+    (section->config_section_set_defaults)();
+    section++;
+  }
 
   config_object = json_object_from_file(CONFIG_PATH);
   if(config_object == NULL)
@@ -160,7 +167,6 @@ config_init()
 
     (section->config_section_init)();
 
-    (section->config_section_set_defaults)();
     (section->config_section_process)(value);
     (section->config_section_validate)();
   }
