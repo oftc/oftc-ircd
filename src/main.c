@@ -29,6 +29,8 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "config.h"
+#include "logging.h"
 
 /* internal functions */
 
@@ -97,17 +99,23 @@ main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-//  if(!daemonize())
-//  {
-//    perror("Error making the process a daemon");
-//    return EXIT_FAILURE;
-//  }
-
   if(!config_init())
   {
     perror("Error starting config");
     return EXIT_FAILURE;
   }
+
+  if(!logging_init())
+  {
+  }
+
+  logging_log(LOG_INFO, "oftc-ircd starting up");
+
+//  if(!daemonize())
+//  {
+//    perror("Error making the process a daemon");
+//    return EXIT_FAILURE;
+//  }
 
   return EXIT_SUCCESS;
 }

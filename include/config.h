@@ -32,9 +32,10 @@
 
 #define ssizeof(t, m) sizeof(((t *)0)->m)
 
-#define CONFIG_SECTION(name) #name, name##_section_init, name##_section_process, name##_section_clearout, name##_section_validate, name##_section_set_defaults
-#define CONFIG_SECTION_END "", NULL, NULL, NULL, NULL, NULL
-#define CONFIG_ENTRY_END "", 0, 0, 0
+#define CONFIG_SECTION(name) #name, config_##name##_section_init, config_##name##_section_process, config_##name##_section_validate, config_##name##_section_set_defaults
+#define CONFIG_SECTION_END "", NULL, NULL, NULL, NULL
+#define CONFIG_SECTION_ENTRY(section, name, type) #name, type, offsetof(struct config_##section, name), ssizeof(struct config_##section, name)
+#define CONFIG_SECTION_ENTRY_END "", 0, 0, 0
 
 typedef void config_process_cb(void *);
 typedef void config_function_cb(void);
@@ -45,7 +46,6 @@ struct config_section
   config_function_cb *config_section_init;
   config_process_cb *config_section_process;
   config_function_cb *config_section_validate;
-  config_function_cb *config_section_clearout;
   config_function_cb *config_section_set_defaults;
 };
 

@@ -26,9 +26,12 @@
 #include "stdinc.h"
 #include <string.h>
 #include <json.h>
+#include "logging.h"
 #include "config.h"
+#include "config_logging.h"
 
 struct config_section config_sections[] = {
+  { CONFIG_SECTION(logging) },
   { CONFIG_SECTION_END }
 };
 
