@@ -24,7 +24,6 @@
 */
 
 #include "stdinc.h"
-#include <json.h>
 #include <string.h>
 #include "logging.h"
 #include "config.h"
@@ -32,8 +31,8 @@
 
 struct config_section_entry logging_section_entries[] = 
 {
-  { CONFIG_SECTION_ENTRY(logging, log_path, json_type_string) },
-  { CONFIG_SECTION_ENTRY(logging, log_level, json_type_string) },
+//  { CONFIG_SECTION_ENTRY(logging, log_path, json_type_string) },
+//  { CONFIG_SECTION_ENTRY(logging, log_level, json_type_string) },
   { CONFIG_SECTION_ENTRY_END }  
 };
 
@@ -54,9 +53,10 @@ void config_logging_section_set_defaults()
 
 void config_logging_section_process(void *obj)
 {
-  json_object *jobj = (json_object *)obj;
+/*  json_object *jobj = (json_object *)obj;
 
   config_section_process(jobj, (char*)&logging_config, logging_section_entries);
+*/
 }
 
 void config_logging_section_validate()

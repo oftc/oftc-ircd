@@ -25,7 +25,6 @@
 
 #include "stdinc.h"
 #include <string.h>
-#include <json.h>
 #include "logging.h"
 #include "config.h"
 #include "config_logging.h"
@@ -76,6 +75,7 @@ find_section_entry(struct config_section_entry *list, const char *name)
 void
 config_section_process(void *obj, char *ptr, struct config_section_entry *entry_list)
 {
+#if 0
   json_object_object_foreach((struct json_object *)obj, key, value)
   {
     struct config_section_entry *section_entry;
@@ -127,13 +127,14 @@ config_section_process(void *obj, char *ptr, struct config_section_entry *entry_
         break;
     }
   }
+#endif
 }
 
 int
 config_init()
 {
-  json_object *config_object;
-  json_type conftype;
+//  json_object *config_object;
+//  json_type conftype;
   struct config_section *section = config_sections;
 
   while(section->name[0] != '\0')
@@ -142,7 +143,8 @@ config_init()
     section++;
   }
 
-  config_object = json_object_from_file(CONFIG_PATH);
+#if 0
+config_object = json_object_from_file(CONFIG_PATH);
   if(config_object == NULL)
   {
     return FALSE;
@@ -170,6 +172,7 @@ config_init()
     (section->config_section_process)(value);
     (section->config_section_validate)();
   }
+#endif
 
   return TRUE;
 }

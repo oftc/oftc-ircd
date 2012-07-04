@@ -24,13 +24,12 @@
 */
 
 #include "stdinc.h"
-#include <json.h>
 #include "config.h"
 #include "config_general.h"
 
 struct config_section_entry general_section_entries[] = 
 { 
-  { CONFIG_SECTION_ENTRY(general, daemon, json_type_boolean) },
+//  { CONFIG_SECTION_ENTRY(general, daemon, json_type_boolean) },
   { CONFIG_SECTION_ENTRY_END }  
 };
 
@@ -50,9 +49,10 @@ void config_general_section_set_defaults()
 
 void config_general_section_process(void *obj)
 {
-  json_object *jobj = (json_object *)obj;
+/*  json_object *jobj = (json_object *)obj;
 
   config_section_process(jobj, (char*)&general_config, general_section_entries);
+*/
 }
 
 void config_general_section_validate()

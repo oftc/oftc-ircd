@@ -44,7 +44,7 @@ void config_logging_section_set_defaults();
 
 #define CONFIG_LOGGING_SECTION_ENTRY(name, type) #name, type, offsetof(struct config_logging, name), ssizeof(struct config_logging, name)
 
-#define DEFAULT_LOG_PATH LOCALSTATEDIR "/log/ircd.log"
+#define DEFAULT_LOG_PATH "/home/stu/oircd/var/log/ircd.log"
 #define DEFAULT_LOG_LEVEL "debug"
 
 #endif

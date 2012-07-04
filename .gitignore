@@ -28,3 +28,6 @@ ltmain.sh
 missing
 src/ircd
 libevent/test/rpcgen-attempted
+ircd.Makefile
+ircd.target.mk
+out
