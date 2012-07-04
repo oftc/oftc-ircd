@@ -31,6 +31,7 @@
 #include <sys/stat.h>
 #include "config.h"
 #include "logging.h"
+#include "config_general.h"
 
 /* internal functions */
 
@@ -111,11 +112,11 @@ main(int argc, char *argv[])
 
   logging_log(LOG_INFO, "oftc-ircd starting up");
 
-//  if(!daemonize())
-//  {
-//    perror("Error making the process a daemon");
-//    return EXIT_FAILURE;
-//  }
+  if(general_config.daemon && !daemonize())
+  {
+    perror("Error making the process a daemon");
+    return EXIT_FAILURE;
+  }
 
   return EXIT_SUCCESS;
 }
