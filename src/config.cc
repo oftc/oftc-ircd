@@ -74,19 +74,19 @@ find_section_entry(struct config_section_entry *list, const char *name)
 void
 config_section_process(void *obj, char *ptr, struct config_section_entry *entry_list)
 {
-  json_object_object_foreach(obj, key, value)
+  json_object_object_foreach((struct json_object *)obj, key, value)
   {
-    struct config_section_entry *entry;
+    struct config_section_entry *section_entry;
     json_type obj_type = json_object_get_type(value);
 
-    entry = find_section_entry(entry_list, key);
+    section_entry = find_section_entry(entry_list, key);
 
-    if(entry == NULL)
+    if(section_entry == NULL)
     {
       continue;
     }
 
-    if(obj_type != entry->type)
+    if(obj_type != section_entry->type)
     {
       continue;
     }
@@ -97,14 +97,14 @@ config_section_process(void *obj, char *ptr, struct config_section_entry *entry_
       {
         int intval = json_object_get_int(value);
 
-        memcpy(ptr + entry->offset, &intval, entry->length);
+        memcpy(ptr + section_entry->offset, &intval, section_entry->length);
         break;
       }
       case json_type_boolean:
       {
         int boolval = json_object_get_boolean(value);
 
-        memcpy(ptr + entry->offset, &boolval, entry->length);
+        memcpy(ptr + section_entry->offset, &boolval, section_entry->length);
         break;
       }
       case json_type_string:
@@ -112,13 +112,13 @@ config_section_process(void *obj, char *ptr, struct config_section_entry *entry_
         char *strval;
         char *addr;
 
-        strval = ptr + entry->offset;
+        strval = ptr + section_entry->offset;
         addr = (char*)(*(int*)strval);
 
         free(addr);
 
         strval = strdup(json_object_get_string(value));
-        memcpy(ptr + entry->offset, &strval, entry->length);
+        memcpy(ptr + section_entry->offset, &strval, section_entry->length);
         break;
       }
       default:

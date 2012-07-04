@@ -12,7 +12,7 @@ AM_MAINTAINER_MODE
 # Checks for programs.
 AC_PROG_INSTALL
 AC_GNU_SOURCE
-AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_RANLIB
 AC_PROG_LIBTOOL
 LIBTOOL="$LIBTOOL --silent"
@@ -28,10 +28,6 @@ AX_ARG_ENABLE_DEBUGGING
 AC_CHECK_HEADERS([sys/resource.h]) # ick
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
-AC_C_INLINE
-AC_C_VOLATILE
-AC_C_BIGENDIAN
 
 # Checks for library functions.
 

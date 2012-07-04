@@ -59,7 +59,7 @@ logging_string_to_level(const char *name)
     p++;
   }
 
-  return -1;
+  return (log_levels)-1;
 }
 
 void
