@@ -1,6 +1,3 @@
 [submodule "libevent"]
 	path = libevent
 	url = git://levent.git.sourceforge.net/gitroot/levent/levent
-[submodule "json-c"]
-	path = json-c
-	url = https://github.com/oftc/json-c.git
