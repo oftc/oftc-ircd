@@ -1,6 +1,6 @@
 MAINTAINERCLEANFILES=Makefile.in
 sbin_PROGRAMS=ircd
-ircd_SOURCES=main.cc config.cc config_logging.cc logging.cc
+ircd_SOURCES=main.cc config.cc config_logging.cc config_general.cc logging.cc
 ircd_LDFLAGS=-export-dynamic
 ircd_CXXFLAGS=-I$(top_srcdir)/include -I$(top_srcdir)/libevent/include -I$(top_srcdir)/json-c
 INCLUDES=
