@@ -28,7 +28,7 @@
 
 #define MAX_CONFIG_SECTION_NAME 64
 #define MAX_CONFIG_SECTION_ENTRY_NAME 128
-#define CONFIG_PATH SYSCONFDIR "/ircd.conf"
+#define CONFIG_PATH "/home/stu/oircd/etc/ircd.conf"
 
 #define ssizeof(t, m) sizeof(((t *)0)->m)
 

@@ -12,6 +12,7 @@
   {
     'target_name': 'ircd',
     'dependencies': [
+      'jsoncpp/jsoncpp.gyp:jsoncpp',
       'libuv/uv.gyp:uv',
     ],
     'type': 'executable',

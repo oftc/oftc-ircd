@@ -29,6 +29,9 @@
 #include "config.h"
 #include "config_logging.h"
 #include "config_general.h"
+#include <json/json.h>
+#include <iostream>
+#include <fstream>
 
 struct config_section config_sections[] = {
   { CONFIG_SECTION(general) },
@@ -142,6 +145,12 @@ config_init()
     (section->config_section_set_defaults)();
     section++;
   }
+
+  std::ifstream config_file(CONFIG_PATH);
+  Json::Value root;
+  Json::Reader reader;
+
+  reader.parse(config_file, root);
 
 #if 0
 config_object = json_object_from_file(CONFIG_PATH);
