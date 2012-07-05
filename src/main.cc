@@ -32,6 +32,7 @@
 #include "config.h"
 #include "logging.h"
 #include "config_general.h"
+#include <uv.h>
 
 /* internal functions */
 
@@ -94,6 +95,10 @@ daemonize()
 int 
 main(int argc, char *argv[])
 {
+  uv_loop_t *uv_loop;
+
+  uv_loop = uv_default_loop();
+
   if(!parse_args(argc, argv))
   {
     perror("Parsing command line arguments failed");
