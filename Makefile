@@ -22,8 +22,8 @@
 #  OTHER DEALINGS IN THE SOFTWARE.
 
 # Variables
-CC ?= clang
-CXX ?= clang++
+export CC=clang
+export CXX=clang++
 GYP ?= gyp
 BUILDDIR ?= build
 LIBRARY ?= static_library
@@ -36,8 +36,10 @@ $(BUILDDIR)/Makefile: ircd.gyp common.gypi
 	$(GYP) --depth=. --generator-output $(BUILDDIR) -Goutput_dir=$(BUILDDIR) -Dlibrary=$(LIBRARY) -Icommon.gypi -f make
 
 .PHONY: ircd
+.PHONY: clean
 
 ircd:
+
 	$(MAKE) -C $(BUILDDIR) 
 
 clean:
