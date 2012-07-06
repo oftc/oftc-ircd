@@ -2,12 +2,6 @@
   'variables': {
   },
 
-  'target_defaults': {
-    'defines': [
-      '_GNU_SOURCE',
-    ],
-  },
-
   'targets': [
   {
     'target_name': 'ircd',
@@ -26,6 +20,10 @@
       'src/logging.cc',
       'src/main.cc',
     ],
+    'defines': [
+      '_GNU_SOURCE',
+    ],
+    'cflags': [ '-Wall -Wextra -Werror -pedantic -Wno-long-long -Wno-unused-parameter' ],
   },
   ],
 }

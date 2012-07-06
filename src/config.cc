@@ -41,6 +41,7 @@ struct config_section config_sections[] = {
 
 /* internal functions */
 
+#if 0
 static struct config_section *
 find_section(const char *name)
 {
@@ -72,6 +73,7 @@ find_section_entry(struct config_section_entry *list, const char *name)
 
   return NULL;
 }
+#endif
 
 /* external functions */
 

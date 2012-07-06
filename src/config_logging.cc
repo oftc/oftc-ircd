@@ -36,7 +36,7 @@ struct config_section_entry logging_section_entries[] =
   { CONFIG_SECTION_ENTRY_END }  
 };
 
-struct config_logging logging_config = { 0 };
+struct config_logging logging_config = { 0, 0, LOG_DEBUG };
 
 /* internal functions */
 

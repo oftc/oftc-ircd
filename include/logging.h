@@ -35,7 +35,7 @@ typedef enum
   LOG_NOTICE,
   LOG_WARNING,
   LOG_ERROR,
-  LOG_CRITICAL,
+  LOG_CRITICAL
 } log_levels;
 
 int logging_init();
