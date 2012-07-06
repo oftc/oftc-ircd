@@ -23,20 +23,17 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CONFIG_GENERAL_H_INC
-#define CONFIG_GENERAL_H_INC
+#ifndef CONFIGSECTION_H_INC
+#define CONFIGSECTION_H_INC
 
-struct config_general
+#include <json/json.h>
+
+class ConfigSection
 {
-  int daemon;
-  /* internal members */
+public:
+  virtual void set_defaults() = 0;
+  virtual void process(Json::Value) = 0;
+  virtual void verify() = 0;
 };
-
-extern struct config_general general_config;
-
-void config_general_section_init();
-void config_general_section_process(void *);
-void config_general_section_validate();
-void config_general_section_set_defaults();
 
 #endif

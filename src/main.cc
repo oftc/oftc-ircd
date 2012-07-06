@@ -23,20 +23,22 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <unistd.h>
 #include "stdinc.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <getopt.h>
 #include <ctype.h>
 #include <sys/types.h>
-#include <sys/stat.h>
+#include <unistd.h>
+#include <uv.h>
+#include <iostream>
+#include <stdexcept>
 #include "config.h"
 #include "logging.h"
-#include "config_general.h"
-#include <uv.h>
 
 /* internal functions */
 
-static int 
+static bool 
 parse_args(int argc, char* const argv[])
 {
   int c;
@@ -51,13 +53,14 @@ parse_args(int argc, char* const argv[])
         break;
       default:
         perror("Error processing command line arguments");
-        return FALSE;
+        return false;
     }
   }
 
-  return TRUE;
+  return true;
 }
 
+#if 0
 static int
 daemonize()
 {
@@ -89,6 +92,7 @@ daemonize()
 
   return TRUE;
 }
+#endif
 
 /* external functions */
 
@@ -105,23 +109,24 @@ main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  if(!config_init())
+  try
   {
-    perror("Error starting config");
+    Logging::init();
+    Config::init(CONFIG_PATH);
+  }
+  catch(std::exception &ex)
+  {
+    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
     return EXIT_FAILURE;
   }
 
-  if(!logging_init())
-  {
-  }
+  Logging::log(LOG_INFO, "oftc-ircd starting up");
 
-  logging_log(LOG_INFO, "oftc-ircd starting up");
-
-  if(general_config.daemon && !daemonize())
+/*  if(general_config.daemon && !daemonize())
   {
     perror("Error making the process a daemon");
     return EXIT_FAILURE;
-  }
+  }*/
 
   return EXIT_SUCCESS;
 }

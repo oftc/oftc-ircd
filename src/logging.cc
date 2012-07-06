@@ -24,15 +24,17 @@
 */
 
 #include "stdinc.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
 #include <time.h>
+#include <iostream>
+#include <json/json.h>
+#include "config.h"
 #include "logging.h"
-#include "config_logging.h"
 
 #define MAX_DATE_LEN 30
-
-static FILE *logptr;
 
 const char *log_level_lookup[] =
 {
@@ -44,9 +46,35 @@ const char *log_level_lookup[] =
   "CRITICAL",
   NULL
 };
-/* internal functions */
 
-/* external functions */
+LoggingSection Logging::config;
+
+void
+LoggingSection::set_defaults()
+{
+  min_log_level = LOG_INFO;
+  log_path = LOG_PATH;
+}
+
+void
+LoggingSection::process(Json::Value value)
+{
+  log_path = value.get("log_path", LOG_PATH).asString(); 
+}
+
+void
+LoggingSection::verify()
+{
+}
+
+FILE * Logging::logptr;
+
+void
+Logging::init()
+{
+  Config::add_section("logging", &Logging::config);
+}
+
 log_levels
 logging_string_to_level(const char *name)
 {
@@ -63,7 +91,7 @@ logging_string_to_level(const char *name)
 }
 
 void
-logging_log(log_levels level, const char *format, ...)
+Logging::log(log_levels level, const char *format, ...)
 {
   char *buffer;
   char datestr[MAX_DATE_LEN];
@@ -71,9 +99,11 @@ logging_log(log_levels level, const char *format, ...)
   time_t current_time;
 
   if(logptr == NULL)
-    return;
+  {
+    Logging::logptr = fopen(Logging::config.get_log_path(), "a+");
+  }
 
-  if(level < logging_config.min_loglevel)
+  if(level < Logging::config.get_min_log_level())
     return;
 
   va_start(args, format);
@@ -93,16 +123,16 @@ logging_log(log_levels level, const char *format, ...)
   va_end(args);
 }
 
-int
+bool
 logging_init()
 {
-  logptr = fopen(logging_config.log_path, "a+");
+  /*logptr = fopen(logging_config.log_path, "a+");
 
   if(logptr == NULL)
   {
     perror("logging_init: Unable to open log file for appending");
     return FALSE;
-  }
+  }*/
 
-  return TRUE;
+  return true;
 }

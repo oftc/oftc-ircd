@@ -26,7 +26,11 @@
 #ifndef LOGGING_H_INC
 #define LOGGING_H_INC
 
-#define MAX_LOG_LEVEL_NAME 20
+#include <json/json.h>
+#include <string>
+#include "configsection.h"
+
+#define LOG_PATH "/home/stu/oircd/var/log/ircd.log"
 
 typedef enum 
 {
@@ -38,7 +42,31 @@ typedef enum
   LOG_CRITICAL
 } log_levels;
 
-int logging_init();
+class LoggingSection : public ConfigSection
+{
+private:
+  int min_log_level;
+  std::string log_path;
+public:
+  void set_defaults();
+  void process(Json::Value);
+  void verify();
+  inline int get_min_log_level() { return min_log_level; }
+  inline const char *get_log_path() { return log_path.c_str(); }
+};
+
+class Logging 
+{
+private:
+  static FILE *logptr;
+  static LoggingSection config;
+public:
+  static void init();
+  static void log(log_levels, const char *, ...);
+};
+
+#define MAX_LOG_LEVEL_NAME 20
+
 void logging_log(log_levels, const char *, ...);
 log_levels logging_string_to_level(const char *);
 
