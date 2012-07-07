@@ -70,7 +70,7 @@ LoggingSection::set_defaults()
 }
 
 void
-LoggingSection::process(Json::Value value)
+LoggingSection::process(const Json::Value& value)
 {
   log_path = value.get("log_path", LOG_PATH).asString(); 
   min_log_level = LoggingSection::string_to_level(value.get("log_level", "info").asString());

@@ -43,10 +43,10 @@ private:
   static int string_to_level(const std::string&);
 public:
   void set_defaults();
-  void process(Json::Value);
+  void process(const Json::Value&);
   void verify();
-  inline int get_min_log_level() { return min_log_level; }
-  inline const char *get_log_path() { return log_path.c_str(); }
+  inline int get_min_log_level() const { return min_log_level; }
+  inline const char *get_log_path() const { return log_path.c_str(); }
 };
 
 class Logging 

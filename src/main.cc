@@ -113,15 +113,14 @@ main(int argc, char *argv[])
   {
     Logging::init();
     Config::init(CONFIG_PATH);
+
+    Logging(Logging::info) << "oftc-ircd starting up";
   }
   catch(std::exception &ex)
   {
     std::cerr << "Unhandled exception: " << ex.what() << std::endl;
     return EXIT_FAILURE;
   }
-
-  Logging(Logging::info) << "oftc-ircd starting up";
-  Logging(Logging::debug) << "debug message";
 
 /*  if(general_config.daemon && !daemonize())
   {
