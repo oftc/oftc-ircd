@@ -24,53 +24,31 @@
 */
 
 #include "stdinc.h"
-#include <stdlib.h>
-#include <uv.h>
-#include <iostream>
+#include <json/json.h>
 #include <stdexcept>
-#include "config.h"
-#include "logging.h"
-#include "system.h"
+#include <iostream>
+#include "listenersection.h"
 #include "listener.h"
 
-int 
-main(int argc, char *argv[])
+void
+ListenerSection::set_defaults()
 {
-  uv_loop_t *uv_loop;
+}
 
-  uv_loop = uv_default_loop();
+void
+ListenerSection::process(const Json::Value& value)
+{
+  if(value.type() != Json::arrayValue)
+    throw std::runtime_error("listener section not an array as expected");
 
-  try
+  for(Json::Value::const_iterator it = value.begin(); it != value.end(); it++)
   {
-    System::parse_args(argc, argv);
-
-    System::init();
-    Logging::init();
-    Listener::init();
-    Config::init(CONFIG_PATH);
-
-    Logging(Logging::info) << "oftc-ircd starting up";
+    Json::Value val = *it;
+    Listener::add(val["host"].asString().c_str(), val["port"].asInt());
   }
-  catch(std::exception &ex)
-  {
-    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
-    return EXIT_FAILURE;
-  }
+}
 
-  // Now that logging is setup, switch to a try catch that will log as well
-  try
-  {
-    if(System::config.get_daemon())
-      System::daemonize();
-
-    Listener::start_listeners();
-    uv_run(uv_loop);
-  }
-  catch(std::exception &ex)
-  {
-    Logging(Logging::critical) << "Unhandled exception: " << ex.what();
-    return EXIT_FAILURE;
-  }
-
-  return EXIT_SUCCESS;
+void
+ListenerSection::verify()
+{
 }

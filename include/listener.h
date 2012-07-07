@@ -23,54 +23,35 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
-#include <stdlib.h>
+#ifndef LISTENER_H_INC
+#define LISTENER_H_INC
+
+#include <string>
+#include <vector>
+#include <map>
 #include <uv.h>
-#include <iostream>
-#include <stdexcept>
-#include "config.h"
-#include "logging.h"
-#include "system.h"
-#include "listener.h"
+#include "listenersection.h"
 
-int 
-main(int argc, char *argv[])
+class Listener 
 {
-  uv_loop_t *uv_loop;
+private:
+  static ListenerSection config;
+  static std::vector<Listener> listeners;
+  static void connected_callback(uv_stream_t *, int);
 
-  uv_loop = uv_default_loop();
+  uv_tcp_t listener;
+  std::string host;
+  int port;
 
-  try
-  {
-    System::parse_args(argc, argv);
+  void start();
+  void connected(uv_stream_t *, int);
+public:
+  static void init();
+  static void add(const char *, int);
+  static void start_listeners();
 
-    System::init();
-    Logging::init();
-    Listener::init();
-    Config::init(CONFIG_PATH);
+  Listener();
+  Listener(const char *, int);
+};
 
-    Logging(Logging::info) << "oftc-ircd starting up";
-  }
-  catch(std::exception &ex)
-  {
-    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  // Now that logging is setup, switch to a try catch that will log as well
-  try
-  {
-    if(System::config.get_daemon())
-      System::daemonize();
-
-    Listener::start_listeners();
-    uv_run(uv_loop);
-  }
-  catch(std::exception &ex)
-  {
-    Logging(Logging::critical) << "Unhandled exception: " << ex.what();
-    return EXIT_FAILURE;
-  }
-
-  return EXIT_SUCCESS;
-}
+#endif

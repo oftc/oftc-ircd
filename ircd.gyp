@@ -16,6 +16,8 @@
     'sources': [
       'src/config.cc',
       'src/generalsection.cc',
+      'src/listener.cc',
+      'src/listenersection.cc',
       'src/logging.cc',
       'src/loggingsection.cc',
       'src/main.cc',

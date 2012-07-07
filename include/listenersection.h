@@ -23,54 +23,20 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
-#include <stdlib.h>
-#include <uv.h>
-#include <iostream>
-#include <stdexcept>
-#include "config.h"
-#include "logging.h"
-#include "system.h"
-#include "listener.h"
+#ifndef LISTENERSECTION_H_INC
+#define LISTENERSECTION_H_INC
 
-int 
-main(int argc, char *argv[])
+#include <json/json.h>
+#include "configsection.h"
+
+class ListenerSection : public ConfigSection
 {
-  uv_loop_t *uv_loop;
+private:
 
-  uv_loop = uv_default_loop();
+public:
+  void set_defaults();
+  void process(const Json::Value&);
+  void verify();
+};
 
-  try
-  {
-    System::parse_args(argc, argv);
-
-    System::init();
-    Logging::init();
-    Listener::init();
-    Config::init(CONFIG_PATH);
-
-    Logging(Logging::info) << "oftc-ircd starting up";
-  }
-  catch(std::exception &ex)
-  {
-    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  // Now that logging is setup, switch to a try catch that will log as well
-  try
-  {
-    if(System::config.get_daemon())
-      System::daemonize();
-
-    Listener::start_listeners();
-    uv_run(uv_loop);
-  }
-  catch(std::exception &ex)
-  {
-    Logging(Logging::critical) << "Unhandled exception: " << ex.what();
-    return EXIT_FAILURE;
-  }
-
-  return EXIT_SUCCESS;
-}
+#endif

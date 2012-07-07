@@ -27,7 +27,6 @@
 #define GENERALSECTION_H_INC
 
 #include <json/json.h>
-#include <string>
 #include "configsection.h"
 
 class GeneralSection : public ConfigSection
