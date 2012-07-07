@@ -34,9 +34,7 @@
 #include "config.h"
 #include "logging.h"
 
-#define MAX_DATE_LEN 30
-
-const char *log_level_lookup[] =
+const char *log_levels[] =
 {
   "DEBUG",
   "INFO",
@@ -49,10 +47,25 @@ const char *log_level_lookup[] =
 
 LoggingSection Logging::config;
 
+int
+LoggingSection::string_to_level(const std::string& name)
+{
+  const char **p = log_levels;
+
+  while(p != NULL)
+  {
+    if(strcasecmp(*p, name.c_str()) == 0)
+      return (int)(p - log_levels);
+    p++;
+  }
+
+  return -1;
+}
+
 void
 LoggingSection::set_defaults()
 {
-  min_log_level = LOG_INFO;
+  min_log_level = Logging::info;
   log_path = LOG_PATH;
 }
 
@@ -60,6 +73,7 @@ void
 LoggingSection::process(Json::Value value)
 {
   log_path = value.get("log_path", LOG_PATH).asString(); 
+  min_log_level = LoggingSection::string_to_level(value.get("log_level", "info").asString());
 }
 
 void
@@ -67,72 +81,36 @@ LoggingSection::verify()
 {
 }
 
-FILE * Logging::logptr;
+Logging::Logging(int level) : log_level(level)
+{
+  log_stream.open(LOG_PATH, std::ios::out | std::ios::app);
+}
+
+Logging::~Logging()
+{
+  log_stream.close();
+}
+
+Logging& 
+Logging::operator <<(const std::string param)
+{
+  char datestr[Logging::MAX_DATE_LEN];
+  time_t current_time;
+
+  if(log_level < Logging::config.get_min_log_level())
+    return *this;
+
+  current_time = time(NULL);
+
+  strftime(datestr, sizeof(datestr), "%Y-%m-%d %H:%M:%S%z", 
+    localtime(&current_time));
+  log_stream << datestr << " - (core) [" << log_levels[log_level] << 
+    "] - " << param << std::endl;
+  return *this;
+}
 
 void
 Logging::init()
 {
   Config::add_section("logging", &Logging::config);
-}
-
-log_levels
-logging_string_to_level(const char *name)
-{
-  const char **p = log_level_lookup;
-
-  while(p != NULL)
-  {
-    if(strcasecmp(*p, name) == 0)
-      return (log_levels)(p - log_level_lookup);
-    p++;
-  }
-
-  return (log_levels)-1;
-}
-
-void
-Logging::log(log_levels level, const char *format, ...)
-{
-  char *buffer;
-  char datestr[MAX_DATE_LEN];
-  va_list args;
-  time_t current_time;
-
-  if(logptr == NULL)
-  {
-    Logging::logptr = fopen(Logging::config.get_log_path(), "a+");
-  }
-
-  if(level < Logging::config.get_min_log_level())
-    return;
-
-  va_start(args, format);
-  
-  if(vasprintf(&buffer, format, args) < 0)
-  {
-    va_end(args);
-    return;
-  }
-
-  current_time = time(NULL);
-
-  strftime(datestr, sizeof(datestr), "%Y-%m-%d %H:%M:%S%z", localtime(&current_time));
-  fprintf(logptr, "%s - (core) [%s] - %s\r\n", datestr, log_level_lookup[level], buffer);
-
-  free(buffer);
-  va_end(args);
-}
-
-bool
-logging_init()
-{
-  /*logptr = fopen(logging_config.log_path, "a+");
-
-  if(logptr == NULL)
-  {
-    perror("logging_init: Unable to open log file for appending");
-    return FALSE;
-  }*/
-
-  return true;
 }

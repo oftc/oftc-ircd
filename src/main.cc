@@ -120,7 +120,8 @@ main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  Logging::log(LOG_INFO, "oftc-ircd starting up");
+  Logging(Logging::info) << "oftc-ircd starting up";
+  Logging(Logging::debug) << "debug message";
 
 /*  if(general_config.daemon && !daemonize())
   {

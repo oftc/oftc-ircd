@@ -21,7 +21,7 @@
     'defines': [
       '_GNU_SOURCE',
     ],
-    'cflags': [ '-Wall -Wextra -Werror -pedantic -Wno-long-long -Wno-unused-parameter' ],
+    'cflags': [ '-Wall', '-Wextra', '-pedantic', '-Wno-long-long', '-Wno-unused-parameter' ],
   },
   ],
 }
