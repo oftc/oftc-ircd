@@ -26,28 +26,12 @@
 #ifndef LOGGING_H_INC
 #define LOGGING_H_INC
 
-#include <json/json.h>
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "configsection.h"
+#include "loggingsection.h"
 
 #define LOG_PATH "/home/stu/oircd/var/log/ircd.log"
-
-class LoggingSection : public ConfigSection
-{
-private:
-  int min_log_level;
-  std::string log_path;
-
-  static int string_to_level(const std::string&);
-public:
-  void set_defaults();
-  void process(const Json::Value&);
-  void verify();
-  inline int get_min_log_level() const { return min_log_level; }
-  inline const char *get_log_path() const { return log_path.c_str(); }
-};
 
 class Logging 
 {
@@ -66,6 +50,7 @@ public:
   static const int MAX_DATE_LEN = 30;
 
   static void init();
+  static int string_to_level(const std::string&);
 
   Logging& operator <<(const std::string);
 

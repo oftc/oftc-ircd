@@ -16,6 +16,7 @@
     'sources': [
       'src/config.cc',
       'src/logging.cc',
+      'src/loggingsection.cc',
       'src/main.cc',
     ],
     'defines': [

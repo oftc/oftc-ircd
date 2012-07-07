@@ -23,17 +23,24 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CONFIGSECTION_H_INC
-#define CONFIGSECTION_H_INC
+#ifndef LOGGINGSECTION_H_INC
+#define LOGGINGSECTION_H_INC
 
 #include <json/json.h>
+#include <string>
+#include "configsection.h"
 
-class ConfigSection
+class LoggingSection : public ConfigSection
 {
+private:
+  int min_log_level;
+  std::string log_path;
 public:
-  virtual void set_defaults() = 0;
-  virtual void process(const Json::Value&) = 0;
-  virtual void verify() = 0;
+  void set_defaults();
+  void process(const Json::Value&);
+  void verify();
+  inline int get_min_log_level() const { return min_log_level; }
+  inline const char *get_log_path() const { return log_path.c_str(); }
 };
 
 #endif

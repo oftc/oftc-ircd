@@ -24,15 +24,11 @@
 */
 
 #include "stdinc.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
 #include <time.h>
+#include <string.h>
 #include <iostream>
-#include <json/json.h>
-#include "config.h"
 #include "logging.h"
+#include "config.h"
 
 const char *log_levels[] =
 {
@@ -46,40 +42,6 @@ const char *log_levels[] =
 };
 
 LoggingSection Logging::config;
-
-int
-LoggingSection::string_to_level(const std::string& name)
-{
-  const char **p = log_levels;
-
-  while(p != NULL)
-  {
-    if(strcasecmp(*p, name.c_str()) == 0)
-      return (int)(p - log_levels);
-    p++;
-  }
-
-  return -1;
-}
-
-void
-LoggingSection::set_defaults()
-{
-  min_log_level = Logging::info;
-  log_path = LOG_PATH;
-}
-
-void
-LoggingSection::process(const Json::Value& value)
-{
-  log_path = value.get("log_path", LOG_PATH).asString(); 
-  min_log_level = LoggingSection::string_to_level(value.get("log_level", "info").asString());
-}
-
-void
-LoggingSection::verify()
-{
-}
 
 Logging::Logging(int level) : log_level(level)
 {
@@ -107,6 +69,21 @@ Logging::operator <<(const std::string param)
   log_stream << datestr << " - (core) [" << log_levels[log_level] << 
     "] - " << param << std::endl;
   return *this;
+}
+
+int
+Logging::string_to_level(const std::string& name)
+{
+  const char **p = log_levels;
+
+  while(p != NULL)
+  {
+    if(strcasecmp(*p, name.c_str()) == 0)
+      return (int)(p - log_levels);
+    p++;
+  }
+
+  return -1;
 }
 
 void

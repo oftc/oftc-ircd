@@ -23,17 +23,26 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CONFIGSECTION_H_INC
-#define CONFIGSECTION_H_INC
-
+#include "stdinc.h"
 #include <json/json.h>
+#include "loggingsection.h"
+#include "logging.h"
 
-class ConfigSection
+void
+LoggingSection::set_defaults()
 {
-public:
-  virtual void set_defaults() = 0;
-  virtual void process(const Json::Value&) = 0;
-  virtual void verify() = 0;
-};
+  min_log_level = Logging::info;
+  log_path = LOG_PATH;
+}
 
-#endif
+void
+LoggingSection::process(const Json::Value& value)
+{
+  log_path = value.get("log_path", LOG_PATH).asString(); 
+  min_log_level = Logging::string_to_level(value.get("log_level", "info").asString());
+}
+
+void
+LoggingSection::verify()
+{
+}
