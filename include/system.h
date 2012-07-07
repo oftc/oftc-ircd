@@ -23,51 +23,24 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
-#include <stdlib.h>
-#include <uv.h>
+#ifndef SYSTEM_H_INC
+#define SYSTEM_H_INC
+
+#include <string>
 #include <iostream>
-#include <stdexcept>
-#include "config.h"
-#include "logging.h"
-#include "system.h"
+#include <fstream>
+#include "generalsection.h"
 
-int 
-main(int argc, char *argv[])
+class System 
 {
-  uv_loop_t *uv_loop;
+private:
+public:
+  static GeneralSection config;
+  
+  static void daemonize();
+  static void init();
+  static void parse_args(int, char* const[]);
+  static std::string perror(const char *);
+};
 
-  uv_loop = uv_default_loop();
-
-  try
-  {
-    System::parse_args(argc, argv);
-
-    System::init();
-    Logging::init();
-    Config::init(CONFIG_PATH);
-
-    Logging(Logging::info) << "oftc-ircd starting up";
-  }
-  catch(std::exception &ex)
-  {
-    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  // Now that logging is setup, switch to a try catch that will log as well
-  try
-  {
-    if(System::config.get_daemon())
-      System::daemonize();
-
-    uv_run(uv_loop);
-  }
-  catch(std::exception &ex)
-  {
-    Logging(Logging::critical) << "Unhandled exception: " << ex.what();
-    return EXIT_FAILURE;
-  }
-
-  return EXIT_SUCCESS;
-}
+#endif

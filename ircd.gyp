@@ -15,9 +15,11 @@
     ],
     'sources': [
       'src/config.cc',
+      'src/generalsection.cc',
       'src/logging.cc',
       'src/loggingsection.cc',
       'src/main.cc',
+      'src/system.cc'
     ],
     'defines': [
       '_GNU_SOURCE',

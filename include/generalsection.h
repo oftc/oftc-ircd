@@ -23,51 +23,23 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
-#include <stdlib.h>
-#include <uv.h>
-#include <iostream>
-#include <stdexcept>
-#include "config.h"
-#include "logging.h"
-#include "system.h"
+#ifndef GENERALSECTION_H_INC
+#define GENERALSECTION_H_INC
 
-int 
-main(int argc, char *argv[])
+#include <json/json.h>
+#include <string>
+#include "configsection.h"
+
+class GeneralSection : public ConfigSection
 {
-  uv_loop_t *uv_loop;
+private:
+  bool daemon;
+public:
+  void set_defaults();
+  void process(const Json::Value&);
+  void verify();
 
-  uv_loop = uv_default_loop();
+  inline bool get_daemon() { return daemon; }
+};
 
-  try
-  {
-    System::parse_args(argc, argv);
-
-    System::init();
-    Logging::init();
-    Config::init(CONFIG_PATH);
-
-    Logging(Logging::info) << "oftc-ircd starting up";
-  }
-  catch(std::exception &ex)
-  {
-    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  // Now that logging is setup, switch to a try catch that will log as well
-  try
-  {
-    if(System::config.get_daemon())
-      System::daemonize();
-
-    uv_run(uv_loop);
-  }
-  catch(std::exception &ex)
-  {
-    Logging(Logging::critical) << "Unhandled exception: " << ex.what();
-    return EXIT_FAILURE;
-  }
-
-  return EXIT_SUCCESS;
-}
+#endif

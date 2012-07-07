@@ -24,50 +24,22 @@
 */
 
 #include "stdinc.h"
-#include <stdlib.h>
-#include <uv.h>
-#include <iostream>
-#include <stdexcept>
-#include "config.h"
-#include "logging.h"
-#include "system.h"
+#include <json/json.h>
+#include "generalsection.h"
 
-int 
-main(int argc, char *argv[])
+void
+GeneralSection::set_defaults()
 {
-  uv_loop_t *uv_loop;
+  daemon = true;
+}
 
-  uv_loop = uv_default_loop();
+void
+GeneralSection::process(const Json::Value& value)
+{
+  daemon = value.get("daemon", true).asBool();
+}
 
-  try
-  {
-    System::parse_args(argc, argv);
-
-    System::init();
-    Logging::init();
-    Config::init(CONFIG_PATH);
-
-    Logging(Logging::info) << "oftc-ircd starting up";
-  }
-  catch(std::exception &ex)
-  {
-    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  // Now that logging is setup, switch to a try catch that will log as well
-  try
-  {
-    if(System::config.get_daemon())
-      System::daemonize();
-
-    uv_run(uv_loop);
-  }
-  catch(std::exception &ex)
-  {
-    Logging(Logging::critical) << "Unhandled exception: " << ex.what();
-    return EXIT_FAILURE;
-  }
-
-  return EXIT_SUCCESS;
+void
+GeneralSection::verify()
+{
 }
