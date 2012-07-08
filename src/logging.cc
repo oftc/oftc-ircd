@@ -43,15 +43,15 @@ const char *log_levels[] =
 };
 
 LoggingSection Logging::config;
+std::ofstream Logging::log_stream;
+Logging Logging::debug(DEBUGL);
+Logging Logging::info(INFO);
+Logging Logging::warning(WARNING);
+Logging Logging::error(ERROR);
+Logging Logging::critical(CRITICAL);
 
 Logging::Logging(LogLevel level) : log_level(level)
 {
-  log_stream.open(LOG_PATH, std::ios::out | std::ios::app);
-}
-
-Logging::~Logging()
-{
-  log_stream.close();
 }
 
 Logging& 
@@ -63,6 +63,9 @@ Logging::operator <<(const std::string param)
   if(log_level < Logging::get_min_loglevel())
     return *this;
 
+  if(!log_stream.is_open())
+    return *this;
+
   current_time = time(NULL);
 
   strftime(datestr, sizeof(datestr), "%Y-%m-%d %H:%M:%S%z", 
@@ -70,7 +73,7 @@ Logging::operator <<(const std::string param)
 
   std::stringstream ss(datestr);
 
-  ss << " - (core) [" << log_levels[log_level] << "] - " << param;
+  ss << datestr << " - (core) [" << log_levels[log_level] << "] - " << param;
   log_stream << ss.str() << std::endl;
 
   return *this;
@@ -96,4 +99,10 @@ void
 Logging::init()
 {
   Config::add_section("logging", &Logging::config);
+}
+
+void
+Logging::start()
+{
+  log_stream.open(config.get_log_path(), std::ios::out | std::ios::app);
 }

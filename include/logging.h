@@ -38,18 +38,25 @@ class Logging
 private:
   static LoggingSection config;
   static const int MAX_DATE_LEN = 30;
+  static std::ofstream log_stream;
 
-  std::ofstream log_stream;
   LogLevel log_level;
 public:  
+  static Logging debug;
+  static Logging info;
+  static Logging notice;
+  static Logging warning;
+  static Logging error;
+  static Logging critical;
+
   static void init();
+  static void start();
   static LogLevel string_to_level(const std::string);
   inline static LogLevel get_min_loglevel() { return config.get_min_loglevel(); }
 
   Logging& operator <<(const std::string);
 
   Logging(LogLevel);
-  ~Logging();
 };
 
 #endif
