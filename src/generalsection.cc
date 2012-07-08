@@ -34,12 +34,13 @@ GeneralSection::set_defaults()
 }
 
 void
-GeneralSection::process(const Json::Value& value)
+GeneralSection::process(const Json::Value value)
 {
-  daemon = value.get("daemon", true).asBool();
+  if(!value["daemon"].isNull())
+    daemon = value["daemon"].asBool();
 }
 
 void
-GeneralSection::verify()
+GeneralSection::verify() const
 {
 }

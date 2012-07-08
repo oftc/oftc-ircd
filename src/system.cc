@@ -70,10 +70,9 @@ System::perror(const char *error)
   std::string str = error;
 
   str += ": ";
-  str +=strerror(errno);
+  str += strerror(errno);
 
   return str;
-  
 }
 
 void

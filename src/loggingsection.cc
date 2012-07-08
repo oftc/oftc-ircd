@@ -31,18 +31,21 @@
 void
 LoggingSection::set_defaults()
 {
-  min_log_level = Logging::info;
+  min_loglevel = INFO;
   log_path = LOG_PATH;
 }
 
 void
-LoggingSection::process(const Json::Value& value)
+LoggingSection::process(const Json::Value value)
 {
-  log_path = value.get("log_path", LOG_PATH).asString(); 
-  min_log_level = Logging::string_to_level(value.get("log_level", "info").asString());
+  if(!value["log_path"].isNull())
+    log_path = value["log_path"].asString(); 
+
+  if(!value["log_level"].isNull())
+    min_loglevel = Logging::string_to_level(value["log_level"].asString());
 }
 
 void
-LoggingSection::verify()
+LoggingSection::verify() const
 {
 }

@@ -34,13 +34,13 @@
 class System 
 {
 private:
-public:
   static GeneralSection config;
-  
+public:
   static void daemonize();
   static void init();
   static void parse_args(int, char* const[]);
   static std::string perror(const char *);
+  static inline bool get_daemon() { return config.get_daemon(); }
 };
 
 #endif

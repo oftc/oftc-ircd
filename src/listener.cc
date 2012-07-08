@@ -25,21 +25,13 @@
 
 #include "stdinc.h"
 #include <vector>
-#include <iostream>
 #include <uv.h>
 #include "config.h"
 #include "listener.h"
 #include "listenersection.h"
-#include "system.h"
 
 ListenerSection Listener::config;
 std::vector<Listener> Listener::listeners;
-
-void
-Listener::init()
-{
-  Config::add_section("listeners", &Listener::config);
-}
 
 Listener::Listener() : host(NULL), port(6667)
 {
@@ -68,6 +60,14 @@ Listener::start()
   ret = uv_listen((uv_stream_t *)&listener, 128, Listener::connected_callback);
 }
 
+
+// Statics
+void
+Listener::init()
+{
+  Config::add_section("listeners", &Listener::config);
+}
+
 void
 Listener::add(const char *host, int port=6667)
 {
@@ -91,4 +91,3 @@ Listener::connected_callback(uv_stream_t *stream, int status)
 
   listener->connected(stream, status);
 }
-

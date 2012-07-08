@@ -30,16 +30,26 @@
 #include <string>
 #include "configsection.h"
 
+enum LogLevel
+{
+  DEBUGL = 0,
+  INFO,
+  NOTICE,
+  WARNING,
+  ERROR,
+  CRITICAL
+};
+
 class LoggingSection : public ConfigSection
 {
 private:
-  int min_log_level;
+  LogLevel min_loglevel;
   std::string log_path;
 public:
   void set_defaults();
-  void process(const Json::Value&);
-  void verify();
-  inline int get_min_log_level() const { return min_log_level; }
+  void process(const Json::Value);
+  void verify() const;
+  inline LogLevel get_min_loglevel() const { return min_loglevel; }
   inline const char *get_log_path() const { return log_path.c_str(); }
 };
 

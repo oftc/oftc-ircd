@@ -27,6 +27,7 @@
 #include <time.h>
 #include <string.h>
 #include <iostream>
+#include <sstream>
 #include "logging.h"
 #include "config.h"
 
@@ -43,7 +44,7 @@ const char *log_levels[] =
 
 LoggingSection Logging::config;
 
-Logging::Logging(int level) : log_level(level)
+Logging::Logging(LogLevel level) : log_level(level)
 {
   log_stream.open(LOG_PATH, std::ios::out | std::ios::app);
 }
@@ -59,31 +60,36 @@ Logging::operator <<(const std::string param)
   char datestr[Logging::MAX_DATE_LEN];
   time_t current_time;
 
-  if(log_level < Logging::config.get_min_log_level())
+  if(log_level < Logging::get_min_loglevel())
     return *this;
 
   current_time = time(NULL);
 
   strftime(datestr, sizeof(datestr), "%Y-%m-%d %H:%M:%S%z", 
     localtime(&current_time));
-  log_stream << datestr << " - (core) [" << log_levels[log_level] << 
-    "] - " << param << std::endl;
+
+  std::stringstream ss(datestr);
+
+  ss << " - (core) [" << log_levels[log_level] << "] - " << param;
+  log_stream << ss.str() << std::endl;
+
   return *this;
 }
 
-int
-Logging::string_to_level(const std::string& name)
+// Statics
+LogLevel
+Logging::string_to_level(const std::string name)
 {
   const char **p = log_levels;
 
   while(p != NULL)
   {
     if(strcasecmp(*p, name.c_str()) == 0)
-      return (int)(p - log_levels);
+      return static_cast<LogLevel>(p - log_levels);
     p++;
   }
 
-  return -1;
+  return static_cast<LogLevel>(-1);
 }
 
 void

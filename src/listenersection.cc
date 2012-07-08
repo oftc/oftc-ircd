@@ -26,7 +26,6 @@
 #include "stdinc.h"
 #include <json/json.h>
 #include <stdexcept>
-#include <iostream>
 #include "listenersection.h"
 #include "listener.h"
 
@@ -36,7 +35,7 @@ ListenerSection::set_defaults()
 }
 
 void
-ListenerSection::process(const Json::Value& value)
+ListenerSection::process(const Json::Value value)
 {
   if(value.type() != Json::arrayValue)
     throw std::runtime_error("listener section not an array as expected");
@@ -49,6 +48,6 @@ ListenerSection::process(const Json::Value& value)
 }
 
 void
-ListenerSection::verify()
+ListenerSection::verify() const
 {
 }

@@ -32,8 +32,8 @@ class ConfigSection
 {
 public:
   virtual void set_defaults() = 0;
-  virtual void process(const Json::Value&) = 0;
-  virtual void verify() = 0;
+  virtual void process(const Json::Value) = 0;
+  virtual void verify() const = 0;
 };
 
 #endif

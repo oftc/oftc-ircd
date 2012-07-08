@@ -38,8 +38,8 @@ private:
   static std::map<std::string, ConfigSection *> sections;
   static ConfigSection *find_section(const char *name);
 public:
-  static void add_section(const std::string& name, ConfigSection* const section);
-  static void init(const char *);
+  static void add_section(const std::string name, ConfigSection* const section);
+  static void init(const std::string);
 };
 
 #endif

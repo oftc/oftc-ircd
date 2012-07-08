@@ -49,7 +49,7 @@ main(int argc, char *argv[])
     Listener::init();
     Config::init(CONFIG_PATH);
 
-    Logging(Logging::info) << "oftc-ircd starting up";
+    Logging(INFO) << "oftc-ircd starting up";
   }
   catch(std::exception &ex)
   {
@@ -60,7 +60,7 @@ main(int argc, char *argv[])
   // Now that logging is setup, switch to a try catch that will log as well
   try
   {
-    if(System::config.get_daemon())
+    if(System::get_daemon())
       System::daemonize();
 
     Listener::start_listeners();
@@ -68,7 +68,7 @@ main(int argc, char *argv[])
   }
   catch(std::exception &ex)
   {
-    Logging(Logging::critical) << "Unhandled exception: " << ex.what();
+    Logging(CRITICAL) << "Unhandled exception: " << ex.what();
     return EXIT_FAILURE;
   }
 

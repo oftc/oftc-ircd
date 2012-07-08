@@ -29,52 +29,49 @@
 #include <fstream>
 #include <stdexcept>
 #include <map>
-#include "logging.h"
 #include "config.h"
 #include "configsection.h"
 
 // Initialise the static member
 std::map<std::string, ConfigSection *> Config::sections;
 
+// Statics
 void
-Config::init(const char *path)
+Config::init(const std::string path)
 {
-  std::ifstream config(path);
+  std::ifstream config(path.c_str());
   Json::Value root;
   Json::Reader reader;
 
-  std::map<std::string, ConfigSection *>::iterator it;
+  std::map<std::string, ConfigSection *>::const_iterator it;
   for(it = Config::sections.begin(); it != Config::sections.end(); it++)
   {
     it->second->set_defaults();
   }
 
   if(!reader.parse(config, root))
+    throw std::runtime_error(reader.getFormattedErrorMessages());
+
+  if(root.type() != Json::objectValue)
+    throw std::runtime_error("Root node is not an object");
+
+  Json::Value::Members members = root.getMemberNames();
+  Json::Value::Members::const_iterator mit;
+
+  for(mit = members.begin(); mit != members.end(); mit++)
   {
-    throw std::runtime_error("Error processing configuration file: " + 
-      reader.getFormattedErrorMessages());
-  }
+    const std::string name = *mit;
+    ConfigSection *section = Config::sections[name];
 
-  if(root.type() == Json::objectValue)
-  {
-    Json::Value::Members members = root.getMemberNames();
-
-    for(Json::Value::Members::iterator it = members.begin(); 
-        it != members.end(); it++)
-    {
-      const std::string &name = *it;
-      ConfigSection *section = Config::sections[name];
-
-      if(section == NULL)
-        std::cerr << "Unknown config section: " << name << std::endl;
-      else
-        section->process(root[name]);
-    }
+    if(section == NULL)
+      std::cerr << "Unknown config section: " << name << std::endl;
+    else
+      section->process(root[name]);
   }
 }
 
 void 
-Config::add_section(const std::string& name, ConfigSection* const section)
+Config::add_section(const std::string name, ConfigSection* const section)
 {
   Config::sections.insert(std::pair<std::string, ConfigSection *>(name, section));
 }

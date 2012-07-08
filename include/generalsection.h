@@ -35,10 +35,10 @@ private:
   bool daemon;
 public:
   void set_defaults();
-  void process(const Json::Value&);
-  void verify();
+  void process(const Json::Value);
+  void verify() const;
 
-  inline bool get_daemon() { return daemon; }
+  inline bool get_daemon() const { return daemon; }
 };
 
 #endif
