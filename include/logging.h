@@ -33,12 +33,19 @@
 
 #define LOG_PATH "/home/stu/oircd/var/log/ircd.log"
 
+class Logging;
+
+typedef Logging& (*manip)(Logging&);
+
 class Logging 
 {
 private:
   static LoggingSection config;
   static const int MAX_DATE_LEN = 30;
   static std::ofstream log_stream;
+  static bool flush;
+  static bool dostamp;
+  static std::stringstream stream;
 
   LogLevel log_level;
 public:  
@@ -55,8 +62,11 @@ public:
   inline static LogLevel get_min_loglevel() { return config.get_min_loglevel(); }
 
   Logging& operator <<(const std::string);
+  Logging& operator <<(manip);
 
   Logging(LogLevel);
+
+  static Logging& endl(Logging&);
 };
 
 #endif

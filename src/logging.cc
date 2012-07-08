@@ -49,6 +49,9 @@ Logging Logging::info(INFO);
 Logging Logging::warning(WARNING);
 Logging Logging::error(ERROR);
 Logging Logging::critical(CRITICAL);
+bool Logging::flush(false);
+bool Logging::dostamp(true);
+std::stringstream Logging::stream;
 
 Logging::Logging(LogLevel level) : log_level(level)
 {
@@ -66,17 +69,37 @@ Logging::operator <<(const std::string param)
   if(!log_stream.is_open())
     return *this;
 
-  current_time = time(NULL);
+  if(dostamp)
+  {
+    current_time = time(NULL);
 
-  strftime(datestr, sizeof(datestr), "%Y-%m-%d %H:%M:%S%z", 
-    localtime(&current_time));
+    strftime(datestr, sizeof(datestr), "%Y-%m-%d %H:%M:%S%z", 
+        localtime(&current_time));
 
-  std::stringstream ss(datestr);
+    stream << datestr << " - (core) [" << log_levels[log_level] << "] - ";
 
-  ss << datestr << " - (core) [" << log_levels[log_level] << "] - " << param;
-  log_stream << ss.str() << std::endl;
+    dostamp = false;
+  }
+
+  stream << param;
+
+  if(flush)
+  {
+    log_stream << stream.str();
+    log_stream.flush();
+    flush = false;
+    dostamp = true;
+    stream.str(std::string());
+    stream.clear();
+  }
 
   return *this;
+}
+
+Logging&
+Logging::operator <<(manip fp)
+{
+  return fp(*this);
 }
 
 // Statics
@@ -105,4 +128,11 @@ void
 Logging::start()
 {
   log_stream.open(config.get_log_path(), std::ios::out | std::ios::app);
+}
+
+Logging&
+Logging::endl(Logging &log)
+{
+  flush = true;
+  return log << "\n";
 }

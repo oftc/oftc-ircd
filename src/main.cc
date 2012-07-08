@@ -50,7 +50,7 @@ main(int argc, char *argv[])
     Config::init(CONFIG_PATH);
     Logging::start();
 
-    Logging::info << "oftc-ircd starting up";
+    Logging::info << "oftc-ircd starting up" << Logging::endl;
   }
   catch(std::exception &ex)
   {
@@ -69,7 +69,9 @@ main(int argc, char *argv[])
   }
   catch(std::exception &ex)
   {
-    Logging::critical << "Unhandled exception: " << ex.what();
+    Logging::critical << "Unhandled exception: " << ex.what() << Logging::endl;
+    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
+
     return EXIT_FAILURE;
   }
 
