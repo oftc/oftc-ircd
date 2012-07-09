@@ -31,8 +31,11 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <uv.h>
 #include <stdexcept>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include "config.h"
 #include "generalsection.h"
 #include "system.h"
@@ -73,6 +76,16 @@ System::perror(const char *error)
   str += strerror(errno);
 
   return str;
+}
+
+std::string
+System::uv_perror(const char *error)
+{
+  std::stringstream ss;
+
+  ss << error << ": " << uv_strerror(uv_last_error(uv_default_loop()));
+
+  return ss.str();
 }
 
 void

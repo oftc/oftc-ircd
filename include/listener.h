@@ -47,11 +47,11 @@ private:
   void connected(uv_stream_t *, int);
 public:
   static void init();
-  static void add(const char *, int);
+  static void add(std::string, int);
   static void start_listeners();
 
   Listener();
-  Listener(const char *, int);
+  Listener(std::string, int);
 };
 
 #endif

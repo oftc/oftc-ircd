@@ -40,6 +40,7 @@ public:
   static void init();
   static void parse_args(int, char* const[]);
   static std::string perror(const char *);
+  static std::string uv_perror(const char *);
   static inline bool get_daemon() { return config.get_daemon(); }
 };
 

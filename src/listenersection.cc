@@ -43,7 +43,12 @@ ListenerSection::process(const Json::Value value)
   for(Json::Value::const_iterator it = value.begin(); it != value.end(); it++)
   {
     Json::Value val = *it;
-    Listener::add(val["host"].asString().c_str(), val["port"].asInt());
+    std::string host(val["host"].asString());
+
+    if(host.length() == 0)
+      Listener::add("::", val["port"].asInt());
+    else
+      Listener::add(host, val["port"].asInt());
   }
 }
 
