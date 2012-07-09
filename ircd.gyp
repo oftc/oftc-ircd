@@ -15,6 +15,7 @@
     ],
     'sources': [
       'src/config.cc',
+      'src/connection.cc',
       'src/generalsection.cc',
       'src/listener.cc',
       'src/listenersection.cc',

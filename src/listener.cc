@@ -27,11 +27,15 @@
 #include <vector>
 #include <stdexcept>
 #include <uv.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <errno.h>
 #include "config.h"
 #include "system.h"
 #include "listener.h"
 #include "listenersection.h"
 #include "logging.h"
+#include "connection.h"
 
 ListenerSection Listener::config;
 std::vector<Listener> Listener::listeners;
@@ -47,6 +51,10 @@ Listener::Listener(std::string host, int port=6667) : host(host), port(port)
 void
 Listener::connected(uv_stream_t *stream, int status)
 {
+  Connection connection;
+
+  Connection::add(connection);
+  connection.accept(*stream);
 }
 
 void
@@ -70,6 +78,7 @@ Listener::start()
   {
     struct sockaddr_in6 addr = uv_ip6_addr(host.c_str(), port);
      
+    uv_tcp_v6only(&listener, 1);
     ret = uv_tcp_bind6(&listener, addr);
   }
   else

@@ -54,6 +54,8 @@ bool Logging::dostamp(true);
 std::stringstream Logging::stream;
 
 template Logging& Logging::operator <<(const std::string param);
+template Logging& Logging::operator <<(const char *param);
+template Logging& Logging::operator <<(char *param);
 template Logging& Logging::operator <<(const int param);
 
 Logging::Logging(LogLevel level) : log_level(level)

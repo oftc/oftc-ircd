@@ -23,39 +23,22 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
-#include <json/json.h>
-#include <stdexcept>
-#include "listenersection.h"
-#include "listener.h"
+#ifndef CONNECTION_H_INC
+#define CONNECTION_H_INC
 
-void
-ListenerSection::set_defaults()
+#include <vector>
+#include <uv.h>
+
+class Connection 
 {
-}
+private:
+  static std::vector<Connection> connections;
 
-void
-ListenerSection::process(const Json::Value value)
-{
-  if(value.type() != Json::arrayValue)
-    throw std::runtime_error("listener section not an array as expected");
+  uv_tcp_t handle;
+public:
+  static void add(Connection);
 
-  for(Json::Value::const_iterator it = value.begin(); it != value.end(); it++)
-  {
-    Json::Value val = *it;
-    std::string host(val["host"].asString());
+  void accept(uv_stream_t);
+};
 
-    if(host.length() == 0)
-    {
-      Listener::add("::", val["port"].asInt());
-      Listener::add("0.0.0.0", val["port"].asInt());
-    }
-    else
-      Listener::add(host, val["port"].asInt());
-  }
-}
-
-void
-ListenerSection::verify() const
-{
-}
+#endif
