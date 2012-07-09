@@ -61,7 +61,8 @@ public:
   static LogLevel string_to_level(const std::string);
   inline static LogLevel get_min_loglevel() { return config.get_min_loglevel(); }
 
-  Logging& operator <<(const std::string);
+  template<typename T>
+  Logging& operator <<(const T);
   Logging& operator <<(manip);
 
   Logging(LogLevel);

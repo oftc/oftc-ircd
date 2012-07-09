@@ -53,12 +53,16 @@ bool Logging::flush(false);
 bool Logging::dostamp(true);
 std::stringstream Logging::stream;
 
+template Logging& Logging::operator <<(const std::string param);
+template Logging& Logging::operator <<(const int param);
+
 Logging::Logging(LogLevel level) : log_level(level)
 {
 }
 
+template<typename T>
 Logging& 
-Logging::operator <<(const std::string param)
+Logging::operator <<(const T param)
 {
   char datestr[Logging::MAX_DATE_LEN];
   time_t current_time;
