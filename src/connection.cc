@@ -98,11 +98,7 @@ Connection::add()
 {
   connections.push_back(Connection());
 
-  Connection &c = connections.back();
-
-  std::cout << "new connection " << &c << std::endl;
-
-  return c;
+  return connections.back();
 }
 
 uv_buf_t
@@ -123,4 +119,3 @@ Connection::on_read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 
   connection->read(stream, nread, buf);
 }
-
