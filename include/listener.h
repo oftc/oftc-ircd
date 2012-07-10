@@ -46,6 +46,8 @@ private:
   void start();
   void connected(uv_stream_t *, int);
 public:
+  static const int DEFAULT_PORT = 6667;
+
   static void init();
   static void add(std::string, int);
   static void start_listeners();

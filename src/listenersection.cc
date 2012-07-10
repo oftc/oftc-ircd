@@ -28,6 +28,7 @@
 #include <stdexcept>
 #include "listenersection.h"
 #include "listener.h"
+#include "logging.h"
 
 void
 ListenerSection::set_defaults()
@@ -44,14 +45,27 @@ ListenerSection::process(const Json::Value value)
   {
     Json::Value val = *it;
     std::string host(val["host"].asString());
+    int port;
+
+    if(!val["port"])
+      port = Listener::DEFAULT_PORT;
+    else
+      port = val["port"].asInt();
+
+    if(port < 0 || port > USHRT_MAX)
+    {
+      Logging::warning << "Ignoring listener, port " << port << " is invalid" <<
+        Logging::endl;
+      continue;
+    }
 
     if(host.length() == 0)
     {
-      Listener::add("::", val["port"].asInt());
-      Listener::add("0.0.0.0", val["port"].asInt());
+      Listener::add("::", port);
+      Listener::add("0.0.0.0", port);
     }
     else
-      Listener::add(host, val["port"].asInt());
+      Listener::add(host, port);
   }
 }
 
