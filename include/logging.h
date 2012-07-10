@@ -31,7 +31,11 @@
 #include <fstream>
 #include "loggingsection.h"
 
+#ifdef _WIN32
+#define LOG_PATH "ircd.log"
+#else
 #define LOG_PATH "/home/stu/oircd/var/log/ircd.log"
+#endif
 
 class Logging;
 
@@ -41,7 +45,7 @@ class Logging
 {
 private:
   static LoggingSection config;
-  static const int MAX_DATE_LEN = 30;
+  static const int MAX_DATE_LEN = 40;
   static std::ofstream log_stream;
   static bool flush;
   static bool dostamp;
@@ -62,7 +66,7 @@ public:
   inline static LogLevel get_min_loglevel() { return config.get_min_loglevel(); }
 
   template<typename T>
-  Logging& operator <<(const T);
+  Logging& operator <<(T);
   Logging& operator <<(manip);
 
   Logging(LogLevel);

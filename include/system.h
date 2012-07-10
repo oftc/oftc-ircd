@@ -36,9 +36,11 @@ class System
 private:
   static GeneralSection config;
 public:
+#ifndef _WIN32
   static void daemonize();
-  static void init();
   static void parse_args(int, char* const[]);
+#endif
+  static void init();
   static std::string perror(const char *);
   static std::string uv_perror(const char *);
   static inline bool get_daemon() { return config.get_daemon(); }

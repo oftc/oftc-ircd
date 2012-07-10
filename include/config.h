@@ -30,7 +30,11 @@
 #include <map>
 #include "configsection.h"
 
+#ifdef _WIN32
+#define CONFIG_PATH "ircd.conf"
+#else
 #define CONFIG_PATH "/home/stu/oircd/etc/ircd.conf"
+#endif
 
 class Config
 {

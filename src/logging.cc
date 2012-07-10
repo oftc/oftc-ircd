@@ -31,6 +31,11 @@
 #include "logging.h"
 #include "config.h"
 
+#ifdef _WIN32 
+#define strncasecmp strnicmp 
+#define strcasecmp stricmp 
+#endif 
+
 const char *log_levels[] =
 {
   "DEBUG",
@@ -47,18 +52,18 @@ std::ofstream Logging::log_stream;
 Logging Logging::debug(DEBUGL);
 Logging Logging::info(INFO);
 Logging Logging::warning(WARNING);
-Logging Logging::error(ERROR);
+Logging Logging::error(ERRORL);
 Logging Logging::critical(CRITICAL);
 bool Logging::flush(false);
 bool Logging::dostamp(true);
 std::stringstream Logging::stream;
 
-template Logging& Logging::operator <<(const std::string param);
-template Logging& Logging::operator <<(const char *param);
-template Logging& Logging::operator <<(char *param);
-template Logging& Logging::operator <<(void *param);
-template Logging& Logging::operator <<(const int param);
-template Logging& Logging::operator <<(const long param);
+template Logging& Logging::operator <<(const std::string);
+template Logging& Logging::operator <<(const char *);
+template Logging& Logging::operator <<(char *);
+template Logging& Logging::operator <<(void *);
+template Logging& Logging::operator <<(const int);
+template Logging& Logging::operator <<(const long);
 
 Logging::Logging(LogLevel level) : log_level(level)
 {
@@ -66,11 +71,8 @@ Logging::Logging(LogLevel level) : log_level(level)
 
 template<typename T>
 Logging& 
-Logging::operator <<(const T param)
+Logging::operator <<(T param)
 {
-  char datestr[Logging::MAX_DATE_LEN];
-  time_t current_time;
-
   if(log_level < Logging::get_min_loglevel())
     return *this;
 
@@ -79,10 +81,15 @@ Logging::operator <<(const T param)
 
   if(dostamp)
   {
+    tm *tptr;
+    char datestr[Logging::MAX_DATE_LEN];
+    time_t current_time;
+
     current_time = time(NULL);
 
-    strftime(datestr, sizeof(datestr), "%Y-%m-%d %H:%M:%S%z", 
-        localtime(&current_time));
+    tptr = localtime(&current_time);
+
+    strftime(datestr, sizeof(datestr)+10, "%Y-%m-%d %H:%M:%S%z", tptr);
 
     stream << datestr << " - (core) [" << log_levels[log_level] << "] - ";
 

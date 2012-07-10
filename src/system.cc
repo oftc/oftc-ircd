@@ -26,9 +26,11 @@
 #include "stdinc.h"
 #include <string.h>
 #include <errno.h>
+#ifndef _WIN32
 #include <unistd.h>
-#include <stdlib.h>
 #include <getopt.h>
+#endif
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <uv.h>
@@ -48,6 +50,7 @@ System::init()
   Config::add_section("general", &System::config);
 }
 
+#ifndef _WIN32
 void
 System::parse_args(int argc, char* const argv[])
 {
@@ -66,6 +69,7 @@ System::parse_args(int argc, char* const argv[])
     }
   }
 }
+#endif
 
 std::string
 System::perror(const char *error)
@@ -88,6 +92,7 @@ System::uv_perror(const char *error)
   return ss.str();
 }
 
+#ifndef _WIN32
 void
 System::daemonize()
 {
@@ -117,3 +122,4 @@ System::daemonize()
   freopen("/dev/null", "w", stdout);
   freopen("/dev/null", "w", stderr);
 }
+#endif

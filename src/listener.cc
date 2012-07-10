@@ -28,7 +28,9 @@
 #include <stdexcept>
 #include <uv.h>
 #include <sys/types.h>
+#ifndef _WIN32
 #include <sys/socket.h>
+#endif
 #include <errno.h>
 #include "config.h"
 #include "system.h"

@@ -42,7 +42,9 @@ main(int argc, char *argv[])
 
   try
   {
+#ifndef _WIN32
     System::parse_args(argc, argv);
+#endif
 
     System::init();
     Logging::init();
@@ -61,8 +63,10 @@ main(int argc, char *argv[])
   // Now that logging is setup, switch to a try catch that will log as well
   try
   {
+#ifndef _WIN32
     if(System::get_daemon())
       System::daemonize();
+#endif
 
     Listener::start_listeners();
     uv_run(uv_loop);

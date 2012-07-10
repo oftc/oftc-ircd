@@ -36,7 +36,7 @@ enum LogLevel
   INFO,
   NOTICE,
   WARNING,
-  ERROR,
+  ERRORL,
   CRITICAL
 };
 

@@ -13,3 +13,12 @@ libltdl
 libtool
 out
 build
+Debug
+Release
+ircd.conf
+ircd.log
+*.ncb
+*.sln
+*.vcproj
+*.suo
+*.user
