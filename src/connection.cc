@@ -33,11 +33,6 @@
 
 std::vector<Connection> Connection::connections;
 
-Connection::Connection()
-{
-  handle = new uv_tcp_t;
-}
-
 void
 Connection::accept(uv_stream_t *server_handle)
 {
@@ -47,22 +42,22 @@ Connection::accept(uv_stream_t *server_handle)
   int addrlen = sizeof(struct sockaddr_in6);
   int ret;
 
-  uv_tcp_init(uv_default_loop(), handle);
+  uv_tcp_init(uv_default_loop(), &handle);
 
-  ret = uv_accept(server_handle, reinterpret_cast<uv_stream_t *>(handle));
+  ret = uv_accept(server_handle, reinterpret_cast<uv_stream_t *>(&handle));
   if(ret < 0)
     throw std::runtime_error(System::uv_perror("Unable to accept connection"));
 
-  ret = uv_tcp_getpeername(handle, reinterpret_cast<sockaddr*>(&addr), &addrlen);
+  ret = uv_tcp_getpeername(&handle, reinterpret_cast<sockaddr*>(&addr), &addrlen);
   saddr = reinterpret_cast<sockaddr *>(&addr);
   if(saddr->sa_family == AF_INET)
     uv_ip4_name(reinterpret_cast<sockaddr_in *>(saddr), buf, sizeof(buf));
   else if(saddr->sa_family == AF_INET6)
     uv_ip6_name(&addr, buf, sizeof(buf));
 
-  handle->data = this;
+  handle.data = this;
 
-  uv_read_start(reinterpret_cast<uv_stream_t *>(handle), on_buf_alloc, on_read);
+  uv_read_start(reinterpret_cast<uv_stream_t *>(&handle), on_buf_alloc, on_read);
   Logging::debug << "Accepted connection from: " << buf << Logging::endl;
 }
 

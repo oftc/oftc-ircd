@@ -53,7 +53,7 @@ Listener::Listener(std::string host, int port=6667) : host(host), port(port)
 void
 Listener::connected(uv_stream_t *stream, int status)
 {
-  Connection connection = Connection::add();
+  Connection& connection = Connection::add();
   connection.accept(stream);
 }
 
