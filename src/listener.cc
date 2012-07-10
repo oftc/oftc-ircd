@@ -51,10 +51,8 @@ Listener::Listener(std::string host, int port=6667) : host(host), port(port)
 void
 Listener::connected(uv_stream_t *stream, int status)
 {
-  Connection connection;
-
-  Connection::add(connection);
-  connection.accept(*stream);
+  Connection connection = Connection::add();
+  connection.accept(stream);
 }
 
 void
@@ -122,7 +120,7 @@ Listener::start_listeners()
 void
 Listener::connected_callback(uv_stream_t *stream, int status)
 {
-  Listener *listener = (Listener *)stream->data;
+  Listener *listener = static_cast<Listener *>(stream->data);
 
   listener->connected(stream, status);
 }

@@ -56,7 +56,9 @@ std::stringstream Logging::stream;
 template Logging& Logging::operator <<(const std::string param);
 template Logging& Logging::operator <<(const char *param);
 template Logging& Logging::operator <<(char *param);
+template Logging& Logging::operator <<(void *param);
 template Logging& Logging::operator <<(const int param);
+template Logging& Logging::operator <<(const long param);
 
 Logging::Logging(LogLevel level) : log_level(level)
 {

@@ -33,8 +33,13 @@
 
 std::vector<Connection> Connection::connections;
 
+Connection::Connection()
+{
+  handle = new uv_tcp_t;
+}
+
 void
-Connection::accept(uv_stream_t server_handle)
+Connection::accept(uv_stream_t *server_handle)
 {
   sockaddr_in6 addr;
   sockaddr *saddr;
@@ -42,25 +47,70 @@ Connection::accept(uv_stream_t server_handle)
   int addrlen = sizeof(struct sockaddr_in6);
   int ret;
 
-  uv_tcp_init(uv_default_loop(), &handle);
+  uv_tcp_init(uv_default_loop(), handle);
 
-  ret = uv_accept(&server_handle, reinterpret_cast<uv_stream_t *>(&handle));
+  ret = uv_accept(server_handle, reinterpret_cast<uv_stream_t *>(handle));
   if(ret < 0)
     throw std::runtime_error(System::uv_perror("Unable to accept connection"));
 
-  ret = uv_tcp_getpeername(&handle, reinterpret_cast<sockaddr*>(&addr), &addrlen);
+  ret = uv_tcp_getpeername(handle, reinterpret_cast<sockaddr*>(&addr), &addrlen);
   saddr = reinterpret_cast<sockaddr *>(&addr);
   if(saddr->sa_family == AF_INET)
     uv_ip4_name(reinterpret_cast<sockaddr_in *>(saddr), buf, sizeof(buf));
   else if(saddr->sa_family == AF_INET6)
     uv_ip6_name(&addr, buf, sizeof(buf));
 
+  handle->data = this;
+
+  uv_read_start(reinterpret_cast<uv_stream_t *>(handle), on_buf_alloc, on_read);
   Logging::debug << "Accepted connection from: " << buf << Logging::endl;
 }
 
-// Statics
 void
-Connection::add(Connection connection)
+Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
-  connections.push_back(connection);
+  Logging::debug << "Read " << nread << "bytes '" << buf.base << "'" << Logging::endl;
+
+  if(nread < 0)
+  {
+    if(buf.base != NULL)
+    {
+      delete[] buf.base;
+      buf.base = 0;
+      buf.len = 0;
+    }
+  }
+
+  delete[] buf.base;
+  buf.base = 0;
+  buf.len = 0;
 }
+
+// Statics
+Connection &
+Connection::add()
+{
+  connections.push_back(Connection());
+
+  return connections.back();
+}
+
+uv_buf_t
+Connection::on_buf_alloc(uv_handle_t *handle, size_t size)
+{
+  uv_buf_t buf;
+
+  buf.len = size;
+  buf.base = new char[size]();
+
+  return buf;
+}
+
+void 
+Connection::on_read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
+{
+  Connection *connection = static_cast<Connection *>(stream->data);
+
+  connection->read(stream, nread, buf);
+}
+

@@ -27,6 +27,7 @@
 #define CONNECTION_H_INC
 
 #include <vector>
+#include <memory>
 #include <uv.h>
 
 class Connection 
@@ -34,11 +35,15 @@ class Connection
 private:
   static std::vector<Connection> connections;
 
-  uv_tcp_t handle;
+  uv_tcp_t *handle;
+  void read(uv_stream_t *, ssize_t, uv_buf_t);
 public:
-  static void add(Connection);
+  static Connection& add();
+  static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
+  static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
 
-  void accept(uv_stream_t);
+  Connection();
+  void accept(uv_stream_t *);
 };
 
 #endif
