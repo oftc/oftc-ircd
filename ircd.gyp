@@ -19,6 +19,16 @@
     'sources': 
     [
       'common.gypi',
+      'include/config.h',
+      'include/configsection.h',
+      'include/connection.h',
+      'include/generalsection.h',
+      'include/listener.h',
+      'include/listenersection.h',
+      'include/logging.h',
+      'include/loggingsection.h',
+      'include/stdinc.h',
+      'include/system.h',
       'src/config.cc',
       'src/connection.cc',
       'src/generalsection.cc',
