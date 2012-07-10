@@ -47,8 +47,6 @@ Connection::accept(uv_stream_t *server_handle)
 
   uv_tcp_init(uv_default_loop(), handle.get());
 
-  std::cout << "Created handle on " << this << std::endl;
-
   ret = uv_accept(server_handle, reinterpret_cast<uv_stream_t *>(handle.get()));
   if(ret < 0)
     throw std::runtime_error(System::uv_perror("Unable to accept connection"));

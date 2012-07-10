@@ -51,7 +51,7 @@
 		  ],
 		},
 		{
-		  'cflags': [ '-Wall', '-Wextra', '-pedantic', '-Wno-long-long', '-Wno-unused-parameter' ],
+		  'cflags': [ '-std=c++0x', '-Wall', '-Wextra', '-pedantic', '-Wno-long-long', '-Wno-unused-parameter' ],
 	      'defines': [ '_GNU_SOURCE' ],
 	    }
 	  ],

@@ -27,7 +27,11 @@
 #define CONNECTION_H_INC
 
 #include <vector>
+#ifdef _WIN32
 #include <memory>
+#else
+#include <tr1/memory>
+#endif
 #include <uv.h>
 
 class Connection 
