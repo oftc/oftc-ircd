@@ -43,13 +43,17 @@ Connection::accept(uv_stream_t *server_handle)
   int addrlen = sizeof(addr);
   int ret;
 
-  uv_tcp_init(uv_default_loop(), &handle);
+  handle.reset(new uv_tcp_t);
 
-  ret = uv_accept(server_handle, reinterpret_cast<uv_stream_t *>(&handle));
+  uv_tcp_init(uv_default_loop(), handle.get());
+
+  std::cout << "Created handle on " << this << std::endl;
+
+  ret = uv_accept(server_handle, reinterpret_cast<uv_stream_t *>(handle.get()));
   if(ret < 0)
     throw std::runtime_error(System::uv_perror("Unable to accept connection"));
 
-  ret = uv_tcp_getpeername(&handle, reinterpret_cast<sockaddr*>(&addr), &addrlen);
+  ret = uv_tcp_getpeername(handle.get(), reinterpret_cast<sockaddr*>(&addr), &addrlen);
   switch(addr.ss_family)
   {
   case AF_INET:
@@ -62,9 +66,9 @@ Connection::accept(uv_stream_t *server_handle)
     break;
   }
 
-  handle.data = this;
+  handle->data = this;
 
-  uv_read_start(reinterpret_cast<uv_stream_t *>(&handle), on_buf_alloc, on_read);
+  uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
   Logging::debug << "Accepted connection from: " << ipstr << Logging::endl;
 }
 
@@ -94,7 +98,11 @@ Connection::add()
 {
   connections.push_back(Connection());
 
-  return connections.back();
+  Connection &c = connections.back();
+
+  std::cout << "new connection " << &c << std::endl;
+
+  return c;
 }
 
 uv_buf_t
