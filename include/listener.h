@@ -28,6 +28,15 @@
 
 #include <string>
 #include <vector>
+#ifdef __GLIBCXX__
+#  include <tr1/memory>
+#else
+#  ifdef __IBMCPP__
+#    define __IBMCPP_TR1__
+#  endif
+#  include <memory>
+#endif
+
 #include <map>
 #include <uv.h>
 #include "listenersection.h"
@@ -36,8 +45,8 @@ class Listener
 {
 private:
   static ListenerSection config;
-  static std::vector<Listener> listeners;
-  static void connected_callback(uv_stream_t *, int);
+  static std::vector<std::tr1::shared_ptr<Listener> > listeners;
+  static void on_connected(uv_stream_t *, int);
 
   uv_tcp_t listener;
   std::string host;
@@ -49,7 +58,7 @@ public:
   static const int DEFAULT_PORT = 6667;
 
   static void init();
-  static void add(std::string, int);
+  static Listener *create(std::string, int);
   static void start_listeners();
 
   Listener();

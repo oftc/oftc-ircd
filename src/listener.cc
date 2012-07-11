@@ -40,7 +40,7 @@
 #include "connection.h"
 
 ListenerSection Listener::config;
-std::vector<Listener> Listener::listeners;
+std::vector<std::tr1::shared_ptr<Listener> > Listener::listeners;
 
 Listener::Listener() : host(""), port(6667)
 {
@@ -53,8 +53,9 @@ Listener::Listener(std::string host, int port=6667) : host(host), port(port)
 void
 Listener::connected(uv_stream_t *stream, int status)
 {
-  Connection& connection = Connection::add();
-  connection.accept(stream);
+  Connection *connection = Connection::create();
+  
+  connection->accept(stream);
 }
 
 void
@@ -87,7 +88,7 @@ Listener::start()
   if(ret < 0)
     throw std::runtime_error(System::uv_perror("Failed to start listener"));
 
-  ret = uv_listen((uv_stream_t *)&listener, 128, Listener::connected_callback);
+  ret = uv_listen((uv_stream_t *)&listener, 128, Listener::on_connected);
 
   if(ret < 0)
     throw std::runtime_error(System::uv_perror("Failed to start listener"));
@@ -103,24 +104,28 @@ Listener::init()
   Config::add_section("listeners", &Listener::config);
 }
 
-void
-Listener::add(std::string host, int port=6667)
+Listener *
+Listener::create(std::string host, int port=6667)
 {
-  listeners.push_back(Listener(host, port));
+  std::tr1::shared_ptr<Listener> new_listener(new Listener(host, port));
+
+  listeners.push_back(new_listener);
+
+  return new_listener.get();
 }
 
 void
 Listener::start_listeners()
 {
-  for(std::vector<Listener>::iterator it = listeners.begin(); 
+  for(std::vector<std::tr1::shared_ptr<Listener >>::iterator it = listeners.begin(); 
       it != listeners.end(); it++)
   {
-    (*it).start();
+    (*it)->start();
   }
 }
 
 void
-Listener::connected_callback(uv_stream_t *stream, int status)
+Listener::on_connected(uv_stream_t *stream, int status)
 {
   Listener *listener = static_cast<Listener *>(stream->data);
 

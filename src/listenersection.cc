@@ -62,11 +62,11 @@ ListenerSection::process(const Json::Value value)
 
     if(host.length() == 0)
     {
-      Listener::add("::", port);
-      Listener::add("0.0.0.0", port);
+      Listener::create("::", port);
+      Listener::create("0.0.0.0", port);
     }
     else
-      Listener::add(host, port);
+      Listener::create(host, port);
   }
 }
 

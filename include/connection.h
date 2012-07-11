@@ -27,22 +27,28 @@
 #define CONNECTION_H_INC
 
 #include <vector>
-#ifdef _WIN32
-#include <memory>
+#include <cstddef> // for __GLIBCXX__
+ 
+#ifdef __GLIBCXX__
+#  include <tr1/memory>
 #else
-#include <tr1/memory>
+#  ifdef __IBMCPP__
+#    define __IBMCPP_TR1__
+#  endif
+#  include <memory>
 #endif
+
 #include <uv.h>
 
 class Connection 
 {
 private:
-  static std::vector<Connection> connections;
+  static std::vector<std::tr1::shared_ptr<Connection> > connections;
 
   std::tr1::shared_ptr<uv_tcp_t> handle;
   void read(uv_stream_t *, ssize_t, uv_buf_t);
 public:
-  static Connection& add();
+  static Connection *create();
   static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
   static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
 

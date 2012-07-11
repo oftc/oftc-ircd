@@ -31,7 +31,7 @@
 #include "system.h"
 #include "logging.h"
 
-std::vector<Connection> Connection::connections;
+std::vector<std::tr1::shared_ptr<Connection> > Connection::connections;
 
 void
 Connection::accept(uv_stream_t *server_handle)
@@ -91,12 +91,13 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 }
 
 // Statics
-Connection &
-Connection::add()
+Connection *
+Connection::create()
 {
-  connections.push_back(Connection());
+  std::tr1::shared_ptr<Connection> conn_ptr(new Connection);
+  connections.push_back(conn_ptr);
 
-  return connections.back();
+  return conn_ptr.get();
 }
 
 uv_buf_t
