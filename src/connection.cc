@@ -24,6 +24,7 @@
 */
 
 #include "stdinc.h"
+#include <string>
 #include <uv.h>
 #include "connection.h"
 #include "system.h"
@@ -80,8 +81,41 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
       delete[] buf.base;
       buf.base = 0;
       buf.len = 0;
+
+      return;
     }
   }
+
+  read_buffer.write(buf.base, nread);
+
+  size_t index;
+  size_t last_index = 0;
+
+  string str = read_buffer.str();
+  
+  index = str.find('\r', 0);
+
+  while(index != string::npos)
+  {
+    string line = str.substr(last_index, index - last_index);
+
+    if(line.length() > 512)
+      line = line.substr(0, 512);
+
+    Logging::debug << "Complete command found '" << line << "'" << Logging::endl;
+
+    // Parse here
+
+    index++;
+    if(str.length() > index && str[index] == '\n')
+      index++;
+
+    last_index = index;
+    index = str.find('\r', last_index);
+  }
+
+  read_buffer.clear();
+  read_buffer.str(read_buffer.str().substr(last_index));
 
   delete[] buf.base;
   buf.base = 0;

@@ -37,11 +37,13 @@
 #  endif
 #  include <memory>
 #endif
+#include <sstream>
 
 #include <uv.h>
 
 using std::vector;
 using std::tr1::shared_ptr;
+using std::stringstream;
 
 class Connection;
 
@@ -53,6 +55,8 @@ private:
   static vector<ConnectionPtr> connections;
 
   shared_ptr<uv_tcp_t> handle;
+  stringstream read_buffer;
+
   void read(uv_stream_t *, ssize_t, uv_buf_t);
 public:
   static Connection *create();
