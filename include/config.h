@@ -36,14 +36,17 @@
 #define CONFIG_PATH "/home/stu/oircd/etc/ircd.conf"
 #endif
 
+using std::map;
+using std::string;
+
 class Config
 {
 private:
-  static std::map<std::string, ConfigSection *> sections;
+  static map<string, ConfigSection *> sections;
   static ConfigSection *find_section(const char *name);
 public:
-  static void add_section(const std::string name, ConfigSection* const section);
-  static void init(const std::string);
+  static void add_section(const string name, ConfigSection* const section);
+  static void init(const string);
 };
 
 #endif

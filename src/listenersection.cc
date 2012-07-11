@@ -26,7 +26,6 @@
 #include "stdinc.h"
 #include <json/json.h>
 #include <limits.h>
-#include <stdexcept>
 #include "listenersection.h"
 #include "listener.h"
 #include "logging.h"
@@ -40,12 +39,12 @@ void
 ListenerSection::process(const Json::Value value)
 {
   if(value.type() != Json::arrayValue)
-    throw std::runtime_error("listener section not an array as expected");
+    throw runtime_error("listener section not an array as expected");
 
   for(Json::Value::const_iterator it = value.begin(); it != value.end(); it++)
   {
     Json::Value val = *it;
-    std::string host(val["host"].asString());
+    string host(val["host"].asString());
     int port;
 
     if(!val["port"])

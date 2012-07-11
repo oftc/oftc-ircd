@@ -24,14 +24,12 @@
 */
 
 #include "stdinc.h"
-#include <vector>
 #include <uv.h>
-#include <stdexcept>
 #include "connection.h"
 #include "system.h"
 #include "logging.h"
 
-std::vector<std::tr1::shared_ptr<Connection> > Connection::connections;
+vector<ConnectionPtr> Connection::connections;
 
 void
 Connection::accept(uv_stream_t *server_handle)
@@ -49,7 +47,7 @@ Connection::accept(uv_stream_t *server_handle)
 
   ret = uv_accept(server_handle, reinterpret_cast<uv_stream_t *>(handle.get()));
   if(ret < 0)
-    throw std::runtime_error(System::uv_perror("Unable to accept connection"));
+    throw runtime_error(System::uv_perror("Unable to accept connection"));
 
   ret = uv_tcp_getpeername(handle.get(), reinterpret_cast<sockaddr*>(&addr), &addrlen);
   switch(addr.ss_family)
@@ -94,7 +92,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 Connection *
 Connection::create()
 {
-  std::tr1::shared_ptr<Connection> conn_ptr(new Connection);
+  ConnectionPtr conn_ptr(new Connection);
   connections.push_back(conn_ptr);
 
   return conn_ptr.get();

@@ -27,9 +27,9 @@
 #define SYSTEM_H_INC
 
 #include <string>
-#include <iostream>
-#include <fstream>
 #include "generalsection.h"
+
+using std::string;
 
 class System 
 {
@@ -41,8 +41,8 @@ public:
   static void parse_args(int, char* const[]);
 #endif
   static void init();
-  static std::string perror(const char *);
-  static std::string uv_perror(const char *);
+  static string perror(const char *);
+  static string uv_perror(const char *);
   static inline bool get_daemon() { return config.get_daemon(); }
 };
 

@@ -26,8 +26,6 @@
 #include "stdinc.h"
 #include <time.h>
 #include <string.h>
-#include <iostream>
-#include <sstream>
 #include "logging.h"
 #include "config.h"
 
@@ -35,6 +33,8 @@
 #define strncasecmp strnicmp 
 #define strcasecmp stricmp 
 #endif 
+
+using std::ios;
 
 const char *log_levels[] =
 {
@@ -48,7 +48,7 @@ const char *log_levels[] =
 };
 
 LoggingSection Logging::config;
-std::ofstream Logging::log_stream;
+ofstream Logging::log_stream;
 Logging Logging::debug(DEBUGL);
 Logging Logging::info(INFO);
 Logging Logging::warning(WARNING);
@@ -56,9 +56,9 @@ Logging Logging::error(ERRORL);
 Logging Logging::critical(CRITICAL);
 bool Logging::flush(false);
 bool Logging::dostamp(true);
-std::stringstream Logging::stream;
+stringstream Logging::stream;
 
-template Logging& Logging::operator <<(const std::string);
+template Logging& Logging::operator <<(const string);
 template Logging& Logging::operator <<(const char *);
 template Logging& Logging::operator <<(char *);
 template Logging& Logging::operator <<(void *);
@@ -104,7 +104,7 @@ Logging::operator <<(T param)
     log_stream.flush();
     flush = false;
     dostamp = true;
-    stream.str(std::string());
+    stream.str(string());
     stream.clear();
   }
 
@@ -119,7 +119,7 @@ Logging::operator <<(manip fp)
 
 // Statics
 LogLevel
-Logging::string_to_level(const std::string name)
+Logging::string_to_level(const string name)
 {
   const char **p = log_levels;
 
@@ -136,13 +136,13 @@ Logging::string_to_level(const std::string name)
 void
 Logging::init()
 {
-  Config::add_section("logging", &Logging::config);
+  Config::add_section("logging", &config);
 }
 
 void
 Logging::start()
 {
-  log_stream.open(config.get_log_path(), std::ios::out | std::ios::app);
+  log_stream.open(config.get_log_path(), ios::out | ios::app);
 }
 
 Logging&

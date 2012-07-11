@@ -27,51 +27,54 @@
 #include <json/json.h>
 #include <iostream>
 #include <fstream>
-#include <stdexcept>
-#include <map>
 #include "config.h"
 #include "configsection.h"
 
+using std::ifstream;
+using std::cerr;
+using std::endl;
+
+typedef map<string, ConfigSection *>::const_iterator ConfigSectionConstIt;
+
 // Initialise the static member
-std::map<std::string, ConfigSection *> Config::sections;
+map<string, ConfigSection *> Config::sections;
 
 // Statics
 void
-Config::init(const std::string path)
+Config::init(const string path)
 {
-  std::ifstream config(path.c_str());
+  ifstream config(path.c_str());
   Json::Value root;
   Json::Reader reader;
 
-  std::map<std::string, ConfigSection *>::const_iterator it;
-  for(it = Config::sections.begin(); it != Config::sections.end(); it++)
+  for(ConfigSectionConstIt it = sections.begin(); it != sections.end(); it++)
   {
     it->second->set_defaults();
   }
 
   if(!reader.parse(config, root))
-    throw std::runtime_error(reader.getFormattedErrorMessages());
+    throw runtime_error(reader.getFormattedErrorMessages());
 
   if(root.type() != Json::objectValue)
-    throw std::runtime_error("Root node is not an object");
+    throw runtime_error("Root node is not an object");
 
   Json::Value::Members members = root.getMemberNames();
   Json::Value::Members::const_iterator mit;
 
   for(mit = members.begin(); mit != members.end(); mit++)
   {
-    const std::string name = *mit;
-    ConfigSection *section = Config::sections[name];
+    const string name = *mit;
+    ConfigSection *section = sections[name];
 
     if(section == NULL)
-      std::cerr << "Unknown config section: " << name << std::endl;
+      cerr << "Unknown config section: " << name << endl;
     else
       section->process(root[name]);
   }
 }
 
 void 
-Config::add_section(const std::string name, ConfigSection* const section)
+Config::add_section(const string name, ConfigSection* const section)
 {
-  Config::sections.insert(std::pair<std::string, ConfigSection *>(name, section));
+  sections[name] = section;
 }

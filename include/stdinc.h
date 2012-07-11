@@ -26,4 +26,16 @@
 #ifndef STDINC_H_INC
 #define STDINC_H_INC
 
+#if defined(_MSC_VER)
+#ifndef _CRT_SECURE_NO_DEPRECATE
+#define _CRT_SECURE_NO_DEPRECATE (1)
+#endif
+#pragma warning(disable : 4996)
+#endif
+
+#include <stdexcept>
+
+using std::runtime_error;
+using std::exception;
+
 #endif

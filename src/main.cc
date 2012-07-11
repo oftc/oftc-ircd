@@ -27,11 +27,13 @@
 #include <stdlib.h>
 #include <uv.h>
 #include <iostream>
-#include <stdexcept>
 #include "config.h"
 #include "logging.h"
 #include "system.h"
 #include "listener.h"
+
+using std::cerr;
+using std::endl;
 
 int 
 main(int argc, char *argv[])
@@ -54,9 +56,9 @@ main(int argc, char *argv[])
 
     Logging::info << "oftc-ircd starting up" << Logging::endl;
   }
-  catch(std::exception &ex)
+  catch(exception &ex)
   {
-    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
+    cerr << "Unhandled exception: " << ex.what() << endl;
     return EXIT_FAILURE;
   }
 
@@ -71,10 +73,10 @@ main(int argc, char *argv[])
     Listener::start_listeners();
     uv_run(uv_loop);
   }
-  catch(std::exception &ex)
+  catch(exception &ex)
   {
     Logging::critical << "Unhandled exception: " << ex.what() << Logging::endl;
-    std::cerr << "Unhandled exception: " << ex.what() << std::endl;
+    cerr << "Unhandled exception: " << ex.what() << endl;
 
     return EXIT_FAILURE;
   }

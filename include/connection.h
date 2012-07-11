@@ -40,12 +40,19 @@
 
 #include <uv.h>
 
+using std::vector;
+using std::tr1::shared_ptr;
+
+class Connection;
+
+typedef shared_ptr<Connection> ConnectionPtr;
+
 class Connection 
 {
 private:
-  static std::vector<std::tr1::shared_ptr<Connection> > connections;
+  static vector<ConnectionPtr> connections;
 
-  std::tr1::shared_ptr<uv_tcp_t> handle;
+  shared_ptr<uv_tcp_t> handle;
   void read(uv_stream_t *, ssize_t, uv_buf_t);
 public:
   static Connection *create();

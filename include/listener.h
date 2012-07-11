@@ -41,15 +41,23 @@
 #include <uv.h>
 #include "listenersection.h"
 
+using std::vector;
+using std::tr1::shared_ptr;
+using std::string;
+
+class Listener;
+
+typedef shared_ptr<Listener> ListenerPtr;
+
 class Listener 
 {
 private:
   static ListenerSection config;
-  static std::vector<std::tr1::shared_ptr<Listener> > listeners;
+  static vector<ListenerPtr> listeners;
   static void on_connected(uv_stream_t *, int);
 
   uv_tcp_t listener;
-  std::string host;
+  string host;
   int port;
 
   void start();
@@ -58,11 +66,11 @@ public:
   static const int DEFAULT_PORT = 6667;
 
   static void init();
-  static Listener *create(std::string, int);
+  static Listener *create(string, int);
   static void start_listeners();
 
   Listener();
-  Listener(std::string, int);
+  Listener(string, int);
 };
 
 #endif

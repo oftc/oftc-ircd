@@ -34,20 +34,22 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <uv.h>
-#include <stdexcept>
 #include <iostream>
 #include <sstream>
-#include <string>
 #include "config.h"
 #include "generalsection.h"
 #include "system.h"
+
+using std::cerr;
+using std::endl;
+using std::stringstream;
 
 GeneralSection System::config;
 
 void
 System::init()
 {
-  Config::add_section("general", &System::config);
+  Config::add_section("general", &config);
 }
 
 #ifndef _WIN32
@@ -62,19 +64,19 @@ System::parse_args(int argc, char* const argv[])
     {
       case '?':
         if(isprint(optopt))
-          std::cerr << "Unknown option '-" << optopt << "'." << std::endl;
+          cerr << "Unknown option '-" << optopt << "'." << endl;
         break;
       default:
-        throw std::runtime_error("Error processing command line arguments");
+        throw runtime_error("Error processing command line arguments");
     }
   }
 }
 #endif
 
-std::string
+string
 System::perror(const char *error)
 {
-  std::string str = error;
+  string str = error;
 
   str += ": ";
   str += strerror(errno);
@@ -82,10 +84,10 @@ System::perror(const char *error)
   return str;
 }
 
-std::string
+string
 System::uv_perror(const char *error)
 {
-  std::stringstream ss;
+  stringstream ss;
 
   ss << error << ": " << uv_strerror(uv_last_error(uv_default_loop()));
 
@@ -104,7 +106,7 @@ System::daemonize()
   pid = fork();
 
   if(pid < 0)
-    throw std::runtime_error(System::perror("Error creating daemon"));
+    throw runtime_error(System::perror("Error creating daemon"));
 
   if(pid > 0)
     exit(0);
@@ -113,10 +115,10 @@ System::daemonize()
 
   sid = setsid();
   if(sid < 0)
-    throw std::runtime_error(System::perror("Error creating daemon"));
+    throw runtime_error(System::perror("Error creating daemon"));
 
   if(chdir("/") < 0)
-    throw std::runtime_error(System::perror("Error creating daemon"));
+    throw runtime_error(System::perror("Error creating daemon"));
 
   freopen("/dev/null", "r", stdin);
   freopen("/dev/null", "w", stdout);

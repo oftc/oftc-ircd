@@ -29,6 +29,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "loggingsection.h"
 
 #ifdef _WIN32
@@ -37,19 +38,24 @@
 #define LOG_PATH "/home/stu/oircd/var/log/ircd.log"
 #endif
 
+using std::ofstream;
+using std::stringstream;
+using std::string;
+
 class Logging;
 
 typedef Logging& (*manip)(Logging&);
+
 
 class Logging 
 {
 private:
   static LoggingSection config;
   static const int MAX_DATE_LEN = 40;
-  static std::ofstream log_stream;
+  static ofstream log_stream;
   static bool flush;
   static bool dostamp;
-  static std::stringstream stream;
+  static stringstream stream;
 
   LogLevel log_level;
 public:  
@@ -62,7 +68,7 @@ public:
 
   static void init();
   static void start();
-  static LogLevel string_to_level(const std::string);
+  static LogLevel string_to_level(const string);
   inline static LogLevel get_min_loglevel() { return config.get_min_loglevel(); }
 
   template<typename T>

@@ -24,8 +24,6 @@
 */
 
 #include "stdinc.h"
-#include <vector>
-#include <stdexcept>
 #include <uv.h>
 #include <sys/types.h>
 #ifndef _WIN32
@@ -39,14 +37,16 @@
 #include "logging.h"
 #include "connection.h"
 
+typedef vector<ListenerPtr>::const_iterator ListenerConstIt;
+
 ListenerSection Listener::config;
-std::vector<std::tr1::shared_ptr<Listener> > Listener::listeners;
+vector<ListenerPtr> Listener::listeners;
 
 Listener::Listener() : host(""), port(6667)
 {
 }
 
-Listener::Listener(std::string host, int port=6667) : host(host), port(port)
+Listener::Listener(string host, int port=6667) : host(host), port(port)
 {
 }
 
@@ -67,15 +67,15 @@ Listener::start()
   listener.data = this;
 
   if(ret < 0)
-    throw std::runtime_error(System::uv_perror("Failed to start listener"));
+    throw runtime_error(System::uv_perror("Failed to start listener"));
 
-  if(host.find('.') != std::string::npos)
+  if(host.find('.') != string::npos)
   {
     struct sockaddr_in addr = uv_ip4_addr(host.c_str(), port);
 
     ret = uv_tcp_bind(&listener, addr);
   }
-  else if(host.find(':') != std::string::npos)
+  else if(host.find(':') != string::npos)
   {
     struct sockaddr_in6 addr = uv_ip6_addr(host.c_str(), port);
      
@@ -83,15 +83,15 @@ Listener::start()
     ret = uv_tcp_bind6(&listener, addr);
   }
   else
-    throw std::runtime_error("Invalid host specified for listener");
+    throw runtime_error("Invalid host specified for listener");
 
   if(ret < 0)
-    throw std::runtime_error(System::uv_perror("Failed to start listener"));
+    throw runtime_error(System::uv_perror("Failed to start listener"));
 
   ret = uv_listen((uv_stream_t *)&listener, 128, Listener::on_connected);
 
   if(ret < 0)
-    throw std::runtime_error(System::uv_perror("Failed to start listener"));
+    throw runtime_error(System::uv_perror("Failed to start listener"));
 
   Logging::info << "Started listener on [" << host << "]:" << port << Logging::endl;
 }
@@ -101,13 +101,13 @@ Listener::start()
 void
 Listener::init()
 {
-  Config::add_section("listeners", &Listener::config);
+  Config::add_section("listeners", &config);
 }
 
 Listener *
-Listener::create(std::string host, int port=6667)
+Listener::create(string host, int port=6667)
 {
-  std::tr1::shared_ptr<Listener> new_listener(new Listener(host, port));
+  ListenerPtr new_listener(new Listener(host, port));
 
   listeners.push_back(new_listener);
 
@@ -117,8 +117,7 @@ Listener::create(std::string host, int port=6667)
 void
 Listener::start_listeners()
 {
-  for(std::vector<std::tr1::shared_ptr<Listener >>::iterator it = listeners.begin(); 
-      it != listeners.end(); it++)
+  for(ListenerConstIt it = listeners.begin(); it != listeners.end(); it++)
   {
     (*it)->start();
   }
