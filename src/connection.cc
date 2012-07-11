@@ -30,6 +30,8 @@
 #include "system.h"
 #include "logging.h"
 
+using std::getline;
+
 vector<ConnectionPtr> Connection::connections;
 
 void
@@ -72,8 +74,6 @@ Connection::accept(uv_stream_t *server_handle)
 void
 Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
-  Logging::debug << "Read " << nread << "bytes '" << buf.base << "'" << Logging::endl;
-
   if(nread < 0)
   {
     if(buf.base != NULL)
@@ -86,36 +86,29 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
     }
   }
 
+  Logging::debug << "Read " << nread << "bytes '" << buf.base << "'" << Logging::endl;
+
   read_buffer.write(buf.base, nread);
+  string line;
 
-  size_t index;
-  size_t last_index = 0;
-
-  string str = read_buffer.str();
-  
-  index = str.find('\r', 0);
-
-  while(index != string::npos)
+  while(getline(read_buffer, line))
   {
-    string line = str.substr(last_index, index - last_index);
+    if(read_buffer.eof())
+    {
+      read_buffer.clear();
+      read_buffer << line;
+      break;
+    }
 
-    if(line.length() > 512)
-      line = line.substr(0, 512);
-
+    if(line[line.length() - 1] == '\r')
+      line = line.substr(0, line.length() - 1);
     Logging::debug << "Complete command found '" << line << "'" << Logging::endl;
 
     // Parse here
-
-    index++;
-    if(str.length() > index && str[index] == '\n')
-      index++;
-
-    last_index = index;
-    index = str.find('\r', last_index);
   }
 
-  read_buffer.clear();
-  read_buffer.str(read_buffer.str().substr(last_index));
+  if(read_buffer.fail())
+    read_buffer.clear();
 
   delete[] buf.base;
   buf.base = 0;
