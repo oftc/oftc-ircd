@@ -101,7 +101,8 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
     }
 
     if(line[line.length() - 1] == '\r')
-      line = line.substr(0, line.length() - 1);
+      line.erase(line.length() - 1, 1);
+
     Logging::debug << "Complete command found '" << line << "'" << Logging::endl;
 
     // Parse here
