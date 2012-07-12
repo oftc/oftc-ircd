@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include <Python.h>
 #include "stdinc.h"
-#include <python.h>
 #include "python/pythonwrap.h"
 
 void

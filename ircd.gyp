@@ -70,7 +70,7 @@
 		{
 		  'include_dirs':
 		  [
-		    '/usr/include/python',
+		    '/usr/include/python2.6',
 		  ],
 		  'cflags': 
 		  [ 
@@ -87,7 +87,7 @@
 	    ],
  		  'libraries': 
 		  [ 
-		    '-lpython' 
+		    '-lpython2.6' 
 		  ],
 	  }
 	  ],
