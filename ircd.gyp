@@ -29,6 +29,7 @@
       'include/loggingsection.h',
       'include/stdinc.h',
       'include/system.h',
+      'include/python/pythonwrap.h',
       'src/config.cc',
       'src/connection.cc',
       'src/generalsection.cc',
@@ -37,8 +38,16 @@
       'src/logging.cc',
       'src/loggingsection.cc',
       'src/main.cc',
-      'src/system.cc'
+      'src/system.cc',
+      'src/python/pythonwrap.cc',
     ],
+    'msvs_settings':
+    {
+      'VCLinkerTool':
+      {
+        'AdditionalLibraryDirectories': 'c:/python27/libs',
+      },
+    },
     'conditions': 
     [
 	  [ 
@@ -49,11 +58,38 @@
 			'_WIN32_WINNT=0x0600',
 			'_GNU_SOURCE',
 		  ],
+		  'include_dirs':
+		  [
+		    'c:/python27/include',
+		  ],
+		  'libraries': 
+		  [ 
+		    'python27.lib' 
+		  ],
 		},
 		{
-		  'cflags': [ '-std=c++0x', '-Wall', '-Wextra', '-pedantic', '-Wno-long-long', '-Wno-unused-parameter' ],
-	      'defines': [ '_GNU_SOURCE' ],
-	    }
+		  'include_dirs':
+		  [
+		    '/usr/include/python',
+		  ],
+		  'cflags': 
+		  [ 
+		    '-std=c++0x', 
+		    '-Wall', 
+		    '-Wextra', 
+		    '-pedantic', 
+		    '-Wno-long-long', 
+		    '-Wno-unused-parameter' 
+		  ],
+	    'defines': 
+	    [ 
+	      '_GNU_SOURCE' 
+	    ],
+ 		  'libraries': 
+		  [ 
+		    '-lpython' 
+		  ],
+	  }
 	  ],
 	], 
   }]
