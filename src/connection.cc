@@ -34,6 +34,10 @@ using std::getline;
 
 vector<ConnectionPtr> Connection::connections;
 
+Connection::Connection() : parser(Parser::get_default())
+{
+}
+
 void
 Connection::accept(uv_stream_t *server_handle)
 {
@@ -105,7 +109,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 
     Logging::debug << "Complete command found '" << line << "'" << Logging::endl;
 
-    // Parse here
+    parser.parse(line);
   }
 
   if(read_buffer.fail())
@@ -121,6 +125,7 @@ Connection *
 Connection::create()
 {
   ConnectionPtr conn_ptr(new Connection);
+
   connections.push_back(conn_ptr);
 
   return conn_ptr.get();

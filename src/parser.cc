@@ -23,51 +23,51 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CONNECTION_H_INC
-#define CONNECTION_H_INC
-
-#include <vector>
-#include <cstddef> // for __GLIBCXX__
- 
-#ifdef __GLIBCXX__
-#  include <tr1/memory>
-#else
-#  ifdef __IBMCPP__
-#    define __IBMCPP_TR1__
-#  endif
-#  include <memory>
-#endif
+#include "stdinc.h"
+#include <string>
 #include <sstream>
-
-#include <uv.h>
+#include <vector>
 #include "parser.h"
 
-using std::vector;
-using std::tr1::shared_ptr;
+using std::string;
 using std::stringstream;
+using std::vector;
 
-class Connection;
+Parser Parser::default_parser;
 
-typedef shared_ptr<Connection> ConnectionPtr;
-
-class Connection 
+void
+Parser::parse(const string& line) const
 {
-private:
-  static vector<ConnectionPtr> connections;
+  stringstream stream(line);
+  vector<string> args;
+  string command, arg;
 
-  shared_ptr<uv_tcp_t> handle;
-  stringstream read_buffer;
-  Parser& parser;
+  if(line[0] == ':')
+  {
+    string prefix;
+    
+    stream >> prefix;
 
-  Connection();
+    // lookup prefix
+  }
 
-  void read(uv_stream_t *, ssize_t, uv_buf_t);
-public:
-  static Connection *create();
-  static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
-  static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
+  stream >> command;
 
-  void accept(uv_stream_t *);
-};
+  // lookup command
 
-#endif
+  while(stream >> arg)
+  {
+    if(arg[0] == ':')
+    {
+      stringstream tmpstream;
+
+      tmpstream << arg.substr(1);
+
+      while(stream >> arg)
+        tmpstream << ' ' << arg;
+
+      arg = tmpstream.str();
+    }
+    args.push_back(arg);
+  }
+}

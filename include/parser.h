@@ -23,51 +23,20 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CONNECTION_H_INC
-#define CONNECTION_H_INC
+#ifndef PARSER_H_INC
+#define PARSER_H_INC
 
-#include <vector>
-#include <cstddef> // for __GLIBCXX__
- 
-#ifdef __GLIBCXX__
-#  include <tr1/memory>
-#else
-#  ifdef __IBMCPP__
-#    define __IBMCPP_TR1__
-#  endif
-#  include <memory>
-#endif
-#include <sstream>
+#include <string>
 
-#include <uv.h>
-#include "parser.h"
+using std::string;
 
-using std::vector;
-using std::tr1::shared_ptr;
-using std::stringstream;
-
-class Connection;
-
-typedef shared_ptr<Connection> ConnectionPtr;
-
-class Connection 
+class Parser
 {
 private:
-  static vector<ConnectionPtr> connections;
-
-  shared_ptr<uv_tcp_t> handle;
-  stringstream read_buffer;
-  Parser& parser;
-
-  Connection();
-
-  void read(uv_stream_t *, ssize_t, uv_buf_t);
+  static Parser default_parser;
 public:
-  static Connection *create();
-  static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
-  static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
-
-  void accept(uv_stream_t *);
+  void parse(const string& line) const;
+  static inline Parser& get_default() { return default_parser; }
 };
 
 #endif
