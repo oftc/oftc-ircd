@@ -23,26 +23,37 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PYTHONWRAP_H_INC
-#define PYTHONWRAP_H_INC
+#ifndef PARSERWRAP_H_INC
+#define PARSERWRAP_H_INC
 
 #include "Python.h"
+#include <cstddef> // for __GLIBCXX__
+ 
+#ifdef __GLIBCXX__
+#  include <tr1/memory>
+#else
+#  ifdef __IBMCPP__
+#    define __IBMCPP_TR1__
+#  endif
+#  include <memory>
+#endif
+#include "parser.h"
+#include "pythonwrap.h"
 
-template <class T> class PythonWrap : PyObject
+using std::tr1::shared_ptr;
+
+typedef shared_ptr<Parser> ParserPtr;
+
+class ParserWrap : public PythonWrap<ParserWrap>
 {
-protected:
-  static PyTypeObject type_object;
-  static PyMethodDef *methods;
-  static PyMemberDef *members;
+private:
+  ParserPtr parser;
 public:
-  static void init(const char *);
-  static PyObject *alloc(PyTypeObject *, Py_ssize_t);
-  static PyObject *create(PyTypeObject *, PyObject *, PyObject *);
-  static void free(void *);
-  static void dealloc(PyObject *);
-  static inline PyTypeObject *get_type_object() { return &type_object; }
-};
+  static void init();
 
-void python_init();
+  ParserWrap();
+  ParserWrap(PyObject *, PyObject *);
+  ~ParserWrap();
+};
 
 #endif

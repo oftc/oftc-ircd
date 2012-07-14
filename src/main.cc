@@ -31,6 +31,7 @@
 #include "logging.h"
 #include "system.h"
 #include "listener.h"
+#include "python/pythonwrap.h"
 
 using std::cerr;
 using std::endl;
@@ -69,7 +70,7 @@ main(int argc, char *argv[])
     if(System::get_daemon())
       System::daemonize();
 #endif
-
+    python_init();
     Listener::start_listeners();
     uv_run(uv_loop);
   }

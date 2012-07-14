@@ -26,9 +26,90 @@
 #include <Python.h>
 #include "stdinc.h"
 #include "python/pythonwrap.h"
+#include "python/parserwrap.h"
+
+template<class T> PyTypeObject PythonWrap<T>::type_object;
+
+template void PythonWrap<ParserWrap>::init(const char *);
+
+static PyMethodDef module_methods[] = 
+{
+  { NULL }
+};
 
 void
-PythonWrap::init()
+python_init()
 {
+  PyObject *m;
+
   Py_Initialize();
+  ParserWrap::init();
+
+  m = Py_InitModule3("pythonwrap", module_methods, 
+    "Wrapper module for oftc-ircd C(++) interface");
+
+  Py_INCREF(ParserWrap::get_type_object());
+  PyModule_AddObject(m, "Parser", 
+    reinterpret_cast<PyObject *>(ParserWrap::get_type_object()));
+
+}
+
+template<class T>
+void
+PythonWrap<T>::init(const char *name)
+{
+  type_object.ob_refcnt = 1;
+  type_object.tp_alloc = alloc;
+  type_object.tp_free = free;
+  type_object.tp_new = create;
+  type_object.tp_dealloc = dealloc;
+  type_object.tp_basicsize = sizeof(T);
+  type_object.tp_name = name;
+  type_object.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
+  type_object.tp_methods = PythonWrap<T>::methods;
+  type_object.tp_members = PythonWrap<T>::members;
+
+  if(PyType_Ready(&type_object) < 0)
+  {
+    throw runtime_error("Unable to create type");
+  }
+}
+ 
+template<class T>
+PyObject *
+PythonWrap<T>::alloc(PyTypeObject *type, Py_ssize_t items)
+{
+  char *ret;
+
+  ret = new char[type->tp_basicsize + (items * type->tp_itemsize)];
+
+  return reinterpret_cast<PyObject *>(ret);
+}
+
+template<class T>
+void
+PythonWrap<T>::free(void *ptr)
+{
+  char *obj = static_cast<char *>(ptr);
+
+  delete[] obj;
+}
+
+template<class T>
+PyObject *
+PythonWrap<T>::create(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+  PyObject *ptr = type->tp_alloc(type, 0);
+  ParserWrap *obj = new(ptr) T(args, kwds);
+
+  return reinterpret_cast<PyObject*>(obj);
+}
+
+template<class T>
+void
+PythonWrap<T>::dealloc(PyObject *obj)
+{
+  T *ptr = reinterpret_cast<T *>(obj);
+  ptr->~T();
+  obj->ob_type->tp_free(obj);
 }

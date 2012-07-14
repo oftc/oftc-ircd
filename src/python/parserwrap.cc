@@ -23,26 +23,41 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PYTHONWRAP_H_INC
-#define PYTHONWRAP_H_INC
-
 #include "Python.h"
+#include "structmember.h"
+#include "stdinc.h"
+#include "python/pythonwrap.h"
+#include "python/parserwrap.h"
 
-template <class T> class PythonWrap : PyObject
+PyMethodDef *PythonWrap<ParserWrap>::methods;
+PyMemberDef *PythonWrap<ParserWrap>::members;
+
+static PyMethodDef parser_methods[] =
 {
-protected:
-  static PyTypeObject type_object;
-  static PyMethodDef *methods;
-  static PyMemberDef *members;
-public:
-  static void init(const char *);
-  static PyObject *alloc(PyTypeObject *, Py_ssize_t);
-  static PyObject *create(PyTypeObject *, PyObject *, PyObject *);
-  static void free(void *);
-  static void dealloc(PyObject *);
-  static inline PyTypeObject *get_type_object() { return &type_object; }
+  { NULL }
 };
 
-void python_init();
+static PyMemberDef parser_members[] =
+{
+  { NULL }
+};
 
-#endif
+ParserWrap::ParserWrap()
+{
+}
+
+ParserWrap::ParserWrap(PyObject *args, PyObject *kwds)
+{
+}
+
+ParserWrap::~ParserWrap()
+{
+}
+
+void
+ParserWrap::init()
+{
+  PythonWrap<ParserWrap>::methods = parser_methods;
+  PythonWrap<ParserWrap>::members = parser_members;
+  PythonWrap<ParserWrap>::init("parser");
+}
