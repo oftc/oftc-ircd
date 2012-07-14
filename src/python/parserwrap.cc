@@ -29,9 +29,6 @@
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
 
-PyMethodDef *PythonWrap<ParserWrap>::methods;
-PyMemberDef *PythonWrap<ParserWrap>::members;
-
 static PyMethodDef parser_methods[] =
 {
   { NULL }
