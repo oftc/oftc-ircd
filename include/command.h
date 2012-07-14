@@ -23,5 +23,13 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
-#include "client.h"
+#ifndef COMMAND_H_INC
+#define COMMAND_H_INC
+
+class Command
+{
+private:
+public:
+};
+
+#endif

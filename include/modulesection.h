@@ -23,5 +23,20 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
-#include "client.h"
+#ifndef MODULESECTION_H_INC
+#define MODULESECTION_H_INC
+
+#include <json/json.h>
+#include "configsection.h"
+
+class ModuleSection : public ConfigSection
+{
+private:
+
+public:
+  void set_defaults();
+  void process(const Json::Value);
+  void verify() const;
+};
+
+#endif

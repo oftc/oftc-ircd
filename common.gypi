@@ -59,40 +59,40 @@
           },
         },
       },
-      'msvs_settings':
+    },
+    'msvs_settings':
+    {
+      'VCCLCompilerTool':
       {
-        'VCCLCompilerTool':
-        {
-          'StringPooling': 'true', # pool string literals
-          'DebugInformationFormat': 3, # Generate a PDB
-          'WarningLevel': 3,
-          'BufferSecurityCheck': 'true',
-          'ExceptionHandling': 1, # /EHsc
-          'SuppressStartupBanner': 'true',
-          'WarnAsError': 'false',
-          'AdditionalOptions':
-          [
-           '/MP', # compile across multiple CPUs
-          ],
-        },
-        'VCLibrarianTool':
-        {
-        },
-        'VCLinkerTool':
-        {
-          'GenerateDebugInformation': 'true',
-          'RandomizedBaseAddress': 2, # enable ASLR
-          'DataExecutionPrevention': 2, # enable DEP
-          'AllowIsolation': 'true',
-          'SuppressStartupBanner': 'true',
-          'target_conditions':
-          [
-            ['_type=="executable"',
-            {
-              'SubSystem': 1, # console executable
-            }],
-          ],
-        },
+        'StringPooling': 'true', # pool string literals
+        'DebugInformationFormat': 3, # Generate a PDB
+        'WarningLevel': 3,
+        'BufferSecurityCheck': 'true',
+        'ExceptionHandling': 1, # /EHsc
+        'SuppressStartupBanner': 'true',
+        'WarnAsError': 'false',
+        'AdditionalOptions':
+        [
+         '/MP', # compile across multiple CPUs
+        ],
+      },
+      'VCLibrarianTool':
+      {
+      },
+      'VCLinkerTool':
+      {
+        'GenerateDebugInformation': 'true',
+        'RandomizedBaseAddress': 2, # enable ASLR
+        'DataExecutionPrevention': 2, # enable DEP
+        'AllowIsolation': 'true',
+        'SuppressStartupBanner': 'true',
+        'target_conditions':
+        [
+          ['_type=="executable"',
+          {
+            'SubSystem': 1, # console executable
+          }],
+        ],
       },
     },
   },

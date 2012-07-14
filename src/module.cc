@@ -24,4 +24,4 @@
 */
 
 #include "stdinc.h"
-#include "client.h"
+#include "module.h"

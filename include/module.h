@@ -23,5 +23,15 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
-#include "client.h"
+#ifndef MODULE_H_INC
+#define MODULE_H_INC
+
+#include "configsection.h"
+
+class Module
+{
+private:
+public:
+};
+
+#endif

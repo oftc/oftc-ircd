@@ -27,13 +27,18 @@
 #define PARSER_H_INC
 
 #include <string>
+#include <map>
+#include "command.h"
 
 using std::string;
+using std::map;
 
 class Parser
 {
 private:
   static Parser default_parser;
+  
+  map<string, Command> commands;
 public:
   void parse(const string& line) const;
   static inline Parser& get_default() { return default_parser; }

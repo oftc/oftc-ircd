@@ -19,6 +19,8 @@
     'sources': 
     [
       'common.gypi',
+      'include/client.h',
+      'include/command.h',
       'include/config.h',
       'include/configsection.h',
       'include/connection.h',
@@ -27,10 +29,15 @@
       'include/listenersection.h',
       'include/logging.h',
       'include/loggingsection.h',
+      'include/module.h',
+      'include/modulesection.h',
       'include/parser.h',
       'include/stdinc.h',
       'include/system.h',
       'include/python/pythonwrap.h',
+      'include/python/parserwrap.h',
+      'src/client.cc',
+      'src/command.cc',
       'src/config.cc',
       'src/connection.cc',
       'src/generalsection.cc',
@@ -38,10 +45,13 @@
       'src/listenersection.cc',
       'src/logging.cc',
       'src/loggingsection.cc',
+      'src/module.cc',
+      'src/modulesection.cc',
       'src/main.cc',
       'src/parser.cc',
       'src/system.cc',
       'src/python/pythonwrap.cc',
+      'src/python/parserwrap.cc'
     ],
     'msvs_settings':
     {
@@ -57,17 +67,17 @@
 		{
 		  'defines': 
 		  [
-			'_WIN32_WINNT=0x0600',
-			'_GNU_SOURCE',
+			  '_WIN32_WINNT=0x0600',
+			  '_GNU_SOURCE',
 		  ],
 		  'include_dirs':
 		  [
 		    'c:/python27/include',
 		  ],
-		  'libraries': 
-		  [ 
-		    'python27.lib' 
-		  ],
+      'libraries': 
+      [ 
+        'python27_d.lib' 
+	    ],
 		},
 		{
 		  'include_dirs':

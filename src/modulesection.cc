@@ -24,4 +24,20 @@
 */
 
 #include "stdinc.h"
-#include "client.h"
+#include <json/json.h>
+#include "modulesection.h"
+
+void
+ModuleSection::set_defaults()
+{
+}
+
+void
+ModuleSection::process(const Json::Value value)
+{
+}
+
+void
+ModuleSection::verify() const
+{
+}
