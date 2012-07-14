@@ -1,8 +1,8 @@
 {
   'variables': 
   {
-    'python-includes': 'python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"',
-    'python-version': 'python -c "from distutils import sysconfig; print sysconfig.get_python_version()"',
+    'python-includes': 'python -c "from distutils import sysconfig; import ntpath; print sysconfig.get_python_inc().replace(ntpath.sep, \'/\')"',
+    'python-version': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"VERSION\\")"',
   },
   
   'targets': 
@@ -63,7 +63,7 @@
 		{
       'variables':
       {
-        'python-binlibdest': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var("BINLIBDEST")"',
+        'python-binlibdest': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"BINLIBDEST\\")"',
       },
       'msvs_settings':
       {
