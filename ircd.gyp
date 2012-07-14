@@ -1,6 +1,8 @@
 {
   'variables': 
   {
+    'python-includes': 'python -c "from distutils import sysconfig; print sysconfig.get_python_inc()"',
+    'python-version': 'python -c "from distutils import sysconfig; print sysconfig.get_python_version()"',
   },
   
   'targets': 
@@ -15,6 +17,7 @@
     'include_dirs': 
     [
       'include',
+      '<!@(<(python-includes))',
     ],
     'sources': 
     [
@@ -53,37 +56,33 @@
       'src/python/pythonwrap.cc',
       'src/python/parserwrap.cc'
     ],
-    'msvs_settings':
-    {
-      'VCLinkerTool':
-      {
-        'AdditionalLibraryDirectories': 'c:/python27/libs',
-      },
-    },
     'conditions': 
     [
 	  [ 
 		'OS=="win"', 
 		{
+      'variables':
+      {
+        'python-binlibdest': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var("BINLIBDEST")"',
+      },
+      'msvs_settings':
+      {
+        'VCLinkerTool':
+        {
+          'AdditionalLibraryDirectories': '<!@(<(python-binlibdest))s',
+        },
+      },
 		  'defines': 
 		  [
 			  '_WIN32_WINNT=0x0600',
 			  '_GNU_SOURCE',
 		  ],
-		  'include_dirs':
-		  [
-		    'c:/python27/include',
-		  ],
       'libraries': 
       [ 
-        'python27_d.lib' 
+		    'python<!@(<(python-version)).lib'
 	    ],
 		},
 		{
-		  'include_dirs':
-		  [
-		    '/usr/include/python2.6',
-		  ],
 		  'cflags': 
 		  [ 
 		    '-std=c++0x', 
@@ -99,7 +98,7 @@
 	    ],
  		  'libraries': 
 		  [ 
-		    '-lpython2.6' 
+		    '-lpython<!@(<(python-version))'
 		  ],
 	  }
 	  ],
