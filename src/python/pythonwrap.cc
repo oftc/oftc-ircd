@@ -34,6 +34,8 @@ template<class T> PyMemberDef *PythonWrap<T>::members;
 
 template class PythonWrap<ParserWrap>;
 
+template void PythonWrap<ParserWrap>::init(const char *);
+
 template<class T>
 void
 PythonWrap<T>::init(const char *name)

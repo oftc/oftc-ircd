@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include "Python.h"
+#include "stdinc.h"
 #include <string>
 #include <sstream>
 #include "python/pythonloader.h"
@@ -39,7 +39,7 @@ typedef vector<string>::const_iterator VectorStringConstIt;
 
 static PyMethodDef module_methods[] =
 {
-  { NULL }
+  { NULL, NULL, 0, NULL }
 };
 
 void 
