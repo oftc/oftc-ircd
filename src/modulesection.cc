@@ -26,6 +26,7 @@
 #include "stdinc.h"
 #include <json/json.h>
 #include "modulesection.h"
+#include "module.h"
 
 void
 ModuleSection::set_defaults()
@@ -35,6 +36,47 @@ ModuleSection::set_defaults()
 void
 ModuleSection::process(const Json::Value value)
 {
+  if(!value.isObject())
+    throw runtime_error("module config section wasn't an object as expected");
+
+  Json::Value::Members members = value.getMemberNames();
+  Json::Value::Members::const_iterator mit;
+
+  for(mit = members.begin(); mit != members.end(); mit++)
+  {
+    const string name = *mit;
+    if(name == "paths")
+    {
+      Json::Value paths = value[name];
+
+      if(!paths.isArray())
+        throw runtime_error("module paths section was not a list as expected");
+
+      for(Json::Value::iterator it = paths.begin(); it != paths.end(); it++)
+      {
+        Json::Value path = *it;
+
+        search_paths.push_back(path.asString());
+      }
+    }
+    else if(name == "load")
+    {
+      Json::Value modules = value[name];
+
+      if(!modules.isObject())
+        throw runtime_error("module config section wasn't an object as expected");
+
+      Json::Value::Members module_members = modules.getMemberNames();
+      Json::Value::Members::const_iterator m_mit;
+
+      for(m_mit = module_members.begin(); m_mit != module_members.end(); m_mit++)
+      {
+        const string name = *m_mit;
+        Json::Value module = modules[name];
+        Module::create(name, module.asString());
+      }
+    }
+  }
 }
 
 void

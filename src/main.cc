@@ -23,6 +23,7 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include "python/pythonloader.h"
 #include "stdinc.h"
 #include <stdlib.h>
 #include <uv.h>
@@ -31,7 +32,7 @@
 #include "logging.h"
 #include "system.h"
 #include "listener.h"
-#include "python/pythonwrap.h"
+#include "module.h"
 
 using std::cerr;
 using std::endl;
@@ -52,6 +53,8 @@ main(int argc, char *argv[])
     System::init();
     Logging::init();
     Listener::init();
+    Module::init();
+
     Config::init(CONFIG_PATH);
     Logging::start();
 
@@ -70,7 +73,8 @@ main(int argc, char *argv[])
     if(System::get_daemon())
       System::daemonize();
 #endif
-    python_init();
+    PythonLoader::init();
+    Module::load_all();
     Listener::start_listeners();
     uv_run(uv_loop);
   }

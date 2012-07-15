@@ -23,36 +23,19 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef MODULE_H_INC
-#define MODULE_H_INC
+#ifndef PYTHONLOADER_H_INC
+#define PYTHONLOADER_H_INC
 
 #include <string>
-#include <vector>
-#include "modulesection.h"
 
 using std::string;
-using std::vector;
 
-class Module
+class PythonLoader
 {
 private:
-  static ModuleSection config;
-  static vector<Module> modules;
-
-  string name;
-  string filename;
 public:
-  Module();
-  Module(string, string);
-
-  void load();
-  inline string get_name() const { return name; }
-  inline string get_filename() const { return filename; }
-
   static void init();
-  static inline vector<string> get_module_paths() { return config.get_paths(); }
-  static Module create(string, string);
-  static void load_all();
+  static void load(string);
 };
 
 #endif

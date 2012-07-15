@@ -26,17 +26,24 @@
 #ifndef MODULESECTION_H_INC
 #define MODULESECTION_H_INC
 
+#include <vector>
+#include <string>
 #include <json/json.h>
 #include "configsection.h"
+
+using std::vector;
+using std::string;
 
 class ModuleSection : public ConfigSection
 {
 private:
-
+  vector<string> search_paths;
 public:
   void set_defaults();
   void process(const Json::Value);
   void verify() const;
+
+  inline vector<string> get_paths() const { return search_paths; }
 };
 
 #endif

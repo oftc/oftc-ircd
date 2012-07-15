@@ -23,36 +23,59 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef MODULE_H_INC
-#define MODULE_H_INC
-
+#include "stdinc.h"
+#include "Python.h"
 #include <string>
-#include <vector>
-#include "modulesection.h"
+#include <sstream>
+#include "python/pythonloader.h"
+#include "python/pythonwrap.h"
+#include "python/parserwrap.h"
+#include "module.h"
 
 using std::string;
-using std::vector;
+using std::stringstream;
 
-class Module
+typedef vector<string>::const_iterator VectorStringConstIt;
+
+static PyMethodDef module_methods[] =
 {
-private:
-  static ModuleSection config;
-  static vector<Module> modules;
-
-  string name;
-  string filename;
-public:
-  Module();
-  Module(string, string);
-
-  void load();
-  inline string get_name() const { return name; }
-  inline string get_filename() const { return filename; }
-
-  static void init();
-  static inline vector<string> get_module_paths() { return config.get_paths(); }
-  static Module create(string, string);
-  static void load_all();
+  { NULL }
 };
 
-#endif
+void 
+PythonLoader::init()
+{
+  PyObject *m;
+
+  Py_Initialize();
+
+  stringstream path;
+
+  path << Py_GetPath();
+  vector<string> paths = Module::get_module_paths();
+
+  for(VectorStringConstIt it = paths.begin(); it != paths.end(); it++)
+  {
+    path << ";" << *it;
+  }
+
+  PySys_SetPath(const_cast<char*>(path.str().c_str()));
+
+  ParserWrap::init();
+
+  m = Py_InitModule3("pythonwrap", module_methods, 
+    "Wrapper module for oftc-ircd C(++) interface");
+
+  Py_INCREF(ParserWrap::get_type_object());
+  PyModule_AddObject(m, "Parser", 
+    reinterpret_cast<PyObject *>(ParserWrap::get_type_object()));
+}
+
+void
+PythonLoader::load(string name)
+{
+  PyObject *foo = PyImport_ImportModule(name.c_str());
+
+  if(foo == NULL)
+    PyErr_Print();
+}

@@ -37,6 +37,7 @@
       'include/parser.h',
       'include/stdinc.h',
       'include/system.h',
+      'include/python/pythonloader.h',
       'include/python/pythonwrap.h',
       'include/python/parserwrap.h',
       'src/client.cc',
@@ -53,6 +54,8 @@
       'src/main.cc',
       'src/parser.cc',
       'src/system.cc',
+      'src/python/ircclient.py',
+      'src/python/pythonloader.cc',
       'src/python/pythonwrap.cc',
       'src/python/parserwrap.cc'
     ],

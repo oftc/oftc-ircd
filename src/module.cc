@@ -24,4 +24,65 @@
 */
 
 #include "stdinc.h"
+#include <algorithm>
+#include <cctype>
 #include "module.h"
+#include "config.h"
+#include "python/pythonloader.h"
+
+using std::transform;
+
+typedef vector<Module>::const_iterator ModuleConstIt;
+
+ModuleSection Module::config;
+vector<Module> Module::modules;
+
+Module::Module()
+{
+}
+
+Module::Module(string _name, string _filename) : name(_name), filename(_filename)
+{
+}
+
+// Statics
+
+void
+Module::init()
+{
+  Config::add_section("module", &config);
+}
+
+Module
+Module::create(string name, string filename)
+{
+  Module module = Module(name, filename);
+
+  modules.push_back(module);
+
+  return module;
+}
+
+void
+Module::load_all()
+{
+  for(ModuleConstIt it = modules.begin(); it != modules.end(); it++)
+  {
+    Module module = *it;
+    string filename = module.get_filename();
+    string ext;
+    size_t index = filename.find_last_of('.');
+
+    if(index == string::npos)
+      ext = "";
+    else
+      ext = filename.substr(index + 1);
+
+    transform(ext.begin(), ext.end(), ext.begin(), toupper);
+
+    if(ext == "PY")
+    {
+      PythonLoader::load(module.get_name());
+    }
+  }
+}
