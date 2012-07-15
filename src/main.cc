@@ -25,8 +25,8 @@
 
 #include "python/pythonloader.h"
 #include "stdinc.h"
-#include <stdlib.h>
 #include <uv.h>
+#include <openssl/ssl.h>
 #include <iostream>
 #include "config.h"
 #include "logging.h"
@@ -43,6 +43,9 @@ main(int argc, char *argv[])
   uv_loop_t *uv_loop;
 
   uv_loop = uv_default_loop();
+
+  SSL_load_error_strings();
+  SSL_library_init();
 
   try
   {
@@ -61,7 +64,7 @@ main(int argc, char *argv[])
   catch(exception &ex)
   {
     cerr << "Unhandled exception: " << ex.what() << endl;
-    return EXIT_FAILURE;
+    return 1;
   }
 
   // Now that logging is setup, switch to a try catch that will log as well
@@ -81,8 +84,8 @@ main(int argc, char *argv[])
     Logging::critical << "Unhandled exception: " << ex.what() << Logging::endl;
     cerr << "Unhandled exception: " << ex.what() << endl;
 
-    return EXIT_FAILURE;
+    return 1;
   }
 
-  return EXIT_SUCCESS;
+  return 0;
 }

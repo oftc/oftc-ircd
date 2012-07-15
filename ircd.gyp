@@ -18,6 +18,7 @@
     [
       'include',
       '<!@(<(python-includes))',
+      'c:\openssl\include',
     ],
     'sources': 
     [
@@ -72,7 +73,7 @@
       {
         'VCLinkerTool':
         {
-          'AdditionalLibraryDirectories': '<!@(<(python-binlibdest))s',
+          'AdditionalLibraryDirectories': '<!@(<(python-binlibdest))s;c:\openssl\lib',
         },
       },
 		  'defines': 
@@ -82,7 +83,9 @@
 		  ],
       'libraries': 
       [ 
-		    'python<!@(<(python-version)).lib'
+		    'python<!@(<(python-version)).lib',
+		    'libeay32.lib',
+		    'ssleay32.lib',
 	    ],
 		},
 		{
