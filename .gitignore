@@ -6,6 +6,7 @@
 *.so
 *.swp
 *~
+*.pyc
 .deps
 .depend
 .libs
