@@ -47,7 +47,7 @@ PythonLoader::init()
 {
   PyObject *m;
 
-  Py_Initialize();
+  Py_InitializeEx(0);
 
   stringstream path;
 
@@ -56,7 +56,7 @@ PythonLoader::init()
 
   for(VectorStringConstIt it = paths.begin(); it != paths.end(); it++)
   {
-    path << ";" << *it;
+    path << ":" << *it;
   }
 
   PySys_SetPath(const_cast<char*>(path.str().c_str()));
