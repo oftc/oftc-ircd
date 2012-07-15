@@ -32,29 +32,7 @@ template<class T> PyTypeObject PythonWrap<T>::type_object;
 template<class T> PyMethodDef *PythonWrap<T>::methods;
 template<class T> PyMemberDef *PythonWrap<T>::members;
 
-template void PythonWrap<ParserWrap>::init(const char *);
-
-static PyMethodDef module_methods[] = 
-{
-  { NULL }
-};
-
-void
-python_init()
-{
-  PyObject *m;
-
-  Py_Initialize();
-  ParserWrap::init();
-
-  m = Py_InitModule3("pythonwrap", module_methods, 
-    "Wrapper module for oftc-ircd C(++) interface");
-
-  Py_INCREF(ParserWrap::get_type_object());
-  PyModule_AddObject(m, "Parser", 
-    reinterpret_cast<PyObject *>(ParserWrap::get_type_object()));
-
-}
+template class PythonWrap<ParserWrap>;
 
 template<class T>
 void
@@ -73,6 +51,7 @@ PythonWrap<T>::init(const char *name)
 
   if(PyType_Ready(&type_object) < 0)
   {
+    PyErr_Print();
     throw runtime_error("Unable to create type");
   }
 }
@@ -102,7 +81,7 @@ PyObject *
 PythonWrap<T>::create(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
   PyObject *ptr = type->tp_alloc(type, 0);
-  ParserWrap *obj = new(ptr) T(args, kwds);
+  T *obj = new(ptr) T(args, kwds);
 
   return reinterpret_cast<PyObject*>(obj);
 }

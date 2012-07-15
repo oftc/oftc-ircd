@@ -31,12 +31,12 @@
 
 static PyMethodDef parser_methods[] =
 {
-  { NULL }
+  { NULL, NULL, 0, NULL }
 };
 
 static PyMemberDef parser_members[] =
 {
-  { NULL }
+  { NULL, 0, 0, 0, NULL }
 };
 
 ParserWrap::ParserWrap()
