@@ -46,16 +46,14 @@ main(int argc, char *argv[])
 
   try
   {
-#ifndef _WIN32
-    System::parse_args(argc, argv);
-#endif
-
     System::init();
+    System::parse_args(argc, argv);
+
     Logging::init();
     Listener::init();
     Module::init();
 
-    Config::init(CONFIG_PATH);
+    Config::init(System::get_config_path());
     Logging::start();
 
     Logging::info << "oftc-ircd starting up" << Logging::endl;

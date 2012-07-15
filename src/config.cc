@@ -47,6 +47,9 @@ Config::init(const string path)
   Json::Value root;
   Json::Reader reader;
 
+  if(!config.is_open())
+    throw runtime_error(string("Failed to open config: ") + path);
+
   for(ConfigSectionConstIt it = sections.begin(); it != sections.end(); it++)
   {
     it->second->set_defaults();

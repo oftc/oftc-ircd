@@ -35,15 +35,17 @@ class System
 {
 private:
   static GeneralSection config;
+  static const char *config_path;
 public:
 #ifndef _WIN32
   static void daemonize();
-  static void parse_args(int, char* const[]);
 #endif
+  static void parse_args(int, const char* const []);
   static void init();
   static string perror(const char *);
   static string uv_perror(const char *);
   static inline bool get_daemon() { return config.get_daemon(); }
+  static inline const char *get_config_path() { return config_path; }
 };
 
 #endif

@@ -27,12 +27,10 @@
 #include <string.h>
 #include <errno.h>
 #ifndef _WIN32
-#include <unistd.h>
-#include <getopt.h>
-#endif
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#endif
 #include <uv.h>
 #include <iostream>
 #include <sstream>
@@ -45,33 +43,33 @@ using std::endl;
 using std::stringstream;
 
 GeneralSection System::config;
+const char *System::config_path;
 
 void
 System::init()
 {
   Config::add_section("general", &config);
+  config_path = CONFIG_PATH;
 }
 
-#ifndef _WIN32
 void
-System::parse_args(int argc, char* const argv[])
+System::parse_args(int argc, const char * const argv[])
 {
-  int c;
-
-  while((c = getopt (argc, argv, "")) != -1)
+  for(int index = 1; index < argc; index++)
   {
-    switch(c)
+    string str(argv[index]);
+
+    if(str == "-c")
     {
-      case '?':
-        if(isprint(optopt))
-          cerr << "Unknown option '-" << optopt << "'." << endl;
-        break;
-      default:
-        throw runtime_error("Error processing command line arguments");
+      config_path = argv[index + 1];
+      index++;
+    }
+    else
+    {
+      cerr << "Unknown option: " << str << endl;
     }
   }
 }
-#endif
 
 string
 System::perror(const char *error)
