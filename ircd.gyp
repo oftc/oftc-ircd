@@ -110,7 +110,9 @@
 	    ],
  		  'libraries': 
 		  [ 
-		    '-lpython<!@(<(python-version))'
+		    '-lpython<!@(<(python-version))',
+        '-lssl',
+        '-lcrypto',
 		  ],
 	  }
 	  ],
