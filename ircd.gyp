@@ -83,6 +83,10 @@
 			  '_WIN32_WINNT=0x0600',
 			  '_GNU_SOURCE',
 		  ],
+      'include_dirs': 
+      [
+        'c:\openssl\include',
+      ],
       'libraries': 
       [ 
 		    'python<!@(<(python-version)).lib',
