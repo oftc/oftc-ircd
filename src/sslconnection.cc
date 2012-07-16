@@ -92,12 +92,9 @@ SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   int ret = SSL_read(ssl, buf.base, nread);
   if(ret <= 0)
   {
-    if(ret <= 0)
-    {
-      handle_error(ret);
-      free_buffer(buf);
-      return;
-    }
+    handle_error(ret);
+    free_buffer(buf);
+    return;
   }
 
   Connection::read(stream, ret, buf);
