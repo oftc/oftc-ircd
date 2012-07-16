@@ -32,6 +32,8 @@
 #include <sys/stat.h>
 #endif
 #include <uv.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 #include <iostream>
 #include <sstream>
 #include "config.h"
@@ -44,12 +46,43 @@ using std::stringstream;
 
 GeneralSection System::config;
 const char *System::config_path;
+SSL_CTX *System::ssl_context;
 
 void
 System::init()
 {
   Config::add_section("general", &config);
   config_path = CONFIG_PATH;
+}
+
+void
+System::start_ssl()
+{
+  SSL_load_error_strings();
+  SSL_library_init();
+
+  ssl_context = SSL_CTX_new(SSLv23_method());
+  if(ssl_context == NULL)
+  {
+    throw runtime_error(string("Unable to initialize SSL context: ") + 
+      ERR_lib_error_string(ERR_get_error()));
+  }
+
+  SSL_CTX_set_options(ssl_context, SSL_OP_NO_SSLv2);
+  SSL_CTX_set_options(ssl_context, SSL_OP_TLS_ROLLBACK_BUG | SSL_OP_ALL);
+
+  if(!SSL_CTX_use_certificate_chain_file(ssl_context, config.get_ssl_certificate().c_str()))
+  {
+    throw runtime_error(string("Unable to load SSL certificate: ") + 
+      ERR_lib_error_string(ERR_get_error()));
+  }
+
+  if(!SSL_CTX_use_PrivateKey_file(ssl_context, config.get_ssl_privatekey().c_str(),
+    SSL_FILETYPE_PEM))
+  {
+    throw runtime_error(string("Unable to load SSL certificate: ") + 
+      ERR_lib_error_string(ERR_get_error()));
+  }
 }
 
 void

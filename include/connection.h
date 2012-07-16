@@ -52,22 +52,27 @@ typedef shared_ptr<Connection> ConnectionPtr;
 
 class Connection 
 {
-private:
+protected:
   static vector<ConnectionPtr> connections;
-
   shared_ptr<uv_tcp_t> handle;
+  shared_ptr<uv_write_t> write_handle;
+
+  static void free_buffer(uv_buf_t&);
+  virtual void read(uv_stream_t *, ssize_t, uv_buf_t);
+private:
   stringstream read_buffer;
   Parser& parser;
 
-  Connection();
-
-  void read(uv_stream_t *, ssize_t, uv_buf_t);
 public:
   static Connection *create();
   static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
   static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
 
-  void accept(uv_stream_t *);
+  Connection();
+
+  virtual void accept(uv_stream_t *);
+  virtual void send(const char *, size_t);
+
 };
 
 #endif

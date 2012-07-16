@@ -44,9 +44,6 @@ main(int argc, char *argv[])
 
   uv_loop = uv_default_loop();
 
-  SSL_load_error_strings();
-  SSL_library_init();
-
   try
   {
     System::init();
@@ -74,6 +71,7 @@ main(int argc, char *argv[])
     if(System::get_daemon())
       System::daemonize();
 #endif
+    System::start_ssl();
     PythonLoader::init();
     Module::load_all();
     Listener::start_listeners();

@@ -38,6 +38,8 @@ ListenerSection::set_defaults()
 void
 ListenerSection::process(const Json::Value value)
 {
+  int flags;
+
   if(value.type() != Json::arrayValue)
     throw runtime_error("listener section not an array as expected");
 
@@ -52,6 +54,9 @@ ListenerSection::process(const Json::Value value)
     else
       port = val["port"].asInt();
 
+    if(!val["ssl"].isNull() && val["ssl"].asBool())
+      flags |= Listener_SSL;
+
     if(port < 0 || port > USHRT_MAX)
     {
       Logging::warning << "Ignoring listener, port " << port << " is invalid" <<
@@ -61,11 +66,11 @@ ListenerSection::process(const Json::Value value)
 
     if(host.length() == 0)
     {
-      Listener::create("::", port);
-      Listener::create("0.0.0.0", port);
+      Listener::create("::", port, static_cast<ListenerFlag>(flags));
+      Listener::create("0.0.0.0", port, static_cast<ListenerFlag>(flags));
     }
     else
-      Listener::create(host, port);
+      Listener::create(host, port, static_cast<ListenerFlag>(flags));
   }
 }
 

@@ -49,6 +49,11 @@ class Listener;
 
 typedef shared_ptr<Listener> ListenerPtr;
 
+enum ListenerFlag
+{
+  Listener_SSL = 0x1
+};
+
 class Listener 
 {
 private:
@@ -59,18 +64,32 @@ private:
   uv_tcp_t listener;
   string host;
   int port;
+  ListenerFlag flags;
 
-  void start();
   void connected(uv_stream_t *, int);
+
+  inline void set_flag(ListenerFlag flag) 
+  { 
+    int int_flags = static_cast<int>(flags);
+    int_flags |= static_cast<int>(flag); 
+
+    flags = static_cast<ListenerFlag>(int_flags);
+  }
+
 public:
   static const int DEFAULT_PORT = 6667;
 
   static void init();
-  static Listener *create(string, int);
+  static Listener *create(string, int, ListenerFlag);
   static void start_listeners();
 
   Listener();
-  Listener(string, int);
+  Listener(string, int, ListenerFlag);
+
+  void start();
+
+  inline bool is_ssl() const { return flags & Listener_SSL; }
+  inline void set_ssl() { set_flag(Listener_SSL); }
 };
 
 #endif

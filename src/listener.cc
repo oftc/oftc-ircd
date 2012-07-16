@@ -36,6 +36,7 @@
 #include "listenersection.h"
 #include "logging.h"
 #include "connection.h"
+#include "sslconnection.h"
 
 typedef vector<ListenerPtr>::const_iterator ListenerConstIt;
 
@@ -46,15 +47,20 @@ Listener::Listener() : host(""), port(6667)
 {
 }
 
-Listener::Listener(string host, int port=6667) : host(host), port(port)
+Listener::Listener(string host, int port, ListenerFlag flags) : 
+  host(host), port(port), flags(flags)
 {
 }
 
 void
 Listener::connected(uv_stream_t *stream, int status)
 {
-  Connection *connection = Connection::create();
-  
+  Connection *connection;
+  if(is_ssl())
+    connection = SSLConnection::create();
+  else
+    connection = Connection::create();
+
   connection->accept(stream);
 }
 
@@ -105,9 +111,9 @@ Listener::init()
 }
 
 Listener *
-Listener::create(string host, int port=6667)
+Listener::create(string host, int port, ListenerFlag flags)
 {
-  ListenerPtr new_listener(new Listener(host, port));
+  ListenerPtr new_listener(new Listener(host, port, flags));
 
   listeners.push_back(new_listener);
 

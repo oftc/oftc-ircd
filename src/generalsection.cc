@@ -38,6 +38,10 @@ GeneralSection::process(const Json::Value value)
 {
   if(!value["daemon"].isNull())
     daemon = value["daemon"].asBool();
+  if(!value["ssl_certificate"].isNull())
+    ssl_certificate = value["ssl_certificate"].asString();
+  if(!value["ssl_privatekey"].isNull())
+    ssl_privatekey = value["ssl_privatekey"].asString();
 }
 
 void

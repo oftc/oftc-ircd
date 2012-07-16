@@ -49,6 +49,7 @@ Connection::accept(uv_stream_t *server_handle)
   int ret;
 
   handle.reset(new uv_tcp_t);
+  write_handle.reset(new uv_write_t);
 
   uv_tcp_init(uv_default_loop(), handle.get());
 
@@ -76,21 +77,32 @@ Connection::accept(uv_stream_t *server_handle)
 }
 
 void
+Connection::send(const char *buffer, size_t len)
+{
+  uv_buf_t buf;
+
+  buf.base = const_cast<char*>(buffer);
+  buf.len = len;
+  uv_write(write_handle.get(), reinterpret_cast<uv_stream_t*>(handle.get()), &buf, 1, NULL);
+}
+
+void
 Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
+  string debug_str;
+
   if(nread < 0)
   {
     if(buf.base != NULL)
     {
-      delete[] buf.base;
-      buf.base = 0;
-      buf.len = 0;
-
+      free_buffer(buf);
       return;
     }
   }
 
-  Logging::debug << "Read " << nread << "bytes '" << buf.base << "'" << Logging::endl;
+  debug_str.insert(0, buf.base, nread);
+
+  Logging::debug << "Read " << nread << "bytes '" << debug_str << "'" << Logging::endl;
 
   read_buffer.write(buf.base, nread);
   string line;
@@ -115,9 +127,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   if(read_buffer.fail())
     read_buffer.clear();
 
-  delete[] buf.base;
-  buf.base = 0;
-  buf.len = 0;
+  free_buffer(buf);
 }
 
 // Statics
@@ -148,4 +158,12 @@ Connection::on_read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   Connection *connection = static_cast<Connection *>(stream->data);
 
   connection->read(stream, nread, buf);
+}
+
+void
+Connection::free_buffer(uv_buf_t &buf)
+{
+  delete[] buf.base;
+  buf.base = 0;
+  buf.len = 0;
 }

@@ -27,6 +27,7 @@
 #define SYSTEM_H_INC
 
 #include <string>
+#include <openssl/ssl.h>
 #include "generalsection.h"
 
 using std::string;
@@ -36,16 +37,19 @@ class System
 private:
   static GeneralSection config;
   static const char *config_path;
+  static SSL_CTX *ssl_context;
 public:
 #ifndef _WIN32
   static void daemonize();
 #endif
   static void parse_args(int, const char* const []);
   static void init();
+  static void start_ssl();
   static string perror(const char *);
   static string uv_perror(const char *);
   static inline bool get_daemon() { return config.get_daemon(); }
   static inline const char *get_config_path() { return config_path; }
+  static inline SSL_CTX *get_ssl_context() { return ssl_context; }
 };
 
 #endif

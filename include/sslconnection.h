@@ -23,29 +23,25 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GENERALSECTION_H_INC
-#define GENERALSECTION_H_INC
+#ifndef SSLCONNECTION_H_INC
+#define SSLCONNECTION_H_INC
 
-#include <string>
-#include <json/json.h>
-#include "configsection.h"
+#include "connection.h"
+#include <openssl/ssl.h>
 
-using std::string;
-
-class GeneralSection : public ConfigSection
+class SSLConnection : public Connection
 {
 private:
-  bool daemon;
-  string ssl_certificate;
-  string ssl_privatekey;
-public:
-  void set_defaults();
-  void process(const Json::Value);
-  void verify() const;
+  SSL *ssl;
+  BIO *read_bio;
+  BIO *write_bio;
 
-  inline bool get_daemon() const { return daemon; }
-  inline string get_ssl_certificate() const { return ssl_certificate; }
-  inline string get_ssl_privatekey() const { return ssl_privatekey; }
+  void handle_error(int);
+  virtual void read(uv_stream_t *, ssize_t, uv_buf_t);
+public:
+  static SSLConnection *create();
+
+  virtual void accept(uv_stream_t *);
 };
 
 #endif
