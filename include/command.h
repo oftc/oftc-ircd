@@ -26,10 +26,34 @@
 #ifndef COMMAND_H_INC
 #define COMMAND_H_INC
 
+#include <string>
+#include <vector>
+#include "client.h"
+
+using std::string;
+using std::vector;
+
+class Command; 
+
+typedef void (*CommandHandler)(const Client&, const Command&, const vector<string>&);
+
 class Command
 {
 private:
+  int min_args;
+  int max_args;
+  int rate_control;
+  string name;
+  AccessLevel min_access;
+  CommandHandler handler;
+  void *data;
 public:
+  Command();
+  Command(CommandHandler, string, AccessLevel, int, int, int, void *);
+
+  inline string get_name() const { return name; }
+  inline CommandHandler get_handler() const { return handler; }
+  inline void *get_data() const { return data; }
 };
 
 #endif

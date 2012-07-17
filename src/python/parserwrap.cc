@@ -31,6 +31,8 @@
 
 static PyMethodDef parser_methods[] =
 {
+  { "Register", reinterpret_cast<PyCFunction>(ParserWrap::register_command),  
+    METH_STATIC | METH_KEYWORDS | METH_VARARGS, "Register a command with the parser" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -51,10 +53,69 @@ ParserWrap::~ParserWrap()
 {
 }
 
+// Statics
+
 void
 ParserWrap::init()
 {
   PythonWrap<ParserWrap>::methods = parser_methods;
   PythonWrap<ParserWrap>::members = parser_members;
   PythonWrap<ParserWrap>::init("parser");
+}
+
+PyObject *
+ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+  char *kwlist[] = 
+  {
+    "name",
+    "function",
+    "min_args",
+    "max_args",
+    "access",
+    "rate_control"
+  };
+  char *name;
+  PyObject *function;
+  unsigned int min_args, max_args, access, rate_control;
+
+  min_args = max_args = access = rate_control = 0;
+
+  if(!PyArg_ParseTupleAndKeywords(args, kwargs, "sO|IIII", kwlist, 
+    &name, &function, &min_args, &max_args, &access, &rate_control))
+  {
+    return NULL;
+  }
+
+  if(!PyCallable_Check(function))
+  {
+    PyErr_SetString(PyExc_TypeError, "argument 2 must be callable");
+    return NULL;
+  }
+
+  Command command(handle_command, string(name), static_cast<AccessLevel>(access),
+    min_args, max_args, rate_control, function);
+  Parser::get_default().register_command(command);
+
+  Py_INCREF(function);
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+void
+ParserWrap::handle_command(const Client &client, const Command& command, const vector<string>& args)
+{
+  PyObject *tuple, *a;
+
+  tuple = PyTuple_New(args.size());
+
+  for(unsigned int i = 0; i < args.size(); i++)
+  {
+    PyTuple_SetItem(tuple, i, PyString_FromString(args[i].c_str()));
+  }
+
+  a = Py_BuildValue("OO", PyString_FromString(command.get_name().c_str()), tuple);
+  PyObject * ret = PyObject_CallObject(static_cast<PyObject *>(command.get_data()), a);
+  if(ret == NULL)
+    PyErr_Print();
 }

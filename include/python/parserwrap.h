@@ -50,6 +50,8 @@ private:
   ParserPtr parser;
 public:
   static void init();
+  static PyObject *register_command(PyObject *, PyObject *, PyObject *);
+  static void handle_command(const Client&, const Command&, const vector<string>&);
 
   ParserWrap();
   ParserWrap(PyObject *, PyObject *);

@@ -24,19 +24,29 @@
 */
 
 #include "stdinc.h"
+#include <algorithm>
 #include <string>
 #include <sstream>
 #include <vector>
+#include <map>
 #include "parser.h"
 
 using std::string;
 using std::stringstream;
 using std::vector;
+using std::transform;
+using std::map;
 
 Parser Parser::default_parser;
 
 void
-Parser::parse(const string& line) const
+Parser::register_command(Command command)
+{
+  commands[command.get_name()] = command;
+}
+
+void
+Parser::parse(const string& line)
 {
   stringstream stream(line);
   vector<string> args;
@@ -52,8 +62,15 @@ Parser::parse(const string& line) const
   }
 
   stream >> command;
+  transform(command.begin(), command.end(), command.begin(), toupper);
 
-  // lookup command
+  map<string, Command>::iterator it = commands.find(command);
+  if(it == commands.end())
+  {
+    // Invalid command, go away
+  }
+
+  Command& cmd = it->second;
 
   while(stream >> arg)
   {
@@ -70,4 +87,6 @@ Parser::parse(const string& line) const
     }
     args.push_back(arg);
   }
+
+  cmd.get_handler()(Client(), cmd, args);
 }

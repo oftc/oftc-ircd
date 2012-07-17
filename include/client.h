@@ -26,6 +26,13 @@
 #ifndef CLIENT_H_INC
 #define CLIENT_H_INC
 
+enum AccessLevel
+{
+  Unregistered = 0,
+  Registered,
+  Oper
+};
+
 class Client
 {
 private:
