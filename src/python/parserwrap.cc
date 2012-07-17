@@ -105,17 +105,18 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 void
 ParserWrap::handle_command(const Client &client, const Command& command, const vector<string>& args)
 {
-  PyObject *tuple, *a;
+  PyObject *tuple;
 
-  tuple = PyTuple_New(args.size());
+  tuple = PyTuple_New(args.size() + 1);
 
-  for(unsigned int i = 0; i < args.size(); i++)
+  PyTuple_SetItem(tuple, 0, PyString_FromString(command.get_name().c_str()));
+
+  for(unsigned int i = 1; i < args.size() + 1; i++)
   {
-    PyTuple_SetItem(tuple, i, PyString_FromString(args[i].c_str()));
+    PyTuple_SetItem(tuple, i, PyString_FromString(args[i - 1].c_str()));
   }
 
-  a = Py_BuildValue("OO", PyString_FromString(command.get_name().c_str()), tuple);
-  PyObject * ret = PyObject_CallObject(static_cast<PyObject *>(command.get_data()), a);
+  PyObject * ret = PyObject_CallObject(static_cast<PyObject *>(command.get_data()), tuple);
   if(ret == NULL)
     PyErr_Print();
 }

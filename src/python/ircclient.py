@@ -28,9 +28,9 @@ print dir(Parser)
 
 class Nick:
     @staticmethod
-    def handle_nick(command, args):
+    def handle_nick(command, nick):
         print "I HAVE A NICK COMMAND, WHAT DO I DO WITH IT?!?!?!"
         print command
-        print args[0]
+        print nick
 
 Parser.Register("NICK", Nick.handle_nick)
