@@ -89,7 +89,7 @@
       ],
       'libraries': 
       [ 
-		    'python<!@(<(python-version)).lib',
+		    'python<!@(<(python-version))_d.lib',
 		    'libeay32.lib',
 		    'ssleay32.lib',
 	    ],
