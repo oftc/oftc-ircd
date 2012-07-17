@@ -23,3 +23,8 @@ ircd.log
 *.vcproj
 *.suo
 *.user
+*.sdf
+*.opensdf
+*.vcxproj*
+*.crt
+*.key
