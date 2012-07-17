@@ -75,6 +75,12 @@ SSLConnection::handle_error(int code)
 void
 SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
+  if(nread < 0)
+  {
+    free_buffer(buf);
+    return;
+  }
+
   BIO_write(read_bio, buf.base, nread);
 
   if(!SSL_is_init_finished(ssl))
