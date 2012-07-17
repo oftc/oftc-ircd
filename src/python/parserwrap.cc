@@ -28,6 +28,7 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
+#include "python/clientwrap.h"
 #include "command.h"
 #include "parser.h"
 
@@ -106,20 +107,34 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 }
 
 void
-ParserWrap::handle_command(const Client& client, const Command& command, const vector<string>& args)
+ParserWrap::handle_command(const Client& client, const Command& command, const vector<string>& params)
 {
-  PyObject *tuple;
+  PyObject *args;
+  ClientWrap *wrapped_client;
 
-  tuple = PyTuple_New(args.size() + 1);
-
-  PyTuple_SetItem(tuple, 0, PyString_FromString(command.get_name().c_str()));
-
-  for(unsigned int i = 1; i < args.size() + 1; i++)
+  args = PyTuple_New(params.size() + 1);
+  if(args == NULL)
   {
-    PyTuple_SetItem(tuple, i, PyString_FromString(args[i - 1].c_str()));
+    PyErr_Print();
+    return;
   }
 
-  PyObject * ret = PyObject_CallObject(static_cast<PyObject *>(command.get_data()), tuple);
+  wrapped_client = reinterpret_cast<ClientWrap *>(PyObject_CallObject(ClientWrap::get_type(), NULL));
+
+  PyTuple_SetItem(args, 0, reinterpret_cast<PyObject*>(wrapped_client));
+
+  for(unsigned int i = 1; i < params.size() + 1; i++)
+  {
+    PyTuple_SetItem(args, i, PyString_FromString(params[i - 1].c_str()));
+  }
+
+  PyObject *ret = PyObject_CallObject(static_cast<PyObject *>(command.get_data()), args);
   if(ret == NULL)
+  {
     PyErr_Print();
+    return;
+  }
+
+  Py_DECREF(ret);
+  Py_DECREF(wrapped_client);
 }

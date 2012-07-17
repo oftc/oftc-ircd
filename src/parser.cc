@@ -69,6 +69,7 @@ Parser::parse(const Client& client, const string& line)
   if(it == commands.end())
   {
     // Invalid command, go away
+    return;
   }
 
   Command& cmd = it->second;

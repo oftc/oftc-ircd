@@ -30,6 +30,7 @@
 #include "python/pythonloader.h"
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
+#include "python/clientwrap.h"
 #include "module.h"
 
 using std::string;
@@ -66,6 +67,7 @@ PythonLoader::init()
   PySys_SetPath(const_cast<char*>(path.str().c_str()));
 
   ParserWrap::init();
+  ClientWrap::init();
 
   m = Py_InitModule3("pythonwrap", module_methods, 
     "Wrapper module for oftc-ircd C(++) interface");
@@ -73,6 +75,10 @@ PythonLoader::init()
   Py_INCREF(ParserWrap::get_type_object());
   PyModule_AddObject(m, "Parser", 
     reinterpret_cast<PyObject *>(ParserWrap::get_type_object()));
+  Py_INCREF(ClientWrap::get_type_object());
+  PyModule_AddObject(m, "Client", 
+    reinterpret_cast<PyObject *>(ClientWrap::get_type_object()));
+
 }
 
 void

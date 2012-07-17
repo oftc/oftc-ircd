@@ -24,13 +24,12 @@
 from pythonwrap import Parser
 
 print "Hello World, from python"
-print dir(Parser)
 
 class Nick:
     @staticmethod
-    def handle_nick(command, nick):
+    def handle_nick(client, nick):
         print "I HAVE A NICK COMMAND, WHAT DO I DO WITH IT?!?!?!"
-        print command
+        print dir(client)
         print nick
 
 Parser.Register("NICK", Nick.handle_nick)
