@@ -100,7 +100,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
       free_buffer(buf);
       return;
     }
-  } 
+  }
 
   debug_str.insert(0, buf.base, nread);
 
