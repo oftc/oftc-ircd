@@ -27,23 +27,12 @@
 #define CONNECTION_H_INC
 
 #include <vector>
-#include <cstddef> // for __GLIBCXX__
- 
-#ifdef __GLIBCXX__
-#  include <tr1/memory>
-#else
-#  ifdef __IBMCPP__
-#    define __IBMCPP_TR1__
-#  endif
-#  include <memory>
-#endif
 #include <sstream>
 
 #include <uv.h>
 #include "parser.h"
 
 using std::vector;
-using std::tr1::shared_ptr;
 using std::stringstream;
 
 class Client;

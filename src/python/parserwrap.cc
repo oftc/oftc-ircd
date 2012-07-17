@@ -28,6 +28,8 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
+#include "command.h"
+#include "parser.h"
 
 static PyMethodDef parser_methods[] =
 {

@@ -26,19 +26,6 @@
 #ifndef CLIENT_H_INC
 #define CLIENT_H_INC
 
-#include <cstddef> // for __GLIBCXX__
- 
-#ifdef __GLIBCXX__
-#  include <tr1/memory>
-#else
-#  ifdef __IBMCPP__
-#    define __IBMCPP_TR1__
-#  endif
-#  include <memory>
-#endif
-
-using std::tr1::shared_ptr;
-
 class Connection;
 
 class Client

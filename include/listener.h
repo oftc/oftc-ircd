@@ -28,21 +28,11 @@
 
 #include <string>
 #include <vector>
-#ifdef __GLIBCXX__
-#  include <tr1/memory>
-#else
-#  ifdef __IBMCPP__
-#    define __IBMCPP_TR1__
-#  endif
-#  include <memory>
-#endif
-
 #include <map>
 #include <uv.h>
 #include "listenersection.h"
 
 using std::vector;
-using std::tr1::shared_ptr;
 using std::string;
 
 class Listener;
