@@ -39,6 +39,7 @@
       'include/sslconnection.h',
       'include/stdinc.h',
       'include/system.h',
+      'include/python/clientwrap.h',
       'include/python/pythonloader.h',
       'include/python/pythonwrap.h',
       'include/python/parserwrap.h',
@@ -58,15 +59,16 @@
       'src/sslconnection.cc',
       'src/system.cc',
       'src/python/ircclient.py',
+      'src/python/clientwrap.cc',
       'src/python/pythonloader.cc',
       'src/python/pythonwrap.cc',
       'src/python/parserwrap.cc'
     ],
     'conditions': 
     [
-	  [ 
-		'OS=="win"', 
-		{
+    [ 
+    'OS=="win"', 
+    {
       'variables':
       {
         'python-binlibdest': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"BINLIBDEST\\")"',
@@ -78,44 +80,44 @@
           'AdditionalLibraryDirectories': '<!@(<(python-binlibdest))s;c:\openssl\lib',
         },
       },
-		  'defines': 
-		  [
-			  '_WIN32_WINNT=0x0600',
-			  '_GNU_SOURCE',
-		  ],
+      'defines': 
+      [
+        '_WIN32_WINNT=0x0600',
+        '_GNU_SOURCE',
+      ],
       'include_dirs': 
       [
         'c:\openssl\include',
       ],
       'libraries': 
       [ 
-		    'python<!@(<(python-version))_d.lib',
-		    'libeay32.lib',
-		    'ssleay32.lib',
-	    ],
-		},
-		{
-		  'cflags': 
-		  [ 
-		    '-std=c++0x', 
-		    '-Wall', 
-		    '-Wextra', 
-		    '-pedantic', 
-		    '-Wno-long-long', 
-		    '-Wno-unused-parameter' 
-		  ],
-	    'defines': 
-	    [ 
-	      '_GNU_SOURCE' 
-	    ],
- 		  'libraries': 
-		  [ 
-		    '-lpython<!@(<(python-version))',
+        'python<!@(<(python-version))_d.lib',
+        'libeay32.lib',
+        'ssleay32.lib',
+      ],
+    },
+    {
+      'cflags': 
+      [ 
+        '-std=c++0x', 
+        '-Wall', 
+        '-Wextra', 
+        '-pedantic', 
+        '-Wno-long-long', 
+        '-Wno-unused-parameter' 
+      ],
+      'defines': 
+      [ 
+        '_GNU_SOURCE' 
+      ],
+      'libraries': 
+      [ 
+        '-lpython<!@(<(python-version))',
         '-lssl',
         '-lcrypto',
-		  ],
-	  }
-	  ],
-	], 
+      ],
+    }
+    ],
+  ], 
   }]
 }

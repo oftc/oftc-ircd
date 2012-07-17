@@ -27,14 +27,17 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
+#include "python/clientwrap.h"
 
 template<class T> PyTypeObject PythonWrap<T>::type_object;
 template<class T> PyMethodDef *PythonWrap<T>::methods;
 template<class T> PyMemberDef *PythonWrap<T>::members;
 
 template class PythonWrap<ParserWrap>;
+template class PythonWrap<ClientWrap>;
 
 template void PythonWrap<ParserWrap>::init(const char *);
+template void PythonWrap<ClientWrap>::init(const char *);
 
 template<class T>
 void
