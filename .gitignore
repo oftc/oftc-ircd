@@ -28,3 +28,4 @@ ircd.log
 *.vcxproj*
 *.crt
 *.key
+ipch
