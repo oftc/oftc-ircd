@@ -46,8 +46,8 @@ using std::vector;
 using std::tr1::shared_ptr;
 using std::stringstream;
 
+class Client;
 class Connection;
-
 typedef shared_ptr<Connection> ConnectionPtr;
 
 class Connection 
@@ -62,6 +62,7 @@ protected:
 private:
   stringstream read_buffer;
   Parser& parser;
+  shared_ptr<Client> client;
 
 public:
   static Connection *create();

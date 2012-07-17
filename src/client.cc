@@ -25,3 +25,12 @@
 
 #include "stdinc.h"
 #include "client.h"
+#include "connection.h"
+
+Client::Client()
+{
+}
+
+Client::Client(Connection *connection) : connection(connection)
+{
+}

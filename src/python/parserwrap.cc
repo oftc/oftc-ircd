@@ -95,6 +95,7 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 
   Command command(handle_command, string(name), static_cast<AccessLevel>(access),
     min_args, max_args, rate_control, function);
+
   Parser::get_default().register_command(command);
 
   Py_INCREF(function);
@@ -103,7 +104,7 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 }
 
 void
-ParserWrap::handle_command(const Client &client, const Command& command, const vector<string>& args)
+ParserWrap::handle_command(const Client& client, const Command& command, const vector<string>& args)
 {
   PyObject *tuple;
 

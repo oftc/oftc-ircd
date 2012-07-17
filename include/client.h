@@ -26,17 +26,28 @@
 #ifndef CLIENT_H_INC
 #define CLIENT_H_INC
 
-enum AccessLevel
-{
-  Unregistered = 0,
-  Registered,
-  Oper
-};
+#include <cstddef> // for __GLIBCXX__
+ 
+#ifdef __GLIBCXX__
+#  include <tr1/memory>
+#else
+#  ifdef __IBMCPP__
+#    define __IBMCPP_TR1__
+#  endif
+#  include <memory>
+#endif
+
+using std::tr1::shared_ptr;
+
+class Connection;
 
 class Client
 {
 private:
+  shared_ptr<Connection> connection;
 public:
+  Client();
+  Client(Connection *);
 };
 
 #endif

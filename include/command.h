@@ -28,14 +28,21 @@
 
 #include <string>
 #include <vector>
-#include "client.h"
 
 using std::string;
 using std::vector;
 
 class Command; 
+class Client;
 
 typedef void (*CommandHandler)(const Client&, const Command&, const vector<string>&);
+
+enum AccessLevel
+{
+  Unregistered = 0,
+  Registered,
+  Oper
+};
 
 class Command
 {

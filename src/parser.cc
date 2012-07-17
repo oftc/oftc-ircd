@@ -30,6 +30,7 @@
 #include <vector>
 #include <map>
 #include "parser.h"
+#include "client.h"
 
 using std::string;
 using std::stringstream;
@@ -46,7 +47,7 @@ Parser::register_command(Command command)
 }
 
 void
-Parser::parse(const string& line)
+Parser::parse(const Client& client, const string& line)
 {
   stringstream stream(line);
   vector<string> args;
@@ -88,5 +89,5 @@ Parser::parse(const string& line)
     args.push_back(arg);
   }
 
-  cmd.get_handler()(Client(), cmd, args);
+  cmd.get_handler()(client, cmd, args);
 }

@@ -29,6 +29,7 @@
 #include "connection.h"
 #include "system.h"
 #include "logging.h"
+#include "client.h"
 
 using std::getline;
 
@@ -36,6 +37,7 @@ vector<ConnectionPtr> Connection::connections;
 
 Connection::Connection() : parser(Parser::get_default())
 {
+  client.reset(new Client(this));
 }
 
 void
@@ -98,7 +100,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
       free_buffer(buf);
       return;
     }
-  }
+  } 
 
   debug_str.insert(0, buf.base, nread);
 
@@ -121,7 +123,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 
     Logging::debug << "Complete command found '" << line << "'" << Logging::endl;
 
-    parser.parse(line);
+    parser.parse(*client, line);
   }
 
   if(read_buffer.fail())
