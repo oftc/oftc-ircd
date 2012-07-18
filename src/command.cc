@@ -38,12 +38,12 @@ Command::Command()
 Command::Command(CommandHandler handler, string name, 
   AccessLevel level=Registered, int min_args=0, int max_args=0, 
   int rate_control=0, void *data=0) : 
+    handler(handler),
     name(name),
     min_access(level), 
     min_args(min_args),
     max_args(max_args),
     rate_control(rate_control),
-    handler(handler),
     data(data)
 {
   transform(name.begin(), name.end(), name.begin(), toupper);

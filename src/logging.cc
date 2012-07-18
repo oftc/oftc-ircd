@@ -24,7 +24,6 @@
 */
 
 #include "stdinc.h"
-#include <time.h>
 #include <string.h>
 #include "config.h"
 #include "client.h"
@@ -58,60 +57,8 @@ bool Logging::flush(false);
 bool Logging::dostamp(true);
 stringstream Logging::stream;
 
-template Logging& Logging::operator <<(const string);
-template Logging& Logging::operator <<(const char *);
-template Logging& Logging::operator <<(char *);
-template Logging& Logging::operator <<(void *);
-template Logging& Logging::operator <<(Client *);
-template Logging& Logging::operator <<(const Client *);
-template Logging& Logging::operator <<(const int);
-template Logging& Logging::operator <<(const long);
-template Logging& Logging::operator <<(unsigned int);
-
 Logging::Logging(LogLevel level) : log_level(level)
 {
-}
-
-template<typename T>
-Logging& 
-Logging::operator <<(T param)
-{
-  if(log_level < Logging::get_min_loglevel())
-    return *this;
-
-  if(!log_stream.is_open())
-    return *this;
-
-  if(dostamp)
-  {
-    tm *tptr;
-    char datestr[Logging::MAX_DATE_LEN];
-    time_t current_time;
-
-    current_time = time(NULL);
-
-    tptr = localtime(&current_time);
-
-    strftime(datestr, sizeof(datestr)+10, "%Y-%m-%d %H:%M:%S%z", tptr);
-
-    stream << datestr << " - (core) [" << log_levels[log_level] << "] - ";
-
-    dostamp = false;
-  }
-
-  stream << param;
-
-  if(flush)
-  {
-    log_stream << stream.str();
-    log_stream.flush();
-    flush = false;
-    dostamp = true;
-    stream.str(string());
-    stream.clear();
-  }
-
-  return *this;
 }
 
 Logging&
@@ -134,6 +81,12 @@ Logging::string_to_level(const string name)
   }
 
   return static_cast<LogLevel>(-1);
+}
+
+string
+Logging::level_to_string(const LogLevel level)
+{
+  return log_levels[level];
 }
 
 void
