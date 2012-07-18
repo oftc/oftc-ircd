@@ -31,4 +31,4 @@ class Nick:
         print "Setting client nick from %s to %s" % (client.Name, nick)
         client.Name = nick
 
-Parser.Register("NICK", Nick.handle_nick)
+Parser.Register("NICK", Nick.handle_nick, min_args=1, max_args=2, access=2)
