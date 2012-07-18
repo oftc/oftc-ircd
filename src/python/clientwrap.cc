@@ -32,8 +32,6 @@
 
 template class PythonWrap<ClientWrap>;
 
-template void PythonWrap<ClientWrap>::init(const char *);
-
 static PyMethodDef client_methods[] =
 {
   { NULL, NULL, 0, NULL }
