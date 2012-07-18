@@ -34,13 +34,18 @@ typedef shared_ptr<Client> ClientPtr;
 class ClientWrap : public PythonWrap<ClientWrap>
 {
 private:
-  ClientPtr client;
+  Client& client;
 public:
   static void init();
+  static PyObject *get_name_wrap(PyObject *, void *);
+  static int set_name_wrap(PyObject *, PyObject *, void *);
 
   ClientWrap(Client& client);
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();
+
+  inline const char *get_name() const { return client.get_name().c_str(); }
+  inline void set_name(const char *name) { client.set_name(name); }
 };
 
 #endif

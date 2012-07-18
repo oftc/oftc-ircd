@@ -31,6 +31,7 @@
 #include "python/clientwrap.h"
 #include "command.h"
 #include "parser.h"
+#include "logging.h"
 
 static PyMethodDef parser_methods[] =
 {
@@ -109,7 +110,7 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 void
 ParserWrap::handle_command(const Client& client, const Command& command, const vector<string>& params)
 {
-  PyObject *args;
+  PyObject *args, *client_obj, *client_args;
   ClientWrap *wrapped_client;
 
   args = PyTuple_New(params.size() + 1);
@@ -119,7 +120,19 @@ ParserWrap::handle_command(const Client& client, const Command& command, const v
     return;
   }
 
-  wrapped_client = reinterpret_cast<ClientWrap *>(PyObject_CallObject(ClientWrap::get_type(), NULL));
+  Logging::debug << "handle_command, client: " << &client << Logging::endl;
+
+  client_obj = PyCapsule_New(const_cast<Client*>(&client), "client_ptr", NULL);
+
+  client_args = Py_BuildValue("(O)", client_obj);
+
+  wrapped_client = reinterpret_cast<ClientWrap *>(PyObject_CallObject(ClientWrap::get_type(), client_args));
+  if(wrapped_client == NULL)
+  {
+    PyErr_Print();
+    Py_DECREF(args);
+    return;
+  }
 
   PyTuple_SetItem(args, 0, reinterpret_cast<PyObject*>(wrapped_client));
 

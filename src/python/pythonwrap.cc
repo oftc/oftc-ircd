@@ -28,10 +28,12 @@
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
 #include "python/clientwrap.h"
+#include "logging.h"
 
 template<class T> PyTypeObject PythonWrap<T>::type_object;
 template<class T> PyMethodDef *PythonWrap<T>::methods;
 template<class T> PyMemberDef *PythonWrap<T>::members;
+template<class T> PyGetSetDef *PythonWrap<T>::getsetters;
 
 template class PythonWrap<ParserWrap>;
 template class PythonWrap<ClientWrap>;
@@ -53,6 +55,7 @@ PythonWrap<T>::init(const char *name)
   type_object.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
   type_object.tp_methods = PythonWrap<T>::methods;
   type_object.tp_members = PythonWrap<T>::members;
+  type_object.tp_getset = PythonWrap<T>::getsetters;
 
   if(PyType_Ready(&type_object) < 0)
   {
@@ -73,6 +76,8 @@ PythonWrap<T>::alloc(PyTypeObject *type, Py_ssize_t items)
   obj = reinterpret_cast<PyObject *>(ret);
   PyObject_INIT(obj, type);
 
+  Logging::debug << "Init type: " << type->tp_name << ": " << (void*)obj << ". Size: " << _PyObject_VAR_SIZE(type, items) << Logging::endl;
+
   return obj;
 }
 
@@ -81,6 +86,8 @@ void
 PythonWrap<T>::free(void *ptr)
 {
   char *obj = static_cast<char *>(ptr);
+
+  Logging::debug << "free pointer: " << ptr << Logging::endl;
 
   delete[] obj;
 }

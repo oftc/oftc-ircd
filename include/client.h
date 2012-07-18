@@ -26,15 +26,24 @@
 #ifndef CLIENT_H_INC
 #define CLIENT_H_INC
 
+#include <string>
+
+using std::string;
+
 class Connection;
 
 class Client
 {
 private:
   shared_ptr<Connection> connection;
+  string name;
 public:
   Client();
   Client(Connection *);
+  ~Client();
+
+  inline string get_name() const { return name; }
+  inline void set_name(string _name) { name = _name; }
 };
 
 #endif

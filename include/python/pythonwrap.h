@@ -34,6 +34,7 @@ protected:
   static PyTypeObject type_object;
   static PyMethodDef *methods;
   static PyMemberDef *members;
+  static PyGetSetDef *getsetters;
 public:
   static void init(const char *);
   static PyObject *alloc(PyTypeObject *, Py_ssize_t);

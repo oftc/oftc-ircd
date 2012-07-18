@@ -26,11 +26,19 @@
 #include "stdinc.h"
 #include "client.h"
 #include "connection.h"
+#include "logging.h"
 
-Client::Client()
+Client::Client() 
 {
+  Logging::debug << "Created client(): " << this << Logging::endl;
 }
 
 Client::Client(Connection *connection) : connection(connection)
 {
+  Logging::debug << "Created client(connection): " << this << Logging::endl;
+}
+
+Client::~Client()
+{
+  Logging::debug << "Destroyed Client: " << this << Logging::endl;
 }

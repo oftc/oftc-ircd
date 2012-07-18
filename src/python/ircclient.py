@@ -28,8 +28,7 @@ print "Hello World, from python"
 class Nick:
     @staticmethod
     def handle_nick(client, nick):
-        print "I HAVE A NICK COMMAND, WHAT DO I DO WITH IT?!?!?!"
-        print dir(client)
-        print nick
+        print "Setting client nick from %s to %s" % (client.Name, nick)
+        client.Name = nick
 
 Parser.Register("NICK", Nick.handle_nick)

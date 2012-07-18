@@ -28,33 +28,48 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
+#include "logging.h"
 
 template class PythonWrap<ClientWrap>;
 
 template void PythonWrap<ClientWrap>::init(const char *);
 
-
-static PyMethodDef parser_methods[] =
+static PyMethodDef client_methods[] =
 {
   { NULL, NULL, 0, NULL }
 };
 
-static PyMemberDef parser_members[] =
+static PyMemberDef client_members[] =
 {
   { NULL, 0, 0, 0, NULL }
 };
 
-ClientWrap::ClientWrap(Client &_client)
+static PyGetSetDef client_getsetters[] = {
+  { "Name", ClientWrap::get_name_wrap, ClientWrap::set_name_wrap, "Name", NULL},
+  { NULL, NULL, NULL, NULL, NULL }
+};
+
+ClientWrap::ClientWrap(Client &_client) : client(_client)
 {
-  client.reset(&_client);
+  Logging::debug << "ClientWrap(): " << (void *)this << Logging::endl;
 }
 
-ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
+ClientWrap::ClientWrap(PyObject *args, PyObject *kwds) : client(Client())
 {
+  PyObject *client_obj;
+  Client *ptr;
+
+  PyArg_ParseTuple(args, "O", &client_obj);
+
+  ptr = (reinterpret_cast<Client*>(PyCapsule_GetPointer(client_obj, "client_ptr")));
+  client = *ptr;
+
+  Logging::debug << "ClientWrap(py): " << (void *)this << Logging::endl;
 }
 
 ClientWrap::~ClientWrap()
 {
+  Logging::debug << "~ClientWrap: " << (void *)this << Logging::endl;
 }
 
 // Statics
@@ -62,7 +77,39 @@ ClientWrap::~ClientWrap()
 void
 ClientWrap::init()
 {
-  PythonWrap<ClientWrap>::methods = parser_methods;
-  PythonWrap<ClientWrap>::members = parser_members;
+  PythonWrap<ClientWrap>::methods = client_methods;
+  PythonWrap<ClientWrap>::members = client_members;
+  PythonWrap<ClientWrap>::getsetters = client_getsetters;
   PythonWrap<ClientWrap>::init("Client");
+}
+
+PyObject *
+ClientWrap::get_name_wrap(PyObject *self, void *closure)
+{
+  ClientWrap *client = reinterpret_cast<ClientWrap*>(self);
+  PyObject *name = PyString_FromString(client->get_name());
+
+  return name;
+}
+
+int
+ClientWrap::set_name_wrap(PyObject *self, PyObject *value, void *closure)
+{
+  ClientWrap *client = reinterpret_cast<ClientWrap*>(self);
+
+  if(value == NULL)
+  {
+    PyErr_SetString(PyExc_TypeError, "Cannot delete the Name attribute");
+    return -1;
+  }
+
+  if(!PyString_Check(value))
+  {
+    PyErr_SetString(PyExc_TypeError, "Name must be a string");
+    return -1;
+  }
+
+  client->set_name(PyString_AsString(value));
+
+  return 0;
 }

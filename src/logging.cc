@@ -28,6 +28,7 @@
 #include <string.h>
 #include "logging.h"
 #include "config.h"
+#include "client.h"
 
 #ifdef _WIN32 
 #define strncasecmp strnicmp 
@@ -62,8 +63,11 @@ template Logging& Logging::operator <<(const string);
 template Logging& Logging::operator <<(const char *);
 template Logging& Logging::operator <<(char *);
 template Logging& Logging::operator <<(void *);
+template Logging& Logging::operator <<(Client *);
+template Logging& Logging::operator <<(const Client *);
 template Logging& Logging::operator <<(const int);
 template Logging& Logging::operator <<(const long);
+template Logging& Logging::operator <<(unsigned int);
 
 Logging::Logging(LogLevel level) : log_level(level)
 {
