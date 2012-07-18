@@ -21,14 +21,12 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #  OTHER DEALINGS IN THE SOFTWARE.
 
-from pythonwrap import Parser
+from ircd import register
 
 print "Hello World, from python"
 
-class Nick:
-    @staticmethod
-    def handle_nick(client, nick):
-        print "Setting client nick from %s to %s" % (client.Name, nick)
-        client.Name = nick
+@register("NICK", min_args=1, max_args=2, access=2)
+def handle_nick(client, nick):
+  print "Setting client nick from %s to %s" % (client.Name, nick)
+  client.Name = nick
 
-Parser.Register("NICK", Nick.handle_nick, min_args=1, max_args=2, access=2)
