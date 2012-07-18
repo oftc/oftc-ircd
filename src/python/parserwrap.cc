@@ -121,7 +121,7 @@ ParserWrap::handle_command(const ClientPtr client, const Command& command, const
     return;
   }
 
-  client_obj = PyCapsule_New(const_cast<ClientPtr *>(&client), "client_ptr", NULL);
+  client_obj = PyCObject_FromVoidPtr(const_cast<ClientPtr*>(&client), NULL);
 
   client_args = Py_BuildValue("(O)", client_obj);
 

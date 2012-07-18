@@ -54,7 +54,7 @@ ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
 
   PyArg_ParseTuple(args, "O", &client_obj);
 
-  ptr = *(reinterpret_cast<ClientPtr*>(PyCapsule_GetPointer(client_obj, "client_ptr")));
+  ptr = *(reinterpret_cast<ClientPtr*>(PyCObject_AsVoidPtr(client_obj)));
   client = ptr;
 }
 
