@@ -28,7 +28,6 @@
 #include <limits.h>
 #include "listenersection.h"
 #include "listener.h"
-#include "logging.h"
 
 void
 ListenerSection::set_defaults()

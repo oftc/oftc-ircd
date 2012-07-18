@@ -31,7 +31,6 @@
 #include "python/clientwrap.h"
 #include "command.h"
 #include "parser.h"
-#include "logging.h"
 #include "client.h"
 
 static PyMethodDef parser_methods[] =

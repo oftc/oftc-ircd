@@ -28,7 +28,6 @@
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
 #include "python/clientwrap.h"
-#include "logging.h"
 
 template<class T> PyTypeObject PythonWrap<T>::type_object;
 template<class T> PyMethodDef *PythonWrap<T>::methods;

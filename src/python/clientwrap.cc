@@ -28,7 +28,6 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
-#include "logging.h"
 
 template class PythonWrap<ClientWrap>;
 

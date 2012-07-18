@@ -34,7 +34,6 @@
 #include "system.h"
 #include "listener.h"
 #include "listenersection.h"
-#include "logging.h"
 #include "connection.h"
 #include "sslconnection.h"
 

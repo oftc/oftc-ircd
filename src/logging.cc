@@ -26,7 +26,6 @@
 #include "stdinc.h"
 #include <time.h>
 #include <string.h>
-#include "logging.h"
 #include "config.h"
 #include "client.h"
 

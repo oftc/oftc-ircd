@@ -44,6 +44,7 @@
 #  endif
 #  include <memory>
 #endif
+#include "logging.h"
 
 using std::tr1::shared_ptr;
 

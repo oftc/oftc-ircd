@@ -26,7 +26,6 @@
 #include "stdinc.h"
 #include "client.h"
 #include "connection.h"
-#include "logging.h"
 
 Client::Client() 
 {

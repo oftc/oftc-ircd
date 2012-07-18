@@ -27,7 +27,6 @@
 #include <uv.h>
 #include "sslconnection.h"
 #include "system.h"
-#include "logging.h"
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 

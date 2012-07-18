@@ -29,7 +29,6 @@
 #include <openssl/ssl.h>
 #include <iostream>
 #include "config.h"
-#include "logging.h"
 #include "system.h"
 #include "listener.h"
 #include "module.h"

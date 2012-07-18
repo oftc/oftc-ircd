@@ -26,7 +26,6 @@
 #include "stdinc.h"
 #include <json/json.h>
 #include "loggingsection.h"
-#include "logging.h"
 
 void
 LoggingSection::set_defaults()

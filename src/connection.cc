@@ -28,7 +28,6 @@
 #include <uv.h>
 #include "connection.h"
 #include "system.h"
-#include "logging.h"
 #include "client.h"
 
 using std::getline;

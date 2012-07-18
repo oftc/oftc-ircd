@@ -32,7 +32,6 @@
 #include "python/parserwrap.h"
 #include "python/clientwrap.h"
 #include "module.h"
-#include "logging.h"
 
 using std::string;
 using std::stringstream;
