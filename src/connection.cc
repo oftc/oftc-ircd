@@ -31,7 +31,7 @@
 #include "client.h"
 
 using std::getline;
-using std::tr1::make_shared;
+using std::make_shared;
 
 vector<ConnectionPtr> Connection::connections;
 
