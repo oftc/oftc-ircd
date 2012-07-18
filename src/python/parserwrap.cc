@@ -79,7 +79,7 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
     "max_args",
     "access",
     "rate_control",
-    "NULL"
+    NULL
   };
   char *name;
   PyObject *function;
