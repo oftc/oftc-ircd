@@ -36,6 +36,7 @@
 #include "listenersection.h"
 #include "connection.h"
 #include "sslconnection.h"
+#include "ssl.h"
 
 typedef vector<ListenerPtr>::const_iterator ListenerConstIt;
 
@@ -55,7 +56,7 @@ void
 Listener::connected(uv_stream_t *stream, int status)
 {
   Connection *connection;
-  if(is_ssl())
+  if(Ssl::is_enabled() && is_ssl())
     connection = SSLConnection::create();
   else
     connection = Connection::create();

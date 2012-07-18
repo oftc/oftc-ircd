@@ -27,13 +27,12 @@
 #include <uv.h>
 #include "sslconnection.h"
 #include "system.h"
-#include <openssl/ssl.h>
-#include <openssl/err.h>
+#include "ssl.h"
 
 void
 SSLConnection::accept(uv_stream_t *server_handle)
 {
-  ssl = SSL_new(System::get_ssl_context());
+  ssl = SSL_new(Ssl::get_context());
   read_bio = BIO_new(BIO_s_mem());
   write_bio = BIO_new(BIO_s_mem());
 

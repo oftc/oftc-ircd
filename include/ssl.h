@@ -23,31 +23,21 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef SYSTEM_H_INC
-#define SYSTEM_H_INC
+#ifndef SSL_H_INC
+#define SSL_H_INC
 
-#include <string>
-#include "generalsection.h"
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 
-using std::string;
-
-class System 
+class Ssl
 {
 private:
-  static GeneralSection config;
-  static const char *config_path;
+  static bool enabled;
+  static SSL_CTX *context;
 public:
-#ifndef _WIN32
-  static void daemonize();
-#endif
-  static void parse_args(int, const char* const []);
   static void init();
-  static string perror(const char *);
-  static string uv_perror(const char *);
-  static inline bool get_daemon() { return config.get_daemon(); }
-  static inline const char *get_config_path() { return config_path; }
-  static inline string get_ssl_certificate() { return config.get_ssl_certificate(); }
-  static inline string get_ssl_privatekey() { return config.get_ssl_privatekey(); }
+  static inline SSL_CTX *get_context() { return context; }
+  static inline bool is_enabled() { return enabled; }
 };
 
 #endif

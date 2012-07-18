@@ -23,66 +23,48 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "python/pythonloader.h"
 #include "stdinc.h"
-#include <uv.h>
-#include <iostream>
-#include "config.h"
-#include "system.h"
-#include "listener.h"
-#include "module.h"
 #include "ssl.h"
+#include "system.h"
 
-using std::cerr;
-using std::endl;
+SSL_CTX *Ssl::context;
+bool Ssl::enabled;
 
-int 
-main(int argc, char *argv[])
+void
+Ssl::init()
 {
-  uv_loop_t *uv_loop;
+  SSL_load_error_strings();
+  SSL_library_init();
 
-  uv_loop = uv_default_loop();
-
-  try
+  context = SSL_CTX_new(SSLv23_method());
+  if(context == NULL)
   {
-    System::init();
-    System::parse_args(argc, argv);
-
-    Logging::init();
-    Listener::init();
-    Module::init();
-
-    Config::init(System::get_config_path());
-    Logging::start();
-
-    Logging::info << "oftc-ircd starting up" << Logging::endl;
-  }
-  catch(exception &ex)
-  {
-    cerr << "Unhandled exception: " << ex.what() << endl;
-    return 1;
+    enabled = false;
+    Logging::warning << "Unable to initialize SSL context: " << ERR_lib_error_string(ERR_get_error()) <<
+      ". Disabling SSL." << Logging::endl;
+    return;
   }
 
-  // Now that logging is setup, switch to a try catch that will log as well
-  try
-  {
-#ifndef _WIN32
-    if(System::get_daemon())
-      System::daemonize();
-#endif
-    Ssl::init();
-    PythonLoader::init();
-    Module::load_all();
-    Listener::start_listeners();
-    uv_run(uv_loop);
-  }
-  catch(exception &ex)
-  {
-    Logging::critical << "Unhandled exception: " << ex.what() << Logging::endl;
-    cerr << "Unhandled exception: " << ex.what() << endl;
+  SSL_CTX_set_options(context, SSL_OP_NO_SSLv2);
+  SSL_CTX_set_options(context, SSL_OP_TLS_ROLLBACK_BUG | SSL_OP_ALL);
 
-    return 1;
+  string cert_file = System::get_ssl_certificate();
+  if(cert_file.empty() || !SSL_CTX_use_certificate_chain_file(context, cert_file.c_str()))
+  {
+    enabled = false;
+    Logging::warning << "Unable to load SSL certificate: " << ERR_lib_error_string(ERR_get_error()) <<
+      ". Disabling SSL" << Logging::endl;
+    return;
   }
 
-  return 0;
+  string key_file = System::get_ssl_privatekey();
+  if(key_file.empty() || !SSL_CTX_use_PrivateKey_file(context, key_file.c_str(), SSL_FILETYPE_PEM))
+  {
+    enabled = false;
+    Logging::warning << "Unable to load SSL private key: " << ERR_lib_error_string(ERR_get_error()) <<
+      ". Disabling SSL" << Logging::endl;
+    return;
+  }
+
+  enabled = true;
 }
