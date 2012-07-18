@@ -30,6 +30,10 @@
 
 using std::string;
 
+class Client;
+
+typedef shared_ptr<Client> ClientPtr;
+
 class Connection;
 
 class Client
@@ -40,8 +44,7 @@ private:
 public:
   Client();
   Client(Connection *);
-  ~Client();
-
+  
   inline string get_name() const { return name; }
   inline void set_name(string _name) { name = _name; }
 };

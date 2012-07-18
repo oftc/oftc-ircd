@@ -47,27 +47,19 @@ static PyGetSetDef client_getsetters[] = {
   { NULL, NULL, NULL, NULL, NULL }
 };
 
-ClientWrap::ClientWrap(Client &_client) : client(_client)
-{
-  Logging::debug << "ClientWrap(): " << (void *)this << Logging::endl;
-}
-
-ClientWrap::ClientWrap(PyObject *args, PyObject *kwds) : client(Client())
+ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
 {
   PyObject *client_obj;
-  Client *ptr;
+  ClientPtr ptr;
 
   PyArg_ParseTuple(args, "O", &client_obj);
 
-  ptr = (reinterpret_cast<Client*>(PyCapsule_GetPointer(client_obj, "client_ptr")));
-  client = *ptr;
-
-  Logging::debug << "ClientWrap(py): " << (void *)this << Logging::endl;
+  ptr = *(reinterpret_cast<ClientPtr*>(PyCapsule_GetPointer(client_obj, "client_ptr")));
+  client = ptr;
 }
 
 ClientWrap::~ClientWrap()
 {
-  Logging::debug << "~ClientWrap: " << (void *)this << Logging::endl;
 }
 
 // Statics

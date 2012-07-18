@@ -123,7 +123,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 
     Logging::debug << "Complete command found '" << line << "'" << Logging::endl;
 
-    parser.parse(*client, line);
+    parser.parse(client, line);
   }
 
   if(read_buffer.fail())

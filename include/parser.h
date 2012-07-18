@@ -40,7 +40,7 @@ private:
   
   map<string, Command> commands;
 public:
-  void parse(const Client&, const string& line);
+  void parse(const ClientPtr, const string& line);
   void register_command(Command command);
   static inline Parser& get_default() { return default_parser; }
 };

@@ -28,6 +28,7 @@
 
 #include <string>
 #include <vector>
+#include "client.h"
 
 using std::string;
 using std::vector;
@@ -35,7 +36,7 @@ using std::vector;
 class Command; 
 class Client;
 
-typedef void (*CommandHandler)(const Client&, const Command&, const vector<string>&);
+typedef void (*CommandHandler)(const ClientPtr, const Command&, const vector<string>&);
 
 enum AccessLevel
 {

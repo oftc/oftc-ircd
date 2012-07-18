@@ -28,6 +28,7 @@
 
 #include "Python.h"
 #include "parser.h"
+#include "client.h"
 
 typedef shared_ptr<Parser> ParserPtr;
 
@@ -38,7 +39,7 @@ private:
 public:
   static void init();
   static PyObject *register_command(PyObject *, PyObject *, PyObject *);
-  static void handle_command(const Client&, const Command&, const vector<string>&);
+  static void handle_command(const ClientPtr, const Command&, const vector<string>&);
 
   ParserWrap();
   ParserWrap(PyObject *, PyObject *);

@@ -47,7 +47,7 @@ Parser::register_command(Command command)
 }
 
 void
-Parser::parse(const Client& client, const string& line)
+Parser::parse(const ClientPtr client, const string& line)
 {
   stringstream stream(line);
   vector<string> args;

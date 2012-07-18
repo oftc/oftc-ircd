@@ -76,8 +76,6 @@ PythonWrap<T>::alloc(PyTypeObject *type, Py_ssize_t items)
   obj = reinterpret_cast<PyObject *>(ret);
   PyObject_INIT(obj, type);
 
-  Logging::debug << "Init type: " << type->tp_name << ": " << (void*)obj << ". Size: " << _PyObject_VAR_SIZE(type, items) << Logging::endl;
-
   return obj;
 }
 
@@ -86,8 +84,6 @@ void
 PythonWrap<T>::free(void *ptr)
 {
   char *obj = static_cast<char *>(ptr);
-
-  Logging::debug << "free pointer: " << ptr << Logging::endl;
 
   delete[] obj;
 }
