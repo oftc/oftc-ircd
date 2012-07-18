@@ -42,7 +42,7 @@ static PyMemberDef client_members[] =
 };
 
 static PyGetSetDef client_getsetters[] = {
-  { "Name", ClientWrap::get_name_wrap, ClientWrap::set_name_wrap, "Name", NULL},
+  { const_cast<char*>("Name"), ClientWrap::get_name_wrap, ClientWrap::set_name_wrap, const_cast<char*>("Name"), NULL},
   { NULL, NULL, NULL, NULL, NULL }
 };
 

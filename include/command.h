@@ -48,12 +48,12 @@ enum AccessLevel
 class Command
 {
 private:
+  CommandHandler handler;
+  string name;
   AccessLevel min_access;
   int min_args;
   int max_args;
   int rate_control;
-  string name;
-  CommandHandler handler;
   void *data;
 public:
   Command();

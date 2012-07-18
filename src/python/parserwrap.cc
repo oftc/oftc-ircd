@@ -72,12 +72,12 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 {
   char *kwlist[] = 
   {
-    "name",
-    "function",
-    "min_args",
-    "max_args",
-    "access",
-    "rate_control",
+    const_cast<char *>("name"),
+    const_cast<char *>("function"),
+    const_cast<char *>("min_args"),
+    const_cast<char *>("max_args"),
+    const_cast<char *>("access"),
+    const_cast<char *>("rate_control"),
     NULL
   };
   char *name;
