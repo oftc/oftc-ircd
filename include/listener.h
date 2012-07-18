@@ -28,7 +28,6 @@
 
 #include <string>
 #include <vector>
-#include <map>
 #include <memory>
 #include <uv.h>
 #include "listenersection.h"

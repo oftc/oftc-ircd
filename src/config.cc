@@ -34,10 +34,10 @@ using std::ifstream;
 using std::cerr;
 using std::endl;
 
-typedef map<string, ConfigSection *>::const_iterator ConfigSectionConstIt;
+typedef unordered_map<string, ConfigSection *>::const_iterator ConfigSectionConstIt;
 
 // Initialise the static member
-map<string, ConfigSection *> Config::sections;
+unordered_map<string, ConfigSection *> Config::sections;
 
 // Statics
 void

@@ -27,7 +27,7 @@
 #define CONFIG_H_INC
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include "configsection.h"
 
 #ifdef _WIN32
@@ -36,13 +36,13 @@
 #define CONFIG_PATH "/home/stu/oircd/etc/ircd.conf"
 #endif
 
-using std::map;
+using std::unordered_map;
 using std::string;
 
 class Config
 {
 private:
-  static map<string, ConfigSection *> sections;
+  static unordered_map<string, ConfigSection *> sections;
   static ConfigSection *find_section(const char *name);
 public:
   static void add_section(const string name, ConfigSection* const section);

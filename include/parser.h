@@ -27,18 +27,18 @@
 #define PARSER_H_INC
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include "command.h"
 
 using std::string;
-using std::map;
+using std::unordered_map;
 
 class Parser
 {
 private:
   static Parser default_parser;
   
-  map<string, Command> commands;
+  unordered_map<string, Command> commands;
 public:
   void parse(const ClientPtr, const string& line);
   void register_command(Command command);
