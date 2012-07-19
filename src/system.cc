@@ -29,6 +29,7 @@
 #ifndef _WIN32
 #include <stdlib.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #endif
 #include <uv.h>
