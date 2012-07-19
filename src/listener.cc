@@ -43,7 +43,7 @@ typedef vector<ListenerPtr>::const_iterator ListenerConstIt;
 ListenerSection Listener::config;
 vector<ListenerPtr> Listener::listeners;
 
-Listener::Listener() : host(""), port(6667)
+Listener::Listener() : host(""), port(6667), flags(static_cast<ListenerFlag>(0))
 {
 }
 

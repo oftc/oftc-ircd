@@ -37,8 +37,6 @@ ListenerSection::set_defaults()
 void
 ListenerSection::process(const Json::Value value)
 {
-  int flags;
-
   if(value.type() != Json::arrayValue)
     throw runtime_error("listener section not an array as expected");
 
@@ -47,6 +45,7 @@ ListenerSection::process(const Json::Value value)
     Json::Value val = *it;
     string host(val["host"].asString());
     int port;
+    int flags = 0;
 
     if(!val["port"])
       port = Listener::DEFAULT_PORT;
