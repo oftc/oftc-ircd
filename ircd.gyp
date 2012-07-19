@@ -103,6 +103,7 @@
       'cflags': 
       [ 
         '-std=c++0x', 
+        '-stdlib=libc++',
         '-Wall', 
         '-Wextra', 
         '-pedantic', 
@@ -118,6 +119,7 @@
         '-lpython<!@(<(python-version))',
         '-lssl',
         '-lcrypto',
+        '-lc++',
       ],
     }
     ],

@@ -22,8 +22,8 @@
 #  OTHER DEALINGS IN THE SOFTWARE.
 
 # Variables
-export CC=gcc
-export CXX=g++
+export CC=clang
+export CXX=clang++
 GYP ?= gyp
 BUILDDIR ?= build
 LIBRARY ?= static_library
