@@ -23,6 +23,7 @@
     'sources': 
     [
       'common.gypi',
+      'etc/example.conf',
       'include/client.h',
       'include/command.h',
       'include/config.h',
