@@ -25,8 +25,12 @@ from ircd import register
 
 print "Hello World, from python"
 
-@register("NICK", min_args=1, max_args=2, access=2)
+@register("NICK", min_args=1, max_args=2, access=1)
 def handle_nick(client, nick):
-  print "Setting client nick from %s to %s" % (client.Name, nick)
   client.Name = nick
 
+@register("USER", min_args=4, max_args=4, access=1)
+def handle_nick(client, username, unused, unused2, realname):
+  client.Username = username
+  client.Realname = realname
+  print "Nick: %s User: %s Realname: %s" % (client.Name, client.Username, client.Realname)

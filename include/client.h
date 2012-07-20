@@ -49,6 +49,8 @@ private:
 
   shared_ptr<Connection> connection;
   string name;
+  string username;
+  string realname;
   AccessLevel level;
 public:
   Client();
@@ -60,8 +62,14 @@ public:
   static inline ClientPtr get_me() { return me; }
 
   inline string get_name() const { return name; }
+  inline string get_username() const { return username; }
+  inline string get_realname() const { return realname; }
+
   inline bool is_registered() const { return level > Registered; }
+
   inline void set_name(string _name) { name = _name; }
+  inline void set_username(string _username) { username = _username; }
+  inline void set_realname(string _realname) { realname = _realname; }
 };
 
 #endif

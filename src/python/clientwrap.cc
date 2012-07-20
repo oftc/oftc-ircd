@@ -42,7 +42,10 @@ static PyMemberDef client_members[] =
 };
 
 static PyGetSetDef client_getsetters[] = {
-  { const_cast<char*>("Name"), ClientWrap::get_name_wrap, ClientWrap::set_name_wrap, const_cast<char*>("Name"), NULL},
+  { const_cast<char*>("Name"), ClientWrap::get_wrap, ClientWrap::set_wrap, const_cast<char*>("Name"), "name"},
+  { const_cast<char*>("Username"), ClientWrap::get_wrap, ClientWrap::set_wrap, const_cast<char*>("Username"), "username"},
+  { const_cast<char*>("Realname"), ClientWrap::get_wrap, ClientWrap::set_wrap, const_cast<char*>("Real Name"), "realname"},
+
   { NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -73,18 +76,29 @@ ClientWrap::init()
 }
 
 PyObject *
-ClientWrap::get_name_wrap(PyObject *self, void *closure)
+ClientWrap::get_wrap(PyObject *self, void *closure)
 {
   ClientWrap *client = reinterpret_cast<ClientWrap*>(self);
-  PyObject *name = PyString_FromString(client->get_name());
+  string prop = string(static_cast<char *>(closure));
+  string value;
+
+  if(prop == "name")
+    value = client->get_name();
+  else if(prop == "username")
+    value = client->get_username();
+  else if(prop == "realname")
+    value = client->get_realname();
+
+  PyObject *name = PyString_FromString(value.c_str());
 
   return name;
 }
 
 int
-ClientWrap::set_name_wrap(PyObject *self, PyObject *value, void *closure)
+ClientWrap::set_wrap(PyObject *self, PyObject *value, void *closure)
 {
   ClientWrap *client = reinterpret_cast<ClientWrap*>(self);
+  string prop = string(static_cast<char *>(closure));
 
   if(value == NULL)
   {
@@ -98,7 +112,12 @@ ClientWrap::set_name_wrap(PyObject *self, PyObject *value, void *closure)
     return -1;
   }
 
-  client->set_name(PyString_AsString(value));
+  if(prop == "name")
+    client->set_name(PyString_AsString(value));
+  else if(prop == "username")
+    client->set_username(PyString_AsString(value));
+  else if(prop == "realname")
+    client->set_realname(PyString_AsString(value));
 
   return 0;
 }

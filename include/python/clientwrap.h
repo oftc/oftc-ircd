@@ -35,14 +35,19 @@ private:
   ClientPtr client;
 public:
   static void init();
-  static PyObject *get_name_wrap(PyObject *, void *);
-  static int set_name_wrap(PyObject *, PyObject *, void *);
+  static PyObject *get_wrap(PyObject *, void *);
+  static int set_wrap(PyObject *, PyObject *, void *);
 
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();
 
-  inline const char *get_name() const { return client->get_name().c_str(); }
+  inline string get_name() const { return client->get_name(); }
+  inline string get_username() const { return client->get_username(); }
+  inline string get_realname() const { return client->get_realname(); }
+
   inline void set_name(const char *name) { client->set_name(name); }
+  inline void set_username(const char *username) { client->set_username(username); }
+  inline void set_realname(const char *realname) { client->set_realname(realname); }
 };
 
 #endif
