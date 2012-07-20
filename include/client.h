@@ -57,6 +57,7 @@ public:
   Client(Connection *);
 
   void send(int, ...);
+  void send(string);
   
   static void init();
   static inline ClientPtr get_me() { return me; }

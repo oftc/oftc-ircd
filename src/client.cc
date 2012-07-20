@@ -31,6 +31,7 @@
 #include "system.h"
 
 using std::make_shared;
+using std::string;
 
 ClientPtr Client::me;
 vector<ClientPtr> Client::client_list;
@@ -41,6 +42,17 @@ Client::Client()
 
 Client::Client(Connection *connection) : connection(connection)
 {
+}
+
+void
+Client::send(string message)
+{
+  if (message.length() >= 510)
+    message.resize(510);
+
+  message.append("\r\n");
+
+  connection->send(message);
 }
 
 void
@@ -58,15 +70,10 @@ Client::send(int numeric, ...)
     buffer << name;
 
   buffer << " " << Numeric::format(numeric, args);
-  string message = buffer.str();
   
-  if(message.length() >= 510)
-    message.resize(510);
-
-  message.append("\r\n");
   va_end(args);
 
-  connection->send(message);
+  send(buffer.str());
 }
 
 // Statics
