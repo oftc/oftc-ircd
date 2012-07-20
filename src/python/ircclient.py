@@ -36,4 +36,4 @@ def handle_user(client, username, unused, unused2, realname):
 
 def check_and_register(client):
   if client.Name and client.Username:
-    client.register()
+    client.add()
