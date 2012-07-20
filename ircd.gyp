@@ -111,6 +111,7 @@
           '-pedantic',
           '-Wno-long-long',
           '-Wno-unused-parameter',
+          '-Wno-deprecated-declarations',
         ],
         'OTHER_CFLAGS': [
           '-std=c++0x',
