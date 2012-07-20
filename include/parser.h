@@ -29,6 +29,7 @@
 #include <string>
 #include <unordered_map>
 #include "command.h"
+#include "client.h"
 
 using std::string;
 using std::unordered_map;

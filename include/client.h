@@ -29,6 +29,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include "command.h"
 
 using std::string;
 using std::shared_ptr;
@@ -48,6 +49,7 @@ private:
 
   shared_ptr<Connection> connection;
   string name;
+  AccessLevel level;
 public:
   Client();
   Client(Connection *);
@@ -58,6 +60,7 @@ public:
   static inline ClientPtr get_me() { return me; }
 
   inline string get_name() const { return name; }
+  inline bool is_registered() const { return level > Registered; }
   inline void set_name(string _name) { name = _name; }
 };
 

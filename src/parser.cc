@@ -69,7 +69,8 @@ Parser::parse(const ClientPtr client, const string& line)
   unordered_map<string, Command>::iterator it = commands.find(command);
   if(it == commands.end())
   {
-    // Invalid command, go away
+    if(client->is_registered())
+      client->send(Numeric::ERR_UNKNOWNCOMMAND, command.c_str());
     return;
   }
 

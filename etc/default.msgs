@@ -1,6 +1,7 @@
 {
   "default":
   {
+    "421": "%s :Unknown command",
     "461": "%s :Not enough parameters.  Got %d, expected at least %d"
   }
 }

@@ -37,6 +37,7 @@ class Numeric
 private:
   static Json::Value message_table;
 public:
+  static const int ERR_UNKNOWNCOMMAND = 421;
   static const int ERR_NEEDMOREPARAMS = 461;
 
   static void load_messages(string);

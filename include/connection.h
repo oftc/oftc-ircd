@@ -28,12 +28,14 @@
 
 #include <vector>
 #include <sstream>
+#include <memory>
 
 #include <uv.h>
 #include "parser.h"
 
 using std::vector;
 using std::stringstream;
+using std::shared_ptr;
 
 class Client;
 class Connection;
