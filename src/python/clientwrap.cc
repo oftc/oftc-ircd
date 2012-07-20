@@ -82,9 +82,9 @@ ClientWrap::send(PyObject *self, PyObject *args, PyObject *kwargs)
 
   PyDict_SetItemString(kwargs, "client", self);
 
-  fargs = PyTuple_New(0);
   meth = PyObject_GetAttrString(fmt, "format");
 
+  fargs = PyTuple_New(0);
   result = PyObject_Call(meth, fargs, kwargs);
 
   if(result == NULL)
@@ -92,6 +92,7 @@ ClientWrap::send(PyObject *self, PyObject *args, PyObject *kwargs)
     return NULL;
   }
 
+  client = reinterpret_cast<ClientWrap*>(self);
   client->client->send(PyString_AsString(result));
 
   return Py_None;
