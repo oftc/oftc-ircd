@@ -100,6 +100,8 @@ ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
   fargs = PyTuple_New(0);
   result = PyObject_Call(meth, fargs, kwargs);
 
+  Py_DECREF(meth);
+
   if(result == NULL)
   {
     return NULL;
@@ -107,6 +109,10 @@ ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
 
   self->client->send(PyString_AsString(result));
 
+  Py_DECREF(result);
+  Py_DECREF(fargs);
+
+  Py_INCREF(Py_None);
   return Py_None;
 }
 
