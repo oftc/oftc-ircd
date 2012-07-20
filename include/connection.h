@@ -61,6 +61,7 @@ public:
   Connection();
 
   virtual void accept(uv_stream_t *);
+  virtual void send(string);
   virtual void send(const char *, size_t);
 
 };

@@ -31,6 +31,7 @@
 #include <unordered_map>
 #include "parser.h"
 #include "client.h"
+#include "numeric.h"
 
 using std::string;
 using std::stringstream;
@@ -88,6 +89,13 @@ Parser::parse(const ClientPtr client, const string& line)
       arg = tmpstream.str();
     }
     args.push_back(arg);
+  }
+
+  if(args.size() < cmd.get_min_args())
+  {
+    client->send(Numeric::ERR_NEEDMOREPARAMS, command.c_str(), args.size(), 
+      cmd.get_min_args());
+    return;
   }
 
   cmd.get_handler()(client, cmd, args);

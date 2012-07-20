@@ -23,42 +23,24 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CLIENT_H_INC
-#define CLIENT_H_INC
+#ifndef NUMERIC_H_INC
+#define NUMERIC_H_INC
 
+#include "json/json.h"
+#include <stdarg.h>
 #include <string>
-#include <memory>
-#include <vector>
 
 using std::string;
-using std::shared_ptr;
-using std::vector;
 
-class Client;
-
-typedef shared_ptr<Client> ClientPtr;
-
-class Connection;
-
-class Client
+class Numeric
 {
 private:
-  static vector<ClientPtr> client_list;
-  static ClientPtr me;
-
-  shared_ptr<Connection> connection;
-  string name;
+  static Json::Value message_table;
 public:
-  Client();
-  Client(Connection *);
+  static const int ERR_NEEDMOREPARAMS = 461;
 
-  void send(int, ...);
-  
-  static void init();
-  static inline ClientPtr get_me() { return me; }
-
-  inline string get_name() const { return name; }
-  inline void set_name(string _name) { name = _name; }
+  static void load_messages(string);
+  static string format(int, va_list);
 };
 
 #endif

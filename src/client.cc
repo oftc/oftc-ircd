@@ -24,8 +24,16 @@
 */
 
 #include "stdinc.h"
+#include <stdarg.h>
 #include "client.h"
 #include "connection.h"
+#include "numeric.h"
+#include "system.h"
+
+using std::make_shared;
+
+ClientPtr Client::me;
+vector<ClientPtr> Client::client_list;
 
 Client::Client() 
 {
@@ -33,4 +41,39 @@ Client::Client()
 
 Client::Client(Connection *connection) : connection(connection)
 {
+}
+
+void
+Client::send(int numeric, ...)
+{
+  va_list args;
+  stringstream buffer;
+
+  va_start(args, numeric);
+
+  buffer << ":" << me->get_name() << " " << numeric << " ";
+  if(name.empty())
+    buffer << "*";
+  else
+    buffer << name;
+
+  buffer << " " << Numeric::format(numeric, args);
+  string message = buffer.str();
+  
+  if(message.length() >= 510)
+    message.resize(510);
+
+  message.append("\r\n");
+  va_end(args);
+
+  connection->send(message);
+}
+
+// Statics
+void
+Client::init()
+{
+  me = make_shared<Client>();
+  me->set_name(System::get_server_name());
+  client_list.push_back(me);
 }

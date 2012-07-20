@@ -38,6 +38,8 @@ private:
   bool daemon;
   string ssl_certificate;
   string ssl_privatekey;
+  string messages_file;
+  string server_name;
 public:
   void set_defaults();
   void process(const Json::Value);
@@ -46,6 +48,8 @@ public:
   inline bool get_daemon() const { return daemon; }
   inline string get_ssl_certificate() const { return ssl_certificate; }
   inline string get_ssl_privatekey() const { return ssl_privatekey; }
+  inline string get_messages_file() const { return messages_file; }
+  inline string get_server_name() const { return server_name; }
 };
 
 #endif

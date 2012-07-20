@@ -48,6 +48,8 @@ public:
   static inline const char *get_config_path() { return config_path; }
   static inline string get_ssl_certificate() { return config.get_ssl_certificate(); }
   static inline string get_ssl_privatekey() { return config.get_ssl_privatekey(); }
+  static inline string get_messages_file() { return config.get_messages_file(); }
+  static inline string get_server_name() { return config.get_server_name(); }
 };
 
 #endif

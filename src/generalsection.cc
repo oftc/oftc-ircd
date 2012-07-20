@@ -42,6 +42,10 @@ GeneralSection::process(const Json::Value value)
     ssl_certificate = value["ssl_certificate"].asString();
   if(!value["ssl_privatekey"].isNull())
     ssl_privatekey = value["ssl_privatekey"].asString();
+  if(!value["messages_file"].isNull())
+    messages_file = value["messages_file"].asString();
+  if(!value["server_name"].isNull())
+    server_name = value["server_name"].asString();
 }
 
 void

@@ -89,6 +89,12 @@ Connection::send(const char *buffer, size_t len)
 }
 
 void
+Connection::send(string buffer)
+{
+  send(buffer.c_str(), buffer.length());
+}
+
+void
 Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
   string debug_str;

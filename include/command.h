@@ -62,6 +62,9 @@ public:
   inline string get_name() const { return name; }
   inline CommandHandler get_handler() const { return handler; }
   inline void *get_data() const { return data; }
+  inline int get_min_args() const { return min_args; }
+  inline int get_max_args() const { return max_args; }
+  inline AccessLevel get_min_access() { return min_access; }
 };
 
 #endif

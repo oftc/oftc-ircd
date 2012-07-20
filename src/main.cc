@@ -32,6 +32,8 @@
 #include "listener.h"
 #include "module.h"
 #include "ssl.h"
+#include "numeric.h"
+#include "client.h"
 
 using std::cerr;
 using std::endl;
@@ -70,6 +72,8 @@ main(int argc, char *argv[])
     if(System::get_daemon())
       System::daemonize();
 #endif
+    Numeric::load_messages(System::get_messages_file());
+    Client::init();
     Ssl::init();
     PythonLoader::init();
     Module::load_all();

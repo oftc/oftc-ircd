@@ -24,6 +24,7 @@
     [
       'common.gypi',
       'etc/example.conf',
+      'etc/default.msgs',
       'include/client.h',
       'include/command.h',
       'include/config.h',
@@ -36,6 +37,7 @@
       'include/loggingsection.h',
       'include/module.h',
       'include/modulesection.h',
+      'include/numeric.h',
       'include/parser.h',
       'include/ssl.h',
       'include/sslconnection.h',
@@ -57,6 +59,7 @@
       'src/module.cc',
       'src/modulesection.cc',
       'src/main.cc',
+      'src/numeric.cc',
       'src/parser.cc',
       'src/ssl.cc',
       'src/sslconnection.cc',

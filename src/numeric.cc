@@ -23,42 +23,51 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CLIENT_H_INC
-#define CLIENT_H_INC
+#include "stdinc.h"
+#include <iostream>
+#include <fstream>
+#include "numeric.h"
 
-#include <string>
-#include <memory>
-#include <vector>
+using std::ifstream;
 
-using std::string;
-using std::shared_ptr;
-using std::vector;
+Json::Value Numeric::message_table;
 
-class Client;
-
-typedef shared_ptr<Client> ClientPtr;
-
-class Connection;
-
-class Client
+void
+Numeric::load_messages(string path)
 {
-private:
-  static vector<ClientPtr> client_list;
-  static ClientPtr me;
+  ifstream message_file(path.c_str());
+  Json::Reader reader;
+  Json::Value root;
 
-  shared_ptr<Connection> connection;
-  string name;
-public:
-  Client();
-  Client(Connection *);
+  if(!message_file.is_open())
+    throw runtime_error(string("Failed to open message file: ") + path);
 
-  void send(int, ...);
+  if(!reader.parse(message_file, root))
+    throw runtime_error(reader.getFormattedErrorMessages());
+
+  if(root.type() != Json::objectValue)
+    throw runtime_error("Root node is not an object");
+
+  message_table = *root.begin();
+}
+
+string
+Numeric::format(int numeric, va_list args)
+{
+  stringstream numstr;
+  char buffer[510 + 1];
+
   
-  static void init();
-  static inline ClientPtr get_me() { return me; }
+  numstr << numeric;
+  Json::Value num = message_table.get(numstr.str(), Json::Value(Json::nullValue));
 
-  inline string get_name() const { return name; }
-  inline void set_name(string _name) { name = _name; }
-};
+  if(num.isNull())
+  {
+    Logging::warning << "Request for unknown numeric: " << numeric << Logging::endl;
+    return "";
+  }
 
-#endif
+  vsnprintf(buffer, sizeof(buffer), num.asCString(), args);
+
+  return string(buffer);
+}
