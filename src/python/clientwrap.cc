@@ -47,11 +47,14 @@ static PyMemberDef client_members[] =
 
 static PyGetSetDef client_getsetters[] = {
   { const_cast<char*>("Name"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Name"), "name" },
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Name"), 
+    reinterpret_cast<void *>(const_cast<char *>("name")) },
   { const_cast<char*>("Username"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Username"), "username"},
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Username"), 
+    reinterpret_cast<void *>(const_cast<char *>("username")) },
   { const_cast<char*>("Realname"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Real Name"), "realname"},
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Real Name"), 
+    reinterpret_cast<void *>(const_cast<char *>("realname")) },
 
   { NULL, NULL, NULL, NULL, NULL }
 };
