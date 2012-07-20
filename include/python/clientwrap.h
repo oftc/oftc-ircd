@@ -37,7 +37,8 @@ public:
   static void init();
   static PyObject *get_wrap(PyObject *, void *);
   static int set_wrap(PyObject *, PyObject *, void *);
-  static PyObject *send(PyObject*, PyObject*, PyObject*);
+  static PyObject *send(PyObject *, PyObject *, PyObject *);
+  static PyObject *add(PyObject *, PyObject *);
 
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();

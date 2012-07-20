@@ -23,14 +23,17 @@
 
 from ircd import register
 
-print "Hello World, from python"
-
 @register("NICK", min_args=1, max_args=2, access=1)
 def handle_nick(client, nick):
   client.Name = nick
+  check_and_register(client)
 
 @register("USER", min_args=4, max_args=4, access=1)
-def handle_nick(client, username, unused, unused2, realname):
+def handle_user(client, username, unused, unused2, realname):
   client.Username = username
   client.Realname = realname
-  print "Nick: %s User: %s Realname: %s" % (client.Name, client.Username, client.Realname)
+  check_and_register(client)
+
+def check_and_register(client):
+  if client.Name and client.Username:
+    client.register()

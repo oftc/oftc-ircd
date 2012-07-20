@@ -35,6 +35,7 @@ static PyMethodDef client_methods[] =
 {
   { "send", reinterpret_cast<PyCFunction>(ClientWrap::send),
     METH_KEYWORDS | METH_VARARGS, "Send the client a message" },
+  { "add", ClientWrap::add, METH_NOARGS, "Register the client" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -64,6 +65,17 @@ ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
 
 ClientWrap::~ClientWrap()
 {
+}
+
+PyObject *
+ClientWrap::add(PyObject *self, PyObject *args)
+{
+  ClientWrap *client = reinterpret_cast<ClientWrap*>(self);
+
+  client->client->add(client->client);
+
+  Py_INCREF(Py_None);
+  return Py_None;
 }
 
 PyObject *

@@ -56,6 +56,7 @@ public:
   Client();
   Client(Connection *);
 
+  void add(ClientPtr);
   void send(int, ...);
   void send(string);
   

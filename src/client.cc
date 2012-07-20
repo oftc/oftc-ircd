@@ -76,6 +76,15 @@ Client::send(int numeric, ...)
   send(buffer.str());
 }
 
+void
+Client::add(ClientPtr client)
+{
+  client_list.push_back(client);
+  level = Registered;
+  
+  // fire new client event
+}
+
 // Statics
 void
 Client::init()
