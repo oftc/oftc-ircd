@@ -52,19 +52,19 @@ private:
   CommandHandler handler;
   string name;
   AccessLevel min_access;
-  int min_args;
-  int max_args;
+  unsigned int min_args;
+  unsigned int max_args;
   int rate_control;
   void *data;
 public:
   Command();
-  Command(CommandHandler, string, AccessLevel, int, int, int, void *);
+  Command(CommandHandler, string, AccessLevel, unsigned int, unsigned int, int, void *);
 
   inline string get_name() const { return name; }
   inline CommandHandler get_handler() const { return handler; }
   inline void *get_data() const { return data; }
-  inline int get_min_args() const { return min_args; }
-  inline int get_max_args() const { return max_args; }
+  inline unsigned int get_min_args() const { return min_args; }
+  inline unsigned int get_max_args() const { return max_args; }
   inline AccessLevel get_min_access() { return min_access; }
 };
 

@@ -36,7 +36,7 @@ Command::Command()
 }
 
 Command::Command(CommandHandler handler, string name, 
-  AccessLevel level=Registered, int min_args=0, int max_args=0, 
+  AccessLevel level=Registered, unsigned int min_args=0, unsigned int max_args=0, 
   int rate_control=0, void *data=0) : 
     handler(handler),
     name(name),
