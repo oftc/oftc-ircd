@@ -134,11 +134,11 @@ ClientWrap::get_wrap(ClientWrap *self, void *closure)
   string value;
 
   if(prop == "name")
-    value = self->get_name();
+    value = self->client->get_name();
   else if(prop == "username")
-    value = self->get_username();
+    value = self->client->get_username();
   else if(prop == "realname")
-    value = self->get_realname();
+    value = self->client->get_realname();
 
   PyObject *name = PyString_FromString(value.c_str());
 
@@ -163,11 +163,11 @@ ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
   }
 
   if(prop == "name")
-    self->set_name(PyString_AsString(value));
+    self->client->set_name(PyString_AsString(value));
   else if(prop == "username")
-    self->set_username(PyString_AsString(value));
+    self->client->set_username(PyString_AsString(value));
   else if(prop == "realname")
-    self->set_realname(PyString_AsString(value));
+    self->client->set_realname(PyString_AsString(value));
 
   return 0;
 }
