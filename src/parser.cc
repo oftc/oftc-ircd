@@ -76,6 +76,10 @@ Parser::parse(const ClientPtr client, const string& line)
 
   Command& cmd = it->second;
 
+  // Silently drop commands unregistered clients doesn't have access to
+  if(cmd.get_min_access() > Unregistered && !client->is_registered())
+    return;
+
   while(stream >> arg)
   {
     if(arg[0] == ':')

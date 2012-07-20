@@ -36,11 +36,11 @@ using std::string;
 ClientPtr Client::me;
 vector<ClientPtr> Client::client_list;
 
-Client::Client() 
+Client::Client() : level(Unregistered)
 {
 }
 
-Client::Client(Connection *connection) : connection(connection)
+Client::Client(Connection *connection) : connection(connection), level(Unregistered)
 {
 }
 

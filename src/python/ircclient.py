@@ -23,12 +23,12 @@
 
 from ircd import register
 
-@register("NICK", min_args=1, max_args=2, access=1)
+@register("NICK", min_args=1, max_args=2, access=0)
 def handle_nick(client, nick):
   client.Name = nick
   check_and_register(client)
 
-@register("USER", min_args=4, max_args=4, access=1)
+@register("USER", min_args=4, max_args=4, access=0)
 def handle_user(client, username, unused, unused2, realname):
   client.Username = username
   client.Realname = realname
