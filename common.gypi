@@ -8,6 +8,14 @@
       {
         'defines': [ 'DEBUG', '_DEBUG' ],
         'cflags': [ '-g', '-O0' ],
+        'xcode_settings': {
+          'GCC_CW_ASM_SYNTAX': 'NO', # No -fasm-blocks
+          'GCC_OPTIMIZATION_LEVEL': 0,
+          #'GCC_DEBUGGING_SYMBOLS': 'full',
+          'OTHER_CFLAGS': [
+            '-g',
+          ],
+        },
         'msvs_settings':
         {
           'VCCLCompilerTool':
@@ -30,6 +38,10 @@
       {
         'defines': [ 'NDEBUG' ],
         'cflags': [ '-O3' ],
+        'xcode_settings': {
+          'GCC_CW_ASM_SYNTAX': 'NO',
+          'GCC_OPTIMIZATION_LEVEL': 3,
+        },
         'msvs_settings':
         {
           'VCCLCompilerTool':

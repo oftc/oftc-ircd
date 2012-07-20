@@ -104,15 +104,28 @@
       ],
     },
     {
+      'xcode_settings': {
+        'WARNING_CFLAGS': [
+          '-Wall',
+          '-Wextra',
+          '-pedantic',
+          '-Wno-long-long',
+          '-Wno-unused-parameter',
+        ],
+        'OTHER_CFLAGS': [
+          '-std=c++0x',
+          '-stdlib=libc++',
+        ],
+      },
       'cflags': 
       [ 
-        '-std=c++0x', 
+        '-std=c++0x',
         '-stdlib=libc++',
-        '-Wall', 
-        '-Wextra', 
-        '-pedantic', 
-        '-Wno-long-long', 
-        '-Wno-unused-parameter' 
+        '-Wall',
+        '-Wextra',
+        '-pedantic',
+        '-Wno-long-long',
+        '-Wno-unused-parameter'
       ],
       'defines': 
       [ 
