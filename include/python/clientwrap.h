@@ -35,10 +35,10 @@ private:
   ClientPtr client;
 public:
   static void init();
-  static PyObject *get_wrap(PyObject *, void *);
-  static int set_wrap(PyObject *, PyObject *, void *);
-  static PyObject *send(PyObject *, PyObject *, PyObject *);
-  static PyObject *add(PyObject *, PyObject *);
+  static PyObject *get_wrap(ClientWrap *, void *);
+  static int set_wrap(ClientWrap *, PyObject *, void *);
+  static PyObject *send(ClientWrap *, PyObject *, PyObject *);
+  static PyObject *add(ClientWrap *, PyObject *);
 
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();

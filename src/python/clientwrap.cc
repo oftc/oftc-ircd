@@ -35,7 +35,8 @@ static PyMethodDef client_methods[] =
 {
   { "send", reinterpret_cast<PyCFunction>(ClientWrap::send),
     METH_KEYWORDS | METH_VARARGS, "Send the client a message" },
-  { "add", ClientWrap::add, METH_NOARGS, "Register the client" },
+  { "add", reinterpret_cast<PyCFunction>(ClientWrap::add), 
+    METH_NOARGS, "Register the client" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -45,9 +46,12 @@ static PyMemberDef client_members[] =
 };
 
 static PyGetSetDef client_getsetters[] = {
-  { const_cast<char*>("Name"), ClientWrap::get_wrap, ClientWrap::set_wrap, const_cast<char*>("Name"), "name"},
-  { const_cast<char*>("Username"), ClientWrap::get_wrap, ClientWrap::set_wrap, const_cast<char*>("Username"), "username"},
-  { const_cast<char*>("Realname"), ClientWrap::get_wrap, ClientWrap::set_wrap, const_cast<char*>("Real Name"), "realname"},
+  { const_cast<char*>("Name"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Name"), "name" },
+  { const_cast<char*>("Username"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Username"), "username"},
+  { const_cast<char*>("Realname"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Real Name"), "realname"},
 
   { NULL, NULL, NULL, NULL, NULL }
 };
@@ -68,20 +72,17 @@ ClientWrap::~ClientWrap()
 }
 
 PyObject *
-ClientWrap::add(PyObject *self, PyObject *args)
+ClientWrap::add(ClientWrap *self, PyObject *args)
 {
-  ClientWrap *client = reinterpret_cast<ClientWrap*>(self);
-
-  client->client->add(client->client);
+  self->client->add(self->client);
 
   Py_INCREF(Py_None);
   return Py_None;
 }
 
 PyObject *
-ClientWrap::send(PyObject *self, PyObject *args, PyObject *kwargs)
+ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
 {
-  ClientWrap *client;
   PyObject *fmt, *result, *meth, *fargs;
 
   fmt = PyTuple_GetItem(args, 0);
@@ -92,7 +93,7 @@ ClientWrap::send(PyObject *self, PyObject *args, PyObject *kwargs)
     return NULL;
   }
 
-  PyDict_SetItemString(kwargs, "client", self);
+  PyDict_SetItemString(kwargs, "client", reinterpret_cast<PyObject *>(self));
 
   meth = PyObject_GetAttrString(fmt, "format");
 
@@ -104,8 +105,7 @@ ClientWrap::send(PyObject *self, PyObject *args, PyObject *kwargs)
     return NULL;
   }
 
-  client = reinterpret_cast<ClientWrap*>(self);
-  client->client->send(PyString_AsString(result));
+  self->client->send(PyString_AsString(result));
 
   return Py_None;
 }
@@ -122,18 +122,17 @@ ClientWrap::init()
 }
 
 PyObject *
-ClientWrap::get_wrap(PyObject *self, void *closure)
+ClientWrap::get_wrap(ClientWrap *self, void *closure)
 {
-  ClientWrap *client = reinterpret_cast<ClientWrap*>(self);
   string prop = string(static_cast<char *>(closure));
   string value;
 
   if(prop == "name")
-    value = client->get_name();
+    value = self->get_name();
   else if(prop == "username")
-    value = client->get_username();
+    value = self->get_username();
   else if(prop == "realname")
-    value = client->get_realname();
+    value = self->get_realname();
 
   PyObject *name = PyString_FromString(value.c_str());
 
@@ -141,9 +140,8 @@ ClientWrap::get_wrap(PyObject *self, void *closure)
 }
 
 int
-ClientWrap::set_wrap(PyObject *self, PyObject *value, void *closure)
+ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 {
-  ClientWrap *client = reinterpret_cast<ClientWrap*>(self);
   string prop = string(static_cast<char *>(closure));
 
   if(value == NULL)
@@ -159,11 +157,11 @@ ClientWrap::set_wrap(PyObject *self, PyObject *value, void *closure)
   }
 
   if(prop == "name")
-    client->set_name(PyString_AsString(value));
+    self->set_name(PyString_AsString(value));
   else if(prop == "username")
-    client->set_username(PyString_AsString(value));
+    self->set_username(PyString_AsString(value));
   else if(prop == "realname")
-    client->set_realname(PyString_AsString(value));
+    self->set_realname(PyString_AsString(value));
 
   return 0;
 }
