@@ -33,6 +33,8 @@ template class PythonWrap<ClientWrap>;
 
 static PyMethodDef client_methods[] =
 {
+  { "send", reinterpret_cast<PyCFunction>(ClientWrap::send),
+    METH_KEYWORDS | METH_VARARGS, "Send the client a message" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -62,6 +64,37 @@ ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
 
 ClientWrap::~ClientWrap()
 {
+}
+
+PyObject *
+ClientWrap::send(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+  ClientWrap *client;
+  PyObject *fmt, *result, *meth, *fargs;
+
+  fmt = PyTuple_GetItem(args, 0);
+
+  if(!PyString_Check(fmt))
+  {
+    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
+    return NULL;
+  }
+
+  PyDict_SetItemString(kwargs, "client", self);
+
+  fargs = PyTuple_New(0);
+  meth = PyObject_GetAttrString(fmt, "format");
+
+  result = PyObject_Call(meth, fargs, kwargs);
+
+  if(result == NULL)
+  {
+    return NULL;
+  }
+
+  client->client->send(PyString_AsString(result));
+
+  return Py_None;
 }
 
 // Statics
