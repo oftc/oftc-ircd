@@ -67,7 +67,7 @@ public:
   inline string get_username() const { return username; }
   inline string get_realname() const { return realname; }
 
-  inline bool is_registered() const { return level > Registered; }
+  inline bool is_registered() const { return level >= Registered; }
 
   inline void set_name(string _name) { name = _name; }
   inline void set_username(string _username) { username = _username; }
