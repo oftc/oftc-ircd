@@ -34,10 +34,8 @@ template<class T> PyMethodDef *PythonWrap<T>::methods;
 template<class T> PyMemberDef *PythonWrap<T>::members;
 template<class T> PyGetSetDef *PythonWrap<T>::getsetters;
 
-template<class T> void PythonWrap<T>::init(const char *);
-
-template class PythonWrap<ParserWrap>;
-template class PythonWrap<ClientWrap>;
+template void PythonWrap<ParserWrap>::init(const char *);
+template void PythonWrap<ClientWrap>::init(const char *);
 
 template<class T>
 void
