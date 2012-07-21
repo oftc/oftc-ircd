@@ -28,17 +28,20 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
+#include "numeric.h"
 
 template class PythonWrap<ClientWrap>;
 
 static PyMethodDef client_methods[] =
 {
-  { "send", reinterpret_cast<PyCFunction>(ClientWrap::send),
-    METH_KEYWORDS | METH_VARARGS, "Send the client a message" },
   { "add", reinterpret_cast<PyCFunction>(ClientWrap::add), 
     METH_NOARGS, "Register the client" },
   { "is_registered", reinterpret_cast<PyCFunction>(ClientWrap::is_registered),
     METH_NOARGS, "Check if a client is registered or not" },
+  { "numeric", reinterpret_cast<PyCFunction>(ClientWrap::numeric),
+    METH_VARARGS, "Send the client a numeric" },
+  { "send", reinterpret_cast<PyCFunction>(ClientWrap::send),
+    METH_KEYWORDS | METH_VARARGS, "Send the client a message" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -193,4 +196,45 @@ PyObject *
 ClientWrap::str(ClientWrap *self)
 {
   return PyString_FromString(self->client->str().c_str());
+}
+
+PyObject *
+ClientWrap::numeric(ClientWrap *self, PyObject *args)
+{
+  PyObject *item;
+  string format, output;
+  int index = 0;
+
+  item = PyTuple_GetItem(args, index++);
+  if(!PyInt_Check(item))
+  {
+    PyErr_SetString(PyExc_TypeError, "First argument must be an integer");
+    return NULL;
+  }
+
+  format = Numeric::raw_format(PyInt_AsLong(item));
+  for(string::const_iterator i = format.begin(); i != format.end(); i++)
+  {
+    char c = *i;
+
+    if(c == '%')
+    {
+      i++;
+      item = PyTuple_GetItem(args, index++);
+      if(item == NULL)
+      {
+        PyErr_SetString(PyExc_TypeError, "Not enough arguments for numeric format");
+        return NULL;
+      }
+      switch(*i)
+      {
+      case 's':
+        break;
+      }
+    }
+
+    output += c;
+  }
+
+  Py_RETURN_NONE;
 }

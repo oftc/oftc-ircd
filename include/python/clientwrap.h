@@ -34,13 +34,14 @@ class ClientWrap : public PythonWrap<ClientWrap>
 private:
   ClientPtr client;
 public:
-  static void init();
-  static PyObject *get_wrap(ClientWrap *, void *);
-  static int set_wrap(ClientWrap *, PyObject *, void *);
-  static PyObject *send(ClientWrap *, PyObject *, PyObject *);
   static PyObject *add(ClientWrap *, PyObject *);
+  static PyObject *get_wrap(ClientWrap *, void *);
+  static void init();
   static PyObject *is_registered(ClientWrap *, PyObject *);
-  static PyObject *str(ClientWrap *);
+  static PyObject *numeric(ClientWrap *, PyObject *);
+  static PyObject *send(ClientWrap *, PyObject *, PyObject *);
+  static int set_wrap(ClientWrap *, PyObject *, void *);
+  static PyObject *str(PyObject *);
 
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();

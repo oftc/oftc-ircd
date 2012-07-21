@@ -47,8 +47,9 @@ public:
   static const int Err_NeedMoreParams = 461;
   static const int Err_AlreadyRegistered = 462;
 
-  static void load_messages(string);
   static string format(int, va_list);
+  static void load_messages(string);
+  static string raw_format(int);
 };
 
 #endif

@@ -57,8 +57,20 @@ Numeric::load_messages(string path)
 string
 Numeric::format(int numeric, va_list args)
 {
-  stringstream numstr;
   char buffer[510 + 1];
+  string format;
+
+  format = raw_format(numeric);
+
+  vsnprintf(buffer, sizeof(buffer), format.c_str(), args);
+
+  return string(buffer);
+}
+
+string
+Numeric::raw_format(int numeric)
+{
+  stringstream numstr;
 
   numstr << setw(3) << setfill('0') << numeric;
   Json::Value num = message_table.get(numstr.str(), Json::Value(Json::nullValue));
@@ -69,7 +81,5 @@ Numeric::format(int numeric, va_list args)
     return "";
   }
 
-  vsnprintf(buffer, sizeof(buffer), num.asCString(), args);
-
-  return string(buffer);
+  return num.asString();
 }
