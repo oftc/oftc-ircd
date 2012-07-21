@@ -202,8 +202,10 @@ PyObject *
 ClientWrap::numeric(ClientWrap *self, PyObject *args)
 {
   PyObject *item;
-  string format, output;
+  string format;
+  stringstream output;
   int index = 0;
+  int numeric;
 
   item = PyTuple_GetItem(args, index++);
   if(!PyInt_Check(item))
@@ -212,7 +214,8 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
     return NULL;
   }
 
-  format = Numeric::raw_format(PyInt_AsLong(item));
+  numeric = PyInt_AsLong(item);
+  format = Numeric::raw_format(numeric);
   for(string::const_iterator i = format.begin(); i != format.end(); i++)
   {
     char c = *i;
@@ -229,12 +232,40 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
       switch(*i)
       {
       case 's':
+        if(!PyString_Check(item))
+        {
+          stringstream ss;
+          ss << "expected string argument for argument " << index;
+          PyErr_SetString(PyExc_TypeError, ss.str().c_str());
+          return NULL;
+        }
+        output << PyString_AsString(item);
+        break;
+      case 'd':
+        if(!PyInt_Check(item))
+        {
+          stringstream ss;
+          ss << "expected int argument for argument " << index;
+          PyErr_SetString(PyExc_TypeError, ss.str().c_str());
+          return NULL;
+        }
+
+        output << PyInt_AsLong(item);
+        break;
+      default:
+        throw runtime_error("format specifier not implemented yet");
         break;
       }
+
+      i++;
+      if(i == format.end())
+        break;
     }
 
-    output += c;
+    output << c;
   }
+
+  self->client->send(numeric, output.str());
 
   Py_RETURN_NONE;
 }

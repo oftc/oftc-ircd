@@ -43,4 +43,5 @@ def check_and_register(client):
   if client.Name and client.Username:
     client.send("Hello {client}!")
     client.add()
+    client.numeric(001, str(client))
     # Send some welcome numerics (001 -> 004)

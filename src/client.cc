@@ -56,24 +56,30 @@ Client::send(string message)
 }
 
 void
-Client::send(int numeric, ...)
+Client::send(int numeric, string arg)
 {
-  va_list args;
   stringstream buffer;
-
-  va_start(args, numeric);
-
   buffer << ":" << me->get_name() << " " << numeric << " ";
   if(name.empty())
     buffer << "*";
   else
     buffer << name;
 
-  buffer << " " << Numeric::format(numeric, args);
-  
-  va_end(args);
+  buffer << " " << arg;
 
   send(buffer.str());
+}
+
+void
+Client::send(int numeric, ...)
+{
+  va_list args;
+
+  va_start(args, numeric);
+
+  send(numeric, Numeric::format(numeric, args));
+  
+  va_end(args);
 }
 
 string
