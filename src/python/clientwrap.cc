@@ -137,8 +137,7 @@ ClientWrap::add(ClientWrap *self, PyObject *args)
 {
   self->client->add(self->client);
 
-  Py_INCREF(Py_None);
-  return Py_None;
+  Py_RETURN_NONE;
 }
 
 PyObject *
@@ -173,8 +172,7 @@ ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
   Py_DECREF(result);
   Py_DECREF(fargs);
 
-  Py_INCREF(Py_None);
-  return Py_None;
+  Py_RETURN_NONE;
 }
 
 PyObject *

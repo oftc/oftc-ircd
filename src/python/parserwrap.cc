@@ -104,8 +104,8 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
   Parser::get_default().register_command(command);
 
   Py_INCREF(function);
-  Py_INCREF(Py_None);
-  return Py_None;
+
+  Py_RETURN_NONE;
 }
 
 void
