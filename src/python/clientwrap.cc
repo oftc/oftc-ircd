@@ -144,7 +144,7 @@ ClientWrap::add(ClientWrap *self, PyObject *args)
 PyObject *
 ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
 {
-  PyObject *fmt, *result, *meth, *fargs;
+  PyObject *fmt, *result, *meth, *fargs, *fdict;
 
   fmt = PyTuple_GetItem(args, 0);
 
@@ -154,12 +154,16 @@ ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
     return NULL;
   }
 
-  PyDict_SetItemString(kwargs, "client", reinterpret_cast<PyObject *>(self));
+  fdict = PyDict_New();
+  PyDict_SetItemString(fdict, "client", reinterpret_cast<PyObject *>(self));
+
+  if (kwargs != NULL)
+    PyDict_Update(fdict, kwargs);
 
   meth = PyObject_GetAttrString(fmt, "format");
 
   fargs = PyTuple_New(0);
-  result = PyObject_Call(meth, fargs, kwargs);
+  result = PyObject_Call(meth, fargs, fdict);
 
   Py_DECREF(meth);
 

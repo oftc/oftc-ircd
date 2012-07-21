@@ -41,6 +41,6 @@ def check_and_register(client):
     return
 
   if client.Name and client.Username:
-    print str(client)
+    client.send("Hello {client}!")
     client.add()
     # Send some welcome numerics (001 -> 004)
