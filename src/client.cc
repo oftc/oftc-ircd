@@ -25,6 +25,7 @@
 
 #include "stdinc.h"
 #include <stdarg.h>
+#include <iomanip>
 #include "client.h"
 #include "connection.h"
 #include "numeric.h"
@@ -32,6 +33,8 @@
 
 using std::make_shared;
 using std::string;
+using std::setw;
+using std::setfill;
 
 ClientPtr Client::me;
 vector<ClientPtr> Client::client_list;
@@ -59,7 +62,10 @@ void
 Client::send(string arg, int numeric)
 {
   stringstream buffer;
-  buffer << ":" << me->get_name() << " " << numeric << " ";
+
+  buffer << ":" << me->get_name() << " ";
+  buffer << setw(3) << setfill('0') << numeric;
+  buffer << " ";
   if(name.empty())
     buffer << "*";
   else
