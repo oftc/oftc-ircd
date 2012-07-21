@@ -78,7 +78,6 @@ PythonLoader::init()
   Py_INCREF(ClientWrap::get_type_object());
   PyModule_AddObject(m, "Client", 
     reinterpret_cast<PyObject *>(ClientWrap::get_type_object()));
-
 }
 
 void

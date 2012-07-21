@@ -46,12 +46,20 @@ using std::stringstream;
 
 GeneralSection System::config;
 const char *System::config_path;
+const char *System::built_date;
 
 void
 System::init()
 {
   Config::add_section("general", &config);
   config_path = CONFIG_PATH;
+
+ #if defined(__TIME__) && defined(__DATE__)
+  built_date = __DATE__ " at " __TIME__;
+#else
+  built_date = "unknown";
+#endif
+
 }
 
 void
