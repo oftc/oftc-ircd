@@ -23,6 +23,7 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include "Python.h"
 #include "stdinc.h"
 #include <sstream>
 #include "python/pythonloader.h"

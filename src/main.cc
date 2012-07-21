@@ -23,6 +23,7 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include "Python.h"
 #include "stdinc.h"
 #include <uv.h>
 #include <iostream>
