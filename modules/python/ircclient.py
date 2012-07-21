@@ -31,7 +31,8 @@ def handle_nick(client, nick):
 @register("USER", min_args=4, max_args=4, access=0)
 def handle_user(client, username, unused, unused2, realname):
   if client.is_registered():
-    return  # this should send the 462 numeric
+    client.numeric(462)
+    return 
   client.Username = username
   client.Realname = realname
   check_and_register(client)
