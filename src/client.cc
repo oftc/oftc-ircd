@@ -76,6 +76,16 @@ Client::send(int numeric, ...)
   send(buffer.str());
 }
 
+string
+Client::str()
+{
+  stringstream buff;
+
+  buff << name << "!" << username << "@" << "localhost";
+
+  return buff.str();
+}
+
 // Statics
 void
 Client::init()

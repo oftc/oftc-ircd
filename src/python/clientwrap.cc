@@ -85,6 +85,7 @@ ClientWrap::init()
   PythonWrap<ClientWrap>::members = client_members;
   PythonWrap<ClientWrap>::getsetters = client_getsetters;
   PythonWrap<ClientWrap>::init("Client");
+  PythonWrap<ClientWrap>::str = str;
 }
 
 PyObject *
@@ -182,4 +183,11 @@ ClientWrap::is_registered(ClientWrap *self, PyObject *args)
     Py_RETURN_TRUE;
   else
     Py_RETURN_FALSE;
+}
+
+PyObject *
+ClientWrap::str(PyObject *self)
+{
+  ClientWrap *c = reinterpret_cast<ClientWrap *>(self);
+  return PyString_FromString(c->client->str().c_str());
 }

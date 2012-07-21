@@ -72,6 +72,8 @@ public:
   inline void set_name(string _name) { name = _name; }
   inline void set_username(string _username) { username = _username; }
   inline void set_realname(string _realname) { realname = _realname; }
+
+  string str();
 };
 
 #endif

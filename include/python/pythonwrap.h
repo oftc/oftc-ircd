@@ -35,6 +35,7 @@ protected:
   static PyMethodDef *methods;
   static PyMemberDef *members;
   static PyGetSetDef *getsetters;
+  static reprfunc str;
 public:
   static void init(const char *);
   static PyObject *alloc(PyTypeObject *, Py_ssize_t);
