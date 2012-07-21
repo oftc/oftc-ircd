@@ -57,7 +57,6 @@ Numeric::format(int numeric, va_list args)
   stringstream numstr;
   char buffer[510 + 1];
 
-  
   numstr << numeric;
   Json::Value num = message_table.get(numstr.str(), Json::Value(Json::nullValue));
 

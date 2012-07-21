@@ -70,14 +70,14 @@ ParserWrap::init()
 PyObject *
 ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-  char *kwlist[] = 
+  const char *kwlist[] = 
   {
-    const_cast<char *>("name"),
-    const_cast<char *>("function"),
-    const_cast<char *>("min_args"),
-    const_cast<char *>("max_args"),
-    const_cast<char *>("access"),
-    const_cast<char *>("rate_control"),
+    "name",
+    "function",
+    "min_args",
+    "max_args",
+    "access",
+    "rate_control",
     NULL
   };
   char *name;
@@ -86,7 +86,7 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 
   min_args = max_args = access = rate_control = 0;
 
-  if(!PyArg_ParseTupleAndKeywords(args, kwargs, "sO|IIII", kwlist, 
+  if(!PyArg_ParseTupleAndKeywords(args, kwargs, "sO|IIII", const_cast<char**>(kwlist), 
     &name, &function, &min_args, &max_args, &access, &rate_control))
   {
     return NULL;
@@ -143,6 +143,7 @@ ParserWrap::handle_command(const ClientPtr client, const Command& command, const
   PyObject *ret = PyObject_CallObject(static_cast<PyObject *>(command.get_data()), args);
   if(ret == NULL)
   {
+    Py_DECREF(wrapped_client);
     PyErr_Print();
     return;
   }

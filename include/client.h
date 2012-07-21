@@ -56,11 +56,11 @@ public:
   Client();
   Client(Connection *);
 
-  void add(ClientPtr);
   void send(int, ...);
   void send(string);
   
   static void init();
+  static void add(ClientPtr);
   static inline ClientPtr get_me() { return me; }
 
   inline string get_name() const { return name; }

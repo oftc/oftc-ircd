@@ -76,15 +76,6 @@ Client::send(int numeric, ...)
   send(buffer.str());
 }
 
-void
-Client::add(ClientPtr client)
-{
-  client_list.push_back(client);
-  level = Registered;
-  
-  // fire new client event
-}
-
 // Statics
 void
 Client::init()
@@ -92,4 +83,13 @@ Client::init()
   me = make_shared<Client>();
   me->set_name(System::get_server_name());
   client_list.push_back(me);
+}
+
+void
+Client::add(ClientPtr client)
+{
+  client_list.push_back(client);
+  client->level = Registered;
+  
+  // fire new client event
 }

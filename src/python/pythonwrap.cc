@@ -70,7 +70,7 @@ PythonWrap<T>::alloc(PyTypeObject *type, Py_ssize_t items)
   ret = new char[_PyObject_VAR_SIZE(type, items)]();
 
   obj = reinterpret_cast<PyObject *>(ret);
-  (void)PyObject_INIT(obj, type);
+  static_cast<void>(PyObject_INIT(obj, type));
 
   return obj;
 }

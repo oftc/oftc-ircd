@@ -23,17 +23,17 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "python/pythonloader.h"
 #include "stdinc.h"
 #include <uv.h>
 #include <iostream>
-#include "config.h"
 #include "system.h"
 #include "listener.h"
 #include "module.h"
-#include "ssl.h"
+#include "config.h"
 #include "numeric.h"
 #include "client.h"
+#include "ssl.h"
+#include "python/pythonloader.h"
 
 using std::cerr;
 using std::endl;
