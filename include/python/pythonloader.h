@@ -26,13 +26,17 @@
 #ifndef PYTHONLOADER_H_INC
 #define PYTHONLOADER_H_INC
 
+#include "Python.h"
 #include <string>
+#include <vector>
 
 using std::string;
+using std::vector;
 
 class PythonLoader
 {
 private:
+  static vector<PyObject *> loaded_modules;
 public:
   static void init();
   static void load(string);

@@ -23,9 +23,7 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Python.h"
 #include "stdinc.h"
-#include <string>
 #include <sstream>
 #include "python/pythonloader.h"
 #include "python/pythonwrap.h"
@@ -33,7 +31,6 @@
 #include "python/clientwrap.h"
 #include "module.h"
 
-using std::string;
 using std::stringstream;
 
 typedef vector<string>::const_iterator VectorStringConstIt;
@@ -42,6 +39,8 @@ static PyMethodDef module_methods[] =
 {
   { NULL, NULL, 0, NULL }
 };
+
+vector<PyObject *> PythonLoader::loaded_modules;
 
 void 
 PythonLoader::init()
@@ -84,8 +83,13 @@ PythonLoader::init()
 void
 PythonLoader::load(string name)
 {
-  PyObject *foo = PyImport_ImportModule(name.c_str());
+  PyObject *module = PyImport_ImportModule(name.c_str());
 
-  if(foo == NULL)
+  if(module == NULL)
+  {
     PyErr_Print();
+    return;
+  }
+
+  loaded_modules.push_back(module);
 }
