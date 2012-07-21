@@ -64,12 +64,12 @@
       'src/ssl.cc',
       'src/sslconnection.cc',
       'src/system.cc',
-      'src/python/ircclient.py',
-      'src/python/ircd/__init__.py',
       'src/python/clientwrap.cc',
       'src/python/pythonloader.cc',
       'src/python/pythonwrap.cc',
       'src/python/parserwrap.cc'
+      'modules/python/ircd/__init__.py',
+      'modules/python/ircclient.py'
     ],
     'conditions': 
     [
