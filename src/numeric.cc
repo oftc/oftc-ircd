@@ -26,9 +26,12 @@
 #include "stdinc.h"
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include "numeric.h"
 
 using std::ifstream;
+using std::setw;
+using std::setfill;
 
 Json::Value Numeric::message_table;
 
@@ -57,7 +60,7 @@ Numeric::format(int numeric, va_list args)
   stringstream numstr;
   char buffer[510 + 1];
 
-  numstr << numeric;
+  numstr << setw(3) << setfill('0') << numeric;
   Json::Value num = message_table.get(numstr.str(), Json::Value(Json::nullValue));
 
   if(num.isNull())

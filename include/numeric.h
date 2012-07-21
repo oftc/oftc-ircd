@@ -37,8 +37,15 @@ class Numeric
 private:
   static Json::Value message_table;
 public:
-  static const int ERR_UNKNOWNCOMMAND = 421;
-  static const int ERR_NEEDMOREPARAMS = 461;
+  static const int Rpl_Welcome = 001;
+  static const int Rpl_YourHost = 002;
+  static const int Rpl_Created = 003;
+  static const int Rpl_MyInfo = 004;
+
+  // Error replies
+  static const int Err_UnknownCommand = 421;
+  static const int Err_NeedMoreParams = 461;
+  static const int Err_AlreadyRegistered = 462;
 
   static void load_messages(string);
   static string format(int, va_list);
