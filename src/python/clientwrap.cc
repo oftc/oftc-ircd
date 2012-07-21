@@ -84,7 +84,7 @@ ClientWrap::init()
   PythonWrap<ClientWrap>::methods = client_methods;
   PythonWrap<ClientWrap>::members = client_members;
   PythonWrap<ClientWrap>::getsetters = client_getsetters;
-  PythonWrap<ClientWrap>::str = str;
+  PythonWrap<ClientWrap>::str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ClientWrap>::init("Client");
 }
 
@@ -186,8 +186,7 @@ ClientWrap::is_registered(ClientWrap *self, PyObject *args)
 }
 
 PyObject *
-ClientWrap::str(PyObject *self)
+ClientWrap::str(ClientWrap *self)
 {
-  ClientWrap *c = reinterpret_cast<ClientWrap *>(self);
-  return PyString_FromString(c->client->str().c_str());
+  return PyString_FromString(self->client->str().c_str());
 }

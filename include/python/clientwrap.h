@@ -40,7 +40,7 @@ public:
   static PyObject *send(ClientWrap *, PyObject *, PyObject *);
   static PyObject *add(ClientWrap *, PyObject *);
   static PyObject *is_registered(ClientWrap *, PyObject *);
-  static PyObject *str(PyObject *);
+  static PyObject *str(ClientWrap *);
 
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();
