@@ -84,8 +84,8 @@ ClientWrap::init()
   PythonWrap<ClientWrap>::methods = client_methods;
   PythonWrap<ClientWrap>::members = client_members;
   PythonWrap<ClientWrap>::getsetters = client_getsetters;
-  PythonWrap<ClientWrap>::init("Client");
   PythonWrap<ClientWrap>::str = str;
+  PythonWrap<ClientWrap>::init("Client");
 }
 
 PyObject *
