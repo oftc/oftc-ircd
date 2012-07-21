@@ -60,7 +60,7 @@ SSLConnection::handle_error(int code)
       char *buf = new char[pending];
       int len = BIO_read(write_bio, buf, pending);
 
-      send(buf, len);
+      Connection::send(buf, len);
 
       delete[] buf;
     }
@@ -93,15 +93,57 @@ SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
     }
   }
 
-  int ret = SSL_read(ssl, buf.base, nread);
+  int offset = 0;
+
+  while(BIO_pending(read_bio) || BIO_pending(write_bio))
+  {
+    int ret = SSL_read(ssl, buf.base + offset, nread - offset);
+    if(ret <= 0)
+    {
+      handle_error(ret);
+      free_buffer(buf);
+      return;
+    }
+    offset += ret;
+  }
+
+  Connection::read(stream, offset, buf);
+}
+
+void
+SSLConnection::send(string buffer)
+{
+  send(buffer.c_str(), buffer.length());
+}
+
+void
+SSLConnection::send(const char *buf, size_t len)
+{
+  int ret = SSL_write(ssl, buf, len);
+
   if(ret <= 0)
   {
     handle_error(ret);
-    free_buffer(buf);
-    return;
+    throw runtime_error("SSL Write error handling not yet implemented");
   }
 
-  Connection::read(stream, ret, buf);
+  int bytes = BIO_pending(write_bio);
+  int offset = 0;
+  char *buffer = new char[bytes]();
+
+  while(BIO_pending(write_bio))
+  {
+    ret = BIO_read(write_bio, buffer + offset, bytes - offset);
+    if(ret < 0)
+    {
+      throw runtime_error("BIO Read errors not implemented yet");
+    }
+    offset += ret;
+  }
+
+  Connection::send(buffer, offset);
+
+  delete[] buffer;
 }
 
 // Statics
