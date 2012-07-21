@@ -70,7 +70,7 @@ Parser::parse(const ClientPtr client, const string& line)
   if(it == commands.end())
   {
     if(client->is_registered())
-      client->send(Numeric::ERR_UNKNOWNCOMMAND, command.c_str());
+      client->send(Numeric::Err_UnknownCommand, command.c_str());
     return;
   }
 
@@ -98,7 +98,7 @@ Parser::parse(const ClientPtr client, const string& line)
 
   if(args.size() < cmd.get_min_args())
   {
-    client->send(Numeric::ERR_NEEDMOREPARAMS, command.c_str(), args.size(), 
+    client->send(Numeric::Err_NeedMoreParams, command.c_str(), args.size(), 
       cmd.get_min_args());
     return;
   }

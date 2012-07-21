@@ -37,6 +37,8 @@ static PyMethodDef client_methods[] =
     METH_KEYWORDS | METH_VARARGS, "Send the client a message" },
   { "add", reinterpret_cast<PyCFunction>(ClientWrap::add), 
     METH_NOARGS, "Register the client" },
+  { "is_registered", reinterpret_cast<PyCFunction>(ClientWrap::is_registered),
+    METH_NOARGS, "Check if a client is registered or not" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -72,51 +74,6 @@ ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
 
 ClientWrap::~ClientWrap()
 {
-}
-
-PyObject *
-ClientWrap::add(ClientWrap *self, PyObject *args)
-{
-  self->client->add(self->client);
-
-  Py_INCREF(Py_None);
-  return Py_None;
-}
-
-PyObject *
-ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
-{
-  PyObject *fmt, *result, *meth, *fargs;
-
-  fmt = PyTuple_GetItem(args, 0);
-
-  if(!PyString_Check(fmt))
-  {
-    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
-    return NULL;
-  }
-
-  PyDict_SetItemString(kwargs, "client", reinterpret_cast<PyObject *>(self));
-
-  meth = PyObject_GetAttrString(fmt, "format");
-
-  fargs = PyTuple_New(0);
-  result = PyObject_Call(meth, fargs, kwargs);
-
-  Py_DECREF(meth);
-
-  if(result == NULL)
-  {
-    return NULL;
-  }
-
-  self->client->send(PyString_AsString(result));
-
-  Py_DECREF(result);
-  Py_DECREF(fargs);
-
-  Py_INCREF(Py_None);
-  return Py_None;
 }
 
 // Statics
@@ -173,4 +130,58 @@ ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
     self->client->set_realname(PyString_AsString(value));
 
   return 0;
+}
+
+PyObject *
+ClientWrap::add(ClientWrap *self, PyObject *args)
+{
+  self->client->add(self->client);
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+PyObject *
+ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
+{
+  PyObject *fmt, *result, *meth, *fargs;
+
+  fmt = PyTuple_GetItem(args, 0);
+
+  if(!PyString_Check(fmt))
+  {
+    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
+    return NULL;
+  }
+
+  PyDict_SetItemString(kwargs, "client", reinterpret_cast<PyObject *>(self));
+
+  meth = PyObject_GetAttrString(fmt, "format");
+
+  fargs = PyTuple_New(0);
+  result = PyObject_Call(meth, fargs, kwargs);
+
+  Py_DECREF(meth);
+
+  if(result == NULL)
+  {
+    return NULL;
+  }
+
+  self->client->send(PyString_AsString(result));
+
+  Py_DECREF(result);
+  Py_DECREF(fargs);
+
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+PyObject *
+ClientWrap::is_registered(ClientWrap *self, PyObject *args)
+{
+  if(self->client->is_registered())
+    Py_RETURN_TRUE;
+  else
+    Py_RETURN_FALSE;
 }

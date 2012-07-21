@@ -39,6 +39,7 @@ public:
   static int set_wrap(ClientWrap *, PyObject *, void *);
   static PyObject *send(ClientWrap *, PyObject *, PyObject *);
   static PyObject *add(ClientWrap *, PyObject *);
+  static PyObject *is_registered(ClientWrap *, PyObject *);
 
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();
