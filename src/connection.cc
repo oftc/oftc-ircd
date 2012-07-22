@@ -147,14 +147,10 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 }
 
 // Statics
-Connection *
-Connection::create()
+void
+Connection::add(ConnectionPtr connection)
 {
-  ConnectionPtr conn_ptr(new Connection);
-
-  connections.push_back(conn_ptr);
-
-  return conn_ptr.get();
+  connections.push_back(connection);
 }
 
 uv_buf_t

@@ -55,7 +55,7 @@ private:
   string host;
 
 public:
-  static Connection *create();
+  static void add(ConnectionPtr);
   static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
   static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
 
