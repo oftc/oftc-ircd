@@ -32,6 +32,8 @@
 
 template class PythonWrap<ClientWrap>;
 
+ClientWrap *ClientWrap::me;
+
 static PyMethodDef client_methods[] =
 {
   { "add", reinterpret_cast<PyCFunction>(ClientWrap::add), 
@@ -50,7 +52,8 @@ static PyMemberDef client_members[] =
   { NULL, 0, 0, 0, NULL }
 };
 
-static PyGetSetDef client_getsetters[] = {
+static PyGetSetDef client_getsetters[] = 
+{
   { const_cast<char*>("Name"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Name"), 
     reinterpret_cast<void *>(const_cast<char *>("name")) },
@@ -88,6 +91,18 @@ ClientWrap::init()
   PythonWrap<ClientWrap>::getsetters = client_getsetters;
   PythonWrap<ClientWrap>::str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ClientWrap>::init("Client");
+
+  PyObject *client_obj, *client_args;
+
+  client_obj = PyCObject_FromVoidPtr(const_cast<ClientPtr*>(&Client::me), NULL);
+
+  client_args = Py_BuildValue("(O)", client_obj);
+
+  me = reinterpret_cast<ClientWrap *>(PyObject_CallObject(ClientWrap::get_type(), client_args));
+  if(me == NULL)
+    PyErr_Print();
+
+  PyDict_SetItemString(type_object.tp_dict, "Me", reinterpret_cast<PyObject *>(me));
 }
 
 PyObject *

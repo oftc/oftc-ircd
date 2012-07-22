@@ -43,7 +43,6 @@ class Client
 {
 private:
   static vector<ClientPtr> client_list;
-  static ClientPtr me;
 
   shared_ptr<Connection> connection;
   string name;
@@ -51,6 +50,8 @@ private:
   string realname;
   AccessLevel level;
 public:
+  static ClientPtr me;
+
   Client();
   Client(Connection *);
 

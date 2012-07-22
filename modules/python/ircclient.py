@@ -22,6 +22,7 @@
 #  OTHER DEALINGS IN THE SOFTWARE.
 
 from ircd import register
+from pythonwrap import Client
 
 @register("NICK", min_args=1, max_args=2, access=0)
 def handle_nick(client, nick):
@@ -39,7 +40,7 @@ def handle_user(client, username, unused, unused2, realname):
 
 @register("PING", min_args=1, max_args=1, access=1)
 def handle_ping(client, arg):
-  client.send(":%s PONG %s :%s" % (arg, arg, arg))
+  client.send(":{source} PONG {source} :{reply}", source=Client.Me.Name, reply=arg)
 
 def check_and_register(client):
   if client.is_registered():
