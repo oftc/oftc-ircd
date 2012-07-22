@@ -75,6 +75,15 @@ SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
   if(nread < 0)
   {
+    if(buf.base != NULL)
+      free_buffer(buf);
+
+    uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), NULL);
+    return;
+  }
+
+  if(nread == 0)
+  {
     free_buffer(buf);
     return;
   }
