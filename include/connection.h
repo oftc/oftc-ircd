@@ -52,6 +52,7 @@ private:
   stringstream read_buffer;
   Parser& parser;
   shared_ptr<Client> client;
+  string host;
 
 public:
   static Connection *create();
@@ -64,6 +65,7 @@ public:
   virtual void send(string);
   virtual void send(const char *, size_t);
 
+  inline string get_host() const { return host; }
 };
 
 #endif

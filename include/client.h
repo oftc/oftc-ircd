@@ -49,6 +49,7 @@ private:
   string name;
   string username;
   string realname;
+  string host;
   AccessLevel level;
 public:
   Client();

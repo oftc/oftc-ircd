@@ -36,7 +36,6 @@ vector<ConnectionPtr> Connection::connections;
 
 Connection::Connection() : parser(Parser::get_default())
 {
-  client = ClientPtr(new Client(this));
 }
 
 void
@@ -71,7 +70,11 @@ Connection::accept(uv_stream_t *server_handle)
     break;
   }
 
+  host = ipstr;
+
   handle->data = this;
+
+  client = ClientPtr(new Client(this));
 
   uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
   Logging::debug << "Accepted connection from: " << ipstr << Logging::endl;
