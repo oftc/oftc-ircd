@@ -37,6 +37,10 @@ def handle_user(client, username, unused, unused2, realname):
   client.Realname = realname
   check_and_register(client)
 
+@register("PING", min_args=1, max_args=1, access=1)
+def handle_ping(client, arg):
+  client.send(":%s PONG %s :%s" % (arg, arg, arg))
+
 def check_and_register(client):
   if client.is_registered():
     return
