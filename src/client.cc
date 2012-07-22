@@ -31,7 +31,6 @@
 #include "numeric.h"
 #include "system.h"
 
-using std::make_shared;
 using std::string;
 using std::setw;
 using std::setfill;
@@ -102,7 +101,7 @@ Client::str()
 void
 Client::init()
 {
-  me = make_shared<Client>();
+  me = ClientPtr(new Client);
   me->set_name(System::get_server_name());
   client_list.push_back(me);
 }

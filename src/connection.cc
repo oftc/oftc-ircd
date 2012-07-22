@@ -31,13 +31,12 @@
 #include "client.h"
 
 using std::getline;
-using std::make_shared;
 
 vector<ConnectionPtr> Connection::connections;
 
 Connection::Connection() : parser(Parser::get_default())
 {
-  client = make_shared<Client>(this);
+  client = ClientPtr(new Client(this));
 }
 
 void
@@ -50,8 +49,8 @@ Connection::accept(uv_stream_t *server_handle)
   int addrlen = sizeof(addr);
   int ret;
 
-  handle = make_shared<uv_tcp_t>();
-  write_handle = make_shared<uv_write_t>();
+  handle = shared_ptr<uv_tcp_t>(new uv_tcp_t);
+  write_handle = shared_ptr<uv_write_t>(new uv_write_t);
 
   uv_tcp_init(uv_default_loop(), handle.get());
 

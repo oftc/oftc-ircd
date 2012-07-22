@@ -28,11 +28,9 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 
 using std::string;
 using std::vector;
-using std::shared_ptr;
 
 class Command; 
 class Client;

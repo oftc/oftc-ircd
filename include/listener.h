@@ -28,13 +28,11 @@
 
 #include <string>
 #include <vector>
-#include <memory>
 #include <uv.h>
 #include "listenersection.h"
 
 using std::vector;
 using std::string;
-using std::shared_ptr;
 
 class Listener;
 

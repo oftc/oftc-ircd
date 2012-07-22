@@ -33,6 +33,17 @@
 #pragma warning(disable : 4996)
 #endif
 
+#include <memory>
+#include <unordered_map>
+
+#if _MSC_VER < 1600
+using std::tr1::shared_ptr;
+using std::tr1::unordered_map;
+#else
+using std::shared_ptr;
+using std::unordered_map;
+#endif
+
 #include <stdexcept>
 #include "logging.h"
 

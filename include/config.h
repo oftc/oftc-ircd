@@ -27,7 +27,6 @@
 #define CONFIG_H_INC
 
 #include <string>
-#include <unordered_map>
 #include "configsection.h"
 
 #ifdef _WIN32
@@ -36,7 +35,6 @@
 #define CONFIG_PATH "/home/stu/oircd/etc/ircd.conf"
 #endif
 
-using std::unordered_map;
 using std::string;
 
 class Config

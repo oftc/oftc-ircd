@@ -27,12 +27,10 @@
 #define CLIENT_H_INC
 
 #include <string>
-#include <memory>
 #include <vector>
 #include "command.h"
 
 using std::string;
-using std::shared_ptr;
 using std::vector;
 
 class Client;

@@ -28,7 +28,6 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <unordered_map>
 #include "parser.h"
 #include "client.h"
 #include "numeric.h"
@@ -37,7 +36,6 @@ using std::string;
 using std::stringstream;
 using std::vector;
 using std::transform;
-using std::unordered_map;
 
 Parser Parser::default_parser;
 
