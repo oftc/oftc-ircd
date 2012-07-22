@@ -106,7 +106,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
     if(buf.base != NULL)
       free_buffer(buf);
 
-    uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), NULL);
+    uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), on_close);
     return;
   }
 
@@ -170,6 +170,12 @@ Connection::on_read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   Connection *connection = static_cast<Connection *>(stream->data);
 
   connection->read(stream, nread, buf);
+}
+
+void 
+Connection::on_close(uv_handle_t *handle)
+{
+  Connection *connection = static_cast<Connection *>(handle->data);
 }
 
 void
