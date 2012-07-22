@@ -156,12 +156,3 @@ SSLConnection::send(const char *buf, size_t len)
 }
 
 // Statics
-SSLConnection *
-SSLConnection::create()
-{
-  ConnectionPtr conn_ptr(new SSLConnection);
-
-  Connection::connections.push_back(conn_ptr);
-
-  return dynamic_cast<SSLConnection *>(conn_ptr.get());
-}

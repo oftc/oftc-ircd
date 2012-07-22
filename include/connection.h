@@ -42,7 +42,7 @@ typedef shared_ptr<Connection> ConnectionPtr;
 class Connection 
 {
 protected:
-  static vector<ConnectionPtr> connections;
+  static unordered_map<Connection *, ConnectionPtr> connections;
   shared_ptr<uv_tcp_t> handle;
   shared_ptr<uv_write_t> write_handle;
 
@@ -61,6 +61,7 @@ public:
   static void on_close(uv_handle_t *);
 
   Connection();
+  ~Connection();
 
   virtual void accept(uv_stream_t *);
   virtual void send(string);

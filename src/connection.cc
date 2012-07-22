@@ -32,10 +32,16 @@
 
 using std::getline;
 
-vector<ConnectionPtr> Connection::connections;
+unordered_map<Connection *, ConnectionPtr> Connection::connections;
 
 Connection::Connection() : parser(Parser::get_default())
 {
+  Logging::debug << "allocated connection: " << this << Logging::endl;
+}
+
+Connection::~Connection()
+{
+  Logging::debug << "de-allocated connection: " << this << Logging::endl;
 }
 
 void
@@ -150,7 +156,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 void
 Connection::add(ConnectionPtr connection)
 {
-  connections.push_back(connection);
+  connections.insert(std::make_pair<Connection *, ConnectionPtr>(connection.get(), connection));
 }
 
 uv_buf_t
@@ -176,6 +182,8 @@ void
 Connection::on_close(uv_handle_t *handle)
 {
   Connection *connection = static_cast<Connection *>(handle->data);
+
+  connections.erase(connection);
 }
 
 void
