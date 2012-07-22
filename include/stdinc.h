@@ -36,7 +36,7 @@
 #include <memory>
 #include <unordered_map>
 
-#if _MSC_VER < 1600
+#if defined(_MSC_VER) && _MSC_VER < 1600
 using std::tr1::shared_ptr;
 using std::tr1::unordered_map;
 #else
