@@ -29,6 +29,12 @@
 #include "system.h"
 #include "ssl.h"
 
+SSLConnection::~SSLConnection()
+{
+  // This actually frees the underlying bios, so dont do it manually
+  SSL_free(ssl);
+}
+
 void
 SSLConnection::accept(uv_stream_t *server_handle)
 {
@@ -73,18 +79,9 @@ SSLConnection::handle_error(int code)
 void
 SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
-  if(nread < 0)
+  if(nread <= 0)
   {
-    if(buf.base != NULL)
-      free_buffer(buf);
-
-    uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), on_close);
-    return;
-  }
-
-  if(nread == 0)
-  {
-    free_buffer(buf);
+    Connection::read(stream, nread, buf);
     return;
   }
 

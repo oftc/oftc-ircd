@@ -96,7 +96,6 @@ Connection::send(const char *buffer, size_t len)
   buf.base = const_cast<char*>(buffer);
   buf.len = len;
   uv_write(req, reinterpret_cast<uv_stream_t*>(handle.get()), &buf, 1, on_write);
-  Logging::debug << "Sending: " << buffer << Logging::endl;
 }
 
 void
