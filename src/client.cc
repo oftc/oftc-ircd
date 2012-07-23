@@ -44,6 +44,7 @@ Client::Client() : level(Unregistered)
 
 Client::Client(Connection *connection) : connection(connection), level(Unregistered)
 {
+  host = connection->get_host();
 }
 
 void
@@ -92,7 +93,7 @@ Client::str()
 {
   stringstream buff;
 
-  buff << name << "!" << username << "@" << "localhost";
+  buff << name << "!" << username << "@" << host;
 
   return buff.str();
 }

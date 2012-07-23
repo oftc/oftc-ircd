@@ -39,8 +39,6 @@ private:
   void handle_error(int);
   virtual void read(uv_stream_t *, ssize_t, uv_buf_t);
 public:
-  static SSLConnection *create();
-
   virtual void accept(uv_stream_t *);
   virtual void send(string);
   virtual void send(const char *, size_t);

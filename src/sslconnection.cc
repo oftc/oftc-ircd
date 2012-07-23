@@ -78,7 +78,7 @@ SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
     if(buf.base != NULL)
       free_buffer(buf);
 
-    uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), NULL);
+    uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), on_close);
     return;
   }
 
@@ -156,12 +156,3 @@ SSLConnection::send(const char *buf, size_t len)
 }
 
 // Statics
-SSLConnection *
-SSLConnection::create()
-{
-  ConnectionPtr conn_ptr(new SSLConnection);
-
-  Connection::connections.push_back(conn_ptr);
-
-  return dynamic_cast<SSLConnection *>(conn_ptr.get());
-}

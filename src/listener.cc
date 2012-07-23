@@ -55,12 +55,14 @@ Listener::Listener(string host, int port, ListenerFlag flags) :
 void
 Listener::connected(uv_stream_t *stream, int status)
 {
-  Connection *connection;
-  if(Ssl::is_enabled() && is_ssl())
-    connection = SSLConnection::create();
-  else
-    connection = Connection::create();
+  ConnectionPtr connection;
 
+  if(Ssl::is_enabled() && is_ssl())
+    connection = ConnectionPtr(new SSLConnection);
+  else
+    connection = ConnectionPtr(new Connection);
+
+  Connection::add(connection);
   connection->accept(stream);
 }
 
@@ -110,14 +112,12 @@ Listener::init()
   Config::add_section("listeners", &config);
 }
 
-Listener *
+void
 Listener::create(string host, int port, ListenerFlag flags)
 {
   ListenerPtr new_listener(new Listener(host, port, flags));
 
   listeners.push_back(new_listener);
-
-  return new_listener.get();
 }
 
 void

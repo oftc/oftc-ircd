@@ -69,7 +69,7 @@ public:
   static const int DEFAULT_PORT = 6667;
 
   static void init();
-  static Listener *create(string, int, ListenerFlag);
+  static void create(string, int, ListenerFlag);
   static void start_listeners();
 
   Listener();

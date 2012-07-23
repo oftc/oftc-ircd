@@ -32,11 +32,16 @@
 
 using std::getline;
 
-vector<ConnectionPtr> Connection::connections;
+unordered_map<Connection *, ConnectionPtr> Connection::connections;
 
 Connection::Connection() : parser(Parser::get_default())
 {
-  client = ClientPtr(new Client(this));
+  Logging::debug << "allocated connection: " << this << Logging::endl;
+}
+
+Connection::~Connection()
+{
+  Logging::debug << "de-allocated connection: " << this << Logging::endl;
 }
 
 void
@@ -71,7 +76,11 @@ Connection::accept(uv_stream_t *server_handle)
     break;
   }
 
+  host = ipstr;
+
   handle->data = this;
+
+  client = ClientPtr(new Client(this));
 
   uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
   Logging::debug << "Accepted connection from: " << ipstr << Logging::endl;
@@ -103,7 +112,7 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
     if(buf.base != NULL)
       free_buffer(buf);
 
-    uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), NULL);
+    uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), on_close);
     return;
   }
 
@@ -144,14 +153,10 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 }
 
 // Statics
-Connection *
-Connection::create()
+void
+Connection::add(ConnectionPtr connection)
 {
-  ConnectionPtr conn_ptr(new Connection);
-
-  connections.push_back(conn_ptr);
-
-  return conn_ptr.get();
+  connections.insert(std::make_pair<Connection *, ConnectionPtr>(connection.get(), connection));
 }
 
 uv_buf_t
@@ -171,6 +176,14 @@ Connection::on_read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   Connection *connection = static_cast<Connection *>(stream->data);
 
   connection->read(stream, nread, buf);
+}
+
+void 
+Connection::on_close(uv_handle_t *handle)
+{
+  Connection *connection = static_cast<Connection *>(handle->data);
+
+  connections.erase(connection);
 }
 
 void

@@ -42,7 +42,7 @@ typedef shared_ptr<Connection> ConnectionPtr;
 class Connection 
 {
 protected:
-  static vector<ConnectionPtr> connections;
+  static unordered_map<Connection *, ConnectionPtr> connections;
   shared_ptr<uv_tcp_t> handle;
   shared_ptr<uv_write_t> write_handle;
 
@@ -52,18 +52,22 @@ private:
   stringstream read_buffer;
   Parser& parser;
   shared_ptr<Client> client;
+  string host;
 
 public:
-  static Connection *create();
+  static void add(ConnectionPtr);
   static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
   static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
+  static void on_close(uv_handle_t *);
 
   Connection();
+  ~Connection();
 
   virtual void accept(uv_stream_t *);
   virtual void send(string);
   virtual void send(const char *, size_t);
 
+  inline string get_host() const { return host; }
 };
 
 #endif
