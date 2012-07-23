@@ -29,6 +29,7 @@
 #include <string>
 #include <vector>
 #include "command.h"
+#include "event.h"
 
 using std::string;
 using std::vector;
@@ -52,6 +53,8 @@ private:
   string host;
   AccessLevel level;
 public:
+  static Event<ClientPtr> connected;
+
   Client();
   Client(Connection *);
 

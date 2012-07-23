@@ -39,6 +39,12 @@
 using std::cerr;
 using std::endl;
 
+bool test(ClientPtr client)
+{
+  Logging::debug << "CLIENT CONNECTED LOLZ" << Logging::endl;
+  return true;
+}
+
 int 
 main(int argc, char *argv[])
 {
@@ -75,6 +81,8 @@ main(int argc, char *argv[])
 #endif
     Numeric::load_messages(System::get_messages_file());
     Client::init();
+
+    Client::connected.attach(function<bool(ClientPtr)>(test));
     Ssl::init();
     PythonLoader::init();
     Module::load_all();
@@ -91,3 +99,4 @@ main(int argc, char *argv[])
 
   return 0;
 }
+

@@ -37,6 +37,7 @@ using std::setfill;
 
 ClientPtr Client::me;
 vector<ClientPtr> Client::client_list;
+Event<ClientPtr> Client::connected;
 
 Client::Client() : level(Unregistered)
 {
@@ -112,6 +113,8 @@ Client::add(ClientPtr client)
 {
   client_list.push_back(client);
   client->level = Registered;
+
+  connected.fire(client);
 
   client->send(001, client->str().c_str());
   client->send(002, client->me->name.c_str(), "0.0.1");
