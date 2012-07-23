@@ -29,6 +29,7 @@
 #include "Python.h"
 #include "parser.h"
 #include "client.h"
+#include "python/pythonwrap.h"
 
 typedef shared_ptr<Parser> ParserPtr;
 
