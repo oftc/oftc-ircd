@@ -94,7 +94,8 @@ ClientWrap::init()
 
   PyObject *client_obj, *client_args;
 
-  client_obj = PyCObject_FromVoidPtr(const_cast<ClientPtr*>(&Client::get_me()), NULL);
+  ClientPtr ptr = Client::get_me();
+  client_obj = PyCObject_FromVoidPtr(const_cast<ClientPtr*>(&ptr), NULL);
 
   client_args = Py_BuildValue("(O)", client_obj);
 

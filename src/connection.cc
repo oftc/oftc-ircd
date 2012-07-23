@@ -26,11 +26,13 @@
 #include "stdinc.h"
 #include <string>
 #include <uv.h>
+#include <utility>
 #include "connection.h"
 #include "system.h"
 #include "client.h"
 
 using std::getline;
+using std::pair;
 
 unordered_map<Connection *, ConnectionPtr> Connection::connections;
 
@@ -156,7 +158,8 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 void
 Connection::add(ConnectionPtr connection)
 {
-  connections.insert(std::make_pair<Connection *, ConnectionPtr>(connection.get(), connection));
+  
+  connections.insert(pair<Connection *, ConnectionPtr>(connection.get(), connection));
 }
 
 uv_buf_t
