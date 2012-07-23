@@ -72,7 +72,7 @@ public:
 
   bool fire(T1 arg)
   {
-    vector<function<bool(T1)> >::const_iterator it;
+    typename vector<function<bool(T1)> >::const_iterator it;
 
     for(it = handlers.begin();  it != handlers.end(); it++)
     {
@@ -84,7 +84,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2)
   {
-    vector<function<bool(T1, T2)> >::const_iterator it;
+    typename vector<function<bool(T1, T2)> >::const_iterator it;
 
     for(it = handlers2.begin();  it != handlers2.end(); it++)
     {
@@ -96,7 +96,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2, T3 arg3)
   {
-    vector<function<bool(T1, T2, T3)> >::const_iterator it;
+    typename vector<function<bool(T1, T2, T3)> >::const_iterator it;
 
     for(it = handlers3.begin();  it != handlers3.end(); it++)
     {
@@ -108,7 +108,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4)
   {
-    vector<function<bool(T1, T2, T3, T4)> >::const_iterator it;
+    typename vector<function<bool(T1, T2, T3, T4)> >::const_iterator it;
 
     for(it = handlers4.begin();  it != handlers4.end(); it++)
     {
@@ -120,7 +120,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
   {
-    vector<function<bool(T1, T2, T3, T4, T5)> >::const_iterator it;
+    typename vector<function<bool(T1, T2, T3, T4, T5)> >::const_iterator it;
 
     for(it = handlers5.begin();  it != handlers5.end(); it++)
     {
@@ -132,7 +132,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
   {
-    vector<function<bool(T1, T2, T3, T4, T5, T6)> >::const_iterator it;
+    typename vector<function<bool(T1, T2, T3, T4, T5, T6)> >::const_iterator it;
 
     for(it = handlers6.begin();  it != handlers6.end(); it++)
     {
