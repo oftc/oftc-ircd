@@ -28,14 +28,16 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 
 using std::string;
 using std::vector;
+using std::function;
 
 class Command; 
 class Client;
 
-typedef void (*CommandHandler)(const shared_ptr<Client>, const Command&, const vector<string>&);
+typedef function<void(const shared_ptr<Client> client, const Command& command, const vector<string>& params)> CommandHandler;
 
 enum AccessLevel
 {
