@@ -27,10 +27,8 @@
 #define EVENT_H_INC
 
 #include <vector>
-#include <functional>
 
 using std::vector;
-using std::function;
 
 struct NullArg {};
 

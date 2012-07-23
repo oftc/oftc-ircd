@@ -28,11 +28,9 @@
 
 #include <string>
 #include <vector>
-#include <functional>
 
 using std::string;
 using std::vector;
-using std::function;
 
 class Command; 
 class Client;
