@@ -57,7 +57,6 @@ Connection::accept(uv_stream_t *server_handle)
   int ret;
 
   handle = shared_ptr<uv_tcp_t>(new uv_tcp_t);
-  write_handle = shared_ptr<uv_write_t>(new uv_write_t);
 
   uv_tcp_init(uv_default_loop(), handle.get());
 
@@ -92,10 +91,12 @@ void
 Connection::send(const char *buffer, size_t len)
 {
   uv_buf_t buf;
+  uv_write_t *req = new uv_write_t;
 
   buf.base = const_cast<char*>(buffer);
   buf.len = len;
-  uv_write(write_handle.get(), reinterpret_cast<uv_stream_t*>(handle.get()), &buf, 1, NULL);
+  uv_write(req, reinterpret_cast<uv_stream_t*>(handle.get()), &buf, 1, on_write);
+  Logging::debug << "Sending: " << buffer << Logging::endl;
 }
 
 void
@@ -125,8 +126,6 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   }
 
   debug_str.insert(0, buf.base, nread);
-
-  Logging::debug << "Read " << nread << "bytes '" << debug_str << "'" << Logging::endl;
 
   read_buffer.write(buf.base, nread);
   string line;
@@ -158,7 +157,6 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 void
 Connection::add(ConnectionPtr connection)
 {
-  
   connections.insert(pair<Connection *, ConnectionPtr>(connection.get(), connection));
 }
 
@@ -187,6 +185,12 @@ Connection::on_close(uv_handle_t *handle)
   Connection *connection = static_cast<Connection *>(handle->data);
 
   connections.erase(connection);
+}
+
+void
+Connection::on_write(uv_write_t *req, int status)
+{
+  delete req;
 }
 
 void

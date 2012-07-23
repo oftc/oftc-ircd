@@ -44,7 +44,6 @@ class Connection
 protected:
   static unordered_map<Connection *, ConnectionPtr> connections;
   shared_ptr<uv_tcp_t> handle;
-  shared_ptr<uv_write_t> write_handle;
 
   static void free_buffer(uv_buf_t&);
   virtual void read(uv_stream_t *, ssize_t, uv_buf_t);
@@ -59,6 +58,7 @@ public:
   static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
   static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
   static void on_close(uv_handle_t *);
+  static void on_write(uv_write_t *, int );
 
   Connection();
   ~Connection();
