@@ -111,7 +111,7 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 void
 ParserWrap::handle_command(const ClientPtr client, const Command& command, const vector<string>& params)
 {
-  PyObject *args, *client_obj, *client_args;
+  PyObject *args;
   ClientWrap *wrapped_client;
 
   args = PyTuple_New(params.size() + 1);
@@ -121,11 +121,8 @@ ParserWrap::handle_command(const ClientPtr client, const Command& command, const
     return;
   }
 
-  client_obj = PyCObject_FromVoidPtr(const_cast<ClientPtr*>(&client), NULL);
+  wrapped_client = ClientWrap::wrap(client);
 
-  client_args = Py_BuildValue("(O)", client_obj);
-
-  wrapped_client = reinterpret_cast<ClientWrap *>(PyObject_CallObject(ClientWrap::get_type(), client_args));
   if(wrapped_client == NULL)
   {
     PyErr_Print();

@@ -46,6 +46,7 @@ public:
   static PyObject *send(ClientWrap *, PyObject *, PyObject *);
   static int set_wrap(ClientWrap *, PyObject *, void *);
   static PyObject *str(ClientWrap *);
+  static ClientWrap *wrap(ClientPtr);
 
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();

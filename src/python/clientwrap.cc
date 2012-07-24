@@ -92,22 +92,36 @@ ClientWrap::init()
   PythonWrap<ClientWrap>::str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ClientWrap>::init("Client");
 
-  PyObject *client_obj, *client_args;
-
   ClientPtr ptr = Client::get_me();
-  client_obj = PyCObject_FromVoidPtr(const_cast<ClientPtr*>(&ptr), NULL);
-
-  client_args = Py_BuildValue("(O)", client_obj);
-
-  me = reinterpret_cast<ClientWrap *>(PyObject_CallObject(ClientWrap::get_type(), client_args));
+  me = ClientWrap::wrap(ptr);
   if(me == NULL)
+  {
     PyErr_Print();
+    throw runtime_error("Python failed to initialise");
+  }
 
   PyDict_SetItemString(type_object.tp_dict, "Me", reinterpret_cast<PyObject *>(me));
 
   Client::connected += function<bool(ClientPtr)>(on_connected);
   Client::registered += function<bool(ClientPtr)>(on_registered);
   Client::disconnected += function<bool(ClientPtr)>(on_disconnected);
+}
+
+ClientWrap*
+ClientWrap::wrap(ClientPtr client)
+{
+  PyObject *client_obj, *client_args;
+  ClientWrap *wrapped_client;
+
+  client_obj = PyCObject_FromVoidPtr(const_cast<ClientPtr*>(&client), NULL);
+
+  client_args = Py_BuildValue("(O)", client_obj);
+
+  wrapped_client = reinterpret_cast<ClientWrap *>(PyObject_CallObject(ClientWrap::get_type(), client_args));
+  if(wrapped_client == NULL)
+    return NULL;
+
+  return wrapped_client;
 }
 
 PyObject *
