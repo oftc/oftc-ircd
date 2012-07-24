@@ -30,6 +30,32 @@
 
 using std::list;
 
+#ifndef _MSC_VER
+template<typename... T>
+class Event
+{
+private:
+  list<function<bool(T...)> > handlers;
+public:
+  void attach(function<bool(T...)> func)
+  {
+    handlers.push_back(func);
+  }
+  bool fire(T... args)
+  {
+    typename list<function<bool(T...)> >::const_iterator it;
+
+    for(it = handlers.begin();  it != handlers.end(); it++)
+    {
+      function<bool(T...)> func = *it;
+      func(args...);
+    }
+
+    return true;
+  }
+};
+
+#else
 struct NullArg {};
 
 template<class T1 = NullArg, class T2 = NullArg, class T3 = NullArg, class T4 = NullArg, class T5 = NullArg, class T6 = NullArg> 
@@ -141,5 +167,7 @@ public:
     return true;
   }
 };
+
+#endif
 
 #endif
