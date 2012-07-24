@@ -302,7 +302,8 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
 bool
 ClientWrap::on_connected(ClientPtr client)
 {
-  PyObject *ret, *args;
+  PyObject *args;
+  bool ret;
 
   args = Py_BuildValue("(O)", wrap(&client));
 
@@ -310,27 +311,14 @@ ClientWrap::on_connected(ClientPtr client)
 
   Py_DECREF(args);
 
-  if(ret == NULL)
-  {
-    PyErr_Print();
-    return false;
-  }
-  if(ret == Py_True)
-  {
-    Py_DECREF(Py_True);
-    return true;
-  }
-  else
-  {
-    Py_DECREF(Py_False);
-    return false;
-  }
+  return ret;
 }
 
 bool
 ClientWrap::on_registered(ClientPtr client)
 {
-  PyObject *ret, *args;
+  PyObject *args;
+  bool ret;
 
   args = Py_BuildValue("(O)", wrap(&client));
 
@@ -338,27 +326,14 @@ ClientWrap::on_registered(ClientPtr client)
 
   Py_DECREF(args);
 
-  if(ret == NULL)
-  {
-    PyErr_Print();
-    return false;
-  }
-  if(ret == Py_True)
-  {
-    Py_DECREF(Py_True);
-    return true;
-  }
-  else
-  {
-    Py_DECREF(Py_False);
-    return false;
-  }
+  return ret;
 }
 
 bool
 ClientWrap::on_disconnected(ClientPtr client)
 {
-  PyObject *ret, *args;
+  PyObject *args;
+  bool ret;
 
   args = Py_BuildValue("(O)", wrap(&client));
 
@@ -366,19 +341,5 @@ ClientWrap::on_disconnected(ClientPtr client)
 
   Py_DECREF(args);
 
-  if(ret == NULL)
-  {
-    PyErr_Print();
-    return false;
-  }
-  if(ret == Py_True)
-  {
-    Py_DECREF(Py_True);
-    return true;
-  }
-  else
-  {
-    Py_DECREF(Py_False);
-    return false;
-  }
+  return ret;
 }
