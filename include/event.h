@@ -41,6 +41,7 @@ public:
   {
     handlers.push_back(func);
   }
+
   bool fire(T... args)
   {
     typename list<function<bool(T...)> >::const_iterator it;
@@ -53,12 +54,23 @@ public:
 
     return true;
   }
+
+  Event<T...>& operator += (function<bool<T...)> func)
+  {
+    attach(func);
+    return this;
+  }
+
+  bool operator()(T... args)
+  {
+    return fire(args...);
+  }
 };
 
 #else
 struct NullArg {};
 
-template<class T1 = NullArg, class T2 = NullArg, class T3 = NullArg, class T4 = NullArg, class T5 = NullArg, class T6 = NullArg> 
+template<class T1 = NullArg, class T2 = NullArg, class T3 = NullArg, class T4 = NullArg, class T5 = NullArg> 
 class Event
 {
 private:
@@ -67,31 +79,60 @@ private:
   list<function<bool(T1, T2, T3)> > handlers3;
   list<function<bool(T1, T2, T3, T4)> > handlers4;
   list<function<bool(T1, T2, T3, T4, T5)> > handlers5;
-  list<function<bool(T1, T2, T3, T4, T5, T6)> > handlers6;
 public:
   void attach(function<bool(T1)> func)
   {
     handlers.push_back(func);
   }
+
   void attach(function<bool(T1, T2)> func)
   {
     handlers2.push_back(func);
   }
+
   void attach(function<bool(T1, T2, T3)> func)
   {
     handlers3.push_back(func);
   }
+
   void attach(function<bool(T1, T2, T3, T4)> func)
   {
     handlers4.push_back(func);
   }
+
   void attach(function<bool(T1, T2, T3, T4, T5)> func)
   {
     handlers5.push_back(func);
   }
-  void attach(function<bool(T1, T2, T3, T4, T5, T6)> func)
+
+  Event<T1>& operator +=(function<bool(T1)> func)
   {
-    handlers6.push_back(func);
+    attach(func);
+    returh this;
+  }
+
+  Event<T1, T2>& operator +=(function<bool(T1, T2)> func)
+  {
+    attach(func);
+    returh this;
+  }
+
+  Event<T1, T2, T3>& operator +=(function<bool(T1, T2, T3)> func)
+  {
+    attach(func);
+    returh this;
+  }
+
+  Event<T1, T2, T3, T4>& operator +=(function<bool(T1, T2, T3, T4)> func)
+  {
+    attach(func);
+    returh this;
+  }
+
+  Event<T1, T2, T3, T4, T5>& operator +=(function<bool(T1, T2, T3, T4, T5)> func)
+  {
+    attach(func);
+    returh this;
   }
 
   bool fire(T1 arg)
@@ -106,6 +147,7 @@ public:
 
     return true;
   }
+
   bool fire(T1 arg, T2 arg2)
   {
     typename list<function<bool(T1, T2)> >::const_iterator it;
@@ -118,6 +160,7 @@ public:
 
     return true;
   }
+
   bool fire(T1 arg, T2 arg2, T3 arg3)
   {
     typename list<function<bool(T1, T2, T3)> >::const_iterator it;
@@ -130,6 +173,7 @@ public:
 
     return true;
   }
+
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4)
   {
     typename list<function<bool(T1, T2, T3, T4)> >::const_iterator it;
@@ -142,6 +186,7 @@ public:
 
     return true;
   }
+
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
   {
     typename list<function<bool(T1, T2, T3, T4, T5)> >::const_iterator it;
@@ -154,17 +199,30 @@ public:
 
     return true;
   }
-  bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+
+  bool operator()(T1 arg)
   {
-    typename list<function<bool(T1, T2, T3, T4, T5, T6)> >::const_iterator it;
+    return fire(arg);
+  }
 
-    for(it = handlers6.begin();  it != handlers6.end(); it++)
-    {
-      function<bool(T1, T2, T3, T4, T5, T6)> func = *it;
-      func(arg, arg2, arg3, arg4, arg5, arg6);
-    }
+  bool operator()(T1 arg, T2 arg2)
+  {
+    return fire(arg, arg2);
+  }
 
-    return true;
+  bool operator()(T1 arg, T2 arg2, T3 arg3)
+  {
+    return fire(arg, arg2, arg3);
+  }
+
+  bool operator()(T1 arg, T2 arg2, T3 arg3, T4 arg4)
+  {
+    return fire(arg, arg2, arg3, arg4);
+  }
+
+  bool operator()(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+  {
+    return fire(arg, arg2, arg3, arg4, arg5);
   }
 };
 
