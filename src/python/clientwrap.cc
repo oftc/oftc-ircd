@@ -33,6 +33,9 @@
 template class PythonWrap<ClientWrap>;
 
 ClientWrap *ClientWrap::me;
+PyObject *ClientWrap::connected;
+PyObject *ClientWrap::registered;
+PyObject *ClientWrap::disconnected;
 
 static PyMethodDef client_methods[] =
 {
@@ -100,7 +103,17 @@ ClientWrap::init()
     throw runtime_error("Python failed to initialise");
   }
 
+  connected = PyObject_New(PyObject, &PyBaseObject_Type);
+  connected = PyObject_Init(connected, &PyBaseObject_Type);
+  registered = PyObject_New(PyObject, &PyBaseObject_Type);
+  registered = PyObject_Init(connected, &PyBaseObject_Type);
+  disconnected = PyObject_New(PyObject, &PyBaseObject_Type);
+  disconnected = PyObject_Init(connected, &PyBaseObject_Type);
+
   PyDict_SetItemString(type_object.tp_dict, "Me", reinterpret_cast<PyObject *>(me));
+  PyDict_SetItemString(type_object.tp_dict, "connected", connected);
+  PyDict_SetItemString(type_object.tp_dict, "registered", connected);
+  PyDict_SetItemString(type_object.tp_dict, "disconnected", connected);
 
   Client::connected += function<bool(ClientPtr)>(on_connected);
   Client::registered += function<bool(ClientPtr)>(on_registered);
@@ -289,17 +302,83 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
 bool
 ClientWrap::on_connected(ClientPtr client)
 {
-  return true;
+  PyObject *ret, *args;
+
+  args = Py_BuildValue("(O)", wrap(&client));
+
+  ret = handle_event(connected, args);
+
+  Py_DECREF(args);
+
+  if(ret == NULL)
+  {
+    PyErr_Print();
+    return false;
+  }
+  if(ret == Py_True)
+  {
+    Py_DECREF(Py_True);
+    return true;
+  }
+  else
+  {
+    Py_DECREF(Py_False);
+    return false;
+  }
 }
 
 bool
 ClientWrap::on_registered(ClientPtr client)
 {
-  return true;
+  PyObject *ret, *args;
+
+  args = Py_BuildValue("(O)", wrap(&client));
+
+  ret = handle_event(registered, args);
+
+  Py_DECREF(args);
+
+  if(ret == NULL)
+  {
+    PyErr_Print();
+    return false;
+  }
+  if(ret == Py_True)
+  {
+    Py_DECREF(Py_True);
+    return true;
+  }
+  else
+  {
+    Py_DECREF(Py_False);
+    return false;
+  }
 }
 
 bool
 ClientWrap::on_disconnected(ClientPtr client)
 {
-  return true;
+  PyObject *ret, *args;
+
+  args = Py_BuildValue("(O)", wrap(&client));
+
+  ret = handle_event(disconnected, args);
+
+  Py_DECREF(args);
+
+  if(ret == NULL)
+  {
+    PyErr_Print();
+    return false;
+  }
+  if(ret == Py_True)
+  {
+    Py_DECREF(Py_True);
+    return true;
+  }
+  else
+  {
+    Py_DECREF(Py_False);
+    return false;
+  }
 }

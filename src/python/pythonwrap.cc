@@ -124,3 +124,21 @@ T *PythonWrap<T>::wrap(void *arg)
 
   return wrapped;
 }
+
+template<class T>
+PyObject *
+PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
+{
+  PyObject *handler;
+  
+  handler = PyObject_GetAttrString(event, "handler");
+
+  if(handler == NULL)
+  {
+    // No handler, return true to say that everything is ok, we just dont have
+    // anything attached
+    Py_RETURN_TRUE;
+  }
+
+  return PyObject_CallObject(handler, args);
+}

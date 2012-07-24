@@ -34,6 +34,9 @@ class ClientWrap : public PythonWrap<ClientWrap>
 private:
   ClientPtr client;
   static ClientWrap *me;
+  static PyObject *connected;
+  static PyObject *registered;
+  static PyObject *disconnected;
 public:
   static PyObject *add(ClientWrap *, PyObject *);
   static PyObject *get_wrap(ClientWrap *, void *);

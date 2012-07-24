@@ -40,6 +40,7 @@ public:
   static void init(const char *);
   static PyObject *alloc(PyTypeObject *, Py_ssize_t);
   static PyObject *create(PyTypeObject *, PyObject *, PyObject *);
+  static PyObject *handle_event(PyObject *, PyObject *);
   static void free(void *);
   static void dealloc(PyObject *);
   static inline PyTypeObject *get_type_object() { return &type_object; }
