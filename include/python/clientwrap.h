@@ -40,7 +40,7 @@ public:
   static void init();
   static PyObject *is_registered(ClientWrap *, PyObject *);
   static PyObject *numeric(ClientWrap *, PyObject *);
-  static bool on_connected(Client);
+  static bool on_connected(ClientPtr);
   static bool on_registered(ClientPtr);
   static bool on_disconnected(ClientPtr);
   static PyObject *send(ClientWrap *, PyObject *, PyObject *);

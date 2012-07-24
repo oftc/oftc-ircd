@@ -105,7 +105,7 @@ ClientWrap::init()
 
   PyDict_SetItemString(type_object.tp_dict, "Me", reinterpret_cast<PyObject *>(me));
 
-  Client::connected += function<bool(Client)>(on_connected);
+  Client::connected += function<bool(ClientPtr)>(on_connected);
   Client::registered += function<bool(ClientPtr)>(on_registered);
   Client::disconnected += function<bool(ClientPtr)>(on_disconnected);
 }
@@ -290,7 +290,7 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
 }
 
 bool
-ClientWrap::on_connected(Client client)
+ClientWrap::on_connected(ClientPtr client)
 {
   return true;
 }

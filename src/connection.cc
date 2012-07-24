@@ -82,6 +82,7 @@ Connection::accept(uv_stream_t *server_handle)
   handle->data = this;
 
   client = ClientPtr(new Client(this));
+  Client::connected(client);
 
   uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
   Logging::debug << "Accepted connection from: " << ipstr << Logging::endl;

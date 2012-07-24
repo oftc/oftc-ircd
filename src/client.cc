@@ -37,7 +37,7 @@ using std::setfill;
 
 ClientPtr Client::me;
 vector<ClientPtr> Client::client_list;
-Event<Client> Client::connected;
+Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registered;
 Event<ClientPtr> Client::disconnected;
 
@@ -47,7 +47,6 @@ Client::Client() : level(Unregistered)
 
 Client::Client(Connection *connection) : connection(connection), level(Unregistered)
 {
-  connected(*this);
   host = connection->get_host();
 }
 
