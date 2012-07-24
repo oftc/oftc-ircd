@@ -93,7 +93,7 @@ ClientWrap::init()
   PythonWrap<ClientWrap>::init("Client");
 
   ClientPtr ptr = Client::get_me();
-  me = ClientWrap::wrap(ptr);
+  me = ClientWrap::wrap(&ptr);
   if(me == NULL)
   {
     PyErr_Print();
@@ -105,23 +105,6 @@ ClientWrap::init()
   Client::connected += function<bool(ClientPtr)>(on_connected);
   Client::registered += function<bool(ClientPtr)>(on_registered);
   Client::disconnected += function<bool(ClientPtr)>(on_disconnected);
-}
-
-ClientWrap*
-ClientWrap::wrap(ClientPtr client)
-{
-  PyObject *client_obj, *client_args;
-  ClientWrap *wrapped_client;
-
-  client_obj = PyCObject_FromVoidPtr(const_cast<ClientPtr*>(&client), NULL);
-
-  client_args = Py_BuildValue("(O)", client_obj);
-
-  wrapped_client = reinterpret_cast<ClientWrap *>(PyObject_CallObject(ClientWrap::get_type(), client_args));
-  if(wrapped_client == NULL)
-    return NULL;
-
-  return wrapped_client;
 }
 
 PyObject *

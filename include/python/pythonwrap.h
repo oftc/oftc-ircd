@@ -44,6 +44,7 @@ public:
   static void dealloc(PyObject *);
   static inline PyTypeObject *get_type_object() { return &type_object; }
   static inline PyObject *get_type() { return reinterpret_cast<PyObject *>(&type_object); }
+  static T *wrap(void *arg);
 };
 
 void python_init();

@@ -113,6 +113,7 @@ ParserWrap::handle_command(const ClientPtr client, const Command& command, const
 {
   PyObject *args;
   ClientWrap *wrapped_client;
+  ClientPtr ptr = client;
 
   args = PyTuple_New(params.size() + 1);
   if(args == NULL)
@@ -121,7 +122,7 @@ ParserWrap::handle_command(const ClientPtr client, const Command& command, const
     return;
   }
 
-  wrapped_client = ClientWrap::wrap(client);
+  wrapped_client = ClientWrap::wrap(&ptr);
 
   if(wrapped_client == NULL)
   {

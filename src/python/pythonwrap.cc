@@ -38,6 +38,9 @@ template<class T> reprfunc PythonWrap<T>::str;
 template void PythonWrap<ParserWrap>::init(const char *);
 template void PythonWrap<ClientWrap>::init(const char *);
 
+template PythonWrap<typename ClientWrap>;
+template PythonWrap<typename ParserWrap>;
+
 template<class T>
 void
 PythonWrap<T>::init(const char *name)
@@ -103,4 +106,21 @@ PythonWrap<T>::dealloc(PyObject *obj)
   T *ptr = reinterpret_cast<T *>(obj);
   ptr->~T();
   obj->ob_type->tp_free(obj);
+}
+
+template<class T>
+T *PythonWrap<T>::wrap(void *arg)
+{
+  PyObject *obj, *args;
+  T *wrapped;
+
+  obj = PyCObject_FromVoidPtr(arg, NULL);
+
+  args = Py_BuildValue("(O)", obj);
+
+  wrapped = reinterpret_cast<T *>(PyObject_CallObject(T::get_type(), args));
+  if(wrapped == NULL)
+    return NULL;
+
+  return wrapped;
 }
