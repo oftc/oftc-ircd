@@ -21,7 +21,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #  OTHER DEALINGS IN THE SOFTWARE.
 
-from ircd import register
+from ircd import register, event
 from pythonwrap import Client
 
 @register("NICK", min_args=1, max_args=2, access=0)
@@ -48,3 +48,7 @@ def check_and_register(client):
 
   if client.Name and client.Username:
     client.add()
+
+@event(Client.connected)
+def client_connected(client):
+  print "CLIENT CONNECTED YAY"
