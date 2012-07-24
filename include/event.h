@@ -55,10 +55,10 @@ public:
     return true;
   }
 
-  Event<T...>& operator += (function<bool(T...)> func)
+  const Event<T...>& operator += (function<bool(T...)> func)
   {
     attach(func);
-    return this;
+    return *this;
   }
 
   bool operator()(T... args)
@@ -105,34 +105,34 @@ public:
     handlers5.push_back(func);
   }
 
-  Event<T1>& operator +=(function<bool(T1)> func)
+  const Event<T1>& operator +=(function<bool(T1)> func)
   {
     attach(func);
-    returh this;
+    return *this;
   }
 
-  Event<T1, T2>& operator +=(function<bool(T1, T2)> func)
+  const Event<T1, T2>& operator +=(function<bool(T1, T2)> func)
   {
     attach(func);
-    returh this;
+    return *this;
   }
 
-  Event<T1, T2, T3>& operator +=(function<bool(T1, T2, T3)> func)
+  const Event<T1, T2, T3>& operator +=(function<bool(T1, T2, T3)> func)
   {
     attach(func);
-    returh this;
+    return *this;
   }
 
-  Event<T1, T2, T3, T4>& operator +=(function<bool(T1, T2, T3, T4)> func)
+  const Event<T1, T2, T3, T4>& operator +=(function<bool(T1, T2, T3, T4)> func)
   {
     attach(func);
-    returh this;
+    return *this;
   }
 
-  Event<T1, T2, T3, T4, T5>& operator +=(function<bool(T1, T2, T3, T4, T5)> func)
+  const Event<T1, T2, T3, T4, T5>& operator +=(function<bool(T1, T2, T3, T4, T5)> func)
   {
     attach(func);
-    returh this;
+    return *this;
   }
 
   bool fire(T1 arg)
