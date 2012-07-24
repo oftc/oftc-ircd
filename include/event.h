@@ -55,7 +55,7 @@ public:
     return true;
   }
 
-  Event<T...>& operator += (function<bool<T...)> func)
+  Event<T...>& operator += (function<bool(T...)> func)
   {
     attach(func);
     return this;
