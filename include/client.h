@@ -53,7 +53,9 @@ private:
   string host;
   AccessLevel level;
 public:
-  static Event<ClientPtr> connected;
+  static Event<Client> connected;
+  static Event<ClientPtr> registered;
+  static Event<ClientPtr> disconnected;
 
   Client();
   Client(Connection *);
