@@ -26,9 +26,9 @@
 #ifndef EVENT_H_INC
 #define EVENT_H_INC
 
-#include <vector>
+#include <list>
 
-using std::vector;
+using std::list;
 
 struct NullArg {};
 
@@ -36,12 +36,12 @@ template<class T1 = NullArg, class T2 = NullArg, class T3 = NullArg, class T4 = 
 class Event
 {
 private:
-  vector<function<bool(T1)> > handlers;
-  vector<function<bool(T1, T2)> > handlers2;
-  vector<function<bool(T1, T2, T3)> > handlers3;
-  vector<function<bool(T1, T2, T3, T4)> > handlers4;
-  vector<function<bool(T1, T2, T3, T4, T5)> > handlers5;
-  vector<function<bool(T1, T2, T3, T4, T5, T6)> > handlers6;
+  list<function<bool(T1)> > handlers;
+  list<function<bool(T1, T2)> > handlers2;
+  list<function<bool(T1, T2, T3)> > handlers3;
+  list<function<bool(T1, T2, T3, T4)> > handlers4;
+  list<function<bool(T1, T2, T3, T4, T5)> > handlers5;
+  list<function<bool(T1, T2, T3, T4, T5, T6)> > handlers6;
 public:
   void attach(function<bool(T1)> func)
   {
@@ -70,7 +70,7 @@ public:
 
   bool fire(T1 arg)
   {
-    typename vector<function<bool(T1)> >::const_iterator it;
+    typename list<function<bool(T1)> >::const_iterator it;
 
     for(it = handlers.begin();  it != handlers.end(); it++)
     {
@@ -82,7 +82,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2)
   {
-    typename vector<function<bool(T1, T2)> >::const_iterator it;
+    typename list<function<bool(T1, T2)> >::const_iterator it;
 
     for(it = handlers2.begin();  it != handlers2.end(); it++)
     {
@@ -94,7 +94,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2, T3 arg3)
   {
-    typename vector<function<bool(T1, T2, T3)> >::const_iterator it;
+    typename list<function<bool(T1, T2, T3)> >::const_iterator it;
 
     for(it = handlers3.begin();  it != handlers3.end(); it++)
     {
@@ -106,7 +106,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4)
   {
-    typename vector<function<bool(T1, T2, T3, T4)> >::const_iterator it;
+    typename list<function<bool(T1, T2, T3, T4)> >::const_iterator it;
 
     for(it = handlers4.begin();  it != handlers4.end(); it++)
     {
@@ -118,7 +118,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
   {
-    typename vector<function<bool(T1, T2, T3, T4, T5)> >::const_iterator it;
+    typename list<function<bool(T1, T2, T3, T4, T5)> >::const_iterator it;
 
     for(it = handlers5.begin();  it != handlers5.end(); it++)
     {
@@ -130,7 +130,7 @@ public:
   }
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
   {
-    typename vector<function<bool(T1, T2, T3, T4, T5, T6)> >::const_iterator it;
+    typename list<function<bool(T1, T2, T3, T4, T5, T6)> >::const_iterator it;
 
     for(it = handlers6.begin();  it != handlers6.end(); it++)
     {
