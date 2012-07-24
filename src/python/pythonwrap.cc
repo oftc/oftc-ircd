@@ -38,8 +38,9 @@ template<class T> reprfunc PythonWrap<T>::str;
 template void PythonWrap<ParserWrap>::init(const char *);
 template void PythonWrap<ClientWrap>::init(const char *);
 
-template PythonWrap<typename ClientWrap>;
-template PythonWrap<typename ParserWrap>;
+template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
+template bool PythonWrap<ClientWrap>::handle_event(PyObject *, PyObject *);
+//template PythonWrap<ParserWrap>;
 
 template<class T>
 void
