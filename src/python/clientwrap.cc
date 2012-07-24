@@ -104,6 +104,10 @@ ClientWrap::init()
     PyErr_Print();
 
   PyDict_SetItemString(type_object.tp_dict, "Me", reinterpret_cast<PyObject *>(me));
+
+  Client::connected += function<bool(Client)>(on_connected);
+  Client::registered += function<bool(ClientPtr)>(on_registered);
+  Client::disconnected += function<bool(ClientPtr)>(on_disconnected);
 }
 
 PyObject *
@@ -283,4 +287,22 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
   self->client->send(output.str(), numeric);
 
   Py_RETURN_NONE;
+}
+
+bool
+ClientWrap::on_connected(Client client)
+{
+  return true;
+}
+
+bool
+ClientWrap::on_registered(ClientPtr client)
+{
+  return true;
+}
+
+bool
+ClientWrap::on_disconnected(ClientPtr client)
+{
+  return true;
 }
