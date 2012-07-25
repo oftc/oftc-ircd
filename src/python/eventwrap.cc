@@ -54,7 +54,6 @@ static PyGetSetDef event_getsetters[] =
 
 EventWrap::EventWrap(PyObject *args, PyObject *kwds)
 {
-  listeners = PyList_New(0);
 }
 
 EventWrap::~EventWrap()
