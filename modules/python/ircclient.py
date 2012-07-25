@@ -47,8 +47,4 @@ def check_and_register(client):
     return
 
   if client.Name and client.Username:
-    client.add()
-
-@event(Client.connected)
-def client_connected(client):
-  print "CLIENT CONNECTED YAY"
+    Client.add(client)

@@ -41,7 +41,7 @@ PyObject *ClientWrap::disconnected;
 static PyMethodDef client_methods[] =
 {
   { "add", reinterpret_cast<PyCFunction>(ClientWrap::add), 
-    METH_NOARGS, "Register the client" },
+    METH_STATIC, "Register the client" },
   { "is_registered", reinterpret_cast<PyCFunction>(ClientWrap::is_registered),
     METH_NOARGS, "Check if a client is registered or not" },
   { "numeric", reinterpret_cast<PyCFunction>(ClientWrap::numeric),
@@ -166,7 +166,19 @@ ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 PyObject *
 ClientWrap::add(ClientWrap *self, PyObject *args)
 {
-  self->client->add(self->client);
+  ClientWrap *client;
+
+  
+  if(!PyArg_Parse(args, "O", &client))
+    return NULL;
+
+  if(Py_TYPE(client) != &type_object)
+  {
+    PyErr_SetString(PyExc_TypeError, "argument must be a Client object");
+    return NULL;
+  }
+
+  Client::add(client->client);
 
   Py_RETURN_NONE;
 }
