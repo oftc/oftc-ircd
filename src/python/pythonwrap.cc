@@ -147,7 +147,7 @@ PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
     PyErr_Print();
     return false;
   }
-  if(ret == Py_True)
+  else if(ret == Py_True)
   {
     Py_DECREF(Py_True);
     return true;
