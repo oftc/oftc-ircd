@@ -43,12 +43,12 @@ def register(command, min_args=0, max_args=0, access=0, rate_control=0):
 
 def event(evt):
   def decorator(func):
-    if not hasattr(evt, 'listeners'):
+    if not evt.listeners:
       evt.listeners = []
 
     evt.listeners.append(func)
 
-    if not hasattr(evt, 'handler'):
+    if not evt.handler:
       def handler(*args, **kwargs):
         ret = True
         for listener in evt.listeners:

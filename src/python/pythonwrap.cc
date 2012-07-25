@@ -28,6 +28,7 @@
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
 #include "python/clientwrap.h"
+#include "python/eventwrap.h"
 
 template<class T> PyTypeObject PythonWrap<T>::type_object;
 template<class T> PyMethodDef *PythonWrap<T>::methods;
@@ -37,6 +38,7 @@ template<class T> reprfunc PythonWrap<T>::str;
 
 template void PythonWrap<ParserWrap>::init(const char *);
 template void PythonWrap<ClientWrap>::init(const char *);
+template void PythonWrap<EventWrap>::init(const char *);
 
 template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
 template bool PythonWrap<ClientWrap>::handle_event(PyObject *, PyObject *);
@@ -133,7 +135,7 @@ PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
   
   handler = PyObject_GetAttrString(event, "handler");
 
-  if(handler == NULL)
+  if(handler == NULL || !PyCallable_Check(handler))
   {
     // No handler, return true to say that everything is ok, we just dont have
     // anything attached

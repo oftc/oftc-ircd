@@ -1,0 +1,98 @@
+/*
+  Copyright (c) 2012 Stuart Walsh
+
+  Permission is hereby granted, free of charge, to any person
+  obtaining a copy of this software and associated documentation
+  files (the "Software"), to deal in the Software without
+  restriction, including without limitation the rights to use,
+  copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the
+  Software is furnished to do so, subject to the following
+  conditions:
+
+  The above copyright notice and this permission notice shall be
+  included in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+#include <Python.h>
+#include <structmember.h>
+#include "stdinc.h"
+#include "python/pythonwrap.h"
+#include "python/eventwrap.h"
+
+template class PythonWrap<EventWrap>;
+
+static PyMethodDef event_methods[] =
+{
+  { NULL, NULL, 0, NULL }
+};
+
+static PyMemberDef event_members[] =
+{
+  { NULL, 0, 0, 0, NULL }
+};
+
+static PyGetSetDef event_getsetters[] = 
+{
+  { const_cast<char*>("listeners"), reinterpret_cast<getter>(EventWrap::get_wrap), 
+    reinterpret_cast<setter>(EventWrap::set_wrap), const_cast<char*>("listeners"), 
+    reinterpret_cast<void *>(const_cast<char *>("listeners")) },
+  { const_cast<char*>("handler"), reinterpret_cast<getter>(EventWrap::get_wrap), 
+    reinterpret_cast<setter>(EventWrap::set_wrap), const_cast<char*>("handler"), 
+    reinterpret_cast<void *>(const_cast<char *>("handler")) },
+  { NULL, NULL, NULL, NULL, NULL }
+};
+
+EventWrap::EventWrap(PyObject *args, PyObject *kwds)
+{
+  listeners = PyList_New(0);
+}
+
+EventWrap::~EventWrap()
+{
+}
+
+// Statics
+
+void
+EventWrap::init()
+{
+  PythonWrap<EventWrap>::methods = event_methods;
+  PythonWrap<EventWrap>::members = event_members;
+  PythonWrap<EventWrap>::getsetters = event_getsetters;
+  PythonWrap<EventWrap>::str = reinterpret_cast<reprfunc>(str);
+  PythonWrap<EventWrap>::init("Event");
+}
+
+PyObject *
+EventWrap::get_wrap(EventWrap *event, void *closure)
+{
+  string prop = string(static_cast<char *>(closure));
+
+  if(prop == "listeners")
+    return event->get_listeners();
+  else if(prop == "handler")
+    return event->get_handler();
+}
+
+int 
+EventWrap::set_wrap(EventWrap *event, PyObject *value, void *closure)
+{
+  string prop = string(static_cast<char *>(closure));
+
+  if(prop == "listeners")
+    event->set_listeners(value);
+  else if(prop == "handler")
+    event->set_handler(value);
+
+  return 0;
+}

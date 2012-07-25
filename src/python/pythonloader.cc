@@ -30,6 +30,7 @@
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
 #include "python/clientwrap.h"
+#include "python/eventwrap.h"
 #include "module.h"
 
 using std::stringstream;
@@ -67,6 +68,7 @@ PythonLoader::init()
   PySys_SetPath(const_cast<char*>(path.str().c_str()));
 
   ParserWrap::init();
+  EventWrap::init();
   ClientWrap::init();
 
   m = Py_InitModule3("pythonwrap", module_methods, 
@@ -78,6 +80,9 @@ PythonLoader::init()
   Py_INCREF(ClientWrap::get_type_object());
   PyModule_AddObject(m, "Client", 
     reinterpret_cast<PyObject *>(ClientWrap::get_type_object()));
+  Py_INCREF(EventWrap::get_type_object());
+  PyModule_AddObject(m, "Event", 
+    reinterpret_cast<PyObject *>(EventWrap::get_type_object()));
 }
 
 void

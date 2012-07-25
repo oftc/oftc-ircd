@@ -28,6 +28,7 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
+#include "python/eventwrap.h"
 #include "numeric.h"
 
 template class PythonWrap<ClientWrap>;
@@ -103,12 +104,9 @@ ClientWrap::init()
     throw runtime_error("Python failed to initialise");
   }
 
-  connected = PyObject_New(PyObject, &PyBaseObject_Type);
-  connected = PyObject_Init(connected, &PyBaseObject_Type);
-  registered = PyObject_New(PyObject, &PyBaseObject_Type);
-  registered = PyObject_Init(connected, &PyBaseObject_Type);
-  disconnected = PyObject_New(PyObject, &PyBaseObject_Type);
-  disconnected = PyObject_Init(connected, &PyBaseObject_Type);
+  connected = PyObject_CallObject(EventWrap::get_type(), NULL);
+  registered = PyObject_CallObject(EventWrap::get_type(), NULL);
+  disconnected = PyObject_CallObject(EventWrap::get_type(), NULL);
 
   PyDict_SetItemString(type_object.tp_dict, "Me", reinterpret_cast<PyObject *>(me));
   PyDict_SetItemString(type_object.tp_dict, "connected", connected);
