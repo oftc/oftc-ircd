@@ -40,7 +40,6 @@ template void PythonWrap<ClientWrap>::init(const char *);
 
 template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
 template bool PythonWrap<ClientWrap>::handle_event(PyObject *, PyObject *);
-//template PythonWrap<ParserWrap>;
 
 template<class T>
 void
