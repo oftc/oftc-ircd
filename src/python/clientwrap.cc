@@ -42,6 +42,12 @@ static PyMethodDef client_methods[] =
 {
   { "add", reinterpret_cast<PyCFunction>(ClientWrap::add), 
     METH_STATIC, "Register the client" },
+  { "add_name", reinterpret_cast<PyCFunction>(ClientWrap::add_name), 
+    METH_STATIC, "Add a name to the names list" },
+  { "find_by_name", reinterpret_cast<PyCFunction>(ClientWrap::find_by_name), 
+    METH_STATIC, "find a client by name" },
+  { "del_name", reinterpret_cast<PyCFunction>(ClientWrap::del_name), 
+    METH_STATIC, "delete a client name from the names list" },
   { "is_registered", reinterpret_cast<PyCFunction>(ClientWrap::is_registered),
     METH_NOARGS, "Check if a client is registered or not" },
   { "numeric", reinterpret_cast<PyCFunction>(ClientWrap::numeric),
@@ -110,8 +116,8 @@ ClientWrap::init()
 
   PyDict_SetItemString(type_object.tp_dict, "Me", reinterpret_cast<PyObject *>(me));
   PyDict_SetItemString(type_object.tp_dict, "connected", connected);
-  PyDict_SetItemString(type_object.tp_dict, "registered", connected);
-  PyDict_SetItemString(type_object.tp_dict, "disconnected", connected);
+  PyDict_SetItemString(type_object.tp_dict, "registered", registered);
+  PyDict_SetItemString(type_object.tp_dict, "disconnected", disconnected);
 
   Client::connected += function<bool(ClientPtr)>(on_connected);
   Client::registered += function<bool(ClientPtr)>(on_registered);
@@ -164,14 +170,8 @@ ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 }
 
 PyObject *
-ClientWrap::add(ClientWrap *self, PyObject *args)
+ClientWrap::add(ClientWrap *self, ClientWrap *client)
 {
-  ClientWrap *client;
-
-  
-  if(!PyArg_Parse(args, "O", &client))
-    return NULL;
-
   if(Py_TYPE(client) != &type_object)
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Client object");
@@ -179,6 +179,50 @@ ClientWrap::add(ClientWrap *self, PyObject *args)
   }
 
   Client::add(client->client);
+
+  Py_RETURN_NONE;
+}
+
+PyObject *
+ClientWrap::add_name(PyObject *self, ClientWrap *client)
+{
+  if(Py_TYPE(client) != &type_object)
+  {
+    PyErr_SetString(PyExc_TypeError, "Argument must be a Client");
+    return NULL;
+  }
+  Client::add_name(client->client);
+
+  Py_RETURN_NONE;
+}
+
+PyObject *
+ClientWrap::find_by_name(PyObject *self, PyObject *name)
+{
+  if(!PyString_Check(name))
+  {
+    PyErr_SetString(PyExc_TypeError, "argument must be a string");
+    return NULL;
+  }
+
+  ClientPtr ptr = Client::find_by_name(PyString_AsString(name));
+
+  if(ptr == NULL)
+    Py_RETURN_NONE;
+
+  return reinterpret_cast<PyObject *>(wrap(&ptr));
+}
+
+PyObject *
+ClientWrap::del_name(PyObject *self, ClientWrap *client)
+{
+  if(Py_TYPE(client) != &type_object)
+  {
+    PyErr_SetString(PyExc_TypeError, "argument must be a Client object");
+    return NULL;
+  }
+
+  Client::del_name(client->client);
 
   Py_RETURN_NONE;
 }
@@ -301,6 +345,7 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
         break;
     }
 
+    c = *i;
     output << c;
   }
 

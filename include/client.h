@@ -28,11 +28,13 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include "command.h"
 #include "event.h"
 
 using std::string;
 using std::vector;
+using std::unordered_map;
 
 class Client;
 
@@ -44,6 +46,7 @@ class Client
 {
 private:
   static vector<ClientPtr> client_list;
+  static unordered_map<string, ClientPtr> names;
   static ClientPtr me;
 
   shared_ptr<Connection> connection;
@@ -67,6 +70,9 @@ public:
   static void init();
   static void add(ClientPtr);
   static inline ClientPtr get_me() { return me; }
+  static inline void add_name(ClientPtr client) { names[client->name] = client; }
+  static inline ClientPtr find_by_name(string name) { return names[name]; }
+  static inline void del_name(ClientPtr client) { names.erase(client->name); }
 
   inline string get_name() const { return name; }
   inline string get_username() const { return username; }

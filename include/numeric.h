@@ -44,6 +44,7 @@ public:
 
   // Error replies
   static const int Err_UnknownCommand = 421;
+  static const int Err_NicknameInUse = 433;
   static const int Err_NeedMoreParams = 461;
   static const int Err_AlreadyRegistered = 462;
 

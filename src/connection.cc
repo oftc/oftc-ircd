@@ -44,6 +44,7 @@ Connection::Connection() : parser(Parser::get_default())
 Connection::~Connection()
 {
   Logging::debug << "de-allocated connection: " << this << Logging::endl;
+  Client::disconnected(client);
 }
 
 void

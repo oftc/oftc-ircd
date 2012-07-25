@@ -37,6 +37,7 @@ using std::setfill;
 
 ClientPtr Client::me;
 vector<ClientPtr> Client::client_list;
+unordered_map<string, ClientPtr> Client::names;
 Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registered;
 Event<ClientPtr> Client::disconnected;
@@ -121,6 +122,4 @@ Client::add(ClientPtr client)
   client->send(001, client->str().c_str());
   client->send(002, client->me->name.c_str(), "0.0.1");
   client->send(003, System::get_built_date());
-  
-  // fire new client event
 }

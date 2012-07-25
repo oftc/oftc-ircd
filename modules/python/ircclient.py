@@ -26,7 +26,11 @@ from pythonwrap import Client
 
 @register("NICK", min_args=1, max_args=2, access=0)
 def handle_nick(client, nick):
+  if Client.find_by_name(nick):
+    client.numeric(433, nick)
+    return
   client.Name = nick
+  Client.add_name(client)
   check_and_register(client)
 
 @register("USER", min_args=4, max_args=4, access=0)
@@ -48,3 +52,8 @@ def check_and_register(client):
 
   if client.Name and client.Username:
     Client.add(client)
+
+@event(Client.disconnected)
+def client_disconnected(client):
+  if(client.Name):
+    Client.del_name(client)
