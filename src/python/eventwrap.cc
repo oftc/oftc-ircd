@@ -82,6 +82,8 @@ EventWrap::get_wrap(EventWrap *event, void *closure)
     return event->get_listeners();
   else if(prop == "handler")
     return event->get_handler();
+
+  return NULL;
 }
 
 int 
