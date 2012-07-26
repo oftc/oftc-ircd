@@ -247,7 +247,7 @@ ClientWrap::find_by_name(PyObject *self, PyObject *name)
 
   ClientPtr ptr = Client::find_by_name(PyString_AsString(name));
 
-  if(ptr == NULL)
+  if(!ptr)
     Py_RETURN_NONE;
 
   return reinterpret_cast<PyObject *>(wrap(&ptr));
