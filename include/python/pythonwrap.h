@@ -37,17 +37,20 @@ protected:
   static PyGetSetDef *getsetters;
   static reprfunc str;
 public:
+  // Non Python methods
   static void init(const char *);
+
+  // Python methods
   static PyObject *alloc(PyTypeObject *, Py_ssize_t);
   static PyObject *create(PyTypeObject *, PyObject *, PyObject *);
-  static bool handle_event(PyObject *, PyObject *);
-  static void free(void *);
   static void dealloc(PyObject *);
-  static inline PyTypeObject *get_type_object() { return &type_object; }
-  static inline PyObject *get_type() { return reinterpret_cast<PyObject *>(&type_object); }
+  static void free(void *);
+  static bool handle_event(PyObject *, PyObject *);
   static T *wrap(void *arg);
-};
 
-void python_init();
+  // Getters
+  static PyTypeObject *get_type_object();
+  static PyObject *get_type();
+};
 
 #endif

@@ -62,6 +62,45 @@ EventWrap::~EventWrap()
   Logging::debug << "Destroyed EventWrap: " << this << Logging::endl;
 }
 
+PyObject *
+EventWrap::get_listeners() const 
+{ 
+  if(listeners == NULL)
+    Py_RETURN_NONE;
+
+  Py_INCREF(listeners);
+
+  return listeners; 
+}
+
+PyObject *
+EventWrap::get_handler() const 
+{ 
+  if(handler == NULL)
+    Py_RETURN_NONE;
+
+  Py_INCREF(handler);
+  return handler; 
+}
+
+void 
+EventWrap::set_listeners(PyObject *value) 
+{
+  Py_XDECREF(listeners);
+  Py_INCREF(value);
+
+  listeners = value; 
+}
+
+void 
+EventWrap::set_handler(PyObject *value) 
+{ 
+  Py_XDECREF(handler);
+  Py_INCREF(value);
+
+  handler = value; 
+}
+
 // Statics
 
 void

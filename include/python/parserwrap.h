@@ -28,20 +28,22 @@
 
 #include "Python.h"
 #include "parser.h"
-#include "client.h"
+#include "baseclient.h"
 #include "python/pythonwrap.h"
-
-typedef shared_ptr<Parser> ParserPtr;
 
 class ParserWrap : public PythonWrap<ParserWrap>
 {
 private:
   ParserPtr parser;
 public:
+  // Non Python methods
   static void init();
-  static PyObject *register_command(PyObject *, PyObject *, PyObject *);
   static void handle_command(const ClientPtr, const Command&, const vector<string>&);
 
+  // Python methods
+  static PyObject *register_command(PyObject *, PyObject *, PyObject *);
+
+  // Ctors/dtors
   ParserWrap();
   ParserWrap(PyObject *, PyObject *);
   ~ParserWrap();

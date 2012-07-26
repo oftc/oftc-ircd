@@ -30,18 +30,17 @@
 #include "python/clientwrap.h"
 #include "python/eventwrap.h"
 
+// Static initialisers
 template<class T> PyTypeObject PythonWrap<T>::type_object;
 template<class T> PyMethodDef *PythonWrap<T>::methods;
 template<class T> PyMemberDef *PythonWrap<T>::members;
 template<class T> PyGetSetDef *PythonWrap<T>::getsetters;
 template<class T> reprfunc PythonWrap<T>::str;
 
-template void PythonWrap<ParserWrap>::init(const char *);
-template void PythonWrap<ClientWrap>::init(const char *);
-template void PythonWrap<EventWrap>::init(const char *);
-
-template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
-template bool PythonWrap<ClientWrap>::handle_event(PyObject *, PyObject *);
+// Template specialisers
+template class PythonWrap<ParserWrap>;
+template class PythonWrap<ClientWrap>;
+template class PythonWrap<EventWrap>;
 
 template<class T>
 void
@@ -163,4 +162,18 @@ PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
     Py_DECREF(Py_False);
     return false;
   }
+}
+
+template<class T>
+PyTypeObject *
+PythonWrap<T>::get_type_object() 
+{ 
+  return &type_object; 
+}
+
+template<class T>
+PyObject *
+PythonWrap<T>::get_type() 
+{ 
+  return reinterpret_cast<PyObject *>(&type_object); 
 }

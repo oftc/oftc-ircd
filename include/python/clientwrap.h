@@ -32,27 +32,36 @@
 class ClientWrap : public PythonWrap<ClientWrap>
 {
 private:
-  ClientPtr client;
   static ClientWrap *me;
   static PyObject *connected;
   static PyObject *registered;
   static PyObject *disconnected;
+
+  ClientPtr client;
 public:
-  static PyObject *add(ClientWrap *, ClientWrap *);
-  static PyObject *get_wrap(ClientWrap *, void *);
+  // Non Python methods
   static void init();
+
+  // Event callbacks
+  static bool on_connected(ClientPtr);
+  static bool on_disconnected(ClientPtr);
+  static bool on_registered(ClientPtr);
+
+  // Get/Setters
+  static PyObject *get_wrap(ClientWrap *, void *);
+  static int set_wrap(ClientWrap *, PyObject *, void *);
+
+  // Python methods
+  static PyObject *add(ClientWrap *, ClientWrap *);
+  static PyObject *add_name(PyObject *, ClientWrap *);
+  static PyObject *del_name(PyObject *, ClientWrap *);
+  static PyObject *find_by_name(PyObject *, PyObject *);
   static PyObject *is_registered(ClientWrap *, PyObject *);
   static PyObject *numeric(ClientWrap *, PyObject *);
-  static bool on_connected(ClientPtr);
-  static bool on_registered(ClientPtr);
-  static bool on_disconnected(ClientPtr);
   static PyObject *send(ClientWrap *, PyObject *, PyObject *);
-  static int set_wrap(ClientWrap *, PyObject *, void *);
   static PyObject *str(ClientWrap *);
-  static PyObject *add_name(PyObject *, ClientWrap *);
-  static PyObject *find_by_name(PyObject *, PyObject *);
-  static PyObject *del_name(PyObject *, ClientWrap *);
 
+  // ctor/dtor
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();
 };

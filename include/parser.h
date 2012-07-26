@@ -44,4 +44,6 @@ public:
   static inline Parser& get_default() { return default_parser; }
 };
 
+typedef shared_ptr<Parser> ParserPtr;
+
 #endif

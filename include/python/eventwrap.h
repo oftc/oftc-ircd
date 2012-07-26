@@ -34,45 +34,24 @@ private:
   PyObject *listeners;
   PyObject *handler;
 public:
+  // Non Python methods
+  static void init();
+
+  // Get/Set Wrappers
+  static PyObject *get_wrap(EventWrap *, void *);
+  static int set_wrap(EventWrap *, PyObject *, void *);
+
+  // Ctor/dtors
   EventWrap(PyObject *, PyObject *);
   ~EventWrap();
 
-  inline PyObject *get_listeners() const 
-  { 
-    if(listeners == NULL)
-      Py_RETURN_NONE;
+  // Getters
+  PyObject *get_listeners() const;
+  PyObject *get_handler() const;
 
-    Py_INCREF(listeners);
-    return listeners; 
-  }
-
-  inline PyObject *get_handler() const 
-  { 
-    if(handler == NULL)
-      Py_RETURN_NONE;
-
-    Py_INCREF(handler);
-    return handler; 
-  }
-
-  inline void set_listeners(PyObject *value) 
-  {
-    Py_XDECREF(listeners);
-    Py_INCREF(value);
-
-    listeners = value; 
-  }
-  inline void set_handler(PyObject *value) 
-  { 
-    Py_XDECREF(handler);
-    Py_INCREF(value);
-
-    handler = value; 
-  }
-
-  static void init();
-  static PyObject *get_wrap(EventWrap *, void *);
-  static int set_wrap(EventWrap *, PyObject *, void *);
+  // Setters
+  void set_listeners(PyObject *value);
+  void set_handler(PyObject *value);
 };
 
 #endif
