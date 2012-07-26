@@ -28,7 +28,6 @@
 #include "connection.h"
 #include "server.h"
 
-list<ClientPtr> BaseClient::client_list;
 unordered_map<string, ClientPtr> BaseClient::names;
 
 BaseClient::BaseClient() : level(Unregistered)
@@ -65,6 +64,12 @@ bool
 BaseClient::is_registered() const
 {
   return level >= Registered;
+}
+
+void
+BaseClient::clear_connection()
+{
+  connection.reset();
 }
 
 string

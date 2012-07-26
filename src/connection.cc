@@ -45,6 +45,7 @@ Connection::~Connection()
 {
   Logging::debug << "de-allocated connection: " << this << Logging::endl;
   Client::disconnected(client);
+  Client::remove(client);
 }
 
 void
@@ -183,6 +184,7 @@ Connection::on_close(uv_handle_t *handle)
   Connection *connection = static_cast<Connection *>(handle->data);
 
   connections.erase(connection);
+  connection->client->clear_connection();
 }
 
 void

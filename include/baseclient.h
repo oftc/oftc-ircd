@@ -42,7 +42,6 @@ typedef shared_ptr<BaseClient> ClientPtr;
 class BaseClient
 {
 protected:
-  static list<ClientPtr> client_list;
   static unordered_map<string, ClientPtr> names;
 
   string name;
@@ -62,6 +61,8 @@ public:
   virtual void send(string);
   
   bool is_registered() const;
+
+  void clear_connection();
 
   string get_name() const;
 

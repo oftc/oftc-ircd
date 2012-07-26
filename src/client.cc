@@ -39,6 +39,7 @@ ClientPtr Client::me;
 Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registered;
 Event<ClientPtr> Client::disconnected;
+list<ClientPtr> Client::client_list;
 
 void
 Client::send(string arg, int numeric)
@@ -95,7 +96,7 @@ Client::init()
 void
 Client::add(ClientPtr ptr)
 {
-  shared_ptr<Client> client = std::dynamic_pointer_cast<Client>(ptr);
+  shared_ptr<Client> client = dynamic_pointer_cast<Client>(ptr);
 
   client_list.push_back(client);
   client->set_resgistered();
@@ -105,4 +106,10 @@ Client::add(ClientPtr ptr)
   client->send(001, client->str().c_str());
   client->send(002, client->me->get_name().c_str(), "0.0.1");
   client->send(003, System::get_built_date());
+}
+
+void 
+Client::remove(ClientPtr client)
+{
+  client_list.remove(client);
 }

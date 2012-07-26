@@ -45,6 +45,7 @@ class Client : public BaseClient
 {
 private:
   static ClientPtr me;
+  static list<ClientPtr> client_list;
 
   string username;
   string realname;
@@ -58,6 +59,7 @@ public:
   
   static void init();
   static void add(ClientPtr);
+  static void remove(ClientPtr);
   static inline ClientPtr get_me() { return me; }
 
   inline string get_username() const { return username; }
