@@ -60,9 +60,53 @@ BaseClient::str()
     return name;
 }
 
+bool 
+BaseClient::is_registered() const
+{
+  return level >= Registered;
+}
+
+string
+BaseClient::get_name() const
+{
+  return name;
+}
+
 void
-BaseClient::set_connection(ConnectionPtr conn)
+BaseClient::set_name(const string _name)
+{
+  name = _name;
+}
+
+void
+BaseClient::set_resgistered()
+{
+  level = Registered;
+}
+
+void
+BaseClient::set_connection(const ConnectionPtr conn)
 {
   connection = conn;
   host = connection->get_host();
+}
+
+//  Statics
+
+void 
+BaseClient::add_name(const ClientPtr client)
+{
+  names[client->name] = client;
+}
+
+ClientPtr
+BaseClient::find_by_name(const string name)
+{
+  return names[name];
+}
+
+void
+BaseClient::del_name(const ClientPtr client)
+{
+  names.erase(client->name);
 }

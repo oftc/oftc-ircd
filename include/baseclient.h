@@ -50,20 +50,22 @@ protected:
   shared_ptr<Connection> connection;
   AccessLevel level;
 public:
-  static inline void add_name(ClientPtr client) { names[client->name] = client; }
-  static inline ClientPtr find_by_name(string name) { return names[name]; }
-  static inline void del_name(ClientPtr client) { names.erase(client->name); }
+  static void add_name(const ClientPtr client);
+  static ClientPtr find_by_name(const string name);
+  static void del_name(const ClientPtr client);
   
   BaseClient();
   virtual ~BaseClient() = 0;
 
   virtual void send(string);
   
-  inline bool is_registered() const { return level >= Registered; }
-  inline void set_resgistered() { level = Registered; }
-  inline string get_name() const { return name; }
-  inline void set_name(string _name) { name = _name; }
-  void set_connection(shared_ptr<Connection> _connection);
+  bool is_registered() const;
+
+  string get_name() const;
+
+  void set_resgistered();
+  void set_name(const string);
+  void set_connection(const shared_ptr<Connection>);
  
   virtual string str();
 };
