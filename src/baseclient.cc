@@ -27,6 +27,7 @@
 #include "baseclient.h"
 #include "connection.h"
 #include "server.h"
+#include "system.h"
 
 unordered_map<string, ClientPtr> BaseClient::names;
 
@@ -98,6 +99,15 @@ BaseClient::set_connection(const ConnectionPtr conn)
 }
 
 //  Statics
+
+void BaseClient::init()
+{
+  ClientPtr me = ClientPtr(new Server);
+
+  me->set_name(System::get_server_name());
+
+  Server::set_me(me);
+}
 
 void 
 BaseClient::add_name(const ClientPtr client)

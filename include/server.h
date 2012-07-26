@@ -26,12 +26,19 @@
 #ifndef SERVER_H_INC
 #define SERVER_H_INC
 
+#include <list>
 #include "baseclient.h"
+
+using std::list;
 
 class Server : public BaseClient
 {
 private:
+  static ClientPtr me;
+  static list<ClientPtr> servers;
 public:
+  static ClientPtr get_me();
+  static void set_me(ClientPtr);
 };
 
 #endif

@@ -31,6 +31,7 @@
 #include "python/eventwrap.h"
 #include "numeric.h"
 #include "client.h"
+#include "server.h"
 
 template class PythonWrap<ClientWrap>;
 
@@ -106,7 +107,7 @@ ClientWrap::init()
   PythonWrap<ClientWrap>::str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ClientWrap>::init("Client");
 
-  ClientPtr ptr = Client::get_me();
+  ClientPtr ptr = Server::get_me();
   me = ClientWrap::wrap(&ptr);
   if(me == NULL)
   {

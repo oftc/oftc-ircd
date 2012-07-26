@@ -30,12 +30,12 @@
 #include "connection.h"
 #include "numeric.h"
 #include "system.h"
+#include "server.h"
 
 using std::string;
 using std::setw;
 using std::setfill;
 
-ClientPtr Client::me;
 Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registered;
 Event<ClientPtr> Client::disconnected;
@@ -46,7 +46,7 @@ Client::send(string arg, int numeric)
 {
   stringstream buffer;
 
-  buffer << ":" << me->get_name() << " ";
+  buffer << ":" << Server::get_me()->str() << " ";
   buffer << setw(3) << setfill('0') << numeric;
   buffer << " ";
   if(name.empty())
@@ -85,13 +85,6 @@ Client::str()
 }
 
 // Statics
-void
-Client::init()
-{
-  me = ClientPtr(new Client);
-  me->set_name(System::get_server_name());
-  client_list.push_back(me);
-}
 
 void
 Client::add(ClientPtr ptr)
@@ -104,7 +97,7 @@ Client::add(ClientPtr ptr)
   registered(client);
 
   client->send(001, client->str().c_str());
-  client->send(002, client->me->get_name().c_str(), "0.0.1");
+  client->send(002, Server::get_me()->str().c_str(), "0.0.1");
   client->send(003, System::get_built_date());
 }
 
