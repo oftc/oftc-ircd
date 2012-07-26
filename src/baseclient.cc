@@ -26,6 +26,7 @@
 #include "stdinc.h"
 #include "baseclient.h"
 #include "connection.h"
+#include "server.h"
 
 list<ClientPtr> BaseClient::client_list;
 unordered_map<string, ClientPtr> BaseClient::names;
@@ -109,4 +110,16 @@ void
 BaseClient::del_name(const ClientPtr client)
 {
   names.erase(client->name);
+}
+
+bool 
+BaseClient::is_client(const ClientPtr client)
+{
+  return typeid(*client) == typeid(Client);
+}
+
+bool 
+BaseClient::is_server(const ClientPtr client)
+{
+  return typeid(*client) == typeid(Server);
 }

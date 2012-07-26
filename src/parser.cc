@@ -67,7 +67,7 @@ Parser::parse(const ClientPtr client, const string& line)
   unordered_map<string, Command>::iterator it = commands.find(command);
   if(it == commands.end())
   {
-    if(client->is_registered() && typeid(*client.get()) == typeid(Client))
+    if(client->is_registered() && Client::is_client(client))
     {
       Client *ptr = dynamic_cast<Client *>(client.get());
       ptr->send(Numeric::Err_UnknownCommand, command.c_str());
@@ -99,7 +99,7 @@ Parser::parse(const ClientPtr client, const string& line)
 
   if(args.size() < cmd.get_min_args())
   {
-    if(typeid(*client.get()) == typeid(Client))
+    if(Client::is_client(client))
     {
       Client *ptr = dynamic_cast<Client *>(client.get());
       ptr->send(Numeric::Err_NeedMoreParams, command.c_str(), args.size(), 

@@ -136,7 +136,7 @@ ClientWrap::get_wrap(ClientWrap *self, void *closure)
     value = self->client->get_name();
   else if(prop == "username")
   {
-    if(typeid(*self->client.get()) != typeid(Client))
+    if(!Client::is_client(self->client))
     {
       PyErr_SetString(PyExc_TypeError, "username is only applicable to Client types");
       return NULL;
@@ -146,7 +146,7 @@ ClientWrap::get_wrap(ClientWrap *self, void *closure)
   }
   else if(prop == "realname")
   {
-    if(typeid(*self->client.get()) != typeid(Client))
+    if(!Client::is_client(self->client))
     {
       PyErr_SetString(PyExc_TypeError, "realname is only applicable to Client types");
       return NULL;
@@ -182,7 +182,7 @@ ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
     self->client->set_name(PyString_AsString(value));
   else if(prop == "username")
   {
-    if(typeid(*self->client.get()) != typeid(Client))
+    if(!Client::is_client(self->client))
     {
       PyErr_SetString(PyExc_TypeError, "username is only applicable to Client types");
       return -1;
@@ -193,7 +193,7 @@ ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
   }
   else if(prop == "realname")
   {
-    if(typeid(*self->client.get()) != typeid(Client))
+    if(!Client::is_client(self->client))
     {
       PyErr_SetString(PyExc_TypeError, "realname is only applicable to Client types");
       return -1;
@@ -328,7 +328,7 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
   int numeric;
   shared_ptr<Client> ptr;
 
-  if(typeid(*self->client.get()) != typeid(Client))
+  if(!Client::is_client(self->client))
   {
     PyErr_SetString(PyExc_RuntimeError, "Cannot send a numeric to a non-client");
     return NULL;

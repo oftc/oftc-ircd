@@ -50,9 +50,11 @@ protected:
   shared_ptr<Connection> connection;
   AccessLevel level;
 public:
-  static void add_name(const ClientPtr client);
-  static ClientPtr find_by_name(const string name);
-  static void del_name(const ClientPtr client);
+  static void add_name(const ClientPtr);
+  static ClientPtr find_by_name(const string);
+  static void del_name(const ClientPtr);
+  static bool is_client(const ClientPtr);
+  static bool is_server(const ClientPtr);
   
   BaseClient();
   virtual ~BaseClient() = 0;
