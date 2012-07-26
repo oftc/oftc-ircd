@@ -36,31 +36,9 @@ using std::setw;
 using std::setfill;
 
 ClientPtr Client::me;
-vector<ClientPtr> Client::client_list;
-unordered_map<string, ClientPtr> Client::names;
 Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registered;
 Event<ClientPtr> Client::disconnected;
-
-Client::Client() : level(Unregistered)
-{
-}
-
-Client::Client(Connection *connection) : connection(connection), level(Unregistered)
-{
-  host = connection->get_host();
-}
-
-void
-Client::send(string message)
-{
-  if (message.length() >= 510)
-    message.resize(510);
-
-  message.append("\r\n");
-
-  connection->send(message);
-}
 
 void
 Client::send(string arg, int numeric)
@@ -77,7 +55,7 @@ Client::send(string arg, int numeric)
 
   buffer << " " << arg;
 
-  send(buffer.str());
+  BaseClient::send(buffer.str());
 }
 
 void
@@ -97,6 +75,9 @@ Client::str()
 {
   stringstream buff;
 
+  if(name.empty())
+    return "*";
+
   buff << name << "!" << username << "@" << host;
 
   return buff.str();
@@ -112,14 +93,16 @@ Client::init()
 }
 
 void
-Client::add(ClientPtr client)
+Client::add(ClientPtr ptr)
 {
+  shared_ptr<Client> client = std::dynamic_pointer_cast<Client>(ptr);
+
   client_list.push_back(client);
-  client->level = Registered;
+  client->set_resgistered();
 
   registered(client);
 
   client->send(001, client->str().c_str());
-  client->send(002, client->me->name.c_str(), "0.0.1");
+  client->send(002, client->me->get_name().c_str(), "0.0.1");
   client->send(003, System::get_built_date());
 }

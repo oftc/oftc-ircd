@@ -64,6 +64,11 @@ Listener::connected(uv_stream_t *stream, int status)
 
   Connection::add(connection);
   connection->accept(stream);
+
+  ClientPtr client = ClientPtr(new Client());
+  connection->set_client(client);
+  client->set_connection(connection);
+  Client::connected(client);
 }
 
 void

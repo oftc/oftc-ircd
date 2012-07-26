@@ -38,10 +38,12 @@
 #include <functional>
 
 #if defined(_MSC_VER) && _MSC_VER < 1600
+using std::tr1::dynamic_pointer_cast;
 using std::tr1::shared_ptr;
 using std::tr1::unordered_map;
 using std::tr1::function;
 #else
+using std::dynamic_pointer_cast;
 using std::shared_ptr;
 using std::unordered_map;
 using std::function;

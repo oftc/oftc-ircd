@@ -23,52 +23,49 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CONNECTION_H_INC
-#define CONNECTION_H_INC
+#ifndef BASECLIENT_H_INC
+#define BASECLIENT_H_INC
 
-#include <vector>
-#include <sstream>
+#include "stdinc.h"
+#include <string>
+#include <list>
+#include "command.h"
 
-#include <uv.h>
-#include "parser.h"
+using std::string;
+using std::list;
 
-using std::vector;
-using std::stringstream;
-
-class Client;
 class Connection;
-typedef shared_ptr<Connection> ConnectionPtr;
+class BaseClient;
 
-class Connection 
+typedef shared_ptr<BaseClient> ClientPtr;
+
+class BaseClient
 {
 protected:
-  static unordered_map<Connection *, ConnectionPtr> connections;
-  shared_ptr<uv_tcp_t> handle;
+  static list<ClientPtr> client_list;
+  static unordered_map<string, ClientPtr> names;
 
-  static void free_buffer(uv_buf_t&);
-  virtual void read(uv_stream_t *, ssize_t, uv_buf_t);
-private:
-  stringstream read_buffer;
-  Parser& parser;
-  ClientPtr client;
+  string name;
   string host;
-
+  shared_ptr<Connection> connection;
+  AccessLevel level;
 public:
-  static void add(ConnectionPtr);
-  static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
-  static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
-  static void on_close(uv_handle_t *);
-  static void on_write(uv_write_t *, int );
+  static inline void add_name(ClientPtr client) { names[client->name] = client; }
+  static inline ClientPtr find_by_name(string name) { return names[name]; }
+  static inline void del_name(ClientPtr client) { names.erase(client->name); }
+  
+  BaseClient();
+  virtual ~BaseClient() = 0;
 
-  Connection();
-  ~Connection();
-
-  virtual void accept(uv_stream_t *);
   virtual void send(string);
-  virtual void send(const char *, size_t);
-
-  inline string get_host() const { return host; }
-  inline void set_client(ClientPtr _client) { client = _client; }
+  
+  inline bool is_registered() const { return level >= Registered; }
+  inline void set_resgistered() { level = Registered; }
+  inline string get_name() const { return name; }
+  inline void set_name(string _name) { name = _name; }
+  void set_connection(shared_ptr<Connection> _connection);
+ 
+  virtual string str();
 };
 
 #endif

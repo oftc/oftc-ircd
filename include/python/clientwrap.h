@@ -27,7 +27,7 @@
 #define CLIENTWRAP_H_INC
 
 #include "Python.h"
-#include "client.h"
+#include "baseclient.h"
 
 class ClientWrap : public PythonWrap<ClientWrap>
 {

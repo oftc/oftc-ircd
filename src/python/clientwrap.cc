@@ -30,6 +30,7 @@
 #include "python/clientwrap.h"
 #include "python/eventwrap.h"
 #include "numeric.h"
+#include "client.h"
 
 template class PythonWrap<ClientWrap>;
 
@@ -129,13 +130,30 @@ ClientWrap::get_wrap(ClientWrap *self, void *closure)
 {
   string prop = string(static_cast<char *>(closure));
   string value;
+  shared_ptr<Client> ptr;
 
   if(prop == "name")
     value = self->client->get_name();
   else if(prop == "username")
-    value = self->client->get_username();
+  {
+    if(typeid(*self->client.get()) != typeid(Client))
+    {
+      PyErr_SetString(PyExc_TypeError, "username is only applicable to Client types");
+      return NULL;
+    }
+    ptr = dynamic_pointer_cast<Client>(self->client);
+    value = ptr->get_username();
+  }
   else if(prop == "realname")
-    value = self->client->get_realname();
+  {
+    if(typeid(*self->client.get()) != typeid(Client))
+    {
+      PyErr_SetString(PyExc_TypeError, "realname is only applicable to Client types");
+      return NULL;
+    }
+    ptr = dynamic_pointer_cast<Client>(self->client);
+    value = ptr->get_realname();
+  }
 
   PyObject *name = PyString_FromString(value.c_str());
 
@@ -146,25 +164,44 @@ int
 ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 {
   string prop = string(static_cast<char *>(closure));
+  shared_ptr<Client> ptr;
 
   if(value == NULL)
   {
-    PyErr_SetString(PyExc_TypeError, "Cannot delete the Name attribute");
+    PyErr_SetString(PyExc_TypeError, "Cannot delete the attribute");
     return -1;
   }
 
   if(!PyString_Check(value))
   {
-    PyErr_SetString(PyExc_TypeError, "Name must be a string");
+    PyErr_SetString(PyExc_TypeError, "value must be a string");
     return -1;
   }
 
   if(prop == "name")
     self->client->set_name(PyString_AsString(value));
   else if(prop == "username")
-    self->client->set_username(PyString_AsString(value));
+  {
+    if(typeid(*self->client.get()) != typeid(Client))
+    {
+      PyErr_SetString(PyExc_TypeError, "username is only applicable to Client types");
+      return -1;
+    }
+    ptr = dynamic_pointer_cast<Client>(self->client);
+
+    ptr->set_username(PyString_AsString(value));
+  }
   else if(prop == "realname")
-    self->client->set_realname(PyString_AsString(value));
+  {
+    if(typeid(*self->client.get()) != typeid(Client))
+    {
+      PyErr_SetString(PyExc_TypeError, "realname is only applicable to Client types");
+      return -1;
+    }
+    ptr = dynamic_pointer_cast<Client>(self->client);
+
+    ptr->set_realname(PyString_AsString(value));
+  }
 
   return 0;
 }
@@ -289,6 +326,15 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
   stringstream output;
   int index = 0;
   int numeric;
+  shared_ptr<Client> ptr;
+
+  if(typeid(*self->client.get()) != typeid(Client))
+  {
+    PyErr_SetString(PyExc_RuntimeError, "Cannot send a numeric to a non-client");
+    return NULL;
+  }
+
+  ptr = dynamic_pointer_cast<Client>(self->client);
 
   item = PyTuple_GetItem(args, index++);
   if(!PyInt_Check(item))
@@ -349,7 +395,7 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
     output << c;
   }
 
-  self->client->send(output.str(), numeric);
+  ptr->send(output.str(), numeric);
 
   Py_RETURN_NONE;
 }

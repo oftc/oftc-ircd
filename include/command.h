@@ -33,9 +33,9 @@ using std::string;
 using std::vector;
 
 class Command; 
-class Client;
+class BaseClient;
 
-typedef function<void(const shared_ptr<Client> client, const Command& command, const vector<string>& params)> CommandHandler;
+typedef function<void(const shared_ptr<BaseClient> client, const Command& command, const vector<string>& params)> CommandHandler;
 
 enum AccessLevel
 {

@@ -31,6 +31,7 @@
 #include <unordered_map>
 #include "command.h"
 #include "event.h"
+#include "baseclient.h"
 
 using std::string;
 using std::vector;
@@ -38,49 +39,30 @@ using std::unordered_map;
 
 class Client;
 
-typedef shared_ptr<Client> ClientPtr;
-
 class Connection;
 
-class Client
+class Client : public BaseClient
 {
 private:
-  static vector<ClientPtr> client_list;
-  static unordered_map<string, ClientPtr> names;
   static ClientPtr me;
 
-  shared_ptr<Connection> connection;
-  string name;
   string username;
   string realname;
-  string host;
-  AccessLevel level;
 public:
   static Event<ClientPtr> connected;
   static Event<ClientPtr> registered;
   static Event<ClientPtr> disconnected;
 
-  Client();
-  Client(Connection *);
-
   void send(string arg, int);
   void send(int, ...);
-  void send(string);
   
   static void init();
   static void add(ClientPtr);
   static inline ClientPtr get_me() { return me; }
-  static inline void add_name(ClientPtr client) { names[client->name] = client; }
-  static inline ClientPtr find_by_name(string name) { return names[name]; }
-  static inline void del_name(ClientPtr client) { names.erase(client->name); }
 
-  inline string get_name() const { return name; }
   inline string get_username() const { return username; }
   inline string get_realname() const { return realname; }
 
-  inline bool is_registered() const { return level >= Registered; }
-
-  inline void set_name(string _name) { name = _name; }
   inline void set_username(string _username) { username = _username; }
   inline void set_realname(string _realname) { realname = _realname; }
 

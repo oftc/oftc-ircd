@@ -67,8 +67,11 @@ Parser::parse(const ClientPtr client, const string& line)
   unordered_map<string, Command>::iterator it = commands.find(command);
   if(it == commands.end())
   {
-    if(client->is_registered())
-      client->send(Numeric::Err_UnknownCommand, command.c_str());
+    if(client->is_registered() && typeid(*client.get()) == typeid(Client))
+    {
+      Client *ptr = dynamic_cast<Client *>(client.get());
+      ptr->send(Numeric::Err_UnknownCommand, command.c_str());
+    }
     return;
   }
 
@@ -96,8 +99,12 @@ Parser::parse(const ClientPtr client, const string& line)
 
   if(args.size() < cmd.get_min_args())
   {
-    client->send(Numeric::Err_NeedMoreParams, command.c_str(), args.size(), 
-      cmd.get_min_args());
+    if(typeid(*client.get()) == typeid(Client))
+    {
+      Client *ptr = dynamic_cast<Client *>(client.get());
+      ptr->send(Numeric::Err_NeedMoreParams, command.c_str(), args.size(), 
+        cmd.get_min_args());
+    }
     return;
   }
 

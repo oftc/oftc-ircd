@@ -23,52 +23,46 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CONNECTION_H_INC
-#define CONNECTION_H_INC
+#include "stdinc.h"
+#include "baseclient.h"
+#include "connection.h"
 
-#include <vector>
-#include <sstream>
+list<ClientPtr> BaseClient::client_list;
+unordered_map<string, ClientPtr> BaseClient::names;
 
-#include <uv.h>
-#include "parser.h"
-
-using std::vector;
-using std::stringstream;
-
-class Client;
-class Connection;
-typedef shared_ptr<Connection> ConnectionPtr;
-
-class Connection 
+BaseClient::BaseClient() : level(Unregistered)
 {
-protected:
-  static unordered_map<Connection *, ConnectionPtr> connections;
-  shared_ptr<uv_tcp_t> handle;
+  Logging::debug << "Client created: " << this << Logging::endl;
+}
 
-  static void free_buffer(uv_buf_t&);
-  virtual void read(uv_stream_t *, ssize_t, uv_buf_t);
-private:
-  stringstream read_buffer;
-  Parser& parser;
-  ClientPtr client;
-  string host;
+BaseClient::~BaseClient()
+{
+  Logging::debug << "Client destroyed:" << this << Logging::endl;
+}
 
-public:
-  static void add(ConnectionPtr);
-  static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
-  static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
-  static void on_close(uv_handle_t *);
-  static void on_write(uv_write_t *, int );
+void
+BaseClient::send(string message)
+{
+  if (message.length() >= 510)
+    message.resize(510);
 
-  Connection();
-  ~Connection();
+  message.append("\r\n");
 
-  virtual void accept(uv_stream_t *);
-  virtual void send(string);
-  virtual void send(const char *, size_t);
+  connection->send(message);
+}
 
-  inline string get_host() const { return host; }
-  inline void set_client(ClientPtr _client) { client = _client; }
-};
+string
+BaseClient::str()
+{
+  if(name.empty())
+    return "*";
+  else
+    return name;
+}
 
-#endif
+void
+BaseClient::set_connection(ConnectionPtr conn)
+{
+  connection = conn;
+  host = connection->get_host();
+}
