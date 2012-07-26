@@ -56,6 +56,7 @@ public:
 
   void send(string arg, int);
   void send(int, ...);
+  using BaseClient::send;
   
   static void init();
   static void add(ClientPtr);
