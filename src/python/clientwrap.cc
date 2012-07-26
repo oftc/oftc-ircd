@@ -292,6 +292,8 @@ ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
   result = PyObject_Call(meth, fargs, fdict);
 
   Py_DECREF(meth);
+  Py_DECREF(fdict);
+  Py_DECREF(fargs);
 
   if(result == NULL)
   {
@@ -301,7 +303,6 @@ ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
   self->client->send(PyString_AsString(result));
 
   Py_DECREF(result);
-  Py_DECREF(fargs);
 
   Py_RETURN_NONE;
 }
@@ -406,14 +407,16 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
 bool
 ClientWrap::on_connected(ClientPtr client)
 {
-  PyObject *args;
+  PyObject *args, *ptr;
   bool ret;
 
-  args = Py_BuildValue("(O)", wrap(&client));
+  ptr = reinterpret_cast<PyObject *>(wrap(&client));
+  args = Py_BuildValue("(O)", ptr);
 
   ret = handle_event(connected, args);
 
   Py_DECREF(args);
+  Py_DECREF(ptr);
 
   return ret;
 }
@@ -421,14 +424,17 @@ ClientWrap::on_connected(ClientPtr client)
 bool
 ClientWrap::on_registered(ClientPtr client)
 {
-  PyObject *args;
+  PyObject *args, *ptr;
   bool ret;
 
-  args = Py_BuildValue("(O)", wrap(&client));
+  ptr = reinterpret_cast<PyObject *>(wrap(&client));
+
+  args = Py_BuildValue("(O)", ptr);
 
   ret = handle_event(registered, args);
 
   Py_DECREF(args);
+  Py_DECREF(ptr);
 
   return ret;
 }
@@ -436,14 +442,17 @@ ClientWrap::on_registered(ClientPtr client)
 bool
 ClientWrap::on_disconnected(ClientPtr client)
 {
-  PyObject *args;
+  PyObject *args, *ptr;
   bool ret;
 
-  args = Py_BuildValue("(O)", wrap(&client));
+  ptr = reinterpret_cast<PyObject *>(wrap(&client));
+
+  args = Py_BuildValue("(O)", ptr);
 
   ret = handle_event(disconnected, args);
 
   Py_DECREF(args);
+  Py_DECREF(ptr);
 
   return ret;
 }

@@ -125,6 +125,7 @@ T *PythonWrap<T>::wrap(void *arg)
   args = Py_BuildValue("(O)", obj);
 
   wrapped = reinterpret_cast<T *>(PyObject_CallObject(T::get_type(), args));
+  Py_DECREF(obj);
   if(wrapped == NULL)
     return NULL;
 

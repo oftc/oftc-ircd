@@ -139,11 +139,11 @@ ParserWrap::handle_command(const ClientPtr client, const Command& command, const
   PyObject *ret = PyObject_CallObject(static_cast<PyObject *>(command.get_data()), args);
   if(ret == NULL)
   {
-    Py_DECREF(wrapped_client);
+    Py_DECREF(args);
     PyErr_Print();
     return;
   }
 
   Py_DECREF(ret);
-  Py_DECREF(wrapped_client);
+  Py_DECREF(args);
 }
