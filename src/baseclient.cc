@@ -32,12 +32,12 @@ unordered_map<string, ClientPtr> BaseClient::names;
 
 BaseClient::BaseClient() : level(Unregistered)
 {
-  Logging::debug << "Client created: " << this << Logging::endl;
+  Logging::debug << "Created Client: " << this << Logging::endl;
 }
 
 BaseClient::~BaseClient()
 {
-  Logging::debug << "Client destroyed:" << this << Logging::endl;
+  Logging::debug << "Destroyed Client: " << this << Logging::endl;
 }
 
 void

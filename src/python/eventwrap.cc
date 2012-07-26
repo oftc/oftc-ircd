@@ -54,10 +54,12 @@ static PyGetSetDef event_getsetters[] =
 
 EventWrap::EventWrap(PyObject *args, PyObject *kwds)
 {
+  Logging::debug << "Created EventWrap: " << this << Logging::endl;
 }
 
 EventWrap::~EventWrap()
 {
+  Logging::debug << "Destroyed EventWrap: " << this << Logging::endl;
 }
 
 // Statics

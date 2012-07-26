@@ -57,6 +57,7 @@ private:
 public:
   Command();
   Command(CommandHandler, string, AccessLevel, unsigned int, unsigned int, int, void *);
+  ~Command();
 
   inline string get_name() const { return name; }
   inline CommandHandler get_handler() const { return handler; }

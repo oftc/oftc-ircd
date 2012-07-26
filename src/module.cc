@@ -40,10 +40,17 @@ vector<Module> Module::modules;
 
 Module::Module()
 {
+  Logging::debug << "Created Module: " << this << Logging::endl;
 }
 
 Module::Module(string _name, string _filename) : name(_name), filename(_filename)
 {
+  Logging::debug << "Created Module: " << this << Logging::endl;
+}
+
+Module::~Module()
+{
+  Logging::debug << "Destroyed Module: " << this << Logging::endl;
 }
 
 // Statics

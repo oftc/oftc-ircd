@@ -38,14 +38,14 @@ unordered_map<Connection *, ConnectionPtr> Connection::connections;
 
 Connection::Connection() : parser(Parser::get_default())
 {
-  Logging::debug << "allocated connection: " << this << Logging::endl;
+  Logging::debug << "Created Connection: " << this << Logging::endl;
 }
 
 Connection::~Connection()
 {
-  Logging::debug << "de-allocated connection: " << this << Logging::endl;
   Client::disconnected(client);
   Client::remove(client);
+  Logging::debug << "Destroyed Connection: " << this << Logging::endl;
 }
 
 void

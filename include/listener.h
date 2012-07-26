@@ -74,6 +74,7 @@ public:
 
   Listener();
   Listener(string, int, ListenerFlag);
+  ~Listener();
 
   void start();
 

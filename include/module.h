@@ -44,6 +44,7 @@ private:
 public:
   Module();
   Module(string, string);
+  ~Module();
 
   void load();
   inline string get_name() const { return name; }

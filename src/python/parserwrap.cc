@@ -45,16 +45,14 @@ static PyMemberDef parser_members[] =
   { NULL, 0, 0, 0, NULL }
 };
 
-ParserWrap::ParserWrap()
-{
-}
-
 ParserWrap::ParserWrap(PyObject *args, PyObject *kwds)
 {
+  Logging::debug << "Created ParserWrap: " << this << Logging::endl;
 }
 
 ParserWrap::~ParserWrap()
 {
+  Logging::debug << "Destroyed ParserWrap: " << this << Logging::endl;
 }
 
 // Statics
