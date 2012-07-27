@@ -57,16 +57,14 @@ ParserWrap::~ParserWrap()
 
 // Statics
 
-void
-ParserWrap::init()
+void ParserWrap::init()
 {
   PythonWrap<ParserWrap>::methods = parser_methods;
   PythonWrap<ParserWrap>::members = parser_members;
   PythonWrap<ParserWrap>::init("parser");
 }
 
-PyObject *
-ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
+PyObject *ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 {
   const char *kwlist[] = 
   {
@@ -106,8 +104,7 @@ ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
   Py_RETURN_NONE;
 }
 
-void
-ParserWrap::handle_command(const ClientPtr client, const Command& command, const vector<string>& params)
+void ParserWrap::handle_command(const ClientPtr client, const Command& command, const vector<string>& params)
 {
   PyObject *args;
   ClientWrap *wrapped_client;

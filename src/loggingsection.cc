@@ -27,15 +27,13 @@
 #include <json/json.h>
 #include "loggingsection.h"
 
-void
-LoggingSection::set_defaults()
+void LoggingSection::set_defaults()
 {
   min_loglevel = INFO;
   log_path = LOG_PATH;
 }
 
-void
-LoggingSection::process(const Json::Value value)
+void LoggingSection::process(const Json::Value value)
 {
   if(!value["log_path"].isNull())
     log_path = value["log_path"].asString(); 
@@ -44,7 +42,6 @@ LoggingSection::process(const Json::Value value)
     min_loglevel = Logging::string_to_level(value["log_level"].asString());
 }
 
-void
-LoggingSection::verify() const
+void LoggingSection::verify() const
 {
 }

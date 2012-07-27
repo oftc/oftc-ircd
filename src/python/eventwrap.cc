@@ -62,8 +62,7 @@ EventWrap::~EventWrap()
   Logging::debug << "Destroyed EventWrap: " << this << Logging::endl;
 }
 
-PyObject *
-EventWrap::get_listeners() const 
+PyObject *EventWrap::get_listeners() const 
 { 
   if(listeners == NULL)
     Py_RETURN_NONE;
@@ -73,8 +72,7 @@ EventWrap::get_listeners() const
   return listeners; 
 }
 
-PyObject *
-EventWrap::get_handler() const 
+PyObject *EventWrap::get_handler() const 
 { 
   if(handler == NULL)
     Py_RETURN_NONE;
@@ -83,8 +81,7 @@ EventWrap::get_handler() const
   return handler; 
 }
 
-void 
-EventWrap::set_listeners(PyObject *value) 
+void EventWrap::set_listeners(PyObject *value) 
 {
   Py_XDECREF(listeners);
   Py_INCREF(value);
@@ -92,8 +89,7 @@ EventWrap::set_listeners(PyObject *value)
   listeners = value; 
 }
 
-void 
-EventWrap::set_handler(PyObject *value) 
+void EventWrap::set_handler(PyObject *value) 
 { 
   Py_XDECREF(handler);
   Py_INCREF(value);
@@ -103,8 +99,7 @@ EventWrap::set_handler(PyObject *value)
 
 // Statics
 
-void
-EventWrap::init()
+void EventWrap::init()
 {
   PythonWrap<EventWrap>::methods = event_methods;
   PythonWrap<EventWrap>::members = event_members;
@@ -113,8 +108,7 @@ EventWrap::init()
   PythonWrap<EventWrap>::init("Event");
 }
 
-PyObject *
-EventWrap::get_wrap(EventWrap *event, void *closure)
+PyObject *EventWrap::get_wrap(EventWrap *event, void *closure)
 {
   string prop = string(static_cast<char *>(closure));
 
@@ -126,8 +120,7 @@ EventWrap::get_wrap(EventWrap *event, void *closure)
   return NULL;
 }
 
-int 
-EventWrap::set_wrap(EventWrap *event, PyObject *value, void *closure)
+int EventWrap::set_wrap(EventWrap *event, PyObject *value, void *closure)
 {
   string prop = string(static_cast<char *>(closure));
 

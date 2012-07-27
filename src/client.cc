@@ -41,8 +41,7 @@ Event<ClientPtr> Client::registered;
 Event<ClientPtr> Client::disconnected;
 list<ClientPtr> Client::client_list;
 
-void
-Client::send(string arg, int numeric)
+void Client::send(string arg, int numeric)
 {
   stringstream buffer;
 
@@ -59,8 +58,7 @@ Client::send(string arg, int numeric)
   BaseClient::send(buffer.str());
 }
 
-void
-Client::send(int numeric, ...)
+void Client::send(int numeric, ...)
 {
   va_list args;
 
@@ -71,8 +69,7 @@ Client::send(int numeric, ...)
   va_end(args);
 }
 
-string
-Client::str() const
+string Client::str() const
 {
   stringstream buff;
 
@@ -84,20 +81,17 @@ Client::str() const
   return buff.str();
 }
 
-string
-Client::get_username() const
+string Client::get_username() const
 {
   return username;
 }
 
-string 
-Client::get_realname() const
+string Client::get_realname() const
 {
   return realname;
 }
 
-void
-Client::set_username(const string user)
+void Client::set_username(const string user)
 {
   username = user;
 }
@@ -109,8 +103,7 @@ void Client::set_realname(const string real)
 
 // Statics
 
-void
-Client::add(ClientPtr ptr)
+void Client::add(ClientPtr ptr)
 {
   shared_ptr<Client> client = dynamic_pointer_cast<Client>(ptr);
 
@@ -124,8 +117,7 @@ Client::add(ClientPtr ptr)
   client->send(003, System::get_built_date());
 }
 
-void 
-Client::remove(ClientPtr client)
+void Client::remove(ClientPtr client)
 {
   client_list.remove(client);
 }

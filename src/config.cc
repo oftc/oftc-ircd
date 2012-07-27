@@ -40,8 +40,7 @@ typedef unordered_map<string, ConfigSection *>::const_iterator ConfigSectionCons
 unordered_map<string, ConfigSection *> Config::sections;
 
 // Statics
-void
-Config::init(const string path)
+void Config::init(const string path)
 {
   ifstream config(path.c_str());
   Json::Value root;
@@ -76,8 +75,7 @@ Config::init(const string path)
   }
 }
 
-void 
-Config::add_section(const string name, ConfigSection* const section)
+void Config::add_section(const string name, ConfigSection* const section)
 {
   sections[name] = section;
 }

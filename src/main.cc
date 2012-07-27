@@ -39,8 +39,7 @@
 using std::cerr;
 using std::endl;
 
-int 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   uv_loop_t *uv_loop;
 

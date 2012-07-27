@@ -41,8 +41,7 @@ BaseClient::~BaseClient()
   Logging::debug << "Destroyed Client: " << this << Logging::endl;
 }
 
-void
-BaseClient::send(string message)
+void BaseClient::send(string message)
 {
   if (message.length() >= 510)
     message.resize(510);
@@ -52,8 +51,7 @@ BaseClient::send(string message)
   connection->send(message);
 }
 
-string
-BaseClient::str() const
+string BaseClient::str() const
 {
   if(name.empty())
     return "*";
@@ -61,38 +59,32 @@ BaseClient::str() const
     return name;
 }
 
-bool 
-BaseClient::is_registered() const
+bool BaseClient::is_registered() const
 {
   return level >= Registered;
 }
 
-void
-BaseClient::clear_connection()
+void BaseClient::clear_connection()
 {
   connection.reset();
 }
 
-string
-BaseClient::get_name() const
+string BaseClient::get_name() const
 {
   return name;
 }
 
-void
-BaseClient::set_name(const string _name)
+void BaseClient::set_name(const string _name)
 {
   name = _name;
 }
 
-void
-BaseClient::set_registered()
+void BaseClient::set_registered()
 {
   level = Registered;
 }
 
-void
-BaseClient::set_connection(const ConnectionPtr conn)
+void BaseClient::set_connection(const ConnectionPtr conn)
 {
   connection = conn;
   host = connection->get_host();
@@ -109,32 +101,27 @@ void BaseClient::init()
   Server::set_me(me);
 }
 
-void 
-BaseClient::add_name(const ClientPtr client)
+void BaseClient::add_name(const ClientPtr client)
 {
   names[client->name] = client;
 }
 
-ClientPtr
-BaseClient::find_by_name(const string name)
+ClientPtr BaseClient::find_by_name(const string name)
 {
   return names[name];
 }
 
-void
-BaseClient::del_name(const ClientPtr client)
+void BaseClient::del_name(const ClientPtr client)
 {
   names.erase(client->name);
 }
 
-bool 
-BaseClient::is_client(const ClientPtr client)
+bool BaseClient::is_client(const ClientPtr client)
 {
   return typeid(*client) == typeid(Client);
 }
 
-bool 
-BaseClient::is_server(const ClientPtr client)
+bool BaseClient::is_server(const ClientPtr client)
 {
   return typeid(*client) == typeid(Server);
 }

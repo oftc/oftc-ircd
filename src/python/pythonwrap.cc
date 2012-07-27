@@ -54,8 +54,7 @@ template bool PythonWrap<EventWrap>::handle_event(PyObject *event, PyObject *arg
 template bool PythonWrap<ClientWrap>::handle_event(PyObject *event, PyObject *args);
 
 template<class T>
-void
-PythonWrap<T>::init(const char *name)
+void PythonWrap<T>::init(const char *name)
 {
   type_object.ob_refcnt = 1;
   type_object.tp_alloc = alloc;
@@ -78,8 +77,7 @@ PythonWrap<T>::init(const char *name)
 }
  
 template<class T>
-PyObject *
-PythonWrap<T>::alloc(PyTypeObject *type, Py_ssize_t items)
+PyObject *PythonWrap<T>::alloc(PyTypeObject *type, Py_ssize_t items)
 {
   char *ret;
   PyObject *obj;
@@ -95,8 +93,7 @@ PythonWrap<T>::alloc(PyTypeObject *type, Py_ssize_t items)
 }
 
 template<class T>
-void
-PythonWrap<T>::free(void *ptr)
+void PythonWrap<T>::free(void *ptr)
 {
   char *obj = static_cast<char *>(ptr);
 
@@ -106,8 +103,7 @@ PythonWrap<T>::free(void *ptr)
 }
 
 template<class T>
-PyObject *
-PythonWrap<T>::create(PyTypeObject *type, PyObject *args, PyObject *kwds)
+PyObject *PythonWrap<T>::create(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
   PyObject *ptr = type->tp_alloc(type, 0);
   T *obj = new(ptr) T(args, kwds);
@@ -116,8 +112,7 @@ PythonWrap<T>::create(PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 template<class T>
-void
-PythonWrap<T>::dealloc(PyObject *obj)
+void PythonWrap<T>::dealloc(PyObject *obj)
 {
   T *ptr = reinterpret_cast<T *>(obj);
   ptr->~T();
@@ -143,8 +138,7 @@ T *PythonWrap<T>::wrap(void *arg)
 }
 
 template<class T>
-bool
-PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
+bool PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
 {
   PyObject *handler, *ret;
   
@@ -176,15 +170,13 @@ PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
 }
 
 template<class T>
-PyTypeObject *
-PythonWrap<T>::get_type_object() 
+PyTypeObject *PythonWrap<T>::get_type_object() 
 { 
   return &type_object; 
 }
 
 template<class T>
-PyObject *
-PythonWrap<T>::get_type() 
+PyObject *PythonWrap<T>::get_type() 
 { 
   return reinterpret_cast<PyObject *>(&type_object); 
 }

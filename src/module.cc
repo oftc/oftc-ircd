@@ -55,14 +55,12 @@ Module::~Module()
 
 // Statics
 
-void
-Module::init()
+void Module::init()
 {
   Config::add_section("module", &config);
 }
 
-Module
-Module::create(string name, string filename)
+Module Module::create(string name, string filename)
 {
   Module module = Module(name, filename);
 
@@ -71,8 +69,7 @@ Module::create(string name, string filename)
   return module;
 }
 
-void
-Module::load_all()
+void Module::load_all()
 {
   for(ModuleConstIt it = modules.begin(); it != modules.end(); it++)
   {

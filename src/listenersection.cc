@@ -29,13 +29,11 @@
 #include "listenersection.h"
 #include "listener.h"
 
-void
-ListenerSection::set_defaults()
+void ListenerSection::set_defaults()
 {
 }
 
-void
-ListenerSection::process(const Json::Value value)
+void ListenerSection::process(const Json::Value value)
 {
   if(value.type() != Json::arrayValue)
     throw runtime_error("listener section not an array as expected");
@@ -72,7 +70,6 @@ ListenerSection::process(const Json::Value value)
   }
 }
 
-void
-ListenerSection::verify() const
+void ListenerSection::verify() const
 {
 }

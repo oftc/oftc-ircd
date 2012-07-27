@@ -35,8 +35,7 @@ using std::setfill;
 
 Json::Value Numeric::message_table;
 
-void
-Numeric::load_messages(string path)
+void Numeric::load_messages(string path)
 {
   ifstream message_file(path.c_str());
   Json::Reader reader;
@@ -54,8 +53,7 @@ Numeric::load_messages(string path)
   message_table = *root.begin();
 }
 
-string
-Numeric::format(int numeric, va_list args)
+string Numeric::format(int numeric, va_list args)
 {
   char buffer[510 + 1];
   string format;
@@ -67,8 +65,7 @@ Numeric::format(int numeric, va_list args)
   return string(buffer);
 }
 
-string
-Numeric::raw_format(int numeric)
+string Numeric::raw_format(int numeric)
 {
   stringstream numstr;
 

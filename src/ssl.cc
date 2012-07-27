@@ -30,8 +30,7 @@
 SSL_CTX *Ssl::context;
 bool Ssl::enabled;
 
-void
-Ssl::init()
+void Ssl::init()
 {
   SSL_load_error_strings();
   SSL_library_init();

@@ -44,8 +44,7 @@ static PyMethodDef module_methods[] =
 
 vector<PyObject *> PythonLoader::loaded_modules;
 
-void 
-PythonLoader::init()
+void PythonLoader::init()
 {
   PyObject *m;
 
@@ -85,8 +84,7 @@ PythonLoader::init()
     reinterpret_cast<PyObject *>(EventWrap::get_type_object()));
 }
 
-void
-PythonLoader::load(string name)
+void PythonLoader::load(string name)
 {
   PyObject *module = PyImport_ImportModule(name.c_str());
 

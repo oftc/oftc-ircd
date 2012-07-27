@@ -61,15 +61,13 @@ Logging::Logging(LogLevel level) : log_level(level)
 {
 }
 
-Logging&
-Logging::operator <<(manip fp)
+Logging& Logging::operator <<(manip fp)
 {
   return fp(*this);
 }
 
 // Statics
-LogLevel
-Logging::string_to_level(const string name)
+LogLevel Logging::string_to_level(const string name)
 {
   const char **p = log_levels;
 
@@ -83,26 +81,22 @@ Logging::string_to_level(const string name)
   return static_cast<LogLevel>(-1);
 }
 
-string
-Logging::level_to_string(const LogLevel level)
+string Logging::level_to_string(const LogLevel level)
 {
   return log_levels[level];
 }
 
-void
-Logging::init()
+void Logging::init()
 {
   Config::add_section("logging", &config);
 }
 
-void
-Logging::start()
+void Logging::start()
 {
   log_stream.open(config.get_log_path(), ios::out | ios::app);
 }
 
-Logging&
-Logging::endl(Logging &log)
+Logging& Logging::endl(Logging &log)
 {
   flush = true;
   return log << "\n";

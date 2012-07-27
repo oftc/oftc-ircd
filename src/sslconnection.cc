@@ -35,8 +35,7 @@ SSLConnection::~SSLConnection()
   SSL_free(ssl);
 }
 
-void
-SSLConnection::accept(uv_stream_t *server_handle)
+void SSLConnection::accept(uv_stream_t *server_handle)
 {
   ssl = SSL_new(Ssl::get_context());
   read_bio = BIO_new(BIO_s_mem());
@@ -51,8 +50,7 @@ SSLConnection::accept(uv_stream_t *server_handle)
   Connection::accept(server_handle);
 }
 
-void
-SSLConnection::handle_error(int code)
+void SSLConnection::handle_error(int code)
 {
   int err = SSL_get_error(ssl, code);
 
@@ -76,8 +74,7 @@ SSLConnection::handle_error(int code)
   }
 }
 
-void
-SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
+void SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
   if(nread <= 0)
   {
@@ -116,14 +113,12 @@ SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   Connection::read(stream, offset, buf);
 }
 
-void
-SSLConnection::send(string buffer)
+void SSLConnection::send(string buffer)
 {
   send(buffer.c_str(), buffer.length());
 }
 
-void
-SSLConnection::send(const char *buf, size_t len)
+void SSLConnection::send(const char *buf, size_t len)
 {
   int ret = SSL_write(ssl, buf, len);
 

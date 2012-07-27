@@ -48,8 +48,7 @@ GeneralSection System::config;
 const char *System::config_path;
 const char *System::built_date;
 
-void
-System::init()
+void System::init()
 {
   Config::add_section("general", &config);
   config_path = CONFIG_PATH;
@@ -62,8 +61,7 @@ System::init()
 
 }
 
-void
-System::parse_args(int argc, const char * const argv[])
+void System::parse_args(int argc, const char * const argv[])
 {
   for(int index = 1; index < argc; index++)
   {
@@ -81,8 +79,7 @@ System::parse_args(int argc, const char * const argv[])
   }
 }
 
-string
-System::perror(const char *error)
+string System::perror(const char *error)
 {
   string str = error;
 
@@ -92,8 +89,7 @@ System::perror(const char *error)
   return str;
 }
 
-string
-System::uv_perror(const char *error)
+string System::uv_perror(const char *error)
 {
   stringstream ss;
 
@@ -103,8 +99,7 @@ System::uv_perror(const char *error)
 }
 
 #ifndef _WIN32
-void
-System::daemonize()
+void System::daemonize()
 {
   pid_t pid, sid;
 

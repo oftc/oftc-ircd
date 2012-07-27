@@ -28,13 +28,11 @@
 #include "modulesection.h"
 #include "module.h"
 
-void
-ModuleSection::set_defaults()
+void ModuleSection::set_defaults()
 {
 }
 
-void
-ModuleSection::process(const Json::Value value)
+void ModuleSection::process(const Json::Value value)
 {
   if(!value.isObject())
     throw runtime_error("module config section wasn't an object as expected");
@@ -79,7 +77,6 @@ ModuleSection::process(const Json::Value value)
   }
 }
 
-void
-ModuleSection::verify() const
+void ModuleSection::verify() const
 {
 }

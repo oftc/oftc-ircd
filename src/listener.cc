@@ -59,8 +59,7 @@ Listener::~Listener()
   Logging::debug << "Destroyed Listener: " << this << Logging::endl;
 }
 
-void
-Listener::set_flag(ListenerFlag flag)
+void Listener::set_flag(ListenerFlag flag)
 {
   int int_flags = static_cast<int>(flags);
 
@@ -68,20 +67,17 @@ Listener::set_flag(ListenerFlag flag)
   flags = static_cast<ListenerFlag>(int_flags);
 }
 
-bool
-Listener::is_ssl() const
+bool Listener::is_ssl() const
 { 
   return flags & Listener_SSL; 
 }
 
-void
-Listener::set_ssl()
+void Listener::set_ssl()
 {
   set_flag(Listener_SSL);
 }
 
-void
-Listener::connected(uv_stream_t *stream, int status)
+void Listener::connected(uv_stream_t *stream, int status)
 {
   ConnectionPtr connection;
 
@@ -99,8 +95,7 @@ Listener::connected(uv_stream_t *stream, int status)
   Client::connected(client);
 }
 
-void
-Listener::start()
+void Listener::start()
 {
   int ret;
 
@@ -139,22 +134,19 @@ Listener::start()
 
 
 // Statics
-void
-Listener::init()
+void Listener::init()
 {
   Config::add_section("listeners", &config);
 }
 
-void
-Listener::create(string host, int port, ListenerFlag flags)
+void Listener::create(string host, int port, ListenerFlag flags)
 {
   ListenerPtr new_listener(new Listener(host, port, flags));
 
   listeners.push_back(new_listener);
 }
 
-void
-Listener::start_listeners()
+void Listener::start_listeners()
 {
   for(ListenerConstIt it = listeners.begin(); it != listeners.end(); it++)
   {
@@ -162,8 +154,7 @@ Listener::start_listeners()
   }
 }
 
-void
-Listener::on_connected(uv_stream_t *stream, int status)
+void Listener::on_connected(uv_stream_t *stream, int status)
 {
   Listener *listener = static_cast<Listener *>(stream->data);
 

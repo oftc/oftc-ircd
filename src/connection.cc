@@ -48,8 +48,7 @@ Connection::~Connection()
   Logging::debug << "Destroyed Connection: " << this << Logging::endl;
 }
 
-void
-Connection::accept(uv_stream_t *server_handle)
+void Connection::accept(uv_stream_t *server_handle)
 {
   sockaddr_storage addr;
   sockaddr_in *addr4;
@@ -87,8 +86,7 @@ Connection::accept(uv_stream_t *server_handle)
   Logging::debug << "Accepted connection from: " << ipstr << Logging::endl;
 }
 
-void
-Connection::send(const char *buffer, size_t len)
+void Connection::send(const char *buffer, size_t len)
 {
   uv_buf_t buf;
   uv_write_t *req = new uv_write_t;
@@ -98,14 +96,12 @@ Connection::send(const char *buffer, size_t len)
   uv_write(req, reinterpret_cast<uv_stream_t*>(handle.get()), &buf, 1, on_write);
 }
 
-void
-Connection::send(string buffer)
+void Connection::send(string buffer)
 {
   send(buffer.c_str(), buffer.length());
 }
 
-void
-Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
+void Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
   string debug_str;
 
@@ -152,27 +148,23 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   free_buffer(buf);
 }
 
-string
-Connection::get_host() const
+string Connection::get_host() const
 {
   return host;
 }
 
-void
-Connection::set_client(const ClientPtr ptr)
+void Connection::set_client(const ClientPtr ptr)
 {
   client = ptr;
 }
 
 // Statics
-void
-Connection::add(ConnectionPtr connection)
+void Connection::add(ConnectionPtr connection)
 {
   connections.insert(pair<Connection *, ConnectionPtr>(connection.get(), connection));
 }
 
-uv_buf_t
-Connection::on_buf_alloc(uv_handle_t *handle, size_t size)
+uv_buf_t Connection::on_buf_alloc(uv_handle_t *handle, size_t size)
 {
   uv_buf_t buf;
 
@@ -182,16 +174,14 @@ Connection::on_buf_alloc(uv_handle_t *handle, size_t size)
   return buf;
 }
 
-void 
-Connection::on_read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
+void Connection::on_read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
 {
   Connection *connection = static_cast<Connection *>(stream->data);
 
   connection->read(stream, nread, buf);
 }
 
-void 
-Connection::on_close(uv_handle_t *handle)
+void Connection::on_close(uv_handle_t *handle)
 {
   Connection *connection = static_cast<Connection *>(handle->data);
 
@@ -199,14 +189,12 @@ Connection::on_close(uv_handle_t *handle)
   connection->client->clear_connection();
 }
 
-void
-Connection::on_write(uv_write_t *req, int status)
+void Connection::on_write(uv_write_t *req, int status)
 {
   delete req;
 }
 
-void
-Connection::free_buffer(uv_buf_t &buf)
+void Connection::free_buffer(uv_buf_t &buf)
 {
   delete[] buf.base;
   buf.base = 0;

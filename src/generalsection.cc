@@ -27,14 +27,12 @@
 #include <json/json.h>
 #include "generalsection.h"
 
-void
-GeneralSection::set_defaults()
+void GeneralSection::set_defaults()
 {
   daemon = true;
 }
 
-void
-GeneralSection::process(const Json::Value value)
+void GeneralSection::process(const Json::Value value)
 {
   if(!value["daemon"].isNull())
     daemon = value["daemon"].asBool();
@@ -48,7 +46,6 @@ GeneralSection::process(const Json::Value value)
     server_name = value["server_name"].asString();
 }
 
-void
-GeneralSection::verify() const
+void GeneralSection::verify() const
 {
 }

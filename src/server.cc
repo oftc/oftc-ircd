@@ -30,14 +30,12 @@ ClientPtr Server::me;
 list<ClientPtr> Server::servers;
 
 // Statics
-ClientPtr
-Server::get_me()
+ClientPtr Server::get_me()
 {
   return me;
 }
 
-void
-Server::set_me(ClientPtr ptr)
+void Server::set_me(ClientPtr ptr)
 {
   if(!me)
   {

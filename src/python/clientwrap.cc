@@ -98,8 +98,7 @@ ClientWrap::~ClientWrap()
 
 // Statics
 
-void
-ClientWrap::init()
+void ClientWrap::init()
 {
   PythonWrap<ClientWrap>::methods = client_methods;
   PythonWrap<ClientWrap>::members = client_members;
@@ -129,8 +128,7 @@ ClientWrap::init()
   Client::disconnected += function<bool(ClientPtr)>(on_disconnected);
 }
 
-PyObject *
-ClientWrap::get_wrap(ClientWrap *self, void *closure)
+PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
 {
   string prop = string(static_cast<char *>(closure));
   string value;
@@ -164,8 +162,7 @@ ClientWrap::get_wrap(ClientWrap *self, void *closure)
   return name;
 }
 
-int
-ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
+int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 {
   string prop = string(static_cast<char *>(closure));
   shared_ptr<Client> ptr;
@@ -210,8 +207,7 @@ ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
   return 0;
 }
 
-PyObject *
-ClientWrap::add(ClientWrap *self, ClientWrap *client)
+PyObject *ClientWrap::add(ClientWrap *self, ClientWrap *client)
 {
   if(Py_TYPE(client) != &type_object)
   {
@@ -224,8 +220,7 @@ ClientWrap::add(ClientWrap *self, ClientWrap *client)
   Py_RETURN_NONE;
 }
 
-PyObject *
-ClientWrap::add_name(PyObject *self, ClientWrap *client)
+PyObject *ClientWrap::add_name(PyObject *self, ClientWrap *client)
 {
   if(Py_TYPE(client) != &type_object)
   {
@@ -237,8 +232,7 @@ ClientWrap::add_name(PyObject *self, ClientWrap *client)
   Py_RETURN_NONE;
 }
 
-PyObject *
-ClientWrap::find_by_name(PyObject *self, PyObject *name)
+PyObject *ClientWrap::find_by_name(PyObject *self, PyObject *name)
 {
   if(!PyString_Check(name))
   {
@@ -254,8 +248,7 @@ ClientWrap::find_by_name(PyObject *self, PyObject *name)
   return reinterpret_cast<PyObject *>(wrap(&ptr));
 }
 
-PyObject *
-ClientWrap::del_name(PyObject *self, ClientWrap *client)
+PyObject *ClientWrap::del_name(PyObject *self, ClientWrap *client)
 {
   if(Py_TYPE(client) != &type_object)
   {
@@ -268,8 +261,7 @@ ClientWrap::del_name(PyObject *self, ClientWrap *client)
   Py_RETURN_NONE;
 }
 
-PyObject *
-ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
+PyObject *ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
 {
   PyObject *fmt, *result, *meth, *fargs, *fdict;
 
@@ -308,8 +300,7 @@ ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
   Py_RETURN_NONE;
 }
 
-PyObject *
-ClientWrap::is_registered(ClientWrap *self, PyObject *args)
+PyObject *ClientWrap::is_registered(ClientWrap *self, PyObject *args)
 {
   if(self->client->is_registered())
     Py_RETURN_TRUE;
@@ -317,14 +308,12 @@ ClientWrap::is_registered(ClientWrap *self, PyObject *args)
     Py_RETURN_FALSE;
 }
 
-PyObject *
-ClientWrap::str(ClientWrap *self)
+PyObject *ClientWrap::str(ClientWrap *self)
 {
   return PyString_FromString(self->client->str().c_str());
 }
 
-PyObject *
-ClientWrap::numeric(ClientWrap *self, PyObject *args)
+PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
 {
   PyObject *item;
   string format;
@@ -405,8 +394,7 @@ ClientWrap::numeric(ClientWrap *self, PyObject *args)
   Py_RETURN_NONE;
 }
 
-bool
-ClientWrap::on_connected(ClientPtr client)
+bool ClientWrap::on_connected(ClientPtr client)
 {
   PyObject *args, *ptr;
   bool ret;
@@ -422,8 +410,7 @@ ClientWrap::on_connected(ClientPtr client)
   return ret;
 }
 
-bool
-ClientWrap::on_registered(ClientPtr client)
+bool ClientWrap::on_registered(ClientPtr client)
 {
   PyObject *args, *ptr;
   bool ret;
@@ -440,8 +427,7 @@ ClientWrap::on_registered(ClientPtr client)
   return ret;
 }
 
-bool
-ClientWrap::on_disconnected(ClientPtr client)
+bool ClientWrap::on_disconnected(ClientPtr client)
 {
   PyObject *args, *ptr;
   bool ret;

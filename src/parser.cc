@@ -39,14 +39,12 @@ using std::transform;
 
 Parser Parser::default_parser;
 
-void
-Parser::register_command(Command command)
+void Parser::register_command(Command command)
 {
   commands[command.get_name()] = command;
 }
 
-void
-Parser::parse(const ClientPtr client, const string& line)
+void Parser::parse(const ClientPtr client, const string& line)
 {
   stringstream stream(line);
   vector<string> args;
