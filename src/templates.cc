@@ -23,49 +23,23 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef COMMAND_H_INC
-#define COMMAND_H_INC
+#include "python/pythonwrap.h"
+#include "python/parserwrap.h"
+#include "python/clientwrap.h"
+#include "python/eventwrap.h"
 
-#include "stdinc.h"
-#include <string>
-#include <vector>
+template void PythonWrap<ParserWrap>::init(const char *name);
+template void PythonWrap<EventWrap>::init(const char *name);
+template void PythonWrap<ClientWrap>::init(const char *name);
 
-using std::string;
-using std::vector;
+template ParserWrap *PythonWrap<ParserWrap>::wrap(void *);
+template EventWrap *PythonWrap<EventWrap>::wrap(void *);
+template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
 
-class Command; 
-class BaseClient;
+template PyTypeObject *PythonWrap<ParserWrap>::get_type_object();
+template PyTypeObject *PythonWrap<EventWrap>::get_type_object();
+template PyTypeObject *PythonWrap<ClientWrap>::get_type_object();
 
-typedef function<void(const shared_ptr<BaseClient> client, const Command& command, const vector<string>& params)> CommandHandler;
-
-enum AccessLevel
-{
-  Unregistered = 0,
-  Registered,
-  Oper
-};
-
-class Command
-{
-private:
-  CommandHandler handler;
-  string name;
-  AccessLevel min_access;
-  unsigned int min_args;
-  unsigned int max_args;
-  int rate_control;
-  void *data;
-public:
-  Command();
-  Command(CommandHandler, string, AccessLevel, unsigned int, unsigned int, int, void *);
-  ~Command();
-
-  inline string get_name() const { return name; }
-  inline CommandHandler get_handler() const { return handler; }
-  inline void *get_data() const { return data; }
-  inline unsigned int get_min_args() const { return min_args; }
-  inline unsigned int get_max_args() const { return max_args; }
-  inline AccessLevel get_min_access() { return min_access; }
-};
-
-#endif
+template bool PythonWrap<ParserWrap>::handle_event(PyObject *event, PyObject *args);
+template bool PythonWrap<EventWrap>::handle_event(PyObject *event, PyObject *args);
+template bool PythonWrap<ClientWrap>::handle_event(PyObject *event, PyObject *args);

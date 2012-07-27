@@ -37,10 +37,7 @@ template<class T> PyMemberDef *PythonWrap<T>::members;
 template<class T> PyGetSetDef *PythonWrap<T>::getsetters;
 template<class T> reprfunc PythonWrap<T>::str;
 
-// Template specialisers
-template class PythonWrap<ParserWrap>;
-template class PythonWrap<ClientWrap>;
-template class PythonWrap<EventWrap>;
+#include "../src/templates.cc"
 
 template<class T>
 void

@@ -71,6 +71,7 @@
       'src/ssl.cc',
       'src/sslconnection.cc',
       'src/system.cc',
+      'src/templates.cc',
       'src/python/clientwrap.cc',
       'src/python/eventwrap.cc',
       'src/python/pythonloader.cc',
