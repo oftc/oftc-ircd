@@ -37,7 +37,21 @@ template<class T> PyMemberDef *PythonWrap<T>::members;
 template<class T> PyGetSetDef *PythonWrap<T>::getsetters;
 template<class T> reprfunc PythonWrap<T>::str;
 
-#include "../src/templates.cc"
+template void PythonWrap<ParserWrap>::init(const char *name);
+template void PythonWrap<EventWrap>::init(const char *name);
+template void PythonWrap<ClientWrap>::init(const char *name);
+
+template ParserWrap *PythonWrap<ParserWrap>::wrap(void *);
+template EventWrap *PythonWrap<EventWrap>::wrap(void *);
+template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
+
+template PyTypeObject *PythonWrap<ParserWrap>::get_type_object();
+template PyTypeObject *PythonWrap<EventWrap>::get_type_object();
+template PyTypeObject *PythonWrap<ClientWrap>::get_type_object();
+
+template bool PythonWrap<ParserWrap>::handle_event(PyObject *event, PyObject *args);
+template bool PythonWrap<EventWrap>::handle_event(PyObject *event, PyObject *args);
+template bool PythonWrap<ClientWrap>::handle_event(PyObject *event, PyObject *args);
 
 template<class T>
 void
