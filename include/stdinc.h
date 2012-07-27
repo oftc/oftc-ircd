@@ -31,6 +31,7 @@
 #define _CRT_SECURE_NO_DEPRECATE (1)
 #endif
 #pragma warning(disable : 4996)
+#pragma warning(disable : 4661) // C++ templates
 #endif
 
 #include <memory>

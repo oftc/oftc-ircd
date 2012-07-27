@@ -28,17 +28,13 @@
 
 #include <string>
 #include <vector>
-#include <unordered_map>
-#include "command.h"
 #include "event.h"
 #include "baseclient.h"
 
 using std::string;
 using std::vector;
-using std::unordered_map;
 
 class Client;
-
 class Connection;
 
 class Client : public BaseClient
@@ -49,24 +45,28 @@ private:
   string username;
   string realname;
 public:
+  // Events
   static Event<ClientPtr> connected;
   static Event<ClientPtr> registered;
   static Event<ClientPtr> disconnected;
 
-  void send(string arg, int);
+  // Client list maniuplators
+  static void add(const ClientPtr);
+  static void remove(const ClientPtr);
+
+  // Members
+  void send(const string arg, int);
   void send(int, ...);
   using BaseClient::send;
+  string str() const;
   
-  static void add(ClientPtr);
-  static void remove(ClientPtr);
+  // Getters
+  string get_username() const;
+  string get_realname() const;
 
-  inline string get_username() const { return username; }
-  inline string get_realname() const { return realname; }
-
-  inline void set_username(string _username) { username = _username; }
-  inline void set_realname(string _realname) { realname = _realname; }
-
-  string str();
+  // Setters
+  void set_username(const string);
+  void set_realname(const string);
 };
 
 #endif

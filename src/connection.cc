@@ -152,6 +152,18 @@ Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   free_buffer(buf);
 }
 
+string
+Connection::get_host() const
+{
+  return host;
+}
+
+void
+Connection::set_client(const ClientPtr ptr)
+{
+  client = ptr;
+}
+
 // Statics
 void
 Connection::add(ConnectionPtr connection)

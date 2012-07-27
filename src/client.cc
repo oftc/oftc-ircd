@@ -72,7 +72,7 @@ Client::send(int numeric, ...)
 }
 
 string
-Client::str()
+Client::str() const
 {
   stringstream buff;
 
@@ -84,6 +84,29 @@ Client::str()
   return buff.str();
 }
 
+string
+Client::get_username() const
+{
+  return username;
+}
+
+string 
+Client::get_realname() const
+{
+  return realname;
+}
+
+void
+Client::set_username(const string user)
+{
+  username = user;
+}
+
+void Client::set_realname(const string real)
+{
+  realname = real;
+}
+
 // Statics
 
 void
@@ -92,7 +115,7 @@ Client::add(ClientPtr ptr)
   shared_ptr<Client> client = dynamic_pointer_cast<Client>(ptr);
 
   client_list.push_back(client);
-  client->set_resgistered();
+  client->set_registered();
 
   registered(client);
 

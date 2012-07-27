@@ -53,7 +53,7 @@ BaseClient::send(string message)
 }
 
 string
-BaseClient::str()
+BaseClient::str() const
 {
   if(name.empty())
     return "*";
@@ -86,7 +86,7 @@ BaseClient::set_name(const string _name)
 }
 
 void
-BaseClient::set_resgistered()
+BaseClient::set_registered()
 {
   level = Registered;
 }

@@ -51,29 +51,36 @@ protected:
 public:
   static void init();
 
+  // list managers
   static void add_name(const ClientPtr);
   static ClientPtr find_by_name(const string);
   static void del_name(const ClientPtr);
 
+  // static tests
   static bool is_client(const ClientPtr);
   static bool is_server(const ClientPtr);
   
+  // ctor/dtor
   BaseClient();
   virtual ~BaseClient() = 0;
 
+  // members
   virtual void send(string);
-  
+  virtual string str() const;
+ 
+  // tests
   bool is_registered() const;
 
+  // clears
   void clear_connection();
 
+  // getters
   string get_name() const;
 
-  void set_resgistered();
+  // setters
+  void set_registered();
   void set_name(const string);
   void set_connection(const shared_ptr<Connection>);
- 
-  virtual string str();
-};
+ };
 
 #endif

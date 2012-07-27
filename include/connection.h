@@ -35,7 +35,6 @@
 using std::vector;
 using std::stringstream;
 
-class Client;
 class Connection;
 typedef shared_ptr<Connection> ConnectionPtr;
 
@@ -43,9 +42,11 @@ class Connection
 {
 protected:
   static unordered_map<Connection *, ConnectionPtr> connections;
+
   shared_ptr<uv_tcp_t> handle;
 
   static void free_buffer(uv_buf_t&);
+
   virtual void read(uv_stream_t *, ssize_t, uv_buf_t);
 private:
   stringstream read_buffer;
@@ -54,21 +55,29 @@ private:
   string host;
 
 public:
+  // static methods
   static void add(ConnectionPtr);
+
+  // callbacks
   static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
   static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
   static void on_close(uv_handle_t *);
   static void on_write(uv_write_t *, int );
 
+  // ctor/dtor
   Connection();
   ~Connection();
 
+  // methods
   virtual void accept(uv_stream_t *);
   virtual void send(string);
   virtual void send(const char *, size_t);
 
-  inline string get_host() const { return host; }
-  inline void set_client(ClientPtr _client) { client = _client; }
+  // getters
+  string get_host() const;
+
+  // setters
+  void set_client(const ClientPtr);
 };
 
 #endif
