@@ -38,7 +38,7 @@ private:
   static list<ClientPtr> servers;
 public:
   static ClientPtr get_me();
-  static void set_me(ClientPtr);
+  static void set_me(const ClientPtr);
 };
 
 #endif

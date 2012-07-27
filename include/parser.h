@@ -40,7 +40,7 @@ private:
   unordered_map<string, Command> commands;
 public:
   void parse(const ClientPtr, const string& line);
-  void register_command(Command command);
+  void register_command(const Command command);
   static inline Parser& get_default() { return default_parser; }
 };
 

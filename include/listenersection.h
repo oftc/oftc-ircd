@@ -32,7 +32,6 @@
 class ListenerSection : public ConfigSection
 {
 private:
-
 public:
   void set_defaults();
   void process(const Json::Value);

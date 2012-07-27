@@ -33,11 +33,7 @@
 #include <time.h>
 #include "loggingsection.h"
 
-#ifdef _WIN32
 #define LOG_PATH "ircd.log"
-#else
-#define LOG_PATH "/home/stu/oircd/var/log/ircd.log"
-#endif
 
 using std::ofstream;
 using std::stringstream;

@@ -49,7 +49,7 @@ public:
   static const int Err_AlreadyRegistered = 462;
 
   static string format(int, va_list);
-  static void load_messages(string);
+  static void load_messages(const string);
   static string raw_format(int);
 };
 

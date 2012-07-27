@@ -48,38 +48,37 @@ class Listener
 private:
   static ListenerSection config;
   static vector<ListenerPtr> listeners;
-  static void on_connected(uv_stream_t *, int);
 
   uv_tcp_t listener;
   string host;
   int port;
   ListenerFlag flags;
 
+  static void on_connected(uv_stream_t *, int);
+
   void connected(uv_stream_t *, int);
-
-  inline void set_flag(ListenerFlag flag) 
-  { 
-    int int_flags = static_cast<int>(flags);
-    int_flags |= static_cast<int>(flag); 
-
-    flags = static_cast<ListenerFlag>(int_flags);
-  }
-
+  void set_flag(ListenerFlag);
 public:
   static const int DEFAULT_PORT = 6667;
 
+  // static methods
   static void init();
   static void create(string, int, ListenerFlag);
   static void start_listeners();
 
+  // ctor/dtor
   Listener();
   Listener(string, int, ListenerFlag);
   ~Listener();
 
+  // methods
   void start();
 
-  inline bool is_ssl() const { return flags & Listener_SSL; }
-  inline void set_ssl() { set_flag(Listener_SSL); }
+  // testers
+  bool is_ssl() const;
+
+  // setters
+  void set_ssl();
 };
 
 #endif

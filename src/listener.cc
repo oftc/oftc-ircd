@@ -60,6 +60,27 @@ Listener::~Listener()
 }
 
 void
+Listener::set_flag(ListenerFlag flag)
+{
+  int int_flags = static_cast<int>(flags);
+
+  int_flags |= static_cast<int>(flag); 
+  flags = static_cast<ListenerFlag>(int_flags);
+}
+
+bool
+Listener::is_ssl() const
+{ 
+  return flags & Listener_SSL; 
+}
+
+void
+Listener::set_ssl()
+{
+  set_flag(Listener_SSL);
+}
+
+void
 Listener::connected(uv_stream_t *stream, int status)
 {
   ConnectionPtr connection;

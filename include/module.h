@@ -42,18 +42,23 @@ private:
   string name;
   string filename;
 public:
-  Module();
-  Module(string, string);
-  ~Module();
-
-  void load();
-  inline string get_name() const { return name; }
-  inline string get_filename() const { return filename; }
-
+  // static methods
   static void init();
   static inline vector<string> get_module_paths() { return config.get_paths(); }
-  static Module create(string, string);
+  static Module create(const string, const string);
   static void load_all();
+
+  // ctors / dtor
+  Module();
+  Module(const string, const string);
+  ~Module();
+
+  // methods
+  void load();
+
+  // getters
+  inline string get_name() const { return name; }
+  inline string get_filename() const { return filename; }
 };
 
 #endif
