@@ -35,7 +35,7 @@ private:
   PyObject *handler;
 public:
   // Non Python methods
-  static void init();
+  static void init(PyObject *);
 
   // Get/Set Wrappers
   static PyObject *get_wrap(EventWrap *, void *);

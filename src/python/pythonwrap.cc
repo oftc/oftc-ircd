@@ -33,24 +33,20 @@
 // Static initialisers
 template<class T> PyTypeObject PythonWrap<T>::type_object;
 
-template void PythonWrap<ParserWrap>::init(const char *name);
-template void PythonWrap<EventWrap>::init(const char *name);
-template void PythonWrap<ClientWrap>::init(const char *name);
+template void PythonWrap<ParserWrap>::init(PyObject *, const char *name);
+template void PythonWrap<EventWrap>::init(PyObject *, const char *name);
+template void PythonWrap<ClientWrap>::init(PyObject *, const char *name);
 
 template ParserWrap *PythonWrap<ParserWrap>::wrap(void *);
 template EventWrap *PythonWrap<EventWrap>::wrap(void *);
 template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
-
-template PyTypeObject *PythonWrap<ParserWrap>::get_type_object();
-template PyTypeObject *PythonWrap<EventWrap>::get_type_object();
-template PyTypeObject *PythonWrap<ClientWrap>::get_type_object();
 
 template bool PythonWrap<ParserWrap>::handle_event(PyObject *event, PyObject *args);
 template bool PythonWrap<EventWrap>::handle_event(PyObject *event, PyObject *args);
 template bool PythonWrap<ClientWrap>::handle_event(PyObject *event, PyObject *args);
 
 template<class T>
-void PythonWrap<T>::init(const char *name)
+void PythonWrap<T>::init(PyObject *module, const char *name)
 {
   type_object.ob_refcnt = 1;
   type_object.tp_alloc = alloc;
@@ -66,6 +62,9 @@ void PythonWrap<T>::init(const char *name)
     PyErr_Print();
     throw runtime_error("Unable to create type");
   }
+
+  Py_INCREF(&type_object);
+  PyModule_AddObject(module, type_object.tp_name, reinterpret_cast<PyObject *>(&type_object));
 }
  
 template<class T>
@@ -121,7 +120,7 @@ T *PythonWrap<T>::wrap(void *arg)
 
   args = Py_BuildValue("(O)", obj);
 
-  wrapped = reinterpret_cast<T *>(PyObject_CallObject(T::get_type(), args));
+  wrapped = PythonWrap<T>::call(args);
   Py_DECREF(obj);
   if(wrapped == NULL)
     return NULL;
@@ -162,13 +161,7 @@ bool PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
 }
 
 template<class T>
-PyTypeObject *PythonWrap<T>::get_type_object() 
-{ 
-  return &type_object; 
-}
-
-template<class T>
-PyObject *PythonWrap<T>::get_type() 
-{ 
-  return reinterpret_cast<PyObject *>(&type_object); 
+T *PythonWrap<T>::call(PyObject *args)
+{
+  return reinterpret_cast<T*>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
 }

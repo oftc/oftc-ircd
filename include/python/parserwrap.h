@@ -37,7 +37,7 @@ private:
   ParserPtr parser;
 public:
   // Non Python methods
-  static void init();
+  static void init(PyObject *);
   static void handle_command(const ClientPtr, const Command&, const vector<string>&);
 
   // Python methods

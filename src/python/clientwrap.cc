@@ -101,14 +101,14 @@ ClientWrap::~ClientWrap()
 
 // Statics
 
-void ClientWrap::init()
+void ClientWrap::init(PyObject *module)
 {
   PythonWrap<ClientWrap>::type_object.tp_methods = client_methods;
   PythonWrap<ClientWrap>::type_object.tp_members = client_members;
   PythonWrap<ClientWrap>::type_object.tp_getset = client_getsetters;
   PythonWrap<ClientWrap>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
   PythonWrap<ClientWrap>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
-  PythonWrap<ClientWrap>::init("Client");
+  PythonWrap<ClientWrap>::init(module, "Client");
 
   ClientPtr ptr = Server::get_me();
   me = ClientWrap::wrap(&ptr);
@@ -118,9 +118,9 @@ void ClientWrap::init()
     throw runtime_error("Python failed to initialise");
   }
 
-  connected = PyObject_CallObject(EventWrap::get_type(), NULL);
-  registered = PyObject_CallObject(EventWrap::get_type(), NULL);
-  disconnected = PyObject_CallObject(EventWrap::get_type(), NULL);
+  connected = PythonWrap<EventWrap>::call(NULL);
+  registered = PythonWrap<EventWrap>::call(NULL);
+  disconnected = PythonWrap<EventWrap>::call(NULL);
 
   PyDict_SetItemString(type_object.tp_dict, "Me", me);
   PyDict_SetItemString(type_object.tp_dict, "connected", connected);

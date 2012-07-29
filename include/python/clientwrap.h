@@ -40,7 +40,7 @@ private:
   ClientPtr client;
 public:
   // Non Python methods
-  static void init();
+  static void init(PyObject *);
 
   // Event callbacks
   static bool on_connected(ClientPtr);

@@ -57,11 +57,11 @@ ParserWrap::~ParserWrap()
 
 // Statics
 
-void ParserWrap::init()
+void ParserWrap::init(PyObject *module)
 {
   PythonWrap<ParserWrap>::type_object.tp_methods = parser_methods;
   PythonWrap<ParserWrap>::type_object.tp_members = parser_members;
-  PythonWrap<ParserWrap>::init("parser");
+  PythonWrap<ParserWrap>::init(module, "Parser");
 }
 
 PyObject *ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)

@@ -66,22 +66,12 @@ void PythonLoader::init()
 
   PySys_SetPath(const_cast<char*>(path.str().c_str()));
 
-  ParserWrap::init();
-  EventWrap::init();
-  ClientWrap::init();
-
   m = Py_InitModule3("pythonwrap", module_methods, 
     "Wrapper module for oftc-ircd C(++) interface");
 
-  Py_INCREF(ParserWrap::get_type_object());
-  PyModule_AddObject(m, "Parser", 
-    reinterpret_cast<PyObject *>(ParserWrap::get_type_object()));
-  Py_INCREF(ClientWrap::get_type_object());
-  PyModule_AddObject(m, "Client", 
-    reinterpret_cast<PyObject *>(ClientWrap::get_type_object()));
-  Py_INCREF(EventWrap::get_type_object());
-  PyModule_AddObject(m, "Event", 
-    reinterpret_cast<PyObject *>(EventWrap::get_type_object()));
+  ParserWrap::init(m);
+  EventWrap::init(m);
+  ClientWrap::init(m);
 }
 
 void PythonLoader::load(string name)

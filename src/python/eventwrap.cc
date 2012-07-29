@@ -99,12 +99,12 @@ void EventWrap::set_handler(PyObject *value)
 
 // Statics
 
-void EventWrap::init()
+void EventWrap::init(PyObject *module)
 {
   PythonWrap<EventWrap>::type_object.tp_methods = event_methods;
   PythonWrap<EventWrap>::type_object.tp_members = event_members;
   PythonWrap<EventWrap>::type_object.tp_getset = event_getsetters;
-  PythonWrap<EventWrap>::init("Event");
+  PythonWrap<EventWrap>::init(module, "Event");
 }
 
 PyObject *EventWrap::get_wrap(EventWrap *event, void *closure)

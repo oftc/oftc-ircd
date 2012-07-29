@@ -34,10 +34,11 @@ protected:
   static PyTypeObject type_object;
 public:
   // Non Python methods
-  static void init(const char *);
+  static void init(PyObject *, const char *);
 
   // Python methods
   static PyObject *alloc(PyTypeObject *, Py_ssize_t);
+  static T *call(PyObject *);
   static PyObject *create(PyTypeObject *, PyObject *, PyObject *);
   static void dealloc(PyObject *);
   static void free(void *);
@@ -45,8 +46,6 @@ public:
   static T *wrap(void *arg);
 
   // Getters
-  static PyTypeObject *get_type_object();
-  static PyObject *get_type();
 };
 
 #endif
