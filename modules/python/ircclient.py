@@ -23,6 +23,7 @@
 
 from ircd import register, event
 from pythonwrap import Client
+from ircuser import *
 import numerics
 
 @register("NICK", min_args=1, max_args=2, access=0)
@@ -53,71 +54,23 @@ def handle_ping(client, arg):
 
 @register("MODE", min_args=1, max_args=2, access=1)
 def handle_mode(client, name, *arg):
-  target = Client.find_by_name(name)
+  if name[:1] == '#':
+    pass
+  else:
+    target = Client.find_by_name(name)
 
-  if not target:
-    client.numeric(numerics.ERR_NOSUCHNICK, name)
-    return
+    if not target:
+      client.numeric(numerics.ERR_NOSUCHNICK, name)
+      return
 
-  if target != client:
-    client.numeric(numerics.ERR_USERSDONTMATCH)
-    return
+    if target != client:
+      client.numeric(numerics.ERR_USERSDONTMATCH)
+      return
 
-  set_before = set()
-  if client.Invisible:
-    set_before.add('i')
-
-  if len(arg) == 0:
-    mode = "+"
-    for c in set_before:
-      mode += c
-
-    client.send("{client} MODE :{mode}", mode=mode)
-    return
-  
-  plus = True
-  invalid = False
-  set_after = set()
-
-  for c in arg[0]:
-    if c == '+':
-      plus = True
-    elif c == '-':
-      plus = False
-    elif c == 'i':
-      client.Invisible = plus
-      if plus:
-        set_after.add(c)
-      else:
-        if c in set_after:
-          set_after.remove(c)
+    if len(arg) > 0:
+      set_user_mode(client, arg[0])
     else:
-      invalid = True
-
-  if invalid:
-    client.numeric(numerics.ERR_UMODEUNKNOWNFLAG)
-
-  mode = ""
-  added = set_after - set_before
-  removed = set_before - set_after
-  if len(added) > 0:
-    mode += '+'
-    for c in added:
-      mode += c
-  if len(removed) > 0:
-    mode += '-'
-    for c in removed:
-      mode += c
-
-  if len(mode) > 0:
-    client.send(":{client} MODE {name} :{mode}", name=client.Name, mode=mode)
-
-def check_and_register(client):
-  if client.is_registered():
-    return
-
-  if client.Name and client.Username:
-    Client.add(client)
+      set_user_mode(client, None)
 
 @event(Client.disconnected)
 def client_disconnected(client):

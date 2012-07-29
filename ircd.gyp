@@ -78,7 +78,8 @@
       'src/python/parserwrap.cc',
       'modules/python/ircd/__init__.py',
       'modules/python/ircclient.py',
-      'modules/python/numerics.py'
+      'modules/python/numerics.py',
+      'modules/python/ircuser.py'
     ],
     'conditions': 
     [
