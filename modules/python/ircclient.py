@@ -75,18 +75,18 @@ def handle_mode(client, name, *arg):
     client.send("{client} MODE :{mode}", mode=mode)
     return
   
-  set = True
+  plus = True
   invalid = False
   set_after = Set()
 
   for c in arg[0]:
     if c == '+':
-      set = True
+      plus = True
     elif c == '-':
-      set = False
+      plus = False
     elif c == 'i':
-      client.Invisible = set
-      if set:
+      client.Invisible = plus
+      if plus:
         set_after.add(c)
       else:
         if c in set_after:
@@ -109,7 +109,8 @@ def handle_mode(client, name, *arg):
     for c in removed:
       mode += c
 
-  client.send(":{client} MODE {name} :{mode}", name=client.Name, mode=mode)
+  if len(mode) > 0:
+    client.send(":{client} MODE {name} :{mode}", name=client.Name, mode=mode)
 
 def check_and_register(client):
   if client.is_registered():
