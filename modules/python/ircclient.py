@@ -23,11 +23,12 @@
 
 from ircd import register, event
 from pythonwrap import Client
+import numerics
 
 @register("NICK", min_args=1, max_args=2, access=0)
 def handle_nick(client, nick):
   if Client.find_by_name(nick):
-    client.numeric(433, nick)
+    client.numeric(numerics.ERR_NICKNAMEINUSE, nick)
     return
 
   client.Name = nick
@@ -38,7 +39,7 @@ def handle_nick(client, nick):
 @register("USER", min_args=4, max_args=4, access=0)
 def handle_user(client, username, unused, unused2, realname):
   if client.is_registered():
-    client.numeric(462)
+    client.numeric(numerics.ERR_ALREADYREGISTERED)
     return 
 
   client.Username = username
@@ -55,11 +56,11 @@ def handle_mode(client, name, *arg):
   target = Client.find_by_name(name)
 
   if not target:
-    client.numeric(401, name)
+    client.numeric(numerics.ERR_NOSUCHNICK, name)
     return
 
   if target != client:
-    client.numeric(502)
+    client.numeric(numerics.ERR_USERSDONTMATCH)
     return
 
   set_before = set()
@@ -94,7 +95,7 @@ def handle_mode(client, name, *arg):
       invalid = True
 
   if invalid:
-    client.numeric(501)
+    client.numeric(numerics.ERR_UMODEUNKNOWNFLAG)
 
   mode = ""
   added = set_after - set_before
