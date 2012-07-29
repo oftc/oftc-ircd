@@ -103,11 +103,11 @@ ClientWrap::~ClientWrap()
 
 void ClientWrap::init()
 {
-  PythonWrap<ClientWrap>::methods = client_methods;
-  PythonWrap<ClientWrap>::members = client_members;
-  PythonWrap<ClientWrap>::getsetters = client_getsetters;
+  PythonWrap<ClientWrap>::type_object.tp_methods = client_methods;
+  PythonWrap<ClientWrap>::type_object.tp_members = client_members;
+  PythonWrap<ClientWrap>::type_object.tp_getset = client_getsetters;
   PythonWrap<ClientWrap>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
-  PythonWrap<ClientWrap>::str = reinterpret_cast<reprfunc>(str);
+  PythonWrap<ClientWrap>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ClientWrap>::init("Client");
 
   ClientPtr ptr = Server::get_me();

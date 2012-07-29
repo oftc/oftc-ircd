@@ -32,10 +32,6 @@ template <class T> class PythonWrap : public PyObject
 {
 protected:
   static PyTypeObject type_object;
-  static PyMethodDef *methods;
-  static PyMemberDef *members;
-  static PyGetSetDef *getsetters;
-  static reprfunc str;
 public:
   // Non Python methods
   static void init(const char *);

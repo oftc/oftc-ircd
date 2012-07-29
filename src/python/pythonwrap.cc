@@ -32,10 +32,6 @@
 
 // Static initialisers
 template<class T> PyTypeObject PythonWrap<T>::type_object;
-template<class T> PyMethodDef *PythonWrap<T>::methods;
-template<class T> PyMemberDef *PythonWrap<T>::members;
-template<class T> PyGetSetDef *PythonWrap<T>::getsetters;
-template<class T> reprfunc PythonWrap<T>::str;
 
 template void PythonWrap<ParserWrap>::init(const char *name);
 template void PythonWrap<EventWrap>::init(const char *name);
@@ -64,10 +60,6 @@ void PythonWrap<T>::init(const char *name)
   type_object.tp_basicsize = sizeof(T);
   type_object.tp_name = name;
   type_object.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
-  type_object.tp_methods = PythonWrap<T>::methods;
-  type_object.tp_members = PythonWrap<T>::members;
-  type_object.tp_getset = PythonWrap<T>::getsetters;
-  type_object.tp_str = PythonWrap<T>::str;
 
   if(PyType_Ready(&type_object) < 0)
   {

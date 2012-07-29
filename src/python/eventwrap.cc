@@ -101,10 +101,9 @@ void EventWrap::set_handler(PyObject *value)
 
 void EventWrap::init()
 {
-  PythonWrap<EventWrap>::methods = event_methods;
-  PythonWrap<EventWrap>::members = event_members;
-  PythonWrap<EventWrap>::getsetters = event_getsetters;
-  PythonWrap<EventWrap>::str = reinterpret_cast<reprfunc>(str);
+  PythonWrap<EventWrap>::type_object.tp_methods = event_methods;
+  PythonWrap<EventWrap>::type_object.tp_members = event_members;
+  PythonWrap<EventWrap>::type_object.tp_getset = event_getsetters;
   PythonWrap<EventWrap>::init("Event");
 }
 

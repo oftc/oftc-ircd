@@ -59,8 +59,8 @@ ParserWrap::~ParserWrap()
 
 void ParserWrap::init()
 {
-  PythonWrap<ParserWrap>::methods = parser_methods;
-  PythonWrap<ParserWrap>::members = parser_members;
+  PythonWrap<ParserWrap>::type_object.tp_methods = parser_methods;
+  PythonWrap<ParserWrap>::type_object.tp_members = parser_members;
   PythonWrap<ParserWrap>::init("parser");
 }
 
