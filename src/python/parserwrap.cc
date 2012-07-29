@@ -126,7 +126,7 @@ void ParserWrap::handle_command(const ClientPtr client, const Command& command, 
     return;
   }
 
-  PyTuple_SetItem(args, 0, reinterpret_cast<PyObject*>(wrapped_client));
+  PyTuple_SetItem(args, 0, wrapped_client);
 
   for(unsigned int i = 1; i < params.size() + 1; i++)
   {

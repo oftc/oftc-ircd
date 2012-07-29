@@ -122,7 +122,7 @@ void ClientWrap::init()
   registered = PyObject_CallObject(EventWrap::get_type(), NULL);
   disconnected = PyObject_CallObject(EventWrap::get_type(), NULL);
 
-  PyDict_SetItemString(type_object.tp_dict, "Me", reinterpret_cast<PyObject *>(me));
+  PyDict_SetItemString(type_object.tp_dict, "Me", me);
   PyDict_SetItemString(type_object.tp_dict, "connected", connected);
   PyDict_SetItemString(type_object.tp_dict, "registered", registered);
   PyDict_SetItemString(type_object.tp_dict, "disconnected", disconnected);
@@ -278,7 +278,7 @@ PyObject *ClientWrap::find_by_name(PyObject *self, PyObject *name)
   if(!ptr)
     Py_RETURN_NONE;
 
-  return reinterpret_cast<PyObject *>(wrap(&ptr));
+  return wrap(&ptr);
 }
 
 PyObject *ClientWrap::del_name(PyObject *self, ClientWrap *client)
@@ -307,8 +307,8 @@ PyObject *ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
   }
 
   fdict = PyDict_New();
-  PyDict_SetItemString(fdict, "client", reinterpret_cast<PyObject *>(self));
-  PyDict_SetItemString(fdict, "me", reinterpret_cast<PyObject *>(me));
+  PyDict_SetItemString(fdict, "client", self);
+  PyDict_SetItemString(fdict, "me", me);
 
   if (kwargs != NULL)
     PyDict_Update(fdict, kwargs);
@@ -447,7 +447,7 @@ bool ClientWrap::on_connected(ClientPtr client)
   PyObject *args, *ptr;
   bool ret;
 
-  ptr = reinterpret_cast<PyObject *>(wrap(&client));
+  ptr = wrap(&client);
   args = Py_BuildValue("(O)", ptr);
 
   ret = handle_event(connected, args);
@@ -463,7 +463,7 @@ bool ClientWrap::on_registered(ClientPtr client)
   PyObject *args, *ptr;
   bool ret;
 
-  ptr = reinterpret_cast<PyObject *>(wrap(&client));
+  ptr = wrap(&client);
 
   args = Py_BuildValue("(O)", ptr);
 
@@ -480,7 +480,7 @@ bool ClientWrap::on_disconnected(ClientPtr client)
   PyObject *args, *ptr;
   bool ret;
 
-  ptr = reinterpret_cast<PyObject *>(wrap(&client));
+  ptr = wrap(&client);
 
   args = Py_BuildValue("(O)", ptr);
 
