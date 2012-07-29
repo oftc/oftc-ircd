@@ -23,7 +23,6 @@
 
 from ircd import register, event
 from pythonwrap import Client
-from sets import Set
 
 @register("NICK", min_args=1, max_args=2, access=0)
 def handle_nick(client, nick):
@@ -63,7 +62,7 @@ def handle_mode(client, name, *arg):
     client.numeric(502)
     return
 
-  set_before = Set()
+  set_before = set()
   if client.Invisible:
     set_before.add('i')
 
@@ -77,7 +76,7 @@ def handle_mode(client, name, *arg):
   
   plus = True
   invalid = False
-  set_after = Set()
+  set_after = set()
 
   for c in arg[0]:
     if c == '+':
