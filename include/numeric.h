@@ -43,10 +43,13 @@ public:
   static const int Rpl_MyInfo = 004;
 
   // Error replies
+  static const int Err_NoSuchNick = 401;
   static const int Err_UnknownCommand = 421;
   static const int Err_NicknameInUse = 433;
   static const int Err_NeedMoreParams = 461;
   static const int Err_AlreadyRegistered = 462;
+  static const int Err_UmodeUnknownFlag = 501;
+  static const int Err_UsersDontMatch = 502;
 
   static string format(int, va_list);
   static void load_messages(const string);

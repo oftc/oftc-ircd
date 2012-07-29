@@ -44,6 +44,7 @@ private:
 
   string username;
   string realname;
+  bool invisible;
 public:
   // Events
   static Event<ClientPtr> connected;
@@ -54,12 +55,18 @@ public:
   static void add(const ClientPtr);
   static void remove(const ClientPtr);
 
+  // ctor/dtor
+  Client();
+
   // Members
   void send(const string arg, int);
   void send(int, ...);
   using BaseClient::send;
   string str() const;
   
+  // Tests
+  bool is_invisible() const;
+
   // Getters
   string get_username() const;
   string get_realname() const;
@@ -67,6 +74,7 @@ public:
   // Setters
   void set_username(const string);
   void set_realname(const string);
+  void set_invisible(bool invis);
 };
 
 #endif

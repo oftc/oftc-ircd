@@ -5,9 +5,12 @@
     "002": ":Your host is %s, running version %s",
     "003": ":This server was created %s",
     "004": ":%s %s %s %s",
+    "401": "%s :No such nick/channel",
     "421": "%s :Unknown command",
     "433": "%s :Nickname is already in use",
     "461": "%s :Not enough parameters.  Got %d, expected at least %d",
-    "462": ":You are already registered and may not re-register"
+    "462": ":You are already registered and may not re-register",
+    "501": ":Unknown MODE flag",
+    "502": ":Cannot change mode for other users"
   }
 }

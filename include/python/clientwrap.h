@@ -54,6 +54,7 @@ public:
   // Python methods
   static PyObject *add(ClientWrap *, ClientWrap *);
   static PyObject *add_name(PyObject *, ClientWrap *);
+  static int compare(ClientWrap *, ClientWrap *);
   static PyObject *del_name(PyObject *, ClientWrap *);
   static PyObject *find_by_name(PyObject *, PyObject *);
   static PyObject *is_registered(ClientWrap *, PyObject *);

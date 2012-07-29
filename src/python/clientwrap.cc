@@ -75,6 +75,9 @@ static PyGetSetDef client_getsetters[] =
   { const_cast<char*>("Realname"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Real Name"), 
     reinterpret_cast<void *>(const_cast<char *>("realname")) },
+  { const_cast<char*>("Invisible"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Invisible"), 
+    reinterpret_cast<void *>(const_cast<char *>("invisible")) },
   { NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -103,6 +106,7 @@ void ClientWrap::init()
   PythonWrap<ClientWrap>::methods = client_methods;
   PythonWrap<ClientWrap>::members = client_members;
   PythonWrap<ClientWrap>::getsetters = client_getsetters;
+  PythonWrap<ClientWrap>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
   PythonWrap<ClientWrap>::str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ClientWrap>::init("Client");
 
@@ -156,6 +160,16 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
     ptr = dynamic_pointer_cast<Client>(self->client);
     value = ptr->get_realname();
   }
+  else if(prop == "invisible")
+  {
+    if(!Client::is_client(self->client))
+    {
+      PyErr_SetString(PyExc_TypeError, "invisible is only applicable to Client types");
+      return NULL;
+    }
+    ptr = dynamic_pointer_cast<Client>(self->client);
+    return PyBool_FromLong(ptr->is_invisible());
+  }
 
   PyObject *name = PyString_FromString(value.c_str());
 
@@ -173,6 +187,25 @@ int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
     return -1;
   }
 
+  if(prop == "invisible")
+  {
+    if(!Client::is_client(self->client))
+    {
+      PyErr_SetString(PyExc_TypeError, "invisible is only applicable to Client types");
+      return -1;
+    }
+    ptr = dynamic_pointer_cast<Client>(self->client);
+
+    if(!PyBool_Check(value))
+    {
+      PyErr_SetString(PyExc_TypeError, "bool type expected");
+      return -1;
+    }
+    ptr->set_invisible(value == Py_True);
+
+    return 0;
+  }
+  
   if(!PyString_Check(value))
   {
     PyErr_SetString(PyExc_TypeError, "value must be a string");
@@ -393,6 +426,20 @@ PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
   ptr->send(output.str(), numeric);
 
   Py_RETURN_NONE;
+}
+
+int ClientWrap::compare(ClientWrap *self, ClientWrap *other)
+{
+  if(self->ob_type != &type_object || other->ob_type != &type_object)
+    return PyObject_Compare(self, other);
+
+  if(self->client == other->client)
+    return 0;
+
+  if(self->client->get_name() > other->client->get_name())
+    return 1;
+  else
+    return -1;
 }
 
 bool ClientWrap::on_connected(ClientPtr client)

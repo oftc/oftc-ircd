@@ -41,6 +41,10 @@ Event<ClientPtr> Client::registered;
 Event<ClientPtr> Client::disconnected;
 list<ClientPtr> Client::client_list;
 
+Client::Client() : invisible(false)
+{
+}
+
 void Client::send(string arg, int numeric)
 {
   stringstream buffer;
@@ -81,6 +85,11 @@ string Client::str() const
   return buff.str();
 }
 
+bool Client::is_invisible() const
+{
+  return invisible;
+}
+
 string Client::get_username() const
 {
   return username;
@@ -89,6 +98,11 @@ string Client::get_username() const
 string Client::get_realname() const
 {
   return realname;
+}
+
+void Client::set_invisible(bool invis)
+{
+  invisible = invis;
 }
 
 void Client::set_username(const string user)

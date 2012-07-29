@@ -23,6 +23,7 @@
 
 from ircd import register, event
 from pythonwrap import Client
+from sets import Set
 
 @register("NICK", min_args=1, max_args=2, access=0)
 def handle_nick(client, nick):
@@ -48,7 +49,65 @@ def handle_user(client, username, unused, unused2, realname):
 
 @register("PING", min_args=1, max_args=1, access=1)
 def handle_ping(client, arg):
-  client.send(":{me} PONG {me} :%s" % (arg))
+  client.send(":{me} PONG {me} :{arg}", arg=arg)
+
+@register("MODE", min_args=1, max_args=2, access=1)
+def handle_mode(client, name, *arg):
+  target = Client.find_by_name(name)
+
+  if not target:
+    client.numeric(401, name)
+
+  if target != client:
+    client.numeric(502)
+    return
+
+  set_before = Set()
+  if client.Invisible:
+    set_before.add('i')
+
+  if len(arg) == 0:
+    mode = "+"
+    for c in set_before:
+      mode += c
+
+    client.send("{client} MODE :{mode}", mode=mode)
+    return
+  
+  set = True
+  invalid = False
+  set_after = Set()
+
+  for c in arg[0]:
+    if c == '+':
+      set = True
+    elif c == '-':
+      set = False
+    elif c == 'i':
+      client.Invisible = set
+      if set:
+        set_after.add(c)
+      else:
+        set_after.remove(c)
+    else:
+      invalid = True
+
+  if invalid:
+    client.numeric(501)
+
+  mode = ""
+  added = set_after - set_before
+  removed = set_before - set_after
+  if len(added) > 0:
+    mode += '+'
+    for c in added:
+      mode += c
+  if len(removed) > 0:
+    mode += '-'
+    for c in removed:
+      mode += c
+
+  client.send(":{client} MODE {name} :{mode}", name=client.Name, mode=mode)
 
 def check_and_register(client):
   if client.is_registered():

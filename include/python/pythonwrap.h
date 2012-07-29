@@ -28,7 +28,7 @@
 
 #include "Python.h"
 
-template <class T> class PythonWrap : PyObject
+template <class T> class PythonWrap : public PyObject
 {
 protected:
   static PyTypeObject type_object;
