@@ -57,6 +57,7 @@ def handle_mode(client, name, *arg):
 
   if not target:
     client.numeric(401, name)
+    return
 
   if target != client:
     client.numeric(502)
@@ -88,7 +89,8 @@ def handle_mode(client, name, *arg):
       if set:
         set_after.add(c)
       else:
-        set_after.remove(c)
+        if c in set_after:
+          set_after.remove(c)
     else:
       invalid = True
 
