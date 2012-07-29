@@ -275,6 +275,7 @@ PyObject *ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
 
   fdict = PyDict_New();
   PyDict_SetItemString(fdict, "client", reinterpret_cast<PyObject *>(self));
+  PyDict_SetItemString(fdict, "me", reinterpret_cast<PyObject *>(me));
 
   if (kwargs != NULL)
     PyDict_Update(fdict, kwargs);

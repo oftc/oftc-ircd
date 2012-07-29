@@ -29,8 +29,10 @@ def handle_nick(client, nick):
   if Client.find_by_name(nick):
     client.numeric(433, nick)
     return
+
   client.Name = nick
   Client.add_name(client)
+
   check_and_register(client)
 
 @register("USER", min_args=4, max_args=4, access=0)
@@ -38,13 +40,15 @@ def handle_user(client, username, unused, unused2, realname):
   if client.is_registered():
     client.numeric(462)
     return 
+
   client.Username = username
   client.Realname = realname
+
   check_and_register(client)
 
 @register("PING", min_args=1, max_args=1, access=1)
 def handle_ping(client, arg):
-  client.send(":{source} PONG {source} :{reply}", source=Client.Me.Name, reply=arg)
+  client.send(":{me} PONG {me} :%s" % (arg))
 
 def check_and_register(client):
   if client.is_registered():
