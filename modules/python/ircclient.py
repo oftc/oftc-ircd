@@ -22,8 +22,8 @@
 #  OTHER DEALINGS IN THE SOFTWARE.
 
 from ircd import register, event
+from ircd.user import *
 from pythonwrap import Client
-from ircuser import *
 import numerics
 
 @register("NICK", min_args=1, max_args=2, access=0)
