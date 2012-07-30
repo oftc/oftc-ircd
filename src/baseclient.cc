@@ -24,10 +24,13 @@
 */
 
 #include "stdinc.h"
+#include <algorithm>
 #include "baseclient.h"
 #include "connection.h"
 #include "server.h"
 #include "system.h"
+
+using std::transform;
 
 unordered_map<string, ClientPtr> BaseClient::names;
 
@@ -110,17 +113,29 @@ void BaseClient::init()
 
 void BaseClient::add_name(const ClientPtr client)
 {
-  names[client->name] = client;
+  string upper_name = client->name;
+
+  transform(client->name.begin(), client->name.end(), upper_name.begin(), toupper);
+
+  names[upper_name] = client;
 }
 
 ClientPtr BaseClient::find_by_name(const string name)
 {
-  return names[name];
+  string upper_name = name;
+
+  transform(name.begin(), name.end(), upper_name.begin(), toupper);
+
+  return names[upper_name];
 }
 
 void BaseClient::del_name(const ClientPtr client)
 {
-  names.erase(client->name);
+  string upper_name = client->name;
+
+  transform(client->name.begin(), client->name.end(), upper_name.begin(), toupper);
+
+  names.erase(upper_name);
 }
 
 bool BaseClient::is_client(const ClientPtr client)
