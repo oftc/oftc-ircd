@@ -82,3 +82,4 @@ def have_target(numeric=numerics.ERR_NOSUCHNICK, epilog=None):
         return func(client, target, *args, **kwargs)
 
     return decorator
+  return wrapper
