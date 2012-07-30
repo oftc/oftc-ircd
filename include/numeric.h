@@ -44,9 +44,11 @@ public:
   static const int Rpl_WhoisUser = 311;
   static const int Rpl_WhoisServer = 312;
   static const int Rpl_EndOfWhois = 318;
+  static const int Rpl_EndOfWhowas = 369;
 
   // Error replies
   static const int Err_NoSuchNick = 401;
+  static const int Err_WasNoSuchNick = 406;
   static const int Err_UnknownCommand = 421;
   static const int Err_NicknameInUse = 433;
   static const int Err_NeedMoreParams = 461;

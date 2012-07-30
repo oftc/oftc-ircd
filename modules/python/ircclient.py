@@ -79,6 +79,11 @@ def handle_whois(client, target, *arg):
   client.numeric(numerics.RPL_WHOISSERVER, target.Name, str(Client.Me), Client.Me.Info)
   client.numeric(numerics.RPL_ENDOFWHOIS, target.Name)
 
+@register("WHOWAS", min_args=1, max_args=2, access=1)
+def handle_whowas(client, name, *arg):
+  client.numeric(numerics.ERR_WASNOSUCHNICK, name)
+  client.numeric(numerics.RPL_ENDOFWHOWAS, name)
+
 @event(Client.disconnected)
 def client_disconnected(client):
   if(client.Name):
