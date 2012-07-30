@@ -67,15 +67,18 @@ def event(evt):
     return wrapper
   return decorator
 
-def have_target(func):
-  @wraps(func)
-  def decorator(client, name, *args, **kwargs):
-    target = Client.find_by_name(name)
+def have_target(epilog=None):
+  def wrapper(func):
+    @wraps(func)
+    def decorator(client, name, *args, **kwargs):
+      target = Client.find_by_name(name)
 
-    if not target:
-      client.numeric(numerics.ERR_NOSUCHNICK, name)
-      return
-    else:
-      return func(client, target, *args, **kwargs)
+      if not target:
+        client.numeric(numerics.ERR_NOSUCHNICK, name)
+        if epilog:
+          client.numeric(epilog, name)
+        return
+      else:
+        return func(client, target, *args, **kwargs)
 
-  return decorator
+    return decorator

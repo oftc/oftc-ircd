@@ -73,7 +73,7 @@ def handle_mode(client, name, *arg):
       set_user_mode(client, None)
 
 @register("WHOIS", min_args=1, max_args=2, access=1)
-@have_target
+@have_target(epilog=numerics.RPL_ENDOFWHOIS)
 def handle_whois(client, target, *arg):
   client.numeric(numerics.RPL_WHOISUSER, target.Name, target.Username, target.Host, target.Realname)
   client.numeric(numerics.RPL_WHOISSERVER, target.Name, str(Client.Me), Client.Me.Info)
