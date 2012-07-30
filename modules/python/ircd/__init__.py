@@ -23,7 +23,9 @@
 
 from functools import wraps
 
-from pythonwrap import Parser
+from pythonwrap import Parser, Client
+
+import numerics
 
 def register(command, min_args=0, max_args=0, access=0, rate_control=0):
   def decorator(func):
@@ -63,4 +65,17 @@ def event(evt):
       return func(*args, **kwargs)
 
     return wrapper
+  return decorator
+
+def have_target(func):
+  @wraps(func):
+  def decorator(client, name, *args, **kwargs):
+    target = Client.find_by_name(name)
+
+    if not target:
+      client.numeric(numerics.ERR_NOSUCHNICK, name)
+      return
+    else:
+      return func(client, target, *args, **kwargs)
+
   return decorator

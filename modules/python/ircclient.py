@@ -21,7 +21,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #  OTHER DEALINGS IN THE SOFTWARE.
 
-from ircd import register, event
+from ircd import register, event, have_target
 from ircd.user import *
 from pythonwrap import Client
 import numerics
@@ -73,13 +73,8 @@ def handle_mode(client, name, *arg):
       set_user_mode(client, None)
 
 @register("WHOIS", min_args=1, max_args=2, access=1)
-def handle_whois(client, name, *arg):
-  target = Client.find_by_name(name)
-
-  if not target:
-    client.numeric(numerics.ERR_NOSUCHNICK, name)
-    return
-
+@have_target
+def handle_whois(client, target, *arg):
   client.numeric(numerics.RPL_WHOISUSER, client.Name, client.Username, client.Host, client.Realname)
   client.numeric(numerics.RPL_WHOISSERVER, client.Name, str(Client.Me), Client.Me.Info)
   client.numeric(numerics.RPL_ENDOFWHOIS, client.Name)
