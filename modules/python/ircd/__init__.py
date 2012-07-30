@@ -68,7 +68,7 @@ def event(evt):
   return decorator
 
 def have_target(func):
-  @wraps(func):
+  @wraps(func)
   def decorator(client, name, *args, **kwargs):
     target = Client.find_by_name(name)
 

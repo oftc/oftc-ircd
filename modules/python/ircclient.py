@@ -75,9 +75,9 @@ def handle_mode(client, name, *arg):
 @register("WHOIS", min_args=1, max_args=2, access=1)
 @have_target
 def handle_whois(client, target, *arg):
-  client.numeric(numerics.RPL_WHOISUSER, client.Name, client.Username, client.Host, client.Realname)
-  client.numeric(numerics.RPL_WHOISSERVER, client.Name, str(Client.Me), Client.Me.Info)
-  client.numeric(numerics.RPL_ENDOFWHOIS, client.Name)
+  client.numeric(numerics.RPL_WHOISUSER, target.Name, target.Username, target.Host, target.Realname)
+  client.numeric(numerics.RPL_WHOISSERVER, target.Name, str(Client.Me), Client.Me.Info)
+  client.numeric(numerics.RPL_ENDOFWHOIS, target.Name)
 
 @event(Client.disconnected)
 def client_disconnected(client):
