@@ -76,6 +76,7 @@ public:
 
   // getters
   string get_name() const;
+  string get_host() const;
 
   // setters
   void set_registered();

@@ -29,6 +29,16 @@
 ClientPtr Server::me;
 list<ClientPtr> Server::servers;
 
+string Server::get_info() const
+{
+  return info;
+}
+
+void Server::set_info(const string inf)
+{
+  info = inf;
+}
+
 // Statics
 ClientPtr Server::get_me()
 {

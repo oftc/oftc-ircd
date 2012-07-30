@@ -40,6 +40,7 @@ private:
   string ssl_privatekey;
   string messages_file;
   string server_name;
+  string server_info;
 public:
   void set_defaults();
   void process(const Json::Value);
@@ -50,6 +51,7 @@ public:
   inline string get_ssl_privatekey() const { return ssl_privatekey; }
   inline string get_messages_file() const { return messages_file; }
   inline string get_server_name() const { return server_name; }
+  inline string get_server_info() const { return server_info; }
 };
 
 #endif

@@ -75,6 +75,12 @@ static PyGetSetDef client_getsetters[] =
   { const_cast<char*>("Realname"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Real Name"), 
     reinterpret_cast<void *>(const_cast<char *>("realname")) },
+  { const_cast<char*>("Host"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Host"), 
+    reinterpret_cast<void *>(const_cast<char *>("host")) },
+  { const_cast<char*>("Info"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Info"), 
+    reinterpret_cast<void *>(const_cast<char *>("info")) },
   { const_cast<char*>("Invisible"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Invisible"), 
     reinterpret_cast<void *>(const_cast<char *>("invisible")) },
@@ -137,6 +143,7 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
   string prop = string(static_cast<char *>(closure));
   string value;
   shared_ptr<Client> ptr;
+  shared_ptr<Server> server_ptr;
 
   if(prop == "name")
     value = self->client->get_name();
@@ -159,6 +166,20 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
     }
     ptr = dynamic_pointer_cast<Client>(self->client);
     value = ptr->get_realname();
+  }
+  else if(prop == "host")
+  {
+    value = self->client->get_host();
+  }
+  else if(prop == "info")
+  {
+    if(!BaseClient::is_server(self->client))
+    {
+      PyErr_SetString(PyExc_TypeError, "info is only applicable to Server types");
+      return NULL;
+    }
+    server_ptr = dynamic_pointer_cast<Server>(self->client);
+    value = server_ptr->get_info();
   }
   else if(prop == "invisible")
   {

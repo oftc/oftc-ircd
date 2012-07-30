@@ -74,6 +74,11 @@ string BaseClient::get_name() const
   return name;
 }
 
+string BaseClient::get_host() const
+{
+  return host;
+}
+
 void BaseClient::set_name(const string _name)
 {
   name = _name;
@@ -95,8 +100,10 @@ void BaseClient::set_connection(const ConnectionPtr conn)
 void BaseClient::init()
 {
   ClientPtr me = ClientPtr(new Server);
+  shared_ptr<Server> me_ptr = dynamic_pointer_cast<Server>(me);
 
   me->set_name(System::get_server_name());
+  me_ptr->set_info(System::get_server_info());
 
   Server::set_me(me);
 }

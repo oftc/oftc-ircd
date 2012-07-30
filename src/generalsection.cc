@@ -44,6 +44,8 @@ void GeneralSection::process(const Json::Value value)
     messages_file = value["messages_file"].asString();
   if(!value["server_name"].isNull())
     server_name = value["server_name"].asString();
+  if(!value["server_info"].isNull())
+    server_info = value["server_info"].asString();
 }
 
 void GeneralSection::verify() const

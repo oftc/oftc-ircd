@@ -72,6 +72,18 @@ def handle_mode(client, name, *arg):
     else:
       set_user_mode(client, None)
 
+@register("WHOIS", min_args=1, max_args=2, access=1)
+def handle_whois(client, name, *arg):
+  target = Client.find_by_name(name)
+
+  if not target:
+    client.numeric(numerics.ERR_NOSUCHNICK, name)
+    return
+
+  client.numeric(numerics.RPL_WHOISUSER, client.Name, client.Username, client.Host, client.Realname)
+  client.numeric(numerics.RPL_WHOISSERVER, client.Name, str(Client.Me), Client.Me.Info)
+  client.numeric(numerics.RPL_ENDOFWHOIS, client.Name)
+
 @event(Client.disconnected)
 def client_disconnected(client):
   if(client.Name):

@@ -27,18 +27,26 @@
 #define SERVER_H_INC
 
 #include <list>
+#include <string>
 #include "baseclient.h"
 
 using std::list;
+using std::string;
 
 class Server : public BaseClient
 {
 private:
   static ClientPtr me;
   static list<ClientPtr> servers;
+
+  string info;
 public:
   static ClientPtr get_me();
   static void set_me(const ClientPtr);
+
+  string get_info() const;
+
+  void set_info(const string);
 };
 
 #endif

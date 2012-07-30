@@ -52,6 +52,7 @@ public:
   static inline string get_ssl_privatekey() { return config.get_ssl_privatekey(); }
   static inline string get_messages_file() { return config.get_messages_file(); }
   static inline string get_server_name() { return config.get_server_name(); }
+  static inline string get_server_info() { return config.get_server_info(); }
   static inline const char *get_built_date() { return built_date; }
 };
 
