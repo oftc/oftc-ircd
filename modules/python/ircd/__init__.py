@@ -67,14 +67,14 @@ def event(evt):
     return wrapper
   return decorator
 
-def have_target(epilog=None):
+def have_target(numeric=numerics.ERR_NOSUCHNICK, epilog=None):
   def wrapper(func):
     @wraps(func)
     def decorator(client, name, *args, **kwargs):
       target = Client.find_by_name(name)
 
       if not target:
-        client.numeric(numerics.ERR_NOSUCHNICK, name)
+        client.numeric(numeric, name)
         if epilog:
           client.numeric(epilog, name)
         return
