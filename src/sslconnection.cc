@@ -24,9 +24,8 @@
 */
 
 #include "stdinc.h"
-#include <uv.h>
-#include "sslconnection.h"
 #include "system.h"
+#include "sslconnection.h"
 #include "ssl.h"
 
 SSLConnection::~SSLConnection()
@@ -58,6 +57,12 @@ void SSLConnection::handle_error(int code)
   {
   case SSL_ERROR_WANT_READ:
     int pending;
+
+    if(!BIO_pending(write_bio))
+    {
+      uv_run_once(uv_default_loop());
+      return;
+    }
 
     while((pending = BIO_pending(write_bio)) > 0)
     {
@@ -120,12 +125,20 @@ void SSLConnection::send(string buffer)
 
 void SSLConnection::send(const char *buf, size_t len)
 {
+  if(!SSL_is_init_finished(ssl))
+  {
+    int ret = SSL_accept(ssl);
+
+    if(ret <= 0)
+      handle_error(ret);
+  }
+  
   int ret = SSL_write(ssl, buf, len);
 
   if(ret <= 0)
   {
     handle_error(ret);
-    throw runtime_error("SSL Write error handling not yet implemented");
+    send(buf, len);
   }
 
   int bytes = BIO_pending(write_bio);
