@@ -41,6 +41,13 @@ private:
 public:
   static void add_section(const string name, ConfigSection* const section);
   static void init(const string);
+  static bool check_file_exists(const string);
+};
+
+class config_error : public runtime_error
+{
+public:
+  config_error(const string message) : runtime_error(message) { }
 };
 
 #endif

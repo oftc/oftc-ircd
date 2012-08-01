@@ -27,6 +27,7 @@
 #include <json/json.h>
 #include "modulesection.h"
 #include "module.h"
+#include "config.h"
 
 void ModuleSection::set_defaults()
 {
@@ -35,7 +36,7 @@ void ModuleSection::set_defaults()
 void ModuleSection::process(const Json::Value value)
 {
   if(!value.isObject())
-    throw runtime_error("module config section wasn't an object as expected");
+    throw config_error("module config section wasn't an object as expected");
 
   Json::Value::Members members = value.getMemberNames();
   Json::Value::Members::const_iterator mit;
@@ -48,7 +49,7 @@ void ModuleSection::process(const Json::Value value)
       Json::Value paths = value[name];
 
       if(!paths.isArray())
-        throw runtime_error("module paths section was not a list as expected");
+        throw config_error("module paths section was not a list as expected");
 
       for(Json::Value::iterator it = paths.begin(); it != paths.end(); it++)
       {
@@ -62,7 +63,7 @@ void ModuleSection::process(const Json::Value value)
       Json::Value modules = value[name];
 
       if(!modules.isObject())
-        throw runtime_error("module config section wasn't an object as expected");
+        throw config_error("module config section wasn't an object as expected");
 
       Json::Value::Members module_members = modules.getMemberNames();
       Json::Value::Members::const_iterator m_mit;

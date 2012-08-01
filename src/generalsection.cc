@@ -26,10 +26,12 @@
 #include "stdinc.h"
 #include <json/json.h>
 #include "generalsection.h"
+#include "config.h"
 
 void GeneralSection::set_defaults()
 {
   daemon = true;
+  server_info = "IRC Server";
 }
 
 void GeneralSection::process(const Json::Value value)
@@ -50,4 +52,14 @@ void GeneralSection::process(const Json::Value value)
 
 void GeneralSection::verify() const
 {
+  if(ssl_certificate.empty() || !Config::check_file_exists(ssl_certificate))
+    Logging::warning << "SSL Certificate file is missing or incorrect" << Logging::endl;
+  if(ssl_privatekey.empty() || !Config::check_file_exists(ssl_privatekey))
+    Logging::warning << "SSL Private key file is missing or incorrect" << Logging::endl;
+
+  if(messages_file.empty() || !Config::check_file_exists(messages_file))
+    throw config_error("Messages file is not configured or the file is missing");
+
+  if(server_name.empty())
+    throw config_error("Server name must be configured");
 }

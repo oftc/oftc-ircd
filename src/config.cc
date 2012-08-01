@@ -47,7 +47,7 @@ void Config::init(const string path)
   Json::Reader reader;
 
   if(!config.is_open())
-    throw runtime_error(string("Failed to open config: ") + path);
+    throw config_error(string("Failed to open config: ") + path);
 
   for(ConfigSectionConstIt it = sections.begin(); it != sections.end(); it++)
   {
@@ -55,10 +55,10 @@ void Config::init(const string path)
   }
 
   if(!reader.parse(config, root))
-    throw runtime_error(reader.getFormattedErrorMessages());
+    throw config_error(reader.getFormattedErrorMessages());
 
   if(root.type() != Json::objectValue)
-    throw runtime_error("Root node is not an object");
+    throw config_error("Root node is not an object");
 
   Json::Value::Members members = root.getMemberNames();
   Json::Value::Members::const_iterator mit;
@@ -78,4 +78,16 @@ void Config::init(const string path)
 void Config::add_section(const string name, ConfigSection* const section)
 {
   sections[name] = section;
+}
+
+bool Config::check_file_exists(const string path)
+{
+  ifstream file(path.c_str());
+
+  if(!file.is_open())
+    return false;
+
+  file.close();
+
+  return true;
 }

@@ -28,6 +28,7 @@
 #include <limits.h>
 #include "listenersection.h"
 #include "listener.h"
+#include "config.h"
 
 void ListenerSection::set_defaults()
 {
@@ -36,7 +37,7 @@ void ListenerSection::set_defaults()
 void ListenerSection::process(const Json::Value value)
 {
   if(value.type() != Json::arrayValue)
-    throw runtime_error("listener section not an array as expected");
+    throw config_error("listener section not an array as expected");
 
   for(Json::Value::const_iterator it = value.begin(); it != value.end(); it++)
   {
