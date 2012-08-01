@@ -29,6 +29,7 @@
 #include "python/parserwrap.h"
 #include "python/clientwrap.h"
 #include "python/eventwrap.h"
+#include "python/pythonloader.h"
 
 // Static initialisers
 template<class T> PyTypeObject PythonWrap<T>::type_object;
@@ -59,7 +60,7 @@ void PythonWrap<T>::init(PyObject *module, const char *name)
 
   if(PyType_Ready(&type_object) < 0)
   {
-    PyErr_Print();
+    PythonLoader::log_error();
     throw runtime_error("Unable to create type");
   }
 
@@ -145,7 +146,7 @@ bool PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
   ret = PyObject_CallObject(handler, args);
   if(ret == NULL)
   {
-    PyErr_Print();
+    PythonLoader::log_error();
     return false;
   }
   else if(ret == Py_True)

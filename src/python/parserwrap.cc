@@ -29,6 +29,7 @@
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
 #include "python/clientwrap.h"
+#include "python/pythonloader.h"
 #include "command.h"
 #include "parser.h"
 #include "client.h"
@@ -113,7 +114,7 @@ void ParserWrap::handle_command(const ClientPtr client, const Command& command, 
   args = PyTuple_New(params.size() + 1);
   if(args == NULL)
   {
-    PyErr_Print();
+    PythonLoader::log_error();
     return;
   }
 
@@ -121,7 +122,7 @@ void ParserWrap::handle_command(const ClientPtr client, const Command& command, 
 
   if(wrapped_client == NULL)
   {
-    PyErr_Print();
+    PythonLoader::log_error();
     Py_DECREF(args);
     return;
   }
@@ -137,7 +138,7 @@ void ParserWrap::handle_command(const ClientPtr client, const Command& command, 
   if(ret == NULL)
   {
     Py_DECREF(args);
-    PyErr_Print();
+    PythonLoader::log_error();
     return;
   }
 

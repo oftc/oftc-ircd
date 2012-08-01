@@ -26,6 +26,7 @@
 #include "Python.h"
 #include "stdinc.h"
 #include <sstream>
+#include <string>
 #include "python/pythonloader.h"
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
@@ -34,6 +35,7 @@
 #include "module.h"
 
 using std::stringstream;
+using std::string;
 
 typedef vector<string>::const_iterator VectorStringConstIt;
 
@@ -80,9 +82,44 @@ void PythonLoader::load(string name)
 
   if(module == NULL)
   {
-    PyErr_Print();
+    log_error();
     return;
   }
 
   loaded_modules.push_back(module);
+}
+  
+void PythonLoader::log_error()
+{
+  PyObject *module, *attr, *ret;
+  PyObject *type, *value, *traceback;
+  PyObject *arg, *str;
+  string message = "Python error: ";
+
+  if(!PyErr_Occurred())
+    return;
+
+  PyErr_Fetch(&type, &value, &traceback);
+  PyErr_NormalizeException(&type, &value, &traceback);
+
+  module = PyImport_ImportModule("traceback");
+  attr = PyObject_GetAttrString(module, "format_exception");
+
+  arg = Py_BuildValue("(OOO)", type, value, traceback);
+
+  ret = PyObject_CallObject(attr, arg);
+
+  int size = PyList_Size(ret);
+
+  for(int i = 0; i < size; i++)
+  {
+    str = PyList_GetItem(ret, i);
+    message += PyString_AsString(str);
+  }
+
+  Py_DECREF(arg);
+  Py_DECREF(attr);
+  Py_DECREF(module);
+
+  Logging::error << message << Logging::endl;
 }
