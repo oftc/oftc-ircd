@@ -38,6 +38,8 @@
 #include <unordered_map>
 #include <functional>
 
+#define _WINSOCKAPI_
+
 #if defined(_MSC_VER) && _MSC_VER < 1600
 using std::tr1::dynamic_pointer_cast;
 using std::tr1::shared_ptr;

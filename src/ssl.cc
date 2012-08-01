@@ -24,8 +24,9 @@
 */
 
 #include "stdinc.h"
-#include "ssl.h"
+#undef _WINSOCKAPI_
 #include "system.h"
+#include "ssl.h"
 
 SSL_CTX *Ssl::context;
 bool Ssl::enabled;

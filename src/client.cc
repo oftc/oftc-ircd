@@ -26,10 +26,10 @@
 #include "stdinc.h"
 #include <stdarg.h>
 #include <iomanip>
+#include "system.h"
 #include "client.h"
 #include "connection.h"
 #include "numeric.h"
-#include "system.h"
 #include "server.h"
 
 using std::string;
