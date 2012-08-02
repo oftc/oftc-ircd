@@ -26,6 +26,7 @@
 #ifndef SYSTEM_H_INC
 #define SYSTEM_H_INC
 
+#include <uv.h>
 #include <string>
 #include "generalsection.h"
 
@@ -37,6 +38,7 @@ private:
   static GeneralSection config;
   static const char *config_path;
   static const char *built_date;
+  static ares_channel dns_channel; 
 
 public:
 #ifndef _WIN32
@@ -54,6 +56,7 @@ public:
   static inline string get_server_name() { return config.get_server_name(); }
   static inline string get_server_info() { return config.get_server_info(); }
   static inline const char *get_built_date() { return built_date; }
+  static inline ares_channel get_ares_channel() { return dns_channel; }
 };
 
 #endif

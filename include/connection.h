@@ -38,12 +38,29 @@ using std::stringstream;
 class Connection;
 typedef shared_ptr<Connection> ConnectionPtr;
 
+enum DnsState
+{
+  Reverse = 0,
+  Forward,
+  Done
+};
+
+struct DnsCallbackState
+{
+  Connection *connection;
+  const char *name;
+  void *addr;
+  int addrlen;
+  int af_type;
+};
+
 class Connection 
 {
 protected:
   static unordered_map<Connection *, ConnectionPtr> connections;
 
   shared_ptr<uv_tcp_t> handle;
+  DnsState dns_state;
 
   static void free_buffer(uv_buf_t&);
 
@@ -63,6 +80,7 @@ public:
   static void on_read(uv_stream_t *, ssize_t, uv_buf_t);
   static void on_close(uv_handle_t *);
   static void on_write(uv_write_t *, int );
+  static void on_dns(void *, int, int, hostent *);
 
   // ctor/dtor
   Connection();
@@ -72,6 +90,7 @@ public:
   virtual void accept(uv_stream_t *);
   virtual void send(string);
   virtual void send(const char *, size_t);
+  void dns_done(int, hostent *, DnsCallbackState *);
 
   // getters
   string get_host() const;

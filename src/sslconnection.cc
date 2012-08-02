@@ -87,6 +87,9 @@ void SSLConnection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
     return;
   }
 
+  if(dns_state != Done)
+    uv_read_stop(reinterpret_cast<uv_stream_t *>(handle.get()));
+
   BIO_write(read_bio, buf.base, nread);
 
   if(!SSL_is_init_finished(ssl))
@@ -125,12 +128,17 @@ void SSLConnection::send(string buffer)
 
 void SSLConnection::send(const char *buf, size_t len)
 {
-  if(!SSL_is_init_finished(ssl))
+  while(!SSL_is_init_finished(ssl))
   {
     int ret = SSL_accept(ssl);
 
     if(ret <= 0)
-      handle_error(ret);
+    {
+      if(dns_state != Done)
+        uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
+
+      handle_error(ret);    
+    }
   }
   
   int ret = SSL_write(ssl, buf, len);

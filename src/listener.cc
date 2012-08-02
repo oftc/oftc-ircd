@@ -24,18 +24,17 @@
 */
 
 #include "stdinc.h"
-#include <uv.h>
 #include <sys/types.h>
 #ifndef _WIN32
 #include <sys/socket.h>
 #endif
 #include <errno.h>
 #include "config.h"
+#include "sslconnection.h"
 #include "system.h"
 #include "listener.h"
 #include "listenersection.h"
 #include "connection.h"
-#include "sslconnection.h"
 #include "ssl.h"
 
 typedef vector<ListenerPtr>::const_iterator ListenerConstIt;
@@ -87,11 +86,12 @@ void Listener::connected(uv_stream_t *stream, int status)
     connection = ConnectionPtr(new Connection);
 
   Connection::add(connection);
-  connection->accept(stream);
-
   ClientPtr client = ClientPtr(new Client());
   connection->set_client(client);
   client->set_connection(connection);
+
+  connection->accept(stream);
+
   Client::connected(client);
 }
 

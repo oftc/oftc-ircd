@@ -30,13 +30,14 @@
 #include "connection.h"
 #include "system.h"
 #include "client.h"
+#include "server.h"
 
 using std::getline;
 using std::pair;
 
 unordered_map<Connection *, ConnectionPtr> Connection::connections;
 
-Connection::Connection() : parser(Parser::get_default())
+Connection::Connection() : parser(Parser::get_default()), dns_state(Reverse)
 {
   Logging::debug << "Created Connection: " << this << Logging::endl;
 }
@@ -82,7 +83,31 @@ void Connection::accept(uv_stream_t *server_handle)
 
   handle->data = this;
 
-  uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
+  stringstream ss;
+  ss << ":" << Server::get_me()->str() << " NOTICE " << client->str() << " :*** Looking up your hostname";
+  client->send(ss.str());
+
+  DnsCallbackState *state = new DnsCallbackState();
+  state->af_type = addr.ss_family;
+  state->connection = this;
+
+  if(addr.ss_family == AF_INET)
+  {
+    state->addrlen = sizeof(in_addr);
+    state->addr = new char[addrlen];
+    memcpy(state->addr, &addr4->sin_addr, addrlen);
+  }
+  else
+  {
+    state->addrlen = sizeof(in6_addr);
+    state->addr = new char[addrlen];
+    memcpy(state->addr, &addr6->sin6_addr, addrlen);
+  }
+
+  client->set_host(ipstr);
+  
+  ares_gethostbyaddr(System::get_ares_channel(), state->addr, state->addrlen, state->af_type, on_dns, state);
+
   Logging::debug << "Accepted connection from: " << ipstr << Logging::endl;
 }
 
@@ -148,6 +173,53 @@ void Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
   free_buffer(buf);
 }
 
+void Connection::dns_done(int status, hostent *hostent, DnsCallbackState *state)
+{
+  stringstream ss;
+
+  if(status != ARES_SUCCESS)
+  {
+    delete state->addr;
+    delete state;
+    ss << ":" << Server::get_me()->str() << " NOTICE " << client->str() << " :*** Couldn't look up your hostname";
+    client->send(ss.str());
+
+    uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
+
+    return;
+  }
+
+  switch(dns_state)
+  {
+  case Reverse:
+    ares_gethostbyname(System::get_ares_channel(), hostent->h_name, state->af_type, on_dns, state);
+    state->name = hostent->h_name;
+    dns_state = Forward;
+    break;
+  case Forward:
+    if(memcmp(state->addr, hostent->h_addr_list[0], state->addrlen) != 0)
+    {
+      ss << ":" << Server::get_me()->str() << " NOTICE " << client->str() << " :*** Your forward and reverse DNS don't match, ignoring";
+      client->send(ss.str());
+    }
+    else
+    {
+      ss << ":" << Server::get_me()->str() << " NOTICE " << client->str() << " :*** Found your hostname";
+      client->send(ss.str());
+      client->set_host(hostent->h_name);
+    }
+
+    dns_state = Done;
+
+    delete state->addr;
+    delete state;
+
+    uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
+
+    break;
+  }
+}
+
 string Connection::get_host() const
 {
   return host;
@@ -192,6 +264,14 @@ void Connection::on_close(uv_handle_t *handle)
 void Connection::on_write(uv_write_t *req, int status)
 {
   delete req;
+}
+
+void Connection::on_dns(void *arg, int status, int timeouts, hostent *hostent)
+{
+  DnsCallbackState *state = static_cast<DnsCallbackState *>(arg);
+  Connection *connection = state->connection;
+
+  connection->dns_done(status, hostent, state);
 }
 
 void Connection::free_buffer(uv_buf_t &buf)

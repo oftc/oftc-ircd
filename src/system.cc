@@ -47,11 +47,15 @@ using std::stringstream;
 GeneralSection System::config;
 const char *System::config_path;
 const char *System::built_date;
+ares_channel System::dns_channel;
 
 void System::init()
 {
   Config::add_section("general", &config);
   config_path = CONFIG_PATH;
+  ares_options options;
+
+  memset(&options, 0, sizeof(options));
 
  #if defined(__TIME__) && defined(__DATE__)
   built_date = __DATE__ " at " __TIME__;
@@ -59,6 +63,11 @@ void System::init()
   built_date = "unknown";
 #endif
 
+  int rc = ares_library_init(ARES_LIB_INIT_ALL);
+  if(rc != 0)
+    throw runtime_error("c-area failed to inistialise");
+
+  uv_ares_init_options(uv_default_loop(), &dns_channel, &options, 0);
 }
 
 void System::parse_args(int argc, const char * const argv[])
