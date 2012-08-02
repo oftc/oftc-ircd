@@ -87,6 +87,11 @@ void BaseClient::set_name(const string _name)
   name = _name;
 }
 
+void BaseClient::set_host(const string _host)
+{
+  host = _host;
+}
+
 void BaseClient::set_registered()
 {
   level = Registered;

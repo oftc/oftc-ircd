@@ -82,6 +82,7 @@ public:
   void set_registered();
   void set_name(const string);
   void set_connection(const shared_ptr<Connection>);
+  void set_host(const string);
  };
 
 #endif
