@@ -179,7 +179,7 @@ void Connection::dns_done(int status, hostent *hostent, DnsCallbackState *state)
 
   if(status != ARES_SUCCESS)
   {
-    delete state->addr;
+    delete[] state->addr;
     delete state;
     ss << ":" << Server::get_me()->str() << " NOTICE " << client->str() << " :*** Couldn't look up your hostname";
     client->send(ss.str());
@@ -211,7 +211,7 @@ void Connection::dns_done(int status, hostent *hostent, DnsCallbackState *state)
 
     dns_state = Done;
 
-    delete state->addr;
+    delete[] state->addr;
     delete state;
 
     uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
