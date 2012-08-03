@@ -99,6 +99,7 @@ def handle_quit(client, *arg):
     reason = ""
 
   client.send("ERROR :Closing link: {host} ({reason})", host=client.Host, reason=reason)
+  client.close()
 
 @register("PRIVMSG", min_args=2, max_args=2, access=1)
 @have_target()

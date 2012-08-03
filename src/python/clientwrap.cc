@@ -49,6 +49,8 @@ static PyMethodDef client_methods[] =
     METH_STATIC, "Add a name to the names list" },
   { "find_by_name", reinterpret_cast<PyCFunction>(ClientWrap::find_by_name), 
     METH_STATIC, "find a client by name" },
+  { "close", reinterpret_cast<PyCFunction>(ClientWrap::close), 
+    METH_NOARGS, "Close a client connection" },
   { "del_name", reinterpret_cast<PyCFunction>(ClientWrap::del_name), 
     METH_STATIC, "delete a client name from the names list" },
   { "is_registered", reinterpret_cast<PyCFunction>(ClientWrap::is_registered),
@@ -283,6 +285,14 @@ PyObject *ClientWrap::add_name(PyObject *self, ClientWrap *client)
     return NULL;
   }
   Client::add_name(client->client);
+
+  Py_RETURN_NONE;
+}
+
+PyObject *ClientWrap::close(ClientWrap *self, PyObject *args)
+{
+  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->client);
+  ptr->close();
 
   Py_RETURN_NONE;
 }

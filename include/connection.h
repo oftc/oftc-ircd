@@ -92,6 +92,7 @@ public:
   virtual void send(string);
   virtual void send(const char *, size_t);
   void dns_done(int, hostent *, DnsCallbackState *);
+  void close();
 
   // getters
   string get_host() const;

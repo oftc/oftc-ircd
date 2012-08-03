@@ -59,6 +59,7 @@ public:
   Client();
 
   // Members
+  void close();
   void send(const string arg, int);
   void send(int, ...);
   using BaseClient::send;

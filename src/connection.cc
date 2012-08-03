@@ -230,6 +230,11 @@ void Connection::set_client(const ClientPtr ptr)
   client = ptr;
 }
 
+void Connection::close()
+{
+  uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), on_close);
+}
+
 // Statics
 void Connection::add(ConnectionPtr connection)
 {

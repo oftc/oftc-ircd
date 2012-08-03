@@ -45,6 +45,11 @@ Client::Client() : invisible(false)
 {
 }
 
+void Client::close()
+{
+  connection->close();
+}
+
 void Client::send(string arg, int numeric)
 {
   stringstream buffer;
