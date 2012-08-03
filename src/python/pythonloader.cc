@@ -105,7 +105,11 @@ void PythonLoader::log_error()
   module = PyImport_ImportModule("traceback");
   attr = PyObject_GetAttrString(module, "format_exception");
 
-  arg = Py_BuildValue("(OOO)", type, value, traceback);
+  if(traceback == NULL)
+    arg = Py_BuildValue("(OOO)", type, value, Py_None);
+  else
+    arg = Py_BuildValue("(OOO)", type, value, traceback);
+    
 
   ret = PyObject_CallObject(attr, arg);
 
