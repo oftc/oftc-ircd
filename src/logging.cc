@@ -28,11 +28,6 @@
 #include "config.h"
 #include "client.h"
 
-#ifdef _WIN32 
-#define strncasecmp strnicmp 
-#define strcasecmp stricmp 
-#endif 
-
 using std::ios;
 
 const char *log_levels[] =

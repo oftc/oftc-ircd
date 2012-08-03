@@ -71,7 +71,7 @@ public:
 
   static int compare(const char *left, const char *right, size_t size)
   {
-    return memicmp(left, right, size);
+    return strncasecmp(left, right, size);
   }
 };
 
@@ -80,7 +80,7 @@ typedef basic_string<char, irc_traits> irc_string;
 namespace std
 {
 template<>
-class hash<irc_string> : public unary_function<irc_string, size_t>
+struct hash<irc_string> : public unary_function<irc_string, size_t>
 {
 public:
   size_t operator()(const irc_string& v) const
