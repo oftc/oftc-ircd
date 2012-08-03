@@ -100,6 +100,16 @@ def handle_quit(client, *arg):
 
   client.send("ERROR :Closing link: {host} ({reason})", host=client.Host, reason=reason)
 
+@register("PRIVMSG", min_args=2, max_args=2, access=1)
+@have_target()
+def handle_privmsg(client, target, message):
+  target.send(":{source} PRIVMSG {name} :{message}", source=str(client), name=target.Name, message=message)
+
+@register("NOTICE", min_args=2, max_args=2, access=1)
+@have_target()
+def handle_notice(client, target, message):
+  target.send(":{source} NOTICE {name} :{message}", source=str(client), name=target.Name, message=message)
+
 @event(Client.disconnected)
 def client_disconnected(client):
   if(client.Name):
