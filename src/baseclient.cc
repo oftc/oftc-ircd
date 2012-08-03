@@ -24,15 +24,12 @@
 */
 
 #include "stdinc.h"
-#include <algorithm>
 #include "baseclient.h"
 #include "connection.h"
 #include "server.h"
 #include "system.h"
 
-using std::transform;
-
-unordered_map<string, ClientPtr> BaseClient::names;
+unordered_map<irc_string, ClientPtr> BaseClient::names;
 
 BaseClient::BaseClient() : level(Unregistered)
 {
@@ -54,7 +51,7 @@ void BaseClient::send(string message)
   connection->send(message);
 }
 
-string BaseClient::str() const
+irc_string BaseClient::str() const
 {
   if(name.empty())
     return "*";
@@ -72,7 +69,7 @@ void BaseClient::clear_connection()
   connection.reset();
 }
 
-string BaseClient::get_name() const
+irc_string BaseClient::get_name() const
 {
   return name;
 }
@@ -82,7 +79,7 @@ string BaseClient::get_host() const
   return host;
 }
 
-void BaseClient::set_name(const string _name)
+void BaseClient::set_name(const irc_string _name)
 {
   name = _name;
 }
@@ -118,29 +115,17 @@ void BaseClient::init()
 
 void BaseClient::add_name(const ClientPtr client)
 {
-  string upper_name = client->name;
-
-  transform(client->name.begin(), client->name.end(), upper_name.begin(), toupper);
-
-  names[upper_name] = client;
+  names[client->name] = client;
 }
 
-ClientPtr BaseClient::find_by_name(const string name)
+ClientPtr BaseClient::find_by_name(const irc_string name)
 {
-  string upper_name = name;
-
-  transform(name.begin(), name.end(), upper_name.begin(), toupper);
-
-  return names[upper_name];
+  return names[name];
 }
 
 void BaseClient::del_name(const ClientPtr client)
 {
-  string upper_name = client->name;
-
-  transform(client->name.begin(), client->name.end(), upper_name.begin(), toupper);
-
-  names.erase(upper_name);
+  names.erase(client->name);
 }
 
 bool BaseClient::is_client(const ClientPtr client)

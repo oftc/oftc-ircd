@@ -30,6 +30,7 @@
 #include <string>
 #include <list>
 #include "command.h"
+#include "ircstring.h"
 
 using std::string;
 using std::list;
@@ -42,9 +43,9 @@ typedef shared_ptr<BaseClient> ClientPtr;
 class BaseClient
 {
 protected:
-  static unordered_map<string, ClientPtr> names;
+  static unordered_map<irc_string, ClientPtr> names;
 
-  string name;
+  irc_string name;
   string host;
   shared_ptr<Connection> connection;
   AccessLevel level;
@@ -53,7 +54,7 @@ public:
 
   // list managers
   static void add_name(const ClientPtr);
-  static ClientPtr find_by_name(const string);
+  static ClientPtr find_by_name(const irc_string);
   static void del_name(const ClientPtr);
 
   // static tests
@@ -66,7 +67,7 @@ public:
 
   // members
   virtual void send(string);
-  virtual string str() const;
+  virtual irc_string str() const;
  
   // tests
   bool is_registered() const;
@@ -75,12 +76,12 @@ public:
   void clear_connection();
 
   // getters
-  string get_name() const;
+  irc_string get_name() const;
   string get_host() const;
 
   // setters
   void set_registered();
-  void set_name(const string);
+  void set_name(const irc_string);
   void set_connection(const shared_ptr<Connection>);
   void set_host(const string);
  };

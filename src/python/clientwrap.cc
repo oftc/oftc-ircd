@@ -147,7 +147,7 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
   shared_ptr<Server> server_ptr;
 
   if(prop == "name")
-    value = self->client->get_name();
+    value = self->client->get_name().c_str();
   else if(prop == "username")
   {
     if(!Client::is_client(self->client))

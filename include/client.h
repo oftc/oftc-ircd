@@ -62,7 +62,7 @@ public:
   void send(const string arg, int);
   void send(int, ...);
   using BaseClient::send;
-  string str() const;
+  irc_string str() const;
   
   // Tests
   bool is_invisible() const;

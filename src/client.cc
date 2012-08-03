@@ -73,7 +73,7 @@ void Client::send(int numeric, ...)
   va_end(args);
 }
 
-string Client::str() const
+irc_string Client::str() const
 {
   stringstream buff;
 
@@ -82,7 +82,7 @@ string Client::str() const
 
   buff << name << "!" << username << "@" << host;
 
-  return buff.str();
+  return irc_string(buff.str().c_str());
 }
 
 bool Client::is_invisible() const

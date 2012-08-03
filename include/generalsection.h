@@ -29,6 +29,7 @@
 #include <string>
 #include <json/json.h>
 #include "configsection.h"
+#include "ircstring.h"
 
 using std::string;
 
@@ -39,7 +40,7 @@ private:
   string ssl_certificate;
   string ssl_privatekey;
   string messages_file;
-  string server_name;
+  irc_string server_name;
   string server_info;
 public:
   void set_defaults();
@@ -50,7 +51,7 @@ public:
   inline string get_ssl_certificate() const { return ssl_certificate; }
   inline string get_ssl_privatekey() const { return ssl_privatekey; }
   inline string get_messages_file() const { return messages_file; }
-  inline string get_server_name() const { return server_name; }
+  inline irc_string get_server_name() const { return server_name; }
   inline string get_server_info() const { return server_info; }
 };
 
