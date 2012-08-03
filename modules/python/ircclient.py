@@ -26,16 +26,24 @@ from ircd.user import *
 from pythonwrap import Client
 import numerics
 
-@register("NICK", min_args=1, max_args=2, access=0)
+@register("NICK", min_args=1, max_args=1, access=0)
 def handle_nick(client, nick):
-  if Client.find_by_name(nick):
+  target = Client.find_by_name(nick)
+  if target and target != client:
     client.numeric(numerics.ERR_NICKNAMEINUSE, nick)
     return
 
+  old_str = str(client)
+
+  Client.del_name(client)
   client.Name = nick
   Client.add_name(client)
 
-  check_and_register(client)
+  if not client.is_registered():
+    check_and_register(client)
+  else:
+    client.send(":{oldstr} NICK :{nick}", oldstr=old_str, nick=client.Name)
+
 
 @register("USER", min_args=4, max_args=4, access=0)
 def handle_user(client, username, unused, unused2, realname):

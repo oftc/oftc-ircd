@@ -82,6 +82,8 @@ string BaseClient::get_host() const
 void BaseClient::set_name(const irc_string _name)
 {
   name = _name;
+  if(name.length() > System::get_nicklen())
+    name.resize(System::get_nicklen());
 }
 
 void BaseClient::set_host(const string _host)
