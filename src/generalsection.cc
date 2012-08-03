@@ -32,6 +32,7 @@ void GeneralSection::set_defaults()
 {
   daemon = true;
   server_info = "IRC Server";
+  nicklen = 30;
 }
 
 void GeneralSection::process(const Json::Value value)
@@ -48,6 +49,8 @@ void GeneralSection::process(const Json::Value value)
     server_name = value["server_name"].asString().c_str();
   if(!value["server_info"].isNull())
     server_info = value["server_info"].asString();
+  if(!value["nicklen"].isNull())
+    nicklen = value["nicklen"].asInt();
 }
 
 void GeneralSection::verify() const
