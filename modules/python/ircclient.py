@@ -44,7 +44,6 @@ def handle_nick(client, nick):
   else:
     client.send(":{oldstr} NICK :{nick}", oldstr=old_str, nick=client.Name)
 
-
 @register("USER", min_args=4, max_args=4, access=0)
 def handle_user(client, username, unused, unused2, realname):
   if client.is_registered():
@@ -91,6 +90,15 @@ def handle_whois(client, target, *arg):
 @have_target(numeric=numerics.ERR_WASNOSUCHNICK, epilog=numerics.RPL_ENDOFWHOWAS)
 def handle_whowas(client, name, *arg):
   pass
+
+@register("QUIT", min_args=0, max_args=1, access=0)
+def handle_quit(client, *arg):
+  if len(arg) > 0:
+    reason = arg[0]
+  else:
+    reason = ""
+
+  client.send("ERROR :Closing link: {host} ({reason})", host=client.Host, reason=reason)
 
 @event(Client.disconnected)
 def client_disconnected(client):

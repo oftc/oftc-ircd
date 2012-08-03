@@ -236,6 +236,11 @@ void Connection::add(ConnectionPtr connection)
   connections.insert(pair<Connection *, ConnectionPtr>(connection.get(), connection));
 }
 
+void Connection::del(ConnectionPtr connection)
+{
+  connections.erase(connection.get());
+}
+
 uv_buf_t Connection::on_buf_alloc(uv_handle_t *handle, size_t size)
 {
   uv_buf_t buf;
@@ -257,8 +262,8 @@ void Connection::on_close(uv_handle_t *handle)
 {
   Connection *connection = static_cast<Connection *>(handle->data);
 
-  connections.erase(connection);
   connection->client->clear_connection();
+  connections.erase(connection);
 }
 
 void Connection::on_write(uv_write_t *req, int status)
