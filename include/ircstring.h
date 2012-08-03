@@ -53,7 +53,6 @@ inline static char to_upper(char left)
 
 class irc_traits : public char_traits<char>
 {
-private:
 public:
   static bool eq(char left, char right)
   {
@@ -81,8 +80,9 @@ typedef basic_string<char, irc_traits> irc_string;
 namespace std
 {
 template<>
-struct hash<irc_string> : public unary_function<irc_string, size_t>
+class hash<irc_string> : public unary_function<irc_string, size_t>
 {
+public:
   size_t operator()(const irc_string& v) const
   {
     unsigned int hash_value;
@@ -102,9 +102,4 @@ inline ostream& operator<<(ostream &left, const irc_string& right)
   return left << right.c_str();
 }
 
-/*istream& operator>>(istream &left, irc_string& right)
-{
-
-}
-*/
 #endif
