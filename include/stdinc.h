@@ -58,6 +58,8 @@ using std::function;
 using std::runtime_error;
 using std::exception;
 
+#include <strings.h>
+
 #ifdef _WIN32 
 #define strncasecmp strnicmp 
 #define strcasecmp stricmp 

@@ -24,6 +24,7 @@
 */
 
 #include "stdinc.h"
+#include <string.h>
 #include <string>
 #include <uv.h>
 #include <utility>
