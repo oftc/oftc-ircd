@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
       System::daemonize();
 #endif
     Numeric::load_messages(System::get_messages_file());
+    BaseClient::init();
     Client::init();
 
     Ssl::init();

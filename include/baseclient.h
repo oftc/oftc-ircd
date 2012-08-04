@@ -49,6 +49,8 @@ protected:
   string host;
   shared_ptr<Connection> connection;
   AccessLevel level;
+  time_t last_data;
+  time_t ping_sent;
 public:
   static void init();
 
@@ -68,6 +70,7 @@ public:
   // members
   virtual void send(string);
   virtual irc_string str() const;
+  virtual bool check_timeout();
  
   // tests
   bool is_registered() const;
@@ -84,6 +87,7 @@ public:
   void set_name(const irc_string);
   void set_connection(const shared_ptr<Connection>);
   void set_host(const string);
+  void set_last_data(time_t);
  };
 
 #endif

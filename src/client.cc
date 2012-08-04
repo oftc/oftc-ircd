@@ -40,6 +40,7 @@ Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registered;
 Event<ClientPtr> Client::disconnected;
 list<ClientPtr> Client::client_list;
+uv_timer_t Client::ping_timer;
 
 Client::Client() : invisible(false)
 {
@@ -122,6 +123,12 @@ void Client::set_realname(const string real)
 
 // Statics
 
+void Client::init()
+{
+  uv_timer_init(uv_default_loop(), &ping_timer);
+  uv_timer_start(&ping_timer, check_pings, 0, 5);
+}
+
 void Client::add(ClientPtr ptr)
 {
   shared_ptr<Client> client = dynamic_pointer_cast<Client>(ptr);
@@ -139,4 +146,20 @@ void Client::add(ClientPtr ptr)
 void Client::remove(ClientPtr client)
 {
   client_list.remove(client);
+}
+
+void Client::check_pings(uv_timer_t *handle, int status)
+{
+  list<ClientPtr>::const_iterator it;
+
+  for(it = client_list.begin(); it != client_list.end(); it++)
+  {
+    shared_ptr<Client> client = dynamic_pointer_cast<Client>(*it);
+
+    if(!client->check_timeout())
+    {
+      client->send("ERROR :Closing link: " + client->get_host() + ":Ping timeout"); 
+      client->close();
+    }
+  }
 }
