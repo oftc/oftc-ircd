@@ -57,7 +57,7 @@ public:
   static inline string get_server_info() { return config.get_server_info(); }
   static inline const char *get_built_date() { return built_date; }
   static inline ares_channel get_ares_channel() { return dns_channel; }
-  static inline int get_nicklen() { return config.get_nicklen(); }
+  static inline unsigned int get_nicklen() { return config.get_nicklen(); }
 };
 
 #endif

@@ -42,7 +42,7 @@ private:
   string messages_file;
   irc_string server_name;
   string server_info;
-  int nicklen;
+  unsigned int nicklen;
 public:
   void set_defaults();
   void process(const Json::Value);
@@ -52,7 +52,7 @@ public:
   inline string get_ssl_certificate() const { return ssl_certificate; }
   inline string get_ssl_privatekey() const { return ssl_privatekey; }
   inline string get_messages_file() const { return messages_file; }
-  inline int get_nicklen() const { return nicklen; }
+  inline unsigned int get_nicklen() const { return nicklen; }
   inline irc_string get_server_name() const { return server_name; }
   inline string get_server_info() const { return server_info; }
 };
