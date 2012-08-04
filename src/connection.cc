@@ -193,10 +193,10 @@ void Connection::dns_done(int status, hostent *hostent, DnsCallbackState *state)
   switch(dns_state)
   {
   case Reverse:
-    ares_gethostbyname(System::get_ares_channel(), hostent->h_name, state->af_type, on_dns, state);
     state->name = hostent->h_name;
     dns_state = Forward;
-    break;
+    ares_gethostbyname(System::get_ares_channel(), hostent->h_name, state->af_type, on_dns, state);
+   break;
   case Forward:
     if(memcmp(state->addr, hostent->h_addr_list[0], state->addrlen) != 0)
     {
