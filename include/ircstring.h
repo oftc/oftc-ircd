@@ -79,6 +79,10 @@ typedef basic_string<char, irc_traits> irc_string;
 
 namespace std
 {
+#if defined(_MSC_VER) && _MSC_VER < 1600
+namespace tr1
+{
+#endif
 template<>
 struct hash<irc_string> : public unary_function<irc_string, size_t>
 {
@@ -96,6 +100,9 @@ public:
   }
 };
 }
+#if defined(_MSC_VER) && _MSC_VER < 1600
+}
+#endif
 
 inline ostream& operator<<(ostream &left, const irc_string& right)
 {
