@@ -59,6 +59,10 @@ def handle_user(client, username, unused, unused2, realname):
 def handle_ping(client, arg):
   client.send(":{me} PONG {me} :{arg}", arg=arg)
 
+@register("PONG", min_args=1, max_args=2, access=0)
+def handle_pong(client, *args):
+  pass
+
 @register("MODE", min_args=1, max_args=2, access=1)
 def handle_mode(client, name, *arg):
   if name[:1] == '#':
