@@ -43,7 +43,7 @@ list<ClientPtr> Client::unregistered_list;
 list<ClientPtr> Client::client_list;
 uv_timer_t Client::ping_timer;
 
-Client::Client() : invisible(false)
+Client::Client() : invisible(false), last_message(time(NULL))
 {
 }
 
@@ -102,6 +102,11 @@ string Client::get_realname() const
   return realname;
 }
 
+time_t Client::get_idletime() const
+{
+  return time(NULL) - last_message;
+}
+
 void Client::set_invisible(bool invis)
 {
   invisible = invis;
@@ -115,6 +120,11 @@ void Client::set_username(const string user)
 void Client::set_realname(const string real)
 {
   realname = real;
+}
+
+void Client::set_last_message(time_t when)
+{
+  last_message = when;
 }
 
 // Statics

@@ -69,13 +69,15 @@ static PyMemberDef client_members[] =
 
 enum Property
 {
-  Name      = 0x00000001,
-  Username  = 0x00000002,
-  Realname  = 0x00000003,
-  Host      = 0x00000004,
-  Info      = 0x00000005,
-  Invisible = 0x00000006,
-  PropMask  = 0x000000ff
+  Name        = 0x00000001,
+  Username    = 0x00000002,
+  Realname    = 0x00000003,
+  Host        = 0x00000004,
+  Info        = 0x00000005,
+  Invisible   = 0x00000006,
+  Idletime    = 0x00000007,
+  LastMessage = 0x00000008,
+  PropMask    = 0x000000ff
 };
 
 enum PropertyFlag
@@ -83,7 +85,8 @@ enum PropertyFlag
   ClientOnly  = 0x00000100,
   ServerOnly  = 0x00000200,
   StringArg   = 0x00000400,
-  BoolArg     = 0x00000800
+  BoolArg     = 0x00000800,
+  IntArg      = 0x00001000
 };
 
 static PyGetSetDef client_getsetters[] = 
@@ -106,6 +109,12 @@ static PyGetSetDef client_getsetters[] =
   { const_cast<char*>("Invisible"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Invisible"), 
     reinterpret_cast<void *>(Invisible | BoolArg | ClientOnly) },
+  { const_cast<char*>("Idletime"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Idle Time"), 
+    reinterpret_cast<void *>(Idletime | IntArg | ClientOnly) },
+  { const_cast<char*>("LastMessage"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Idle Time"), 
+    reinterpret_cast<void *>(LastMessage | IntArg | ClientOnly) },
   { NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -209,6 +218,9 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
   case Invisible:
     value = PyBool_FromLong(client_ptr->is_invisible());
     break;
+  case Idletime:
+    value = PyInt_FromLong(client_ptr->get_idletime());
+    break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;
     PyErr_SetString(PyExc_AttributeError, "Unknown property");
@@ -270,6 +282,15 @@ int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
     }
   }
 
+  if(prop & IntArg)
+  {
+    if(!PyInt_Check(value))
+    {
+      PyErr_SetString(PyExc_TypeError, "Property must be an int value");
+      return -1;
+    }
+  }
+
   switch(prop & PropMask)
   {
   case Name:
@@ -286,6 +307,9 @@ int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
     break;
   case Invisible:
     client_ptr->set_invisible(value == Py_True);
+    break;
+  case LastMessage:
+    client_ptr->set_last_message(PyInt_AsLong(value));
     break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;

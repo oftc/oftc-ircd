@@ -48,6 +48,7 @@ private:
   string username;
   string realname;
   bool invisible;
+  time_t last_message;
 public:
   // Events
   static Event<ClientPtr> connected;
@@ -78,11 +79,14 @@ public:
   // Getters
   string get_username() const;
   string get_realname() const;
+  time_t get_idletime() const;
+
 
   // Setters
   void set_username(const string);
   void set_realname(const string);
   void set_invisible(bool invis);
+  void set_last_message(time_t);
 };
 
 #endif
