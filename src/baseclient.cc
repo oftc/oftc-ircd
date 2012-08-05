@@ -41,8 +41,13 @@ BaseClient::~BaseClient()
   Logging::debug << "Destroyed Client: " << this << Logging::endl;
 }
 
-void BaseClient::close()
+void BaseClient::close(string message)
 {
+  stringstream ss;
+
+  ss << "ERROR :Closing link: " << host << " (" << message << ")";
+
+  send(ss.str());
   connection->close();
 }
 

@@ -153,8 +153,7 @@ void Client::check_pings(uv_timer_t *handle, int status)
 
     if(!client->check_timeout())
     {
-      client->send("ERROR :Closing link: " + client->get_host() + ":Ping timeout"); 
-      client->close();
+      client->close("Ping Timeout");
     }
   }
 }
