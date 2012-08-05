@@ -28,6 +28,7 @@
 
 #include <string>
 #include <vector>
+#include <uv.h>
 #include "event.h"
 #include "baseclient.h"
 
@@ -41,6 +42,7 @@ class Client : public BaseClient
 {
 private:
   static list<ClientPtr> client_list;
+  static uv_timer_t ping_timer;
 
   string username;
   string realname;
@@ -55,11 +57,14 @@ public:
   static void add(const ClientPtr);
   static void remove(const ClientPtr);
 
+  // Static members
+  static void init();
+  static void check_pings(uv_timer_t *, int);
+
   // ctor/dtor
   Client();
 
   // Members
-  void close();
   void send(const string arg, int);
   void send(int, ...);
   using BaseClient::send;

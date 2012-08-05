@@ -31,7 +31,7 @@
 
 unordered_map<irc_string, ClientPtr> BaseClient::names;
 
-BaseClient::BaseClient() : level(Unregistered)
+BaseClient::BaseClient() : level(Unregistered), last_data(0)
 {
   Logging::debug << "Created Client: " << this << Logging::endl;
 }
@@ -39,6 +39,16 @@ BaseClient::BaseClient() : level(Unregistered)
 BaseClient::~BaseClient()
 {
   Logging::debug << "Destroyed Client: " << this << Logging::endl;
+}
+
+void BaseClient::close(string message)
+{
+  stringstream ss;
+
+  ss << "ERROR :Closing link: " << host << " (" << message << ")";
+
+  send(ss.str());
+  connection->close();
 }
 
 void BaseClient::send(string message)
@@ -91,6 +101,27 @@ void BaseClient::set_host(const string _host)
   host = _host;
 }
 
+bool BaseClient::check_timeout()
+{
+  time_t curr_time = time(NULL);
+
+  if(ping_sent != 0 && curr_time - ping_sent > 30)
+  {
+    ping_sent = 0;
+    return false;
+  }
+
+  if(ping_sent == 0 && curr_time - last_data > 15)
+  {
+    stringstream ss;
+
+    ss << "PING :" << Server::get_me()->str();
+    send(ss.str());
+    ping_sent = curr_time;
+  }
+  return true;
+}
+
 void BaseClient::set_registered()
 {
   level = Registered;
@@ -100,6 +131,12 @@ void BaseClient::set_connection(const ConnectionPtr conn)
 {
   connection = conn;
   host = connection->get_host();
+}
+
+void BaseClient::set_last_data(time_t when)
+{
+  last_data = when;
+  ping_sent = 0;
 }
 
 //  Statics
