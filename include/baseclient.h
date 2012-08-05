@@ -49,6 +49,7 @@ protected:
   string host;
   shared_ptr<Connection> connection;
   AccessLevel level;
+  time_t first_seen;
   time_t last_data;
   time_t ping_sent;
 public:
@@ -89,6 +90,7 @@ public:
   void set_connection(const shared_ptr<Connection>);
   void set_host(const string);
   void set_last_data(time_t);
+  void set_first_seen(time_t);
  };
 
 #endif

@@ -43,6 +43,9 @@ BaseClient::~BaseClient()
 
 void BaseClient::close(string message)
 {
+  if(connection->is_closing())
+    return;
+
   stringstream ss;
 
   ss << "ERROR :Closing link: " << host << " (" << message << ")";
@@ -105,19 +108,27 @@ bool BaseClient::check_timeout()
 {
   time_t curr_time = time(NULL);
 
-  if(ping_sent != 0 && curr_time - ping_sent > 30)
+  if(!is_registered())
   {
-    ping_sent = 0;
-    return false;
+    if(curr_time - first_seen > 30)
+      return false;
   }
-
-  if(ping_sent == 0 && curr_time - last_data > 15)
+  else
   {
-    stringstream ss;
+    if(ping_sent != 0 && curr_time - ping_sent > 30)
+    {
+      ping_sent = 0;
+      return false;
+    }
 
-    ss << "PING :" << Server::get_me()->str();
-    send(ss.str());
-    ping_sent = curr_time;
+    if(ping_sent == 0 && curr_time - last_data > 15)
+    {
+      stringstream ss;
+
+      ss << "PING :" << Server::get_me()->str();
+      send(ss.str());
+      ping_sent = curr_time;
+    }
   }
   return true;
 }
@@ -137,6 +148,11 @@ void BaseClient::set_last_data(time_t when)
 {
   last_data = when;
   ping_sent = 0;
+}
+
+void BaseClient::set_first_seen(time_t when)
+{
+  first_seen = when;
 }
 
 //  Statics

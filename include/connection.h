@@ -70,6 +70,7 @@ private:
   Parser& parser;
   ClientPtr client;
   string host;
+  bool closing;
 
 public:
   // static methods
@@ -93,6 +94,7 @@ public:
   virtual void send(const char *, size_t);
   void dns_done(int, hostent *, DnsCallbackState *);
   void close();
+  inline bool is_closing() { return closing; }
 
   // getters
   string get_host() const;

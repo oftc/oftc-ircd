@@ -42,6 +42,7 @@ class Client : public BaseClient
 {
 private:
   static list<ClientPtr> client_list;
+  static list<ClientPtr> unregistered_list;
   static uv_timer_t ping_timer;
 
   string username;
@@ -55,6 +56,7 @@ public:
 
   // Client list maniuplators
   static void add(const ClientPtr);
+  static void add_unregistered(const ClientPtr);
   static void remove(const ClientPtr);
 
   // Static members

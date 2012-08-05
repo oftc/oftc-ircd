@@ -90,6 +90,9 @@ void Listener::connected(uv_stream_t *stream, int status)
   connection->set_client(client);
   client->set_connection(connection);
 
+  client->set_first_seen(time(NULL));
+  Client::add_unregistered(client);
+
   connection->accept(stream);
 
   Client::connected(client);
