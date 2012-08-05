@@ -41,6 +41,11 @@ BaseClient::~BaseClient()
   Logging::debug << "Destroyed Client: " << this << Logging::endl;
 }
 
+void BaseClient::close()
+{
+  connection->close();
+}
+
 void BaseClient::send(string message)
 {
   if (message.length() >= 510)

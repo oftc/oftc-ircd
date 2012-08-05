@@ -46,11 +46,6 @@ Client::Client() : invisible(false)
 {
 }
 
-void Client::close()
-{
-  connection->close();
-}
-
 void Client::send(string arg, int numeric)
 {
   stringstream buffer;
@@ -154,7 +149,7 @@ void Client::check_pings(uv_timer_t *handle, int status)
 
   for(it = client_list.begin(); it != client_list.end(); it++)
   {
-    shared_ptr<Client> client = dynamic_pointer_cast<Client>(*it);
+    ClientPtr client = *it;
 
     if(!client->check_timeout())
     {

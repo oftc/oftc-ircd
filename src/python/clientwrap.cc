@@ -291,8 +291,7 @@ PyObject *ClientWrap::add_name(PyObject *self, ClientWrap *client)
 
 PyObject *ClientWrap::close(ClientWrap *self, PyObject *args)
 {
-  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->client);
-  ptr->close();
+  self->client->close();
 
   Py_RETURN_NONE;
 }
