@@ -96,16 +96,16 @@ static PyGetSetDef client_getsetters[] =
     reinterpret_cast<void *>(Username | StringArg | ClientOnly) },
   { const_cast<char*>("Realname"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Real Name"), 
-    reinterpret_cast<void *>(Name | StringArg | ClientOnly) },
+    reinterpret_cast<void *>(Realname | StringArg | ClientOnly) },
   { const_cast<char*>("Host"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Host"), 
-    reinterpret_cast<void *>(Name | StringArg) },
+    reinterpret_cast<void *>(Host | StringArg) },
   { const_cast<char*>("Info"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Info"), 
-    reinterpret_cast<void *>(Name | StringArg | ServerOnly) },
+    reinterpret_cast<void *>(Info | StringArg | ServerOnly) },
   { const_cast<char*>("Invisible"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Invisible"), 
-    reinterpret_cast<void *>(Name | BoolArg | ClientOnly) },
+    reinterpret_cast<void *>(Invisible | BoolArg | ClientOnly) },
   { NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -220,63 +220,77 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
 
 int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 {
-  string prop = string(static_cast<char *>(closure));
-  shared_ptr<Client> ptr;
+  int prop = reinterpret_cast<int>(closure);
+  shared_ptr<Client> client_ptr;
+  shared_ptr<Server> server_ptr;
 
   if(value == NULL)
   {
     PyErr_SetString(PyExc_TypeError, "Cannot delete the attribute");
     return -1;
-  }
+  } 
 
-  if(prop == "invisible")
+  if(prop & ClientOnly)
   {
     if(!Client::is_client(self->client))
     {
-      PyErr_SetString(PyExc_TypeError, "invisible is only applicable to Client types");
+      PyErr_SetString(PyExc_TypeError, "Property only applicable to Client types");
       return -1;
     }
-    ptr = dynamic_pointer_cast<Client>(self->client);
 
+    client_ptr = dynamic_pointer_cast<Client>(self->client);
+  }
+
+  if(prop & ServerOnly)
+  {
+    if(!Client::is_server(self->client))
+    {
+      PyErr_SetString(PyExc_TypeError, "Property only applicable to Server types");
+      return -1;
+    }
+
+    server_ptr = dynamic_pointer_cast<Server>(self->client);
+  }
+
+  if(prop & StringArg)
+  {
+    if(!PyString_Check(value))
+    {
+      PyErr_SetString(PyExc_TypeError, "Property must be a string value");
+      return -1;
+    }
+  }
+
+  if(prop & BoolArg)
+  {
     if(!PyBool_Check(value))
     {
-      PyErr_SetString(PyExc_TypeError, "bool type expected");
+      PyErr_SetString(PyExc_TypeError, "Property must be a bool value");
       return -1;
     }
-    ptr->set_invisible(value == Py_True);
-
-    return 0;
   }
-  
-  if(!PyString_Check(value))
+
+  switch(prop & PropMask)
   {
-    PyErr_SetString(PyExc_TypeError, "value must be a string");
-    return -1;
-  }
-
-  if(prop == "name")
+  case Name:
     self->client->set_name(PyString_AsString(value));
-  else if(prop == "username")
-  {
-    if(!Client::is_client(self->client))
-    {
-      PyErr_SetString(PyExc_TypeError, "username is only applicable to Client types");
-      return -1;
-    }
-    ptr = dynamic_pointer_cast<Client>(self->client);
-
-    ptr->set_username(PyString_AsString(value));
-  }
-  else if(prop == "realname")
-  {
-    if(!Client::is_client(self->client))
-    {
-      PyErr_SetString(PyExc_TypeError, "realname is only applicable to Client types");
-      return -1;
-    }
-    ptr = dynamic_pointer_cast<Client>(self->client);
-
-    ptr->set_realname(PyString_AsString(value));
+    break;
+  case Username:
+    client_ptr->set_username(PyString_AsString(value));
+    break;
+  case Realname:
+    client_ptr->set_realname(PyString_AsString(value));
+    break;
+  case Host:
+    self->client->set_host(PyString_AsString(value));
+    break;
+  case Invisible:
+    client_ptr->set_invisible(value == Py_True);
+    break;
+  default:
+    Logging::warning << "Unknown property requested: " << prop << Logging::endl;
+    PyErr_SetString(PyExc_AttributeError, "Unknown property");
+    return -1;
   }
 
   return 0;
