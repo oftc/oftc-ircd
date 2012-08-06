@@ -95,6 +95,14 @@ void Logging::start()
 
 Logging& Logging::endl(Logging &log)
 {
-  flush = true;
-  return log << "\n";
+  Logging& tmp = log << "\n";
+
+  log_stream << stream.str();
+  log_stream.flush();
+  flush = false;
+  dostamp = true;
+  stream.str(string());
+  stream.clear();
+
+  return tmp;
 }
