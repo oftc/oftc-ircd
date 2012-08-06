@@ -171,7 +171,7 @@ void ClientWrap::init(PyObject *module)
 
 PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
 {
-  int prop = reinterpret_cast<int>(closure);
+  int prop = *reinterpret_cast<int *>(&closure);
   PyObject *value;
   shared_ptr<Client> client_ptr;
   shared_ptr<Server> server_ptr;
@@ -232,7 +232,7 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
 
 int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 {
-  int prop = reinterpret_cast<int>(closure);
+  int prop = *reinterpret_cast<int *>(&closure);
   shared_ptr<Client> client_ptr;
   shared_ptr<Server> server_ptr;
 
