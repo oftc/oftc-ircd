@@ -33,6 +33,7 @@
 #include "python/clientwrap.h"
 #include "python/eventwrap.h"
 #include "module.h"
+#include "system.h"
 
 using std::stringstream;
 using std::string;
@@ -41,7 +42,7 @@ typedef vector<string>::const_iterator VectorStringConstIt;
 
 static PyMethodDef module_methods[] =
 {
-  { NULL, NULL, 0, NULL }
+  { "get_motd", PythonLoader::get_motd, METH_NOARGS, "Return the MOTD for the server" }
 };
 
 vector<PyObject *> PythonLoader::loaded_modules;
@@ -70,6 +71,12 @@ void PythonLoader::init()
 
   m = Py_InitModule3("pythonwrap", module_methods, 
     "Wrapper module for oftc-ircd C(++) interface");
+
+  if(m == NULL)
+  {
+    log_error();
+    throw runtime_error("Error initialising python");
+  }
 
   ParserWrap::init(m);
   EventWrap::init(m);
@@ -126,4 +133,11 @@ void PythonLoader::log_error()
   Py_DECREF(module);
 
   Logging::error << message << Logging::endl;
+}
+
+PyObject *PythonLoader::get_motd(PyObject *self, PyObject *arg)
+{
+  PyObject *ret = PyString_FromString(System::get_motd().c_str());
+
+  return ret;
 }

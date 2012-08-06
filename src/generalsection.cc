@@ -25,14 +25,19 @@
 
 #include "stdinc.h"
 #include <json/json.h>
+#include <iostream>
+#include <fstream>
 #include "generalsection.h"
 #include "config.h"
+
+using std::ifstream;
 
 void GeneralSection::set_defaults()
 {
   daemon = true;
   server_info = "IRC Server";
   nicklen = 30;
+  motd = "";
 }
 
 void GeneralSection::process(const Json::Value value)
@@ -51,6 +56,30 @@ void GeneralSection::process(const Json::Value value)
     server_info = value["server_info"].asString();
   if(!value["nicklen"].isNull())
     nicklen = value["nicklen"].asInt();
+
+  if(!value["motd_file"].isNull())
+  {
+    ifstream file(value["motd_file"].asCString());
+
+    if(file.is_open())
+    {
+      stringstream ss;
+      char line[80];
+
+      while(!file.eof())
+      {
+        file.getline(line, 80);
+        if(!file.eof() && file.fail())
+          file.clear();
+
+        if(!file.eof())
+          ss << line << "\n";
+      }
+
+      motd = ss.str();
+      file.close();
+    } 
+  }
 }
 
 void GeneralSection::verify() const

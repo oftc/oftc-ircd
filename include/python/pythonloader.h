@@ -41,6 +41,7 @@ public:
   static void init();
   static void load(string);
   static void log_error();
+  static PyObject *get_motd(PyObject *, PyObject *);
 };
 
 #endif

@@ -117,6 +117,10 @@ def handle_privmsg(client, target, message):
 def handle_notice(client, target, message):
   target.send(":{source} NOTICE {name} :{message}", source=str(client), name=target.Name, message=message)
 
+@register("MOTD", min_args=0, max_args=1, access=1)
+def handle_motd(client, *args):
+  send_motd(client)
+
 @event(Client.disconnected)
 def client_disconnected(client):
   if(client.Name):

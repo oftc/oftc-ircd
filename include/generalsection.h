@@ -43,6 +43,7 @@ private:
   irc_string server_name;
   string server_info;
   unsigned int nicklen;
+  string motd;
 public:
   void set_defaults();
   void process(const Json::Value);
@@ -55,6 +56,7 @@ public:
   inline unsigned int get_nicklen() const { return nicklen; }
   inline irc_string get_server_name() const { return server_name; }
   inline string get_server_info() const { return server_info; }
+  inline string get_motd() const { return motd; }
 };
 
 #endif

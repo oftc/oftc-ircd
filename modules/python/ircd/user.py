@@ -21,7 +21,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #  OTHER DEALINGS IN THE SOFTWARE.
 
-from pythonwrap import Client
+from pythonwrap import Client, get_motd
 import numerics
 
 def check_and_register(client):
@@ -30,6 +30,7 @@ def check_and_register(client):
 
   if client.Name and client.Username:
     Client.add(client)
+    send_motd(client)
 
 def set_user_mode(client, mode):
   set_before = set()
@@ -80,3 +81,19 @@ def set_user_mode(client, mode):
 
   if len(mode) > 0:
     client.send(":{client} MODE {name} :{mode}", name=client.Name, mode=mode)
+
+def send_motd(client):
+  motd = get_motd()
+
+  if len(motd) == 0:
+    client.numeric(numerics.ERR_NOMOTD)
+    return
+
+  client.numeric(numerics.RPL_MOTDSTART, Client.Me.Name)
+
+  lines = motd.split("\n")
+
+  for s in lines:
+    client.numeric(numerics.RPL_MOTD, s[:-1])
+
+  client.numeric(numerics.RPL_MOTDEND)

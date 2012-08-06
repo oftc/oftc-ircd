@@ -58,6 +58,7 @@ public:
   static inline const char *get_built_date() { return built_date; }
   static inline ares_channel get_ares_channel() { return dns_channel; }
   static inline unsigned int get_nicklen() { return config.get_nicklen(); }
+  static inline string get_motd() { return config.get_motd(); }
 };
 
 #endif
