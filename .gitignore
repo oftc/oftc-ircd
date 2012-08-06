@@ -18,6 +18,7 @@ Debug
 Release
 ircd.conf
 ircd.log
+ircd.motd
 *.ncb
 *.sln
 *.vcproj
