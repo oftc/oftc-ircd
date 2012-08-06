@@ -30,9 +30,12 @@
 #include <string>
 #include "configsection.h"
 
+using std::string;
+
 enum LogLevel
 {
-  DEBUGL = 0,
+  TRACE = 0,
+  DEBUGL,
   INFO,
   NOTICE,
   WARNING,
@@ -44,7 +47,7 @@ class LoggingSection : public ConfigSection
 {
 private:
   LogLevel min_loglevel;
-  std::string log_path;
+  string log_path;
 public:
   void set_defaults();
   void process(const Json::Value);

@@ -7,6 +7,7 @@
     "004": ":%s %s %s %s",
     "311": "%s %s %s * :%s",
     "312": "%s %s :%s",
+    "317": "%s %d :seconds idle",
     "318": "%s :End of WHOIS list",
     "369": "%s :End of WHOWAS",
     "401": "%s :No such nick/channel",

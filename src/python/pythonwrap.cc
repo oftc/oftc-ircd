@@ -79,7 +79,7 @@ PyObject *PythonWrap<T>::alloc(PyTypeObject *type, Py_ssize_t items)
   obj = reinterpret_cast<PyObject *>(ret);
   static_cast<void>(PyObject_INIT(obj, type));
 
-  Logging::debug << "Created Python object: " << type->tp_name << " at: " << static_cast<void*>(obj) << Logging::endl;
+  Logging::trace << "Created Python object: " << type->tp_name << " at: " << static_cast<void*>(obj) << Logging::endl;
 
   return obj;
 }
@@ -89,7 +89,7 @@ void PythonWrap<T>::free(void *ptr)
 {
   char *obj = static_cast<char *>(ptr);
 
-  Logging::debug << "Destroyed python object: " << ptr << Logging::endl;
+  Logging::trace << "Destroyed python object: " << ptr << Logging::endl;
 
   delete[] obj;
 }

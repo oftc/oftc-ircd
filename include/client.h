@@ -42,11 +42,13 @@ class Client : public BaseClient
 {
 private:
   static list<ClientPtr> client_list;
+  static list<ClientPtr> unregistered_list;
   static uv_timer_t ping_timer;
 
   string username;
   string realname;
   bool invisible;
+  time_t last_message;
 public:
   // Events
   static Event<ClientPtr> connected;
@@ -55,6 +57,7 @@ public:
 
   // Client list maniuplators
   static void add(const ClientPtr);
+  static void add_unregistered(const ClientPtr);
   static void remove(const ClientPtr);
 
   // Static members
@@ -76,11 +79,14 @@ public:
   // Getters
   string get_username() const;
   string get_realname() const;
+  time_t get_idletime() const;
+
 
   // Setters
   void set_username(const string);
   void set_realname(const string);
   void set_invisible(bool invis);
+  void set_last_message(time_t);
 };
 
 #endif

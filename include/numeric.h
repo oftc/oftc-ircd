@@ -43,6 +43,7 @@ public:
   static const int Rpl_MyInfo = 004;
   static const int Rpl_WhoisUser = 311;
   static const int Rpl_WhoisServer = 312;
+  static const int Rpl_WhoisIdle = 317;
   static const int Rpl_EndOfWhois = 318;
   static const int Rpl_EndOfWhowas = 369;
 

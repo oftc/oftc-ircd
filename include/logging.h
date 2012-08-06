@@ -43,7 +43,6 @@ class Logging;
 
 typedef Logging& (*manip)(Logging&);
 
-
 class Logging 
 {
 private:
@@ -55,7 +54,8 @@ private:
   static stringstream stream;
 
   LogLevel log_level;
-public:  
+public:
+  static Logging trace;
   static Logging debug;
   static Logging info;
   static Logging notice;
@@ -96,16 +96,6 @@ public:
     }
 
     stream << param;
-
-    if(flush)
-    {
-      log_stream << stream.str();
-      log_stream.flush();
-      flush = false;
-      dostamp = true;
-      stream.str(string());
-      stream.clear();
-    }
 
     return *this;
   }  

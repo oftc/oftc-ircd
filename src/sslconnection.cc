@@ -75,7 +75,7 @@ void SSLConnection::handle_error(int code)
     }
     break;
   default:
-    Logging::debug << "Unknown ssl error status" << Logging::endl;
+    Logging::critical << "Unknown ssl error status" << Logging::endl;
   }
 }
 

@@ -25,6 +25,7 @@ from ircd import register, event, have_target
 from ircd.user import *
 from pythonwrap import Client
 import numerics
+import time
 
 @register("NICK", min_args=1, max_args=1, access=0)
 def handle_nick(client, nick):
@@ -59,6 +60,10 @@ def handle_user(client, username, unused, unused2, realname):
 def handle_ping(client, arg):
   client.send(":{me} PONG {me} :{arg}", arg=arg)
 
+@register("PONG", min_args=1, max_args=2, access=0)
+def handle_pong(client, *args):
+  pass
+
 @register("MODE", min_args=1, max_args=2, access=1)
 def handle_mode(client, name, *arg):
   if name[:1] == '#':
@@ -83,6 +88,7 @@ def handle_mode(client, name, *arg):
 @have_target(epilog=numerics.RPL_ENDOFWHOIS)
 def handle_whois(client, target, *arg):
   client.numeric(numerics.RPL_WHOISUSER, target.Name, target.Username, target.Host, target.Realname)
+  client.numeric(numerics.RPL_WHOISIDLE, target.Name, target.Idletime);
   client.numeric(numerics.RPL_WHOISSERVER, target.Name, str(Client.Me), Client.Me.Info)
   client.numeric(numerics.RPL_ENDOFWHOIS, target.Name)
 
@@ -104,6 +110,7 @@ def handle_quit(client, *arg):
 @have_target()
 def handle_privmsg(client, target, message):
   target.send(":{source} PRIVMSG {name} :{message}", source=str(client), name=target.Name, message=message)
+  client.LastMessage = int(time.time())
 
 @register("NOTICE", min_args=2, max_args=2, access=1)
 @have_target()

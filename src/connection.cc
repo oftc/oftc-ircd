@@ -38,16 +38,16 @@ using std::pair;
 
 unordered_map<Connection *, ConnectionPtr> Connection::connections;
 
-Connection::Connection() : dns_state(Reverse), parser(Parser::get_default())
+Connection::Connection() : dns_state(Reverse), parser(Parser::get_default()), closing(false)
 {
-  Logging::debug << "Created Connection: " << this << Logging::endl;
+  Logging::trace << "Created Connection: " << this << Logging::endl;
 }
 
 Connection::~Connection()
 {
   Client::disconnected(client);
   Client::remove(client);
-  Logging::debug << "Destroyed Connection: " << this << Logging::endl;
+  Logging::trace << "Destroyed Connection: " << this << Logging::endl;
 }
 
 void Connection::accept(uv_stream_t *server_handle)
@@ -236,7 +236,11 @@ void Connection::set_client(const ClientPtr ptr)
 
 void Connection::close()
 {
-  uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), on_close);
+  if(!closing)
+  {
+    uv_close(reinterpret_cast<uv_handle_t *>(handle.get()), on_close);
+    closing = true;
+  }
 }
 
 // Statics

@@ -39,10 +39,11 @@ using std::setfill;
 Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registered;
 Event<ClientPtr> Client::disconnected;
+list<ClientPtr> Client::unregistered_list;
 list<ClientPtr> Client::client_list;
 uv_timer_t Client::ping_timer;
 
-Client::Client() : invisible(false)
+Client::Client() : invisible(false), last_message(time(NULL))
 {
 }
 
@@ -101,6 +102,11 @@ string Client::get_realname() const
   return realname;
 }
 
+time_t Client::get_idletime() const
+{
+  return time(NULL) - last_message;
+}
+
 void Client::set_invisible(bool invis)
 {
   invisible = invis;
@@ -114,6 +120,11 @@ void Client::set_username(const string user)
 void Client::set_realname(const string real)
 {
   realname = real;
+}
+
+void Client::set_last_message(time_t when)
+{
+  last_message = when;
 }
 
 // Statics
@@ -131,6 +142,8 @@ void Client::add(ClientPtr ptr)
   client_list.push_back(client);
   client->set_registered();
 
+  unregistered_list.remove(client);
+
   registered(client);
 
   client->send(001, client->str().c_str());
@@ -138,9 +151,17 @@ void Client::add(ClientPtr ptr)
   client->send(003, System::get_built_date());
 }
 
+void Client::add_unregistered(ClientPtr client)
+{
+  unregistered_list.push_back(client);
+}
+
 void Client::remove(ClientPtr client)
 {
-  client_list.remove(client);
+  if(client->is_registered())
+    client_list.remove(client);
+  else
+    unregistered_list.remove(client);
 }
 
 void Client::check_pings(uv_timer_t *handle, int status)
@@ -154,6 +175,16 @@ void Client::check_pings(uv_timer_t *handle, int status)
     if(!client->check_timeout())
     {
       client->close("Ping Timeout");
+    }
+  }
+
+  for(it = unregistered_list.begin(); it != unregistered_list.end(); it++)
+  {
+    ClientPtr client = *it;
+
+    if(!client->check_timeout())
+    {
+      client->close("Registration timed out");
     }
   }
 }

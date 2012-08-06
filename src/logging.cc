@@ -32,6 +32,7 @@ using std::ios;
 
 const char *log_levels[] =
 {
+  "TRACE",
   "DEBUG",
   "INFO",
   "NOTICE",
@@ -43,6 +44,7 @@ const char *log_levels[] =
 
 LoggingSection Logging::config;
 ofstream Logging::log_stream;
+Logging Logging::trace(TRACE);
 Logging Logging::debug(DEBUGL);
 Logging Logging::info(INFO);
 Logging Logging::warning(WARNING);
@@ -93,6 +95,14 @@ void Logging::start()
 
 Logging& Logging::endl(Logging &log)
 {
-  flush = true;
-  return log << "\n";
+  Logging& tmp = log << "\n";
+
+  log_stream << stream.str();
+  log_stream.flush();
+  flush = false;
+  dostamp = true;
+  stream.str(string());
+  stream.clear();
+
+  return tmp;
 }
