@@ -50,6 +50,9 @@ void Parser::parse(const ClientPtr client, const string& line)
   vector<string> args;
   string command, arg;
 
+  if(line.empty())
+    return;
+
   if(line[0] == ':')
   {
     string prefix;
@@ -60,6 +63,9 @@ void Parser::parse(const ClientPtr client, const string& line)
   }
 
   stream >> command;
+  if(command.empty())
+    return;
+
   transform(command.begin(), command.end(), command.begin(), toupper);
 
   unordered_map<string, Command>::iterator it = commands.find(command);
