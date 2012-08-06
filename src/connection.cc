@@ -163,8 +163,6 @@ void Connection::read(uv_stream_t *stream, ssize_t nread, uv_buf_t buf)
     if(line[line.length() - 1] == '\r')
       line.erase(line.length() - 1, 1);
 
-    Logging::debug << "Complete command found '" << line << "'" << Logging::endl;
-
     client->set_last_data(time(NULL));
     parser.parse(client, line);
   }
