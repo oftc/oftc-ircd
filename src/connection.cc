@@ -40,14 +40,14 @@ unordered_map<Connection *, ConnectionPtr> Connection::connections;
 
 Connection::Connection() : dns_state(Reverse), parser(Parser::get_default()), closing(false)
 {
-  Logging::debug << "Created Connection: " << this << Logging::endl;
+  Logging::trace << "Created Connection: " << this << Logging::endl;
 }
 
 Connection::~Connection()
 {
   Client::disconnected(client);
   Client::remove(client);
-  Logging::debug << "Destroyed Connection: " << this << Logging::endl;
+  Logging::trace << "Destroyed Connection: " << this << Logging::endl;
 }
 
 void Connection::accept(uv_stream_t *server_handle)

@@ -33,12 +33,12 @@ unordered_map<irc_string, ClientPtr> BaseClient::names;
 
 BaseClient::BaseClient() : level(Unregistered), last_data(0)
 {
-  Logging::debug << "Created Client: " << this << Logging::endl;
+  Logging::trace << "Created Client: " << this << Logging::endl;
 }
 
 BaseClient::~BaseClient()
 {
-  Logging::debug << "Destroyed Client: " << this << Logging::endl;
+  Logging::trace << "Destroyed Client: " << this << Logging::endl;
 }
 
 void BaseClient::close(string message)

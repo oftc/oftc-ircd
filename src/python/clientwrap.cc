@@ -128,12 +128,12 @@ ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
   ptr = *(reinterpret_cast<ClientPtr*>(PyCObject_AsVoidPtr(client_obj)));
   client = ptr;
 
-  Logging::debug << "Created ClientWrap: " << this << Logging::endl;
+  Logging::trace << "Created ClientWrap: " << this << Logging::endl;
 }
 
 ClientWrap::~ClientWrap()
 {
-  Logging::debug << "Destroyed ClientWrap: " << this << Logging::endl;
+  Logging::trace << "Destroyed ClientWrap: " << this << Logging::endl;
 }
 
 // Statics

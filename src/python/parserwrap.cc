@@ -48,12 +48,12 @@ static PyMemberDef parser_members[] =
 
 ParserWrap::ParserWrap(PyObject *args, PyObject *kwds)
 {
-  Logging::debug << "Created ParserWrap: " << this << Logging::endl;
+  Logging::trace << "Created ParserWrap: " << this << Logging::endl;
 }
 
 ParserWrap::~ParserWrap()
 {
-  Logging::debug << "Destroyed ParserWrap: " << this << Logging::endl;
+  Logging::trace << "Destroyed ParserWrap: " << this << Logging::endl;
 }
 
 // Statics

@@ -33,12 +33,12 @@ using std::transform;
 
 Command::Command()
 {
-  Logging::debug << "Created Command: " << this << Logging::endl;
+  Logging::trace << "Created Command: " << this << Logging::endl;
 }
 
 Command::~Command()
 {
-  Logging::debug << "Destroyed Command: " << this << Logging::endl;
+  Logging::trace << "Destroyed Command: " << this << Logging::endl;
 }
 
 Command::Command(CommandHandler handler, string name, 
@@ -52,6 +52,6 @@ Command::Command(CommandHandler handler, string name,
     rate_control(rate_control),
     data(data)
 {
-  Logging::debug << "Created Command: " << this << Logging::endl;
+  Logging::trace << "Created Command: " << this << Logging::endl;
   transform(name.begin(), name.end(), name.begin(), toupper);
 }

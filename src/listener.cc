@@ -44,18 +44,18 @@ vector<ListenerPtr> Listener::listeners;
 
 Listener::Listener() : host(""), port(6667), flags(static_cast<ListenerFlag>(0))
 {
-  Logging::debug << "Created Listener: " << this << Logging::endl;
+  Logging::trace << "Created Listener: " << this << Logging::endl;
 }
 
 Listener::Listener(string host, int port, ListenerFlag flags) : 
   host(host), port(port), flags(flags)
 {
-  Logging::debug << "Created Listener: " << this << Logging::endl;
+  Logging::trace << "Created Listener: " << this << Logging::endl;
 }
 
 Listener::~Listener()
 {
-  Logging::debug << "Destroyed Listener: " << this << Logging::endl;
+  Logging::trace << "Destroyed Listener: " << this << Logging::endl;
 }
 
 void Listener::set_flag(ListenerFlag flag)
