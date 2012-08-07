@@ -61,6 +61,7 @@ protected:
 
   shared_ptr<uv_tcp_t> handle;
   DnsState dns_state;
+  bool closing;
 
   static void free_buffer(uv_buf_t&);
 
@@ -70,7 +71,6 @@ private:
   Parser& parser;
   ClientPtr client;
   string host;
-  bool closing;
 
 public:
   // static methods

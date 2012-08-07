@@ -55,6 +55,9 @@ void SSLConnection::handle_error(int code)
 
   switch(err)
   {
+  case SSL_ERROR_SSL:
+    close();
+    break;
   case SSL_ERROR_WANT_READ:
     int pending;
 
@@ -137,7 +140,9 @@ void SSLConnection::send(const char *buf, size_t len)
       if(dns_state != Done)
         uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
 
-      handle_error(ret);    
+      handle_error(ret);
+      if(closing)
+        return;
     }
   }
   
