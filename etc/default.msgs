@@ -16,6 +16,7 @@
     "375": ":- %s Message of the day - ",
     "376": ":End of MOTD command",
     "401": "%s :No such nick/channel",
+    "403": "%s :No such channel",
     "406": "%s :There was no such nickname",
     "421": "%s :Unknown command",
     "422": ":MOTD file is missing",
