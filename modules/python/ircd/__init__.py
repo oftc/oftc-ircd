@@ -23,7 +23,7 @@
 
 from functools import wraps
 
-from pythonwrap import Parser, Client
+from pythonwrap import Parser, Client, Channel
 
 import numerics
 
@@ -71,7 +71,12 @@ def have_target(numeric=numerics.ERR_NOSUCHNICK, epilog=None):
   def wrapper(func):
     @wraps(func)
     def decorator(client, name, *args, **kwargs):
-      target = Client.find_by_name(name)
+      if name[0] == '#':
+        target = Channel.find(name)
+        if numeric == numerics.ERR_NOSUCHNICK:
+          numeric = numerics.ERR_NOSUCHCHANNEL
+      else:
+        target = Client.find_by_name(name)
 
       if not target:
         client.numeric(numeric, name)
