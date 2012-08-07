@@ -32,6 +32,7 @@
 #include "python/parserwrap.h"
 #include "python/clientwrap.h"
 #include "python/eventwrap.h"
+#include "python/channelwrap.h"
 #include "module.h"
 #include "system.h"
 
@@ -81,6 +82,7 @@ void PythonLoader::init()
   ParserWrap::init(m);
   EventWrap::init(m);
   ClientWrap::init(m);
+  ChannelWrap::init(m);
 }
 
 void PythonLoader::load(string name)
