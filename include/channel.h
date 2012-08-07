@@ -30,6 +30,7 @@
 #include <string>
 #include <list>
 #include "ircstring.h"
+#include "baseclient.h"
 
 using std::list;
 using std::string;
@@ -38,12 +39,26 @@ class Channel;
 
 typedef shared_ptr<Channel> ChannelPtr;
 
+enum MembershipFlags
+{
+  Member = 0x1,
+  Voice = 0x2,
+  ChanOp = 0x4
+};
+
+struct Membership
+{
+  ClientPtr client;
+  MembershipFlags flags;
+};
+
 class Channel
 {
 private:
   static unordered_map<irc_string, ChannelPtr> names;
   static list<ChannelPtr> channels;
 
+  list<Membership> members;
   irc_string name;
 public:
   // Ctor/dtor
@@ -62,6 +77,8 @@ public:
   void set_name(const irc_string);
   
   // members
+  void add_member(ClientPtr);
+  void send_names(ClientPtr);
   irc_string str() const;
  };
 

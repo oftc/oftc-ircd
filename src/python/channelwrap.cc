@@ -35,10 +35,14 @@ static PyMethodDef channel_methods[] =
 {
   { "add", reinterpret_cast<PyCFunction>(ChannelWrap::add), 
     METH_STATIC, "Create a new channel" },
+  { "add_member", reinterpret_cast<PyCFunction>(ChannelWrap::add_member), 
+    0, "Add a client to a channel" },
   { "find", reinterpret_cast<PyCFunction>(ChannelWrap::find), 
     METH_STATIC, "find a channel by name" },
   { "del", reinterpret_cast<PyCFunction>(ChannelWrap::del), 
     METH_STATIC, "delete a channel" },
+  { "send_names", reinterpret_cast<PyCFunction>(ChannelWrap::send_names), 
+    0, "Send names reply to a client" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -174,6 +178,13 @@ int ChannelWrap::set_wrap(ChannelWrap *self, PyObject *value, void *closure)
   return 0;
 }
 
+PyObject *ChannelWrap::add_member(ChannelWrap *self, ClientWrap *client)
+{
+  self->channel->add_member(client->get_client());
+
+  Py_RETURN_NONE;
+}
+
 PyObject *ChannelWrap::add(ChannelWrap *self, ChannelWrap *channel)
 {
   if(Py_TYPE(channel) != &type_object)
@@ -216,6 +227,12 @@ PyObject *ChannelWrap::del(PyObject *self, ChannelWrap *channel)
   Py_RETURN_NONE;
 }
 
+PyObject *ChannelWrap::send_names(ChannelWrap *self, ClientWrap *client)
+{
+  self->channel->send_names(client->get_client());
+
+  Py_RETURN_NONE;
+}
 
 PyObject *ChannelWrap::str(ChannelWrap *self)
 {

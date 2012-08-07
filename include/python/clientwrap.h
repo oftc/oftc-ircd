@@ -66,6 +66,9 @@ public:
   // ctor/dtor
   ClientWrap(PyObject *, PyObject *);
   ~ClientWrap();
+
+  // members
+  inline ClientPtr get_client() const { return client; }
 };
 
 #endif

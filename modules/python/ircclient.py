@@ -23,7 +23,7 @@
 
 from ircd import register, event, have_target
 from ircd.user import *
-from pythonwrap import Client
+from pythonwrap import Client, Channel
 import numerics
 import time
 
@@ -120,6 +120,18 @@ def handle_notice(client, target, message):
 @register("MOTD", min_args=0, max_args=1, access=1)
 def handle_motd(client, *args):
   send_motd(client)
+
+@register("JOIN", min_args=1, max_args=2, access=1)
+def handle_join(client, name, *args):
+  channel = Channel.find(name)
+  if not channel:
+    channel = Channel()
+    channel.Name = name
+    Channel.add(channel)
+    
+  channel.add_member(client)
+  client.send(":{client} JOIN :{channel}", channel=str(channel));
+  channel.send_names(client)
 
 @event(Client.disconnected)
 def client_disconnected(client):

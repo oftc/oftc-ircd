@@ -25,6 +25,9 @@
 
 #include "stdinc.h"
 #include "channel.h"
+#include "numeric.h"
+#include "client.h"
+#include "server.h"
 
 list<ChannelPtr> Channel::channels;
 unordered_map<irc_string, ChannelPtr> Channel::names;
@@ -39,6 +42,29 @@ Channel::~Channel()
   Logging::trace << "Destroyed Channel: " << this << Logging::endl;
 }
 
+void Channel::add_member(const ClientPtr client)
+{
+  Membership member;
+
+  member.client = client;
+  if(members.size() == 0)
+    member.flags = ChanOp;
+  else
+    member.flags = Member;
+
+  list<Membership>::const_iterator it;
+
+  for(it = members.begin(); it != members.end(); it++)
+  {
+    stringstream ss;
+
+    ss << ":" << client->str() << " JOIN :" << name;
+    it->client->send(ss.str());
+  }
+
+  members.push_back(member);
+}
+
 irc_string Channel::get_name() const
 {
   return name;
@@ -47,6 +73,46 @@ irc_string Channel::get_name() const
 void Channel::set_name(const irc_string _name)
 {
   name = _name;
+}
+
+void Channel::send_names(ClientPtr client)
+{
+  list<Membership>::const_iterator it;
+  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
+  stringstream reply;
+  string reply_format;
+  bool first = true;
+  int min_len = 1 + Server::get_me()->get_name().length() + 1 + 3 + 1 + client->get_name().length() + 1; // ":Server 000 nick "
+
+  reply_format = Numeric::format_str(Numeric::Rpl_NamesReply, '=', name.c_str(), "");
+  reply << reply_format;
+
+  for(it = members.begin(); it != members.end(); it++)
+  {
+    if(min_len + reply.str().length() + it->client->get_name().length() >= 510)
+    {
+      ptr->send(reply.str(), Numeric::Rpl_NamesReply);
+      reply.clear();
+      reply.str("");
+      reply << reply_format;
+    }
+
+    if(first)
+      first = false;
+    else
+      reply << ' ';
+
+    if(it->flags & ChanOp)
+      reply << '@';
+    else if(it->flags & Voice)
+      reply << '+';
+
+    reply << it->client->get_name();
+  }
+  
+  ptr->send(reply.str(), Numeric::Rpl_NamesReply);
+
+  ptr->send(Numeric::Rpl_EndOfNames, name.c_str());
 }
 
 irc_string Channel::str() const

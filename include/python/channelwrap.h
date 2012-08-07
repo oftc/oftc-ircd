@@ -28,6 +28,7 @@
 
 #include "Python.h"
 #include "python/pythonwrap.h"
+#include "python/clientwrap.h"
 #include "channel.h"
 
 class ChannelWrap : public PythonWrap<ChannelWrap>
@@ -46,9 +47,11 @@ public:
 
   // Python methods
   static PyObject *add(ChannelWrap *, ChannelWrap *);
+  static PyObject *add_member(ChannelWrap *, ClientWrap *);
   static int compare(ChannelWrap *, ChannelWrap *);
   static PyObject *del(PyObject *, ChannelWrap *);
   static PyObject *find(PyObject *, PyObject *);
+  static PyObject *send_names(ChannelWrap *, ClientWrap *);
   static PyObject *str(ChannelWrap *);
 
   // ctor/dtor

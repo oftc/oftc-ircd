@@ -53,6 +53,19 @@ void Numeric::load_messages(string path)
   message_table = *root.begin();
 }
 
+string Numeric::format_str(int numeric, ...)
+{
+  va_list args;
+
+  va_start(args, numeric);
+
+  string str = format(numeric, args);
+
+  va_end(args);
+
+  return str;
+}
+
 string Numeric::format(int numeric, va_list args)
 {
   char buffer[510 + 1];

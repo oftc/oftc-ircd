@@ -45,6 +45,8 @@ public:
   static const int Rpl_WhoisServer = 312;
   static const int Rpl_WhoisIdle = 317;
   static const int Rpl_EndOfWhois = 318;
+  static const int Rpl_NamesReply = 353;
+  static const int Rpl_EndOfNames = 366;
   static const int Rpl_EndOfWhowas = 369;
 
   // Error replies
@@ -57,6 +59,7 @@ public:
   static const int Err_UmodeUnknownFlag = 501;
   static const int Err_UsersDontMatch = 502;
 
+  static string format_str(int, ...);
   static string format(int, va_list);
   static void load_messages(const string);
   static string raw_format(int);
