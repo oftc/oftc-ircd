@@ -71,15 +71,17 @@ def have_target(numeric=numerics.ERR_NOSUCHNICK, epilog=None):
   def wrapper(func):
     @wraps(func)
     def decorator(client, name, *args, **kwargs):
+      _numeric = numeric
+
       if name[0] == '#':
         target = Channel.find(name)
-        if numeric == numerics.ERR_NOSUCHNICK:
-          numeric = numerics.ERR_NOSUCHCHANNEL
+        if _numeric == numerics.ERR_NOSUCHNICK:
+          _numeric = numerics.ERR_NOSUCHCHANNEL
       else:
         target = Client.find_by_name(name)
 
       if not target:
-        client.numeric(numeric, name)
+        client.numeric(_numeric, name)
         if epilog:
           client.numeric(epilog, name)
         return
