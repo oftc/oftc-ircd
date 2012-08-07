@@ -52,6 +52,7 @@ public:
   static PyObject *del(PyObject *, ChannelWrap *);
   static PyObject *find(PyObject *, PyObject *);
   static PyObject *send_names(ChannelWrap *, ClientWrap *);
+  static PyObject *send(ChannelWrap *, PyObject *, PyObject *);
   static PyObject *str(ChannelWrap *);
 
   // ctor/dtor

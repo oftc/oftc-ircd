@@ -27,6 +27,7 @@
 #include <structmember.h>
 #include "stdinc.h"
 #include "python/channelwrap.h"
+#include "python/pythonloader.h"
 #include "channel.h"
 
 template class PythonWrap<ChannelWrap>;
@@ -43,6 +44,8 @@ static PyMethodDef channel_methods[] =
     METH_STATIC, "delete a channel" },
   { "send_names", reinterpret_cast<PyCFunction>(ChannelWrap::send_names), 
     0, "Send names reply to a client" },
+  { "send", reinterpret_cast<PyCFunction>(ChannelWrap::send), 
+    METH_KEYWORDS, "Send a message to all clients on the channel" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -230,6 +233,41 @@ PyObject *ChannelWrap::del(PyObject *self, ChannelWrap *channel)
 PyObject *ChannelWrap::send_names(ChannelWrap *self, ClientWrap *client)
 {
   self->channel->send_names(client->get_client());
+
+  Py_RETURN_NONE;
+}
+
+PyObject *ChannelWrap::send(ChannelWrap *self, PyObject *args, PyObject *kwargs)
+{
+  PyObject *fmt, *result, *meth, *fargs;
+  ClientWrap *client;
+
+  client = reinterpret_cast<ClientWrap *>(PyDict_GetItemString(kwargs, "client"));
+
+  fmt = PyTuple_GetItem(args, 0);
+
+  if(!PyString_Check(fmt))
+  {
+    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
+    return NULL;
+  }
+
+  meth = PyObject_GetAttrString(fmt, "format");
+
+  fargs = PyTuple_New(0);
+  result = PyObject_Call(meth, fargs, kwargs);
+
+  Py_DECREF(meth);
+  Py_DECREF(fargs);
+
+  if(result == NULL)
+  {
+    return NULL;
+  }
+
+  self->channel->send(client->get_client(), PyString_AsString(result));
+
+  Py_DECREF(result);
 
   Py_RETURN_NONE;
 }

@@ -109,13 +109,13 @@ def handle_quit(client, *arg):
 @register("PRIVMSG", min_args=2, max_args=2)
 @have_target()
 def handle_privmsg(client, target, message):
-  target.send(":{source} PRIVMSG {name} :{message}", source=str(client), name=target.Name, message=message)
+  target.send(":{source} PRIVMSG {name} :{message}", source=str(client), client=client, name=target.Name, message=message)
   client.LastMessage = int(time.time())
 
 @register("NOTICE", min_args=2, max_args=2)
 @have_target()
 def handle_notice(client, target, message):
-  target.send(":{source} NOTICE {name} :{message}", source=str(client), name=target.Name, message=message)
+  target.send(":{source} NOTICE {name} :{message}", source=str(client), client=client, name=target.Name, message=message)
 
 @register("MOTD", min_args=0, max_args=1)
 def handle_motd(client, *args):

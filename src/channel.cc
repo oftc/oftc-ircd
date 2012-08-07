@@ -115,6 +115,17 @@ void Channel::send_names(ClientPtr client)
   ptr->send(Numeric::Rpl_EndOfNames, name.c_str());
 }
 
+void Channel::send(const ClientPtr client, const string str)
+{
+  list<Membership>::const_iterator it;
+
+  for(it = members.begin(); it != members.end(); it++)
+  {
+    if(it->client != client)
+      it->client->send(str);
+  }
+}
+
 irc_string Channel::str() const
 {
   return name;

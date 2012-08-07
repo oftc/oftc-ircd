@@ -77,8 +77,9 @@ public:
   void set_name(const irc_string);
   
   // members
-  void add_member(ClientPtr);
-  void send_names(ClientPtr);
+  void add_member(const ClientPtr);
+  void send_names(const ClientPtr);
+  void send(const ClientPtr, const string);
   irc_string str() const;
  };
 
