@@ -56,7 +56,7 @@ def handle_user(client, username, unused, unused2, realname):
 
   check_and_register(client)
 
-@register("PING", min_args=1, max_args=1, access=1)
+@register("PING", min_args=1, max_args=1)
 def handle_ping(client, arg):
   client.send(":{me} PONG {me} :{arg}", arg=arg)
 
@@ -64,7 +64,7 @@ def handle_ping(client, arg):
 def handle_pong(client, *args):
   pass
 
-@register("MODE", min_args=1, max_args=2, access=1)
+@register("MODE", min_args=1, max_args=2)
 def handle_mode(client, name, *arg):
   if name[:1] == '#':
     pass
@@ -84,7 +84,7 @@ def handle_mode(client, name, *arg):
     else:
       set_user_mode(client, None)
 
-@register("WHOIS", min_args=1, max_args=2, access=1)
+@register("WHOIS", min_args=1, max_args=2)
 @have_target(epilog=numerics.RPL_ENDOFWHOIS)
 def handle_whois(client, target, *arg):
   client.numeric(numerics.RPL_WHOISUSER, target.Name, target.Username, target.Host, target.Realname)
@@ -92,7 +92,7 @@ def handle_whois(client, target, *arg):
   client.numeric(numerics.RPL_WHOISSERVER, target.Name, str(Client.Me), Client.Me.Info)
   client.numeric(numerics.RPL_ENDOFWHOIS, target.Name)
 
-@register("WHOWAS", min_args=1, max_args=2, access=1)
+@register("WHOWAS", min_args=1, max_args=2)
 @have_target(numeric=numerics.ERR_WASNOSUCHNICK, epilog=numerics.RPL_ENDOFWHOWAS)
 def handle_whowas(client, name, *arg):
   pass
@@ -106,22 +106,22 @@ def handle_quit(client, *arg):
 
   client.close(reason)
 
-@register("PRIVMSG", min_args=2, max_args=2, access=1)
+@register("PRIVMSG", min_args=2, max_args=2)
 @have_target()
 def handle_privmsg(client, target, message):
   target.send(":{source} PRIVMSG {name} :{message}", source=str(client), name=target.Name, message=message)
   client.LastMessage = int(time.time())
 
-@register("NOTICE", min_args=2, max_args=2, access=1)
+@register("NOTICE", min_args=2, max_args=2)
 @have_target()
 def handle_notice(client, target, message):
   target.send(":{source} NOTICE {name} :{message}", source=str(client), name=target.Name, message=message)
 
-@register("MOTD", min_args=0, max_args=1, access=1)
+@register("MOTD", min_args=0, max_args=1)
 def handle_motd(client, *args):
   send_motd(client)
 
-@register("JOIN", min_args=1, max_args=2, access=1)
+@register("JOIN", min_args=1, max_args=2)
 def handle_join(client, name, *args):
   channel = Channel.find(name)
   if not channel:
@@ -133,7 +133,7 @@ def handle_join(client, name, *args):
   client.send(":{client} JOIN :{channel}", channel=str(channel));
   channel.send_names(client)
 
-@register("NAMES", min_args=1, max_args=1, access=1)
+@register("NAMES", min_args=1, max_args=1)
 #@have_target(numeric=numerics.ERR_NOSUCHCHANNEL)
 def handle_names(client, target):
   chan = Channel.find(target)

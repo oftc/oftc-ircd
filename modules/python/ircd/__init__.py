@@ -27,7 +27,7 @@ from pythonwrap import Parser, Client
 
 import numerics
 
-def register(command, min_args=0, max_args=0, access=0, rate_control=0):
+def register(command, min_args=0, max_args=0, access=1, rate_control=0):
   def decorator(func):
     Parser.Register(command, func,
       min_args=min_args,
