@@ -139,7 +139,8 @@ void Client::add(ClientPtr ptr)
 {
   shared_ptr<Client> client = dynamic_pointer_cast<Client>(ptr);
 
-  registering(client);
+  if(!registering(client))
+    return;
 
   client_list.push_back(client);
   client->set_registered();
