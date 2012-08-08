@@ -34,7 +34,7 @@ class ClientWrap : public PythonWrap<ClientWrap>
 private:
   static ClientWrap *me;
   static PyObject *connected;
-  static PyObject *registered;
+  static PyObject *registering;
   static PyObject *disconnected;
 
   ClientPtr client;
@@ -45,7 +45,7 @@ public:
   // Event callbacks
   static bool on_connected(ClientPtr);
   static bool on_disconnected(ClientPtr);
-  static bool on_registered(ClientPtr);
+  static bool on_registering(ClientPtr);
 
   // Get/Setters
   static PyObject *get_wrap(ClientWrap *, void *);

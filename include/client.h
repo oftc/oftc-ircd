@@ -52,7 +52,7 @@ private:
 public:
   // Events
   static Event<ClientPtr> connected;
-  static Event<ClientPtr> registered;
+  static Event<ClientPtr> registering;
   static Event<ClientPtr> disconnected;
 
   // Client list maniuplators

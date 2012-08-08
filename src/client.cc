@@ -37,7 +37,7 @@ using std::setw;
 using std::setfill;
 
 Event<ClientPtr> Client::connected;
-Event<ClientPtr> Client::registered;
+Event<ClientPtr> Client::registering;
 Event<ClientPtr> Client::disconnected;
 list<ClientPtr> Client::unregistered_list;
 list<ClientPtr> Client::client_list;
@@ -139,12 +139,14 @@ void Client::add(ClientPtr ptr)
 {
   shared_ptr<Client> client = dynamic_pointer_cast<Client>(ptr);
 
+  registering(client);
+
   client_list.push_back(client);
   client->set_registered();
 
   unregistered_list.remove(client);
 
-  registered(client);
+  connected(client);
 
   client->send(001, client->str().c_str());
   client->send(002, Server::get_me()->str().c_str(), "0.0.1");
