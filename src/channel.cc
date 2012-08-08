@@ -29,7 +29,7 @@
 #include "client.h"
 #include "server.h"
 
-list<ChannelPtr> Channel::channels;
+map<Channel *, ChannelPtr> Channel::channels;
 unordered_map<irc_string, ChannelPtr> Channel::names;
 
 Channel::Channel() 
@@ -45,6 +45,7 @@ Channel::~Channel()
 void Channel::add_member(const ClientPtr client)
 {
   Membership member;
+  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
 
   member.client = client;
   if(members.size() == 0)
@@ -52,17 +53,13 @@ void Channel::add_member(const ClientPtr client)
   else
     member.flags = Member;
 
-  list<Membership>::const_iterator it;
+  stringstream ss;
 
-  for(it = members.begin(); it != members.end(); it++)
-  {
-    stringstream ss;
-
-    ss << ":" << client->str() << " JOIN :" << name;
-    it->client->send(ss.str());
-  }
+  ss << ":" << client->str() << " JOIN :" << name;
+  send(client, ss.str());
 
   members.push_back(member);
+  ptr->add_channel(channels[this]);
 }
 
 irc_string Channel::get_name() const
@@ -135,7 +132,7 @@ irc_string Channel::str() const
 void Channel::add(const ChannelPtr channel)
 {
   names[channel->name] = channel;
-  channels.push_back(channel);
+  channels[channel.get()] = channel;
 }
 
 ChannelPtr Channel::find(const irc_string name)
@@ -145,6 +142,6 @@ ChannelPtr Channel::find(const irc_string name)
 
 void Channel::del(const ChannelPtr channel)
 {
-  channels.remove(channel);
+  channels.erase(channel.get());
   names.erase(channel->name);
 }

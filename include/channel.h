@@ -29,11 +29,13 @@
 #include "stdinc.h"
 #include <string>
 #include <list>
+#include <map>
 #include "ircstring.h"
 #include "baseclient.h"
 
 using std::list;
 using std::string;
+using std::map;
 
 class Channel;
 
@@ -56,7 +58,7 @@ class Channel
 {
 private:
   static unordered_map<irc_string, ChannelPtr> names;
-  static list<ChannelPtr> channels;
+  static map<Channel *, ChannelPtr> channels;
 
   list<Membership> members;
   irc_string name;

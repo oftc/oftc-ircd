@@ -47,6 +47,11 @@ Client::Client() : invisible(false), last_message(time(NULL))
 {
 }
 
+void Client::add_channel(ChannelPtr channel)
+{
+  channels.push_back(channel);
+}
+
 void Client::send(string arg, int numeric)
 {
   stringstream buffer;

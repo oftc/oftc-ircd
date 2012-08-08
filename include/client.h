@@ -31,6 +31,7 @@
 #include <uv.h>
 #include "event.h"
 #include "baseclient.h"
+#include "channel.h"
 
 using std::string;
 using std::vector;
@@ -49,6 +50,7 @@ private:
   string realname;
   bool invisible;
   time_t last_message;
+  list<ChannelPtr> channels;
 public:
   // Events
   static Event<ClientPtr> connected;
@@ -68,6 +70,7 @@ public:
   Client();
 
   // Members
+  void add_channel(const ChannelPtr);
   void send(const string arg, int);
   void send(int, ...);
   using BaseClient::send;
