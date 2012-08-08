@@ -37,6 +37,8 @@ using std::getline;
 using std::pair;
 
 unordered_map<Connection *, ConnectionPtr> Connection::connections;
+Event<ConnectionPtr> Connection::ip_connecting;
+Event<ConnectionPtr> Connection::dns_finished;
 
 Connection::Connection() : dns_state(Reverse), parser(Parser::get_default()), closing(false)
 {
@@ -184,6 +186,8 @@ void Connection::dns_done(int status, hostent *hostent, DnsCallbackState *state)
     ss << ":" << Server::get_me()->str() << " NOTICE " << client->str() << " :*** Couldn't look up your hostname";
     client->send(ss.str());
 
+    Connection::dns_finished(connections[this]);
+
     uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
 
     return;
@@ -213,6 +217,8 @@ void Connection::dns_done(int status, hostent *hostent, DnsCallbackState *state)
 
     delete[] static_cast<char *>(state->addr);
     delete state;
+
+    Connection::dns_finished(connections[this]);
 
     uv_read_start(reinterpret_cast<uv_stream_t *>(handle.get()), on_buf_alloc, on_read);
 

@@ -73,6 +73,10 @@ private:
   string host;
 
 public:
+  // Events
+  static Event<ConnectionPtr> ip_connecting;
+  static Event<ConnectionPtr> dns_finished;
+
   // static methods
   static void add(ConnectionPtr);
   static void del(ConnectionPtr);

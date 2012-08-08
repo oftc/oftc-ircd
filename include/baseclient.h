@@ -53,6 +53,8 @@ protected:
   time_t last_data;
   time_t ping_sent;
 public:
+  // Events
+
   static void init();
 
   // list managers

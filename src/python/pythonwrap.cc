@@ -30,6 +30,7 @@
 #include "python/clientwrap.h"
 #include "python/eventwrap.h"
 #include "python/channelwrap.h"
+#include "python/connectionwrap.h"
 #include "python/pythonloader.h"
 
 // Static initialisers
@@ -39,16 +40,19 @@ template void PythonWrap<ParserWrap>::init(PyObject *, const char *name);
 template void PythonWrap<EventWrap>::init(PyObject *, const char *name);
 template void PythonWrap<ClientWrap>::init(PyObject *, const char *name);
 template void PythonWrap<ChannelWrap>::init(PyObject *, const char *name);
+template void PythonWrap<ConnectionWrap>::init(PyObject *, const char *name);
 
 template ParserWrap *PythonWrap<ParserWrap>::wrap(void *);
 template EventWrap *PythonWrap<EventWrap>::wrap(void *);
 template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
 template ChannelWrap *PythonWrap<ChannelWrap>::wrap(void *);
+template ConnectionWrap *PythonWrap<ConnectionWrap>::wrap(void *);
 
 template bool PythonWrap<ParserWrap>::handle_event(PyObject *event, PyObject *args);
 template bool PythonWrap<EventWrap>::handle_event(PyObject *event, PyObject *args);
 template bool PythonWrap<ClientWrap>::handle_event(PyObject *event, PyObject *args);
 template bool PythonWrap<ChannelWrap>::handle_event(PyObject *event, PyObject *args);
+template bool PythonWrap<ConnectionWrap>::handle_event(PyObject *event, PyObject *args);
 
 template<class T>
 void PythonWrap<T>::init(PyObject *module, const char *name)

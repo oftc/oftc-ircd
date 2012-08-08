@@ -94,6 +94,7 @@ void Listener::connected(uv_stream_t *stream, int status)
   Client::add_unregistered(client);
 
   connection->accept(stream);
+  Connection::ip_connecting(connection);
 
   Client::connected(client);
 }
