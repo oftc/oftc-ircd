@@ -36,6 +36,7 @@ private:
   static PyObject *connected;
   static PyObject *registering;
   static PyObject *disconnected;
+  static PyObject *closing;
 
   ClientPtr client;
 public:
@@ -46,6 +47,7 @@ public:
   static bool on_connected(ClientPtr);
   static bool on_disconnected(ClientPtr);
   static bool on_registering(ClientPtr);
+  static bool on_closing(ClientPtr, string);
 
   // Get/Setters
   static PyObject *get_wrap(ClientWrap *, void *);

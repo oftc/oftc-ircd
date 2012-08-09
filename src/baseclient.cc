@@ -30,6 +30,7 @@
 #include "system.h"
 
 unordered_map<irc_string, ClientPtr> BaseClient::names;
+Event<ClientPtr, string> BaseClient::closing;
 
 BaseClient::BaseClient() : level(Unregistered), last_data(0)
 {
@@ -47,6 +48,8 @@ void BaseClient::close(string message)
     return;
 
   stringstream ss;
+
+  BaseClient::closing(names[name], message);
 
   ss << "ERROR :Closing link: " << host << " (" << message << ")";
 

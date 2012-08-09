@@ -31,6 +31,7 @@
 #include <list>
 #include "command.h"
 #include "ircstring.h"
+#include "event.h"
 
 using std::string;
 using std::list;
@@ -54,6 +55,7 @@ protected:
   time_t ping_sent;
 public:
   // Events
+  static Event<ClientPtr, string> closing;
 
   static void init();
 

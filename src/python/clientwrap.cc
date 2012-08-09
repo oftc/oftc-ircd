@@ -39,6 +39,7 @@ template class PythonWrap<ClientWrap>;
 ClientWrap *ClientWrap::me;
 PyObject *ClientWrap::connected;
 PyObject *ClientWrap::registering;
+PyObject *ClientWrap::closing;
 PyObject *ClientWrap::disconnected;
 
 static PyMethodDef client_methods[] =
@@ -158,15 +159,18 @@ void ClientWrap::init(PyObject *module)
   connected = PythonWrap<EventWrap>::call(NULL);
   registering = PythonWrap<EventWrap>::call(NULL);
   disconnected = PythonWrap<EventWrap>::call(NULL);
+  closing = PythonWrap<EventWrap>::call(NULL);
 
   PyDict_SetItemString(type_object.tp_dict, "Me", me);
   PyDict_SetItemString(type_object.tp_dict, "connected", connected);
   PyDict_SetItemString(type_object.tp_dict, "registering", registering);
   PyDict_SetItemString(type_object.tp_dict, "disconnected", disconnected);
+  PyDict_SetItemString(type_object.tp_dict, "closing", closing);
 
   Client::connected += function<bool(ClientPtr)>(on_connected);
   Client::registering += function<bool(ClientPtr)>(on_registering);
   Client::disconnected += function<bool(ClientPtr)>(on_disconnected);
+  BaseClient::closing += function<bool(ClientPtr, string)>(on_closing);
 }
 
 PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
@@ -577,6 +581,23 @@ bool ClientWrap::on_disconnected(ClientPtr client)
   args = Py_BuildValue("(O)", ptr);
 
   ret = handle_event(disconnected, args);
+
+  Py_DECREF(args);
+  Py_DECREF(ptr);
+
+  return ret;
+}
+
+bool ClientWrap::on_closing(ClientPtr client, string reason)
+{
+  PyObject *args, *ptr;
+  bool ret;
+
+  ptr = wrap(&client);
+
+  args = Py_BuildValue("(Os)", ptr, reason);
+
+  ret = handle_event(closing, args);
 
   Py_DECREF(args);
   Py_DECREF(ptr);
