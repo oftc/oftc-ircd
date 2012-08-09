@@ -595,7 +595,7 @@ bool ClientWrap::on_closing(ClientPtr client, string reason)
 
   ptr = wrap(&client);
 
-  args = Py_BuildValue("(Os)", ptr, reason);
+  args = Py_BuildValue("(Os)", ptr, reason.c_str());
 
   ret = handle_event(closing, args);
 
