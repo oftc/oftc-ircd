@@ -34,8 +34,6 @@ using std::ifstream;
 using std::cerr;
 using std::endl;
 
-typedef unordered_map<string, ConfigSection *>::const_iterator ConfigSectionConstIt;
-
 // Initialise the static member
 unordered_map<string, ConfigSection *> Config::sections;
 
@@ -49,7 +47,7 @@ void Config::init(const string path)
   if(!config.is_open())
     throw config_error(string("Failed to open config: ") + path);
 
-  for(ConfigSectionConstIt it = sections.begin(); it != sections.end(); it++)
+  for(auto it = sections.begin(); it != sections.end(); it++)
   {
     it->second->set_defaults();
   }
@@ -61,9 +59,8 @@ void Config::init(const string path)
     throw config_error("Root node is not an object");
 
   Json::Value::Members members = root.getMemberNames();
-  Json::Value::Members::const_iterator mit;
 
-  for(mit = members.begin(); mit != members.end(); mit++)
+  for(auto mit = members.begin(); mit != members.end(); mit++)
   {
     const string name = *mit;
     ConfigSection *section = sections[name];

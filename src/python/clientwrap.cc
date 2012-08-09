@@ -512,7 +512,7 @@ PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
 
   numeric = PyInt_AsLong(item);
   format = Numeric::raw_format(numeric);
-  for(string::const_iterator i = format.begin(); i != format.end(); i++)
+  for(auto i = format.begin(); i != format.end(); i++)
   {
     char c = *i;
 

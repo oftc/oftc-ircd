@@ -87,12 +87,12 @@ void Client::send_channels_common(string message)
 {
   unordered_map<BaseClient *, ClientPtr> sent_clients;
 
-  for(list<ChannelPtr>::const_iterator it = channels.begin(); it != channels.end(); it++)
+  for(auto it = channels.begin(); it != channels.end(); it++)
   {
     ChannelPtr channel = *it;
     list<Membership> members = channel->get_members();
 
-    for(list<Membership>::const_iterator mit = members.begin(); mit != members.end(); mit++)
+    for(auto mit = members.begin(); mit != members.end(); mit++)
     {
       Membership ms = *mit;
 
@@ -199,9 +199,7 @@ void Client::remove(ClientPtr client)
 
 void Client::check_pings(uv_timer_t *handle, int status)
 {
-  list<ClientPtr>::const_iterator it;
-
-  for(it = client_list.begin(); it != client_list.end(); it++)
+  for(auto it = client_list.begin(); it != client_list.end(); it++)
   {
     ClientPtr client = *it;
 
@@ -211,7 +209,7 @@ void Client::check_pings(uv_timer_t *handle, int status)
     }
   }
 
-  for(it = unregistered_list.begin(); it != unregistered_list.end(); it++)
+  for(auto it = unregistered_list.begin(); it != unregistered_list.end(); it++)
   {
     ClientPtr client = *it;
 

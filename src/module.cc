@@ -33,8 +33,6 @@
 
 using std::transform;
 
-typedef vector<Module>::const_iterator ModuleConstIt;
-
 ModuleSection Module::config;
 vector<Module> Module::modules;
 
@@ -71,7 +69,7 @@ Module Module::create(string name, string filename)
 
 void Module::load_all()
 {
-  for(ModuleConstIt it = modules.begin(); it != modules.end(); it++)
+  for(auto it = modules.begin(); it != modules.end(); it++)
   {
     Module module = *it;
     string filename = module.get_filename();

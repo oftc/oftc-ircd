@@ -39,7 +39,7 @@ void ListenerSection::process(const Json::Value value)
   if(value.type() != Json::arrayValue)
     throw config_error("listener section not an array as expected");
 
-  for(Json::Value::const_iterator it = value.begin(); it != value.end(); it++)
+  for(auto it = value.begin(); it != value.end(); it++)
   {
     Json::Value val = *it;
     string host(val["host"].asString());

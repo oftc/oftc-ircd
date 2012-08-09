@@ -37,8 +37,6 @@
 #include "connection.h"
 #include "ssl.h"
 
-typedef vector<ListenerPtr>::const_iterator ListenerConstIt;
-
 ListenerSection Listener::config;
 vector<ListenerPtr> Listener::listeners;
 
@@ -152,7 +150,7 @@ void Listener::create(string host, int port, ListenerFlag flags)
 
 void Listener::start_listeners()
 {
-  for(ListenerConstIt it = listeners.begin(); it != listeners.end(); it++)
+  for(auto it = listeners.begin(); it != listeners.end(); it++)
   {
     (*it)->start();
   }

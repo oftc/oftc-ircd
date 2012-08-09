@@ -79,7 +79,6 @@ void Channel::set_name(const irc_string _name)
 
 void Channel::send_names(ClientPtr client)
 {
-  list<Membership>::const_iterator it;
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
   stringstream reply;
   string reply_format;
@@ -89,7 +88,7 @@ void Channel::send_names(ClientPtr client)
   reply_format = Numeric::format_str(Numeric::Rpl_NamesReply, '=', name.c_str(), "");
   reply << reply_format;
 
-  for(it = members.begin(); it != members.end(); it++)
+  for(auto it = members.begin(); it != members.end(); it++)
   {
     if(min_len + reply.str().length() + it->client->get_name().length() >= 510)
     {
@@ -119,9 +118,7 @@ void Channel::send_names(ClientPtr client)
 
 void Channel::send(const ClientPtr client, const string str)
 {
-  list<Membership>::const_iterator it;
-
-  for(it = members.begin(); it != members.end(); it++)
+  for(auto it = members.begin(); it != members.end(); it++)
   {
     if(it->client != client)
       it->client->send(str);

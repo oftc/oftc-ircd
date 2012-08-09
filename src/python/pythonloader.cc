@@ -39,8 +39,6 @@
 using std::stringstream;
 using std::string;
 
-typedef vector<string>::const_iterator VectorStringConstIt;
-
 static PyMethodDef module_methods[] =
 {
   { "get_motd", PythonLoader::get_motd, 0, "Return the MOTD for the server" },
@@ -60,7 +58,7 @@ void PythonLoader::init()
   path << Py_GetPath();
   vector<string> paths = Module::get_module_paths();
 
-  for(VectorStringConstIt it = paths.begin(); it != paths.end(); it++)
+  for(auto it = paths.begin(); it != paths.end(); it++)
   {
 #ifdef _WIN32
     path << ";" << *it;

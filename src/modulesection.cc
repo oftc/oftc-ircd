@@ -39,9 +39,8 @@ void ModuleSection::process(const Json::Value value)
     throw config_error("module config section wasn't an object as expected");
 
   Json::Value::Members members = value.getMemberNames();
-  Json::Value::Members::const_iterator mit;
 
-  for(mit = members.begin(); mit != members.end(); mit++)
+  for(auto mit = members.begin(); mit != members.end(); mit++)
   {
     const string name = *mit;
     if(name == "paths")
@@ -66,9 +65,8 @@ void ModuleSection::process(const Json::Value value)
         throw config_error("module config section wasn't an object as expected");
 
       Json::Value::Members module_members = modules.getMemberNames();
-      Json::Value::Members::const_iterator m_mit;
 
-      for(m_mit = module_members.begin(); m_mit != module_members.end(); m_mit++)
+      for(auto m_mit = module_members.begin(); m_mit != module_members.end(); m_mit++)
       {
         const string name = *m_mit;
         Json::Value module = modules[name];

@@ -44,9 +44,7 @@ public:
 
   bool fire(T... args)
   {
-    typename list<function<bool(T...)> >::const_iterator it;
-
-    for(it = handlers.begin();  it != handlers.end(); it++)
+    for(auto it = handlers.begin();  it != handlers.end(); it++)
     {
       function<bool(T...)> func = *it;
       func(args...);
@@ -137,9 +135,7 @@ public:
 
   bool fire(T1 arg)
   {
-    typename list<function<bool(T1)> >::const_iterator it;
-
-    for(it = handlers.begin();  it != handlers.end(); it++)
+    for(auto it = handlers.begin();  it != handlers.end(); it++)
     {
       function<bool(T1)> func = *it;
       func(arg);
@@ -150,9 +146,7 @@ public:
 
   bool fire(T1 arg, T2 arg2)
   {
-    typename list<function<bool(T1, T2)> >::const_iterator it;
-
-    for(it = handlers2.begin();  it != handlers2.end(); it++)
+    for(auto it = handlers2.begin();  it != handlers2.end(); it++)
     {
       function<bool(T1, T2)> func = *it;
       func(arg, arg2);
@@ -163,9 +157,7 @@ public:
 
   bool fire(T1 arg, T2 arg2, T3 arg3)
   {
-    typename list<function<bool(T1, T2, T3)> >::const_iterator it;
-
-    for(it = handlers3.begin();  it != handlers3.end(); it++)
+    for(auto it = handlers3.begin();  it != handlers3.end(); it++)
     {
       function<bool(T1, T2, T3)> func = *it;
       func(arg, arg2, arg3);
@@ -176,9 +168,7 @@ public:
 
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4)
   {
-    typename list<function<bool(T1, T2, T3, T4)> >::const_iterator it;
-
-    for(it = handlers4.begin();  it != handlers4.end(); it++)
+    for(auto it = handlers4.begin();  it != handlers4.end(); it++)
     {
       function<bool(T1, T2, T3, T4)> func = *it;
       func(arg, arg2, arg3, arg4);
@@ -189,9 +179,7 @@ public:
 
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
   {
-    typename list<function<bool(T1, T2, T3, T4, T5)> >::const_iterator it;
-
-    for(it = handlers5.begin();  it != handlers5.end(); it++)
+    for(auto it = handlers5.begin();  it != handlers5.end(); it++)
     {
       function<bool(T1, T2, T3, T4, T5)> func = *it;
       func(arg, arg2, arg3, arg4, arg5);
