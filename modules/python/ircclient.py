@@ -146,3 +146,7 @@ def handle_names(client, target):
 def client_disconnected(client):
   if(client.Name):
     Client.del_name(client)
+
+@event(Client.closing)
+def client_closing(client, reason):
+  client.send_channels_common(":{client} QUIT :{reason}", reason=reason)

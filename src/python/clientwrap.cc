@@ -60,6 +60,8 @@ static PyMethodDef client_methods[] =
     METH_VARARGS, "Send the client a numeric" },
   { "send", reinterpret_cast<PyCFunction>(ClientWrap::send),
     METH_KEYWORDS | METH_VARARGS, "Send the client a message" },
+  { "send_channels_common", reinterpret_cast<PyCFunction>(ClientWrap::send_channels_common),
+    METH_KEYWORDS | METH_VARARGS, "Send a message to the users that share channels with this client" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -424,6 +426,47 @@ PyObject *ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
   }
 
   self->client->send(PyString_AsString(result));
+
+  Py_DECREF(result);
+
+  Py_RETURN_NONE;
+}
+
+PyObject *ClientWrap::send_channels_common(ClientWrap *self, PyObject *args, PyObject *kwargs)
+{
+  PyObject *fmt, *result, *meth, *fargs, *fdict;
+
+  fmt = PyTuple_GetItem(args, 0);
+
+  if(!PyString_Check(fmt))
+  {
+    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
+    return NULL;
+  }
+
+  fdict = PyDict_New();
+  PyDict_SetItemString(fdict, "client", self);
+  PyDict_SetItemString(fdict, "me", me);
+
+  if (kwargs != NULL)
+    PyDict_Update(fdict, kwargs);
+
+  meth = PyObject_GetAttrString(fmt, "format");
+
+  fargs = PyTuple_New(0);
+  result = PyObject_Call(meth, fargs, fdict);
+
+  Py_DECREF(meth);
+  Py_DECREF(fdict);
+  Py_DECREF(fargs);
+
+  if(result == NULL)
+  {
+    return NULL;
+  }
+
+  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->client);
+  ptr->send_channels_common(PyString_AsString(result));
 
   Py_DECREF(result);
 

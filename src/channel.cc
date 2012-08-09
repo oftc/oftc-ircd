@@ -67,6 +67,11 @@ irc_string Channel::get_name() const
   return name;
 }
 
+list<Membership> Channel::get_members() const
+{
+  return members;
+}
+
 void Channel::set_name(const irc_string _name)
 {
   name = _name;

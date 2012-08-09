@@ -26,15 +26,18 @@
 #include "stdinc.h"
 #include <stdarg.h>
 #include <iomanip>
+#include <list>
 #include "system.h"
 #include "client.h"
 #include "connection.h"
 #include "numeric.h"
 #include "server.h"
+#include "channel.h"
 
 using std::string;
 using std::setw;
 using std::setfill;
+using std::list;
 
 Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registering;
@@ -78,6 +81,28 @@ void Client::send(int numeric, ...)
   send(Numeric::format(numeric, args), numeric);
   
   va_end(args);
+}
+
+void Client::send_channels_common(string message)
+{
+  unordered_map<BaseClient *, ClientPtr> sent_clients;
+
+  for(list<ChannelPtr>::const_iterator it = channels.begin(); it != channels.end(); it++)
+  {
+    ChannelPtr channel = *it;
+    list<Membership> members = channel->get_members();
+
+    for(list<Membership>::const_iterator mit = members.begin(); mit != members.end(); mit++)
+    {
+      Membership ms = *mit;
+
+      if(sent_clients[ms.client.get()])
+        continue;
+
+      sent_clients[ms.client.get()] = ms.client;
+      ms.client->send(message);
+    }
+  }
 }
 
 irc_string Client::str() const

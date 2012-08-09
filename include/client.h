@@ -73,6 +73,7 @@ public:
   void add_channel(const ChannelPtr);
   void send(const string arg, int);
   void send(int, ...);
+  void send_channels_common(const string);
   using BaseClient::send;
   irc_string str() const;
   

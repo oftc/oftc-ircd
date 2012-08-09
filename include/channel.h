@@ -74,6 +74,7 @@ public:
 
   // getters
   irc_string get_name() const;
+  list<Membership> get_members() const;
 
   // setters
   void set_name(const irc_string);
@@ -82,6 +83,7 @@ public:
   void add_member(const ClientPtr);
   void send_names(const ClientPtr);
   void send(const ClientPtr, const string);
+  void send_common(const ClientPtr, const string);
   irc_string str() const;
  };
 

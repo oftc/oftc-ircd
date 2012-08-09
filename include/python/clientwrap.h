@@ -63,6 +63,7 @@ public:
   static PyObject *is_registered(ClientWrap *, PyObject *);
   static PyObject *numeric(ClientWrap *, PyObject *);
   static PyObject *send(ClientWrap *, PyObject *, PyObject *);
+  static PyObject *send_channels_common(ClientWrap *, PyObject *, PyObject *);
   static PyObject *str(ClientWrap *);
 
   // ctor/dtor
