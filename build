@@ -1,0 +1,2 @@
+gyp --depth=. -Goutput_dir=ircd -Dlibrary=static_library -Icommon.gypi -f make
+make

@@ -13,7 +13,6 @@
 libltdl
 libtool
 out
-build
 Debug
 Release
 ircd.conf
@@ -30,3 +29,6 @@ ircd.motd
 *.crt
 *.key
 ipch
+Makefile
+ircd.Makefile
+ircd.target.mk
