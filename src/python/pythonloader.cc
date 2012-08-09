@@ -43,7 +43,8 @@ typedef vector<string>::const_iterator VectorStringConstIt;
 
 static PyMethodDef module_methods[] =
 {
-  { "get_motd", PythonLoader::get_motd, METH_NOARGS, "Return the MOTD for the server" }
+  { "get_motd", PythonLoader::get_motd, 0, "Return the MOTD for the server" },
+  { NULL, NULL, 0, NULL }
 };
 
 vector<PyObject *> PythonLoader::loaded_modules;
