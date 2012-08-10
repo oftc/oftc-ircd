@@ -21,6 +21,7 @@
     "421": "%s :Unknown command",
     "422": ":MOTD file is missing",
     "433": "%s :Nickname is already in use",
+    "442": "%s :You're not on that channel",
     "461": "%s :Not enough parameters.  Got %d, expected at least %d",
     "462": ":You are already registered and may not re-register",
     "479": "%s :Bad channel name",

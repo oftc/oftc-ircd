@@ -144,14 +144,19 @@ def handle_names(client, target):
   target.send_names(client)
 
 @register("PART", min_args=1, max_args=2)
-@have_target(Target.CHANNEL)
+@have_target(Target.CHANNEL, numeric=numerics.ERR_NOSUCHCHANNEL)
 def handle_part(client, target, *args):
   if len(args) > 0:
     reason = args[0]
   else:
     reason = ""
 
+  if not target.is_member(client):
+    client.numeric(numerics.ERR_NOTONCHANNEL, target.Name)
+    return
+
   target.send(":{client} PART {channel} :{reason}", client=client, channel=target.Name, reason=reason)
+  client.send(":{client} PART {channel} :{reason}", channel=target.Name, reason=reason)
   client.remove_channel(target)
   target.remove_member(client)
 
