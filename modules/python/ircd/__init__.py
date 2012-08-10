@@ -77,11 +77,16 @@ def have_target(target_type=Target.ANY, numeric=numerics.ERR_NOSUCHNICK, epilog=
     @wraps(func)
     def decorator(client, name, *args, **kwargs):
       _numeric = numeric
+      wants_channel = name[0] == '#'
+      target = None
 
-      if name[0] == '#':
-        target = Channel.find(name)
+      if target_type == Target.CHANNEL or wants_channel:
         if _numeric == numerics.ERR_NOSUCHNICK:
-          _numeric = numerics.ERR_NOSUCHCHANNEL
+          if wants_channel:
+            _numeric = numerics.ERR_NOSUCHCHANNEL
+            target = Channel.find(name)
+          else:
+            _numeric = numerics.ERR_BADCHANNELNAME
       else:
         target = Client.find_by_name(name)
 
@@ -91,22 +96,7 @@ def have_target(target_type=Target.ANY, numeric=numerics.ERR_NOSUCHNICK, epilog=
           client.numeric(epilog, name)
         return
       else:
-        valid = True
-
-        if target_type == Target.CHANNEL and not isinstance(target, Channel):
-          if _numeric == numerics.ERR_NOSUCHNICK:
-            _numeric = numerics.ERR_NOSUCHCHANNEL
-          valid = False
-        elif target_type == Target.NICK and not isinstance(target, Client):
-          valid = False
-
-        if valid:
-          return func(client, target, *args, **kwargs)
-        else:
-          client.numeric(_numeric, name)
-          if epilog:
-            client.numeric(epilog, name)
-          return
+        return func(client, target, *args, **kwargs)
 
     return decorator
   return wrapper
