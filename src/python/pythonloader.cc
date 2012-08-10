@@ -27,6 +27,7 @@
 #include "stdinc.h"
 #include <sstream>
 #include <string>
+#include <iostream>
 #include "python/pythonloader.h"
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
@@ -38,6 +39,8 @@
 
 using std::stringstream;
 using std::string;
+using std::cerr;
+using std::endl;
 
 static PyMethodDef module_methods[] =
 {
@@ -134,6 +137,7 @@ void PythonLoader::log_error()
   Py_DECREF(module);
 
   Logging::error << message << Logging::endl;
+  cerr << message << endl;
 }
 
 PyObject *PythonLoader::get_motd(PyObject *self, PyObject *arg)
