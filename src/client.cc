@@ -64,6 +64,7 @@ void Client::close(const string reason)
     channel->remove_member(client_list[this]);
   }
 }
+
 void Client::remove_channel(const ChannelPtr channel)
 {
   channels.remove(channel);
@@ -186,7 +187,7 @@ void Client::add(ClientPtr ptr)
   if(!registering(client))
     return;
 
-  client_list[client.get()] = client;
+  client_list[ptr.get()] = ptr;
   client->set_registered();
 
   unregistered_list.remove(client);
