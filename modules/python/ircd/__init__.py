@@ -93,11 +93,11 @@ def have_target(target_type=Target.ANY, numeric=numerics.ERR_NOSUCHNICK, epilog=
       else:
         valid = True
 
-        if target_type == Target.CHANNEL and not target is Channel:
+        if target_type == Target.CHANNEL and not isinstance(target, Channel):
           if _numeric == numerics.ERR_NOSUCHNICK:
             _numeric = numerics.ERR_NOSUCHCHANNEL
           valid = False
-        elif target_type == Target.NICK and not target is Client:
+        elif target_type == Target.NICK and not isinstance(target, Client):
           valid = False
 
         if valid:
