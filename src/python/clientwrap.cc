@@ -549,7 +549,8 @@ PyObject *ClientWrap::fire_connected(EventWrap *, PyObject *args)
 {
   ClientWrap *client;
 
-  PyArg_ParseTuple(args, "O", &client);
+  if(!PyArg_ParseTuple(args, "O", &client))
+    return NULL;
 
   if(Client::connected(client->client))
     return Py_True;
@@ -561,7 +562,8 @@ PyObject *ClientWrap::fire_disconnected(EventWrap *, PyObject *args)
 {
   ClientWrap *client;
 
-  PyArg_ParseTuple(args, "O", &client);
+  if(!PyArg_ParseTuple(args, "O", &client))
+    return NULL;
 
   if(Client::disconnected(client->client))
     return Py_True;
@@ -573,7 +575,8 @@ PyObject *ClientWrap::fire_registering(EventWrap *, PyObject *args)
 {
   ClientWrap *client;
 
-  PyArg_ParseTuple(args, "O", &client);
+  if(!PyArg_ParseTuple(args, "O", &client))
+    return NULL;
 
   if(Client::registering(client->client))
     return Py_True;
@@ -586,7 +589,8 @@ PyObject *ClientWrap::fire_closing(EventWrap *event, PyObject *args)
   ClientWrap *client;
   char *reason;
 
-  PyArg_ParseTuple(args, "Os", &client, &reason);
+  if(!PyArg_ParseTuple(args, "Os", &client, &reason))
+    return NULL;
 
   if(Client::closing(client->client, reason))
     return Py_True;
