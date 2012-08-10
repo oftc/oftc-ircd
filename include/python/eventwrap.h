@@ -37,7 +37,6 @@ private:
 public:
   // Non Python methods
   static void init(PyObject *);
-  static EventWrap *new_event(PyCFunction *);
 
   // Get/Set Wrappers
   static PyObject *get_wrap(EventWrap *, void *);
