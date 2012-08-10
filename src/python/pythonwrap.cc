@@ -36,11 +36,11 @@
 // Static initialisers
 template<class T> PyTypeObject PythonWrap<T>::type_object;
 
-template void PythonWrap<ParserWrap>::init(PyObject *, const char *name);
-template void PythonWrap<EventWrap>::init(PyObject *, const char *name);
-template void PythonWrap<ClientWrap>::init(PyObject *, const char *name);
-template void PythonWrap<ChannelWrap>::init(PyObject *, const char *name);
-template void PythonWrap<ConnectionWrap>::init(PyObject *, const char *name);
+template void PythonWrap<ParserWrap>::init(PyObject *, const char *);
+template void PythonWrap<EventWrap>::init(PyObject *, const char *);
+template void PythonWrap<ClientWrap>::init(PyObject *, const char *);
+template void PythonWrap<ChannelWrap>::init(PyObject *, const char *);
+template void PythonWrap<ConnectionWrap>::init(PyObject *, const char *);
 
 template ParserWrap *PythonWrap<ParserWrap>::wrap(void *);
 template EventWrap *PythonWrap<EventWrap>::wrap(void *);
@@ -48,11 +48,17 @@ template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
 template ChannelWrap *PythonWrap<ChannelWrap>::wrap(void *);
 template ConnectionWrap *PythonWrap<ConnectionWrap>::wrap(void *);
 
-template bool PythonWrap<ParserWrap>::handle_event(PyObject *event, PyObject *args);
-template bool PythonWrap<EventWrap>::handle_event(PyObject *event, PyObject *args);
-template bool PythonWrap<ClientWrap>::handle_event(PyObject *event, PyObject *args);
-template bool PythonWrap<ChannelWrap>::handle_event(PyObject *event, PyObject *args);
-template bool PythonWrap<ConnectionWrap>::handle_event(PyObject *event, PyObject *args);
+template bool PythonWrap<ParserWrap>::handle_event(PyObject *event, PyObject *);
+template bool PythonWrap<EventWrap>::handle_event(PyObject *event, PyObject *);
+template bool PythonWrap<ClientWrap>::handle_event(PyObject *event, PyObject *);
+template bool PythonWrap<ChannelWrap>::handle_event(PyObject *event, PyObject *);
+template bool PythonWrap<ConnectionWrap>::handle_event(PyObject *event, PyObject *);
+
+template bool PythonWrap<ParserWrap>::check(PyObject *);
+template bool PythonWrap<EventWrap>::check(PyObject *);
+template bool PythonWrap<ClientWrap>::check(PyObject *);
+template bool PythonWrap<ChannelWrap>::check(PyObject *);
+template bool PythonWrap<ConnectionWrap>::check(PyObject *);
 
 template<class T>
 void PythonWrap<T>::init(PyObject *module, const char *name)
@@ -167,6 +173,12 @@ bool PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
     Py_DECREF(Py_False);
     return false;
   }
+}
+
+template<class T>
+bool PythonWrap<T>::check(PyObject *arg)
+{
+  return Py_TYPE(arg) == &type_object;   
 }
 
 template<class T>

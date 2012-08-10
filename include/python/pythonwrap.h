@@ -39,6 +39,7 @@ public:
   // Python methods
   static PyObject *alloc(PyTypeObject *, Py_ssize_t);
   static T *call(PyObject *);
+  static bool check(PyObject *);
   static PyObject *create(PyTypeObject *, PyObject *, PyObject *);
   static void dealloc(PyObject *);
   static void free(void *);

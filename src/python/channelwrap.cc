@@ -187,6 +187,12 @@ int ChannelWrap::set_wrap(ChannelWrap *self, PyObject *value, void *closure)
 
 PyObject *ChannelWrap::add_member(ChannelWrap *self, ClientWrap *client)
 {
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
+  {
+    PyErr_SetString(PyExc_TypeError, "Argument must be a Client type");
+    return NULL;
+  }
+
   self->channel->add_member(client->get_client());
 
   Py_RETURN_NONE;
@@ -194,7 +200,7 @@ PyObject *ChannelWrap::add_member(ChannelWrap *self, ClientWrap *client)
 
 PyObject *ChannelWrap::add(ChannelWrap *self, ChannelWrap *channel)
 {
-  if(Py_TYPE(channel) != &type_object)
+  if(!ChannelWrap::check(channel))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Channel object");
     return NULL;
@@ -223,7 +229,7 @@ PyObject *ChannelWrap::find(PyObject *self, PyObject *name)
 
 PyObject *ChannelWrap::del(PyObject *self, ChannelWrap *channel)
 {
-  if(Py_TYPE(channel) != &type_object)
+  if(!ChannelWrap::check(channel))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Channel object");
     return NULL;
@@ -236,6 +242,12 @@ PyObject *ChannelWrap::del(PyObject *self, ChannelWrap *channel)
 
 PyObject *ChannelWrap::send_names(ChannelWrap *self, ClientWrap *client)
 {
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
+  {
+    PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
+    return NULL;
+  }
+  
   self->channel->send_names(client->get_client());
 
   Py_RETURN_NONE;
@@ -278,6 +290,12 @@ PyObject *ChannelWrap::send(ChannelWrap *self, PyObject *args, PyObject *kwargs)
 
 PyObject *ChannelWrap::is_member(ChannelWrap *self, ClientWrap *client)
 {
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
+  {
+    PyErr_SetString(PyExc_TypeError, "Argument must be a Client type");
+    return NULL;
+  }
+
   if(self->channel->is_member(client->get_client()))
     Py_RETURN_TRUE;
   else
@@ -286,6 +304,12 @@ PyObject *ChannelWrap::is_member(ChannelWrap *self, ClientWrap *client)
 
 PyObject *ChannelWrap::remove_member(ChannelWrap *self, ClientWrap *client)
 {
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
+  {
+    PyErr_SetString(PyExc_TypeError, "Argument must be a Client type");
+    return NULL;
+  }
+
   self->channel->remove_member(client->get_client());
 
   Py_RETURN_NONE;

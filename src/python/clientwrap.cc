@@ -343,7 +343,7 @@ PyObject *ClientWrap::add(ClientWrap *self, ClientWrap *client)
 
 PyObject *ClientWrap::add_name(PyObject *self, ClientWrap *client)
 {
-  if(Py_TYPE(client) != &type_object)
+  if(!ClientWrap::check(client))
   {
     PyErr_SetString(PyExc_TypeError, "Argument must be a Client");
     return NULL;
@@ -383,7 +383,7 @@ PyObject *ClientWrap::find_by_name(PyObject *self, PyObject *name)
 
 PyObject *ClientWrap::del_name(PyObject *self, ClientWrap *client)
 {
-  if(Py_TYPE(client) != &type_object)
+  if(!ClientWrap::check(client))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Client object");
     return NULL;
@@ -572,6 +572,12 @@ PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
 PyObject *ClientWrap::remove_channel(ClientWrap *self, ChannelWrap *channel)
 {
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->client);
+
+  if(!ChannelWrap::check(channel))
+  {
+    PyErr_SetString(PyExc_TypeError, "argument must be a Channel");
+    return NULL;
+  }
 
   ptr->remove_channel(channel->get_channel());
 
