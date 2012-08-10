@@ -116,6 +116,9 @@ void Client::send_channels_common(string message)
       if(sent_clients[ms.client.get()])
         continue;
 
+      if(ms.client.get() == this)
+        continue;
+
       sent_clients[ms.client.get()] = ms.client;
       ms.client->send(message);
     }
