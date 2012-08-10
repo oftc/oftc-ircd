@@ -42,6 +42,8 @@ using std::list;
 Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registering;
 Event<ClientPtr> Client::disconnected;
+Event<ClientPtr, irc_string> Client::nick_changing;
+Event<ClientPtr> Client::nick_changed;
 list<ClientPtr> Client::unregistered_list;
 map<BaseClient *, ClientPtr> Client::client_list;
 uv_timer_t Client::ping_timer;
