@@ -31,7 +31,7 @@
 #include "python/eventwrap.h"
 #include "python/channelwrap.h"
 #include "python/connectionwrap.h"
-#include "python/pythonloader.h"
+#include "python/pythonutil.h"
 
 // Static initialisers
 template<class T> PyTypeObject PythonWrap<T>::type_object;
@@ -48,11 +48,11 @@ template ClientWrap *PythonWrap<ClientWrap>::wrap(void *);
 template ChannelWrap *PythonWrap<ChannelWrap>::wrap(void *);
 template ConnectionWrap *PythonWrap<ConnectionWrap>::wrap(void *);
 
-template bool PythonWrap<ParserWrap>::handle_event(PyObject *event, PyObject *);
-template bool PythonWrap<EventWrap>::handle_event(PyObject *event, PyObject *);
-template bool PythonWrap<ClientWrap>::handle_event(PyObject *event, PyObject *);
-template bool PythonWrap<ChannelWrap>::handle_event(PyObject *event, PyObject *);
-template bool PythonWrap<ConnectionWrap>::handle_event(PyObject *event, PyObject *);
+template bool PythonWrap<ParserWrap>::handle_event(PyObject *, PyObject *);
+template bool PythonWrap<EventWrap>::handle_event(PyObject *, PyObject *);
+template bool PythonWrap<ClientWrap>::handle_event(PyObject *, PyObject *);
+template bool PythonWrap<ChannelWrap>::handle_event(PyObject *, PyObject *);
+template bool PythonWrap<ConnectionWrap>::handle_event(PyObject *, PyObject *);
 
 template bool PythonWrap<ParserWrap>::check(PyObject *);
 template bool PythonWrap<EventWrap>::check(PyObject *);
@@ -74,7 +74,7 @@ void PythonWrap<T>::init(PyObject *module, const char *name)
 
   if(PyType_Ready(&type_object) < 0)
   {
-    PythonLoader::log_error();
+    PythonUtil::log_error();
     throw runtime_error("Unable to create type");
   }
 
@@ -160,7 +160,7 @@ bool PythonWrap<T>::handle_event(PyObject *event, PyObject *args)
   ret = PyObject_CallObject(handler, args);
   if(ret == NULL)
   {
-    PythonLoader::log_error();
+    PythonUtil::log_error();
     return false;
   }
   else if(ret == Py_True)

@@ -28,13 +28,12 @@
 #include <sstream>
 #include <string>
 #include <iostream>
-#include "python/pythonloader.h"
+#include "python/pythonutil.h"
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
 #include "python/clientwrap.h"
 #include "python/eventwrap.h"
 #include "python/channelwrap.h"
-#include "python/pythonutil.h"
 #include "module.h"
 #include "system.h"
 
@@ -42,61 +41,50 @@ using std::stringstream;
 using std::string;
 using std::cerr;
 using std::endl;
-
-static PyMethodDef module_methods[] =
+  
+void PythonUtil::log_error()
 {
-  { "get_motd", PythonUtil::get_motd, 0, "Return the MOTD for the server" },
-  { NULL, NULL, 0, NULL }
-};
+  PyObject *module, *attr, *ret;
+  PyObject *type, *value, *traceback;
+  PyObject *arg, *str;
+  string message = "Python error: ";
 
-vector<PyObject *> PythonLoader::loaded_modules;
+  if(!PyErr_Occurred())
+    return;
 
-void PythonLoader::init()
-{
-  PyObject *m;
+  PyErr_Fetch(&type, &value, &traceback);
+  PyErr_NormalizeException(&type, &value, &traceback);
 
-  Py_InitializeEx(0);
+  module = PyImport_ImportModule("traceback");
+  attr = PyObject_GetAttrString(module, "format_exception");
 
-  stringstream path;
+  if(traceback == NULL)
+    arg = Py_BuildValue("(OOO)", type, value, Py_None);
+  else
+    arg = Py_BuildValue("(OOO)", type, value, traceback);
+    
 
-  path << Py_GetPath();
-  vector<string> paths = Module::get_module_paths();
+  ret = PyObject_CallObject(attr, arg);
 
-  for(auto it = paths.begin(); it != paths.end(); it++)
+  int size = PyList_Size(ret);
+
+  for(int i = 0; i < size; i++)
   {
-#ifdef _WIN32
-    path << ";" << *it;
-#else
-    path << ":" << *it;
-#endif
+    str = PyList_GetItem(ret, i);
+    message += PyString_AsString(str);
   }
 
-  PySys_SetPath(const_cast<char*>(path.str().c_str()));
+  Py_DECREF(arg);
+  Py_DECREF(attr);
+  Py_DECREF(module);
 
-  m = Py_InitModule3("pythonwrap", module_methods, 
-    "Wrapper module for oftc-ircd C(++) interface");
-
-  if(m == NULL)
-  {
-    PythonUtil::log_error();
-    throw runtime_error("Error initialising python");
-  }
-
-  ParserWrap::init(m);
-  EventWrap::init(m);
-  ClientWrap::init(m);
-  ChannelWrap::init(m);
+  Logging::error << message << Logging::endl;
+  cerr << message << endl;
 }
 
-void PythonLoader::load(string name)
+PyObject *PythonUtil::get_motd(PyObject *self, PyObject *arg)
 {
-  PyObject *module = PyImport_ImportModule(name.c_str());
+  PyObject *ret = PyString_FromString(System::get_motd().c_str());
 
-  if(module == NULL)
-  {
-    PythonUtil::log_error();
-    return;
-  }
-
-  loaded_modules.push_back(module);
+  return ret;
 }

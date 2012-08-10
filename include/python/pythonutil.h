@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PYTHONLOADER_H_INC
-#define PYTHONLOADER_H_INC
+#ifndef PYTHONUTIL_H_INC
+#define PYTHONUTIL_H_INC
 
 #include "Python.h"
 #include <string>
@@ -33,13 +33,12 @@
 using std::string;
 using std::vector;
 
-class PythonLoader
+class PythonUtil
 {
 private:
-  static vector<PyObject *> loaded_modules;
 public:
-  static void init();
-  static void load(string);
+  static void log_error();
+  static PyObject *get_motd(PyObject *, PyObject *);
 };
 
 #endif

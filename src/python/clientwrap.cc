@@ -29,7 +29,7 @@
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
 #include "python/eventwrap.h"
-#include "python/pythonloader.h"
+#include "python/pythonutil.h"
 #include "numeric.h"
 #include "client.h"
 #include "server.h"
@@ -156,7 +156,7 @@ void ClientWrap::init(PyObject *module)
   me = ClientWrap::wrap(&ptr);
   if(me == NULL)
   {
-    PythonLoader::log_error();
+    PythonUtil::log_error();
     throw runtime_error("Python failed to initialise");
   }
 
