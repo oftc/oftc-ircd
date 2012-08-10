@@ -144,7 +144,7 @@ def handle_names(client, target):
   target.send_names(client)
 
 @register("PART", min_args=1, max_args=2)
-@have_target(Target.CHANNEL, numeric=numerics.ERR_NOSUCHCHANNEL)
+@have_target(Target.CHANNEL)
 def handle_part(client, target, *args):
   if len(args) > 0:
     reason = args[0]

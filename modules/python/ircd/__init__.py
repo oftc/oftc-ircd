@@ -87,7 +87,7 @@ def have_target(target_type=Target.ANY, numeric=numerics.ERR_NOSUCHNICK, epilog=
         if wants_channel:
           target = Channel.find(name)
         else:
-          _numeric = numerics.ERR_BADCHANNELNAME
+          _numeric = numerics.ERR_BADCHANNAME
       else:
         target = Client.find_by_name(name)
 
