@@ -31,6 +31,8 @@
 #include "python/clientwrap.h"
 #include "channel.h"
 
+class ClientWrap;
+
 class ChannelWrap : public PythonWrap<ChannelWrap>
 {
 private:
@@ -58,6 +60,9 @@ public:
   // ctor/dtor
   ChannelWrap(PyObject *, PyObject *);
   ~ChannelWrap();
+
+  // members
+  inline ChannelPtr get_channel() const { return channel; }
 };
 
 #endif

@@ -28,6 +28,9 @@
 
 #include "Python.h"
 #include "baseclient.h"
+#include "python/channelwrap.h"
+
+class ChannelWrap;
 
 class ClientWrap : public PythonWrap<ClientWrap>
 {
@@ -62,6 +65,7 @@ public:
   static PyObject *find_by_name(PyObject *, PyObject *);
   static PyObject *is_registered(ClientWrap *, PyObject *);
   static PyObject *numeric(ClientWrap *, PyObject *);
+  static PyObject *remove_channel(ClientWrap *, ChannelWrap *);
   static PyObject *send(ClientWrap *, PyObject *, PyObject *);
   static PyObject *send_channels_common(ClientWrap *, PyObject *, PyObject *);
   static PyObject *str(ClientWrap *);

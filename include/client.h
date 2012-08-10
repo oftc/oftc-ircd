@@ -72,10 +72,11 @@ public:
   // Members
   void add_channel(const ChannelPtr);
   void close(const string);
+  void remove_channel(const ChannelPtr);
   void send(const string arg, int);
   void send(int, ...);
-  void send_channels_common(const string);
   using BaseClient::send;
+  void send_channels_common(const string);
   irc_string str() const;
   
   // Tests

@@ -51,13 +51,15 @@ static PyMethodDef client_methods[] =
   { "find_by_name", reinterpret_cast<PyCFunction>(ClientWrap::find_by_name), 
     METH_STATIC, "find a client by name" },
   { "close", reinterpret_cast<PyCFunction>(ClientWrap::close), 
-    0, "Close a client connection" },
+    METH_OLDARGS, "Close a client connection" },
   { "del_name", reinterpret_cast<PyCFunction>(ClientWrap::del_name), 
     METH_STATIC, "delete a client name from the names list" },
   { "is_registered", reinterpret_cast<PyCFunction>(ClientWrap::is_registered),
     METH_NOARGS, "Check if a client is registered or not" },
   { "numeric", reinterpret_cast<PyCFunction>(ClientWrap::numeric),
     METH_VARARGS, "Send the client a numeric" },
+  { "remove_channel", reinterpret_cast<PyCFunction>(ClientWrap::remove_channel),
+    METH_OLDARGS, "Remove the client from the specified channel" },
   { "send", reinterpret_cast<PyCFunction>(ClientWrap::send),
     METH_KEYWORDS | METH_VARARGS, "Send the client a message" },
   { "send_channels_common", reinterpret_cast<PyCFunction>(ClientWrap::send_channels_common),
@@ -563,6 +565,15 @@ PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
   }
 
   ptr->send(output.str(), numeric);
+
+  Py_RETURN_NONE;
+}
+
+PyObject *ClientWrap::remove_channel(ClientWrap *self, ChannelWrap *channel)
+{
+  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->client);
+
+  ptr->remove_channel(channel->get_channel());
 
   Py_RETURN_NONE;
 }

@@ -134,9 +134,21 @@ def handle_join(client, name, *args):
   channel.send_names(client)
 
 @register("NAMES", min_args=1, max_args=1)
-@have_target(numeric=numerics.ERR_NOSUCHCHANNEL)
+@have_target()
 def handle_names(client, target):
   target.send_names(client)
+
+@register("PART", min_args=1, max_args=2)
+@have_target()
+def handle_part(client, target, *args):
+  if len(args) > 0:
+    reason = args[0]
+  else:
+    reason = ""
+
+  client.send_channels_common(":{client} PART {channel} :{reason}", channel=target.Name, reason=reason)
+  client.remove_channel(target)
+  target.remove_member(client)
 
 @event(Client.disconnected)
 def client_disconnected(client):

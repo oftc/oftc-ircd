@@ -64,6 +64,10 @@ void Client::close(const string reason)
     channel->remove_member(client_list[this]);
   }
 }
+void Client::remove_channel(const ChannelPtr channel)
+{
+  channels.remove(channel);
+}
 
 void Client::send(const string arg, int numeric)
 {
