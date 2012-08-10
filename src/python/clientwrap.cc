@@ -40,6 +40,8 @@ PyObject *ClientWrap::connected;
 PyObject *ClientWrap::registering;
 PyObject *ClientWrap::closing;
 PyObject *ClientWrap::disconnected;
+PyObject *ClientWrap::nick_changing;
+PyObject *ClientWrap::nick_changed;
 
 static PyMethodDef client_methods[] =
 {
@@ -163,17 +165,23 @@ void ClientWrap::init(PyObject *module)
   registering = EventWrap::wrap(&fire_registering);
   disconnected = EventWrap::wrap(&fire_disconnected);
   closing = EventWrap::wrap(&fire_closing);
+  nick_changing = EventWrap::wrap(&fire_nick_changing);
+  nick_changed = EventWrap::wrap(&fire_nick_changed);
 
   PyDict_SetItemString(type_object.tp_dict, "Me", me);
   PyDict_SetItemString(type_object.tp_dict, "connected", connected);
   PyDict_SetItemString(type_object.tp_dict, "registering", registering);
   PyDict_SetItemString(type_object.tp_dict, "disconnected", disconnected);
   PyDict_SetItemString(type_object.tp_dict, "closing", closing);
+  PyDict_SetItemString(type_object.tp_dict, "nick_changing", nick_changing);
+  PyDict_SetItemString(type_object.tp_dict, "nick_changed", nick_changed);
 
   Client::connected += function<bool(ClientPtr)>(on_connected);
   Client::registering += function<bool(ClientPtr)>(on_registering);
   Client::disconnected += function<bool(ClientPtr)>(on_disconnected);
   BaseClient::closing += function<bool(ClientPtr, string)>(on_closing);
+  Client::nick_changing += function<bool(ClientPtr, irc_string)>(on_nick_changing);
+  Client::nick_changed += function<bool(ClientPtr, string)>(on_nick_changed);
 }
 
 PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
@@ -598,6 +606,34 @@ PyObject *ClientWrap::fire_closing(EventWrap *event, PyObject *args)
     return Py_False;
 }
 
+PyObject *ClientWrap::fire_nick_changing(EventWrap *event, PyObject *args)
+{
+  ClientWrap *client;
+  char *nick;
+
+  if(!PyArg_ParseTuple(args, "Os", &client, &nick))
+    return NULL;
+
+  if(Client::nick_changing(client->client, nick))
+    return Py_True;
+  else
+    return Py_False;
+}
+
+PyObject *ClientWrap::fire_nick_changed(EventWrap *event, PyObject *args)
+{
+  ClientWrap *client;
+  char *old_str;
+
+  if(!PyArg_ParseTuple(args, "Os", &client, &old_str))
+    return NULL;
+
+  if(Client::nick_changed(client->client, old_str))
+    return Py_True;
+  else
+    return Py_False;
+}
+
 bool ClientWrap::on_connected(ClientPtr client)
 {
   PyObject *args, *ptr;
@@ -658,6 +694,40 @@ bool ClientWrap::on_closing(ClientPtr client, string reason)
   args = Py_BuildValue("(Os)", ptr, reason.c_str());
 
   ret = handle_event(closing, args);
+
+  Py_DECREF(args);
+  Py_DECREF(ptr);
+
+  return ret;
+}
+
+bool ClientWrap::on_nick_changing(ClientPtr client, irc_string nick)
+{
+  PyObject *args, *ptr;
+  bool ret;
+
+  ptr = wrap(&client);
+
+  args = Py_BuildValue("(Os)", ptr, nick.c_str());
+
+  ret = handle_event(nick_changing, args);
+
+  Py_DECREF(args);
+  Py_DECREF(ptr);
+
+  return ret;
+}
+
+bool ClientWrap::on_nick_changed(ClientPtr client, string old_str)
+{
+  PyObject *args, *ptr;
+  bool ret;
+
+  ptr = wrap(&client);
+
+  args = Py_BuildValue("(Os)", ptr, old_str.c_str());
+
+  ret = handle_event(nick_changed, args);
 
   Py_DECREF(args);
   Py_DECREF(ptr);

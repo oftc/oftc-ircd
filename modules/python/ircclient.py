@@ -36,6 +36,9 @@ def handle_nick(client, nick):
 
   old_str = str(client)
 
+  if not Client.nick_changing.fire(client, nick):
+    return
+
   Client.del_name(client)
   client.Name = nick
   Client.add_name(client)
@@ -44,6 +47,7 @@ def handle_nick(client, nick):
     check_and_register(client)
   else:
     client.send(":{oldstr} NICK :{nick}", oldstr=old_str, nick=client.Name)
+    Client.nick_changed.fire(client, old_str)
 
 @register("USER", min_args=4, max_args=4, access=0)
 def handle_user(client, username, unused, unused2, realname):
@@ -163,3 +167,7 @@ def handle_part(client, target, *args):
 @event(Client.closing)
 def client_closing(client, reason):
   client.send_channels_common(":{client} QUIT :{reason}", reason=reason)
+
+@event(Client.nick_changed)
+def client_nick_changed(client, old_source):
+  client.send_channels_common(":{old} NICK :{new}", old=old_source, new=client.Name)

@@ -57,7 +57,7 @@ public:
   static Event<ClientPtr> registering;
   static Event<ClientPtr> disconnected;
   static Event<ClientPtr, irc_string> nick_changing;
-  static Event<ClientPtr> nick_changed;
+  static Event<ClientPtr, string> nick_changed;
 
   // Client list maniuplators
   static void add(const ClientPtr);

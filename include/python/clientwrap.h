@@ -41,7 +41,9 @@ private:
   static PyObject *registering;
   static PyObject *disconnected;
   static PyObject *closing;
-
+  static PyObject *nick_changing;
+  static PyObject *nick_changed;
+  
   ClientPtr client;
 public:
   // Non Python methods
@@ -52,12 +54,16 @@ public:
   static bool on_disconnected(ClientPtr);
   static bool on_registering(ClientPtr);
   static bool on_closing(ClientPtr, string);
+  static bool on_nick_changing(ClientPtr, irc_string);
+  static bool on_nick_changed(ClientPtr, string);
 
   // Event fires
   static PyObject *fire_connected(EventWrap *, PyObject *);
   static PyObject *fire_registering(EventWrap *, PyObject *);
   static PyObject *fire_disconnected(EventWrap *, PyObject *);
   static PyObject *fire_closing(EventWrap *, PyObject *);
+  static PyObject *fire_nick_changing(EventWrap *, PyObject *);
+  static PyObject *fire_nick_changed(EventWrap *, PyObject *);
 
   // Get/Setters
   static PyObject *get_wrap(ClientWrap *, void *);
