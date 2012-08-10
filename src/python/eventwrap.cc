@@ -33,6 +33,7 @@ template class PythonWrap<EventWrap>;
 
 static PyMethodDef event_methods[] =
 {
+  { "fire", reinterpret_cast<PyCFunction>(EventWrap::fire), METH_VARARGS, "fire the event" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -52,8 +53,16 @@ static PyGetSetDef event_getsetters[] =
   { NULL, NULL, NULL, NULL, NULL }
 };
 
-EventWrap::EventWrap(PyObject *args, PyObject *kwds)
+EventWrap::EventWrap(PyObject *args, PyObject *kwds) : fire_func(NULL)
 {
+  PyObject *func;
+
+  if(args != NULL)
+  {
+    PyArg_ParseTuple(args, "O", &func);
+
+    fire_func = static_cast<PyCFunction>(PyCObject_AsVoidPtr(func));
+  }
   Logging::trace << "Created EventWrap: " << this << Logging::endl;
 }
 
@@ -129,4 +138,9 @@ int EventWrap::set_wrap(EventWrap *event, PyObject *value, void *closure)
     event->set_handler(value);
 
   return 0;
+}
+
+PyObject *EventWrap::fire(EventWrap *event, PyObject *args)
+{
+  return (*event->fire_func)(event, args);
 }

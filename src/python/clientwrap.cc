@@ -28,7 +28,6 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
-#include "python/eventwrap.h"
 #include "python/pythonutil.h"
 #include "numeric.h"
 #include "client.h"
@@ -160,10 +159,10 @@ void ClientWrap::init(PyObject *module)
     throw runtime_error("Python failed to initialise");
   }
 
-  connected = PythonWrap<EventWrap>::call(NULL);
-  registering = PythonWrap<EventWrap>::call(NULL);
-  disconnected = PythonWrap<EventWrap>::call(NULL);
-  closing = PythonWrap<EventWrap>::call(NULL);
+  connected = EventWrap::wrap(&fire_connected);
+  registering = EventWrap::wrap(&fire_registering);
+  disconnected = EventWrap::wrap(&fire_disconnected);
+  closing = EventWrap::wrap(&fire_closing);
 
   PyDict_SetItemString(type_object.tp_dict, "Me", me);
   PyDict_SetItemString(type_object.tp_dict, "connected", connected);
@@ -544,6 +543,55 @@ int ClientWrap::compare(ClientWrap *self, ClientWrap *other)
     return 1;
   else
     return -1;
+}
+
+PyObject *ClientWrap::fire_connected(EventWrap *, PyObject *args)
+{
+  ClientWrap *client;
+
+  PyArg_ParseTuple(args, "O", &client);
+
+  if(Client::connected(client->client))
+    return Py_True;
+  else
+    return Py_False;
+}
+
+PyObject *ClientWrap::fire_disconnected(EventWrap *, PyObject *args)
+{
+  ClientWrap *client;
+
+  PyArg_ParseTuple(args, "O", &client);
+
+  if(Client::disconnected(client->client))
+    return Py_True;
+  else
+    return Py_False;
+}
+
+PyObject *ClientWrap::fire_registering(EventWrap *, PyObject *args)
+{
+  ClientWrap *client;
+
+  PyArg_ParseTuple(args, "O", &client);
+
+  if(Client::registering(client->client))
+    return Py_True;
+  else
+    return Py_False;
+}
+
+PyObject *ClientWrap::fire_closing(EventWrap *event, PyObject *args)
+{
+  ClientWrap *client;
+  char *reason;
+
+  PyArg_ParseTuple(args, "Os", &client, &reason);
+
+  if(Client::closing(client->client, reason))
+    return Py_True;
+  else
+    return Py_False;
 }
 
 bool ClientWrap::on_connected(ClientPtr client)

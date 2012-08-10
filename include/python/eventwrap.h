@@ -33,13 +33,18 @@ class EventWrap : public PythonWrap<EventWrap>
 private:
   PyObject *listeners;
   PyObject *handler;
+  PyCFunction fire_func;
 public:
   // Non Python methods
   static void init(PyObject *);
+  static EventWrap *new_event(PyCFunction *);
 
   // Get/Set Wrappers
   static PyObject *get_wrap(EventWrap *, void *);
   static int set_wrap(EventWrap *, PyObject *, void *);
+
+  // static methods
+  static PyObject *fire(EventWrap *, PyObject *);
 
   // Ctor/dtors
   EventWrap(PyObject *, PyObject *);
@@ -50,8 +55,8 @@ public:
   PyObject *get_handler() const;
 
   // Setters
-  void set_listeners(PyObject *value);
-  void set_handler(PyObject *value);
+  void set_listeners(PyObject *);
+  void set_handler(PyObject *);
 };
 
 #endif

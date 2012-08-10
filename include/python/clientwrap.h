@@ -29,6 +29,7 @@
 #include "Python.h"
 #include "baseclient.h"
 #include "python/channelwrap.h"
+#include "python/eventwrap.h"
 
 class ChannelWrap;
 
@@ -51,6 +52,12 @@ public:
   static bool on_disconnected(ClientPtr);
   static bool on_registering(ClientPtr);
   static bool on_closing(ClientPtr, string);
+
+  // Event fires
+  static PyObject *fire_connected(EventWrap *, PyObject *);
+  static PyObject *fire_registering(EventWrap *, PyObject *);
+  static PyObject *fire_disconnected(EventWrap *, PyObject *);
+  static PyObject *fire_closing(EventWrap *, PyObject *);
 
   // Get/Setters
   static PyObject *get_wrap(ClientWrap *, void *);
