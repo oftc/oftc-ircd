@@ -88,3 +88,43 @@ PyObject *PythonUtil::get_motd(PyObject *self, PyObject *arg)
 
   return ret;
 }
+
+PyObject *PythonUtil::send_format(PyObject *source, PyObject *args, PyObject *kwargs)
+{
+  PyObject *fmt, *result, *meth, *fargs, *fdict;
+
+  fmt = PyTuple_GetItem(args, 0);
+
+  if(!PyString_Check(fmt))
+  {
+    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
+    return NULL;
+  }
+
+  fdict = PyDict_New();
+  if(!ChannelWrap::check(source))
+    PyDict_SetItemString(fdict, "client", source);
+  else
+    PyDict_SetItemString(fdict, "channel", source);
+
+  PyDict_SetItemString(fdict, "me", ClientWrap::get_me());
+
+  if (kwargs != NULL)
+    PyDict_Update(fdict, kwargs);
+
+  meth = PyObject_GetAttrString(fmt, "format");
+
+  fargs = PyTuple_New(0);
+  result = PyObject_Call(meth, fargs, fdict);
+
+  Py_DECREF(meth);
+  Py_DECREF(fdict);
+  Py_DECREF(fargs);
+
+  if(result == NULL)
+  {
+    return NULL;
+  }
+
+  return result;
+}

@@ -55,6 +55,7 @@ public:
   // Get/Setters
   static PyObject *get_wrap(ClientWrap *, void *);
   static int set_wrap(ClientWrap *, PyObject *, void *);
+  static PyObject *get_me() { return me; }
 
   // Python methods
   static PyObject *add(ClientWrap *, ClientWrap *);

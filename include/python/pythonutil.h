@@ -39,6 +39,7 @@ private:
 public:
   static void log_error();
   static PyObject *get_motd(PyObject *, PyObject *);
+  static PyObject *send_format(PyObject *, PyObject *, PyObject *);
 };
 
 #endif

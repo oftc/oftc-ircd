@@ -27,7 +27,7 @@
 #include <structmember.h>
 #include "stdinc.h"
 #include "python/channelwrap.h"
-#include "python/pythonloader.h"
+#include "python/pythonutil.h"
 #include "channel.h"
 
 template class PythonWrap<ChannelWrap>;
@@ -255,31 +255,19 @@ PyObject *ChannelWrap::send_names(ChannelWrap *self, ClientWrap *client)
 
 PyObject *ChannelWrap::send(ChannelWrap *self, PyObject *args, PyObject *kwargs)
 {
-  PyObject *fmt, *result, *meth, *fargs;
   ClientWrap *client;
+  PyObject *result = PythonUtil::send_format(self, args, kwargs);
 
   client = reinterpret_cast<ClientWrap *>(PyDict_GetItemString(kwargs, "client"));
 
-  fmt = PyTuple_GetItem(args, 0);
-
-  if(!PyString_Check(fmt))
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
   {
-    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
+    PyErr_SetString(PyExc_TypeError, "client argument must be a Client type");
     return NULL;
   }
-
-  meth = PyObject_GetAttrString(fmt, "format");
-
-  fargs = PyTuple_New(0);
-  result = PyObject_Call(meth, fargs, kwargs);
-
-  Py_DECREF(meth);
-  Py_DECREF(fargs);
 
   if(result == NULL)
-  {
     return NULL;
-  }
 
   self->channel->send(client->get_client(), PyString_AsString(result));
 
@@ -292,7 +280,7 @@ PyObject *ChannelWrap::is_member(ChannelWrap *self, ClientWrap *client)
 {
   if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
   {
-    PyErr_SetString(PyExc_TypeError, "Argument must be a Client type");
+    PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
     return NULL;
   }
 

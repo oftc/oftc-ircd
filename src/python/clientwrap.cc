@@ -396,36 +396,10 @@ PyObject *ClientWrap::del_name(PyObject *self, ClientWrap *client)
 
 PyObject *ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
 {
-  PyObject *fmt, *result, *meth, *fargs, *fdict;
-
-  fmt = PyTuple_GetItem(args, 0);
-
-  if(!PyString_Check(fmt))
-  {
-    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
-    return NULL;
-  }
-
-  fdict = PyDict_New();
-  PyDict_SetItemString(fdict, "client", self);
-  PyDict_SetItemString(fdict, "me", me);
-
-  if (kwargs != NULL)
-    PyDict_Update(fdict, kwargs);
-
-  meth = PyObject_GetAttrString(fmt, "format");
-
-  fargs = PyTuple_New(0);
-  result = PyObject_Call(meth, fargs, fdict);
-
-  Py_DECREF(meth);
-  Py_DECREF(fdict);
-  Py_DECREF(fargs);
+  PyObject *result = PythonUtil::send_format(self, args, kwargs);
 
   if(result == NULL)
-  {
     return NULL;
-  }
 
   self->client->send(PyString_AsString(result));
 
@@ -436,36 +410,10 @@ PyObject *ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
 
 PyObject *ClientWrap::send_channels_common(ClientWrap *self, PyObject *args, PyObject *kwargs)
 {
-  PyObject *fmt, *result, *meth, *fargs, *fdict;
-
-  fmt = PyTuple_GetItem(args, 0);
-
-  if(!PyString_Check(fmt))
-  {
-    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
-    return NULL;
-  }
-
-  fdict = PyDict_New();
-  PyDict_SetItemString(fdict, "client", self);
-  PyDict_SetItemString(fdict, "me", me);
-
-  if (kwargs != NULL)
-    PyDict_Update(fdict, kwargs);
-
-  meth = PyObject_GetAttrString(fmt, "format");
-
-  fargs = PyTuple_New(0);
-  result = PyObject_Call(meth, fargs, fdict);
-
-  Py_DECREF(meth);
-  Py_DECREF(fdict);
-  Py_DECREF(fargs);
+  PyObject *result = PythonUtil::send_format(self, args, kwargs);
 
   if(result == NULL)
-  {
     return NULL;
-  }
 
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->client);
   ptr->send_channels_common(PyString_AsString(result));
