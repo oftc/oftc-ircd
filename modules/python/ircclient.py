@@ -160,11 +160,6 @@ def handle_part(client, target, *args):
   client.remove_channel(target)
   target.remove_member(client)
 
-@event(Client.disconnected)
-def client_disconnected(client):
-  if(client.Name):
-    Client.del_name(client)
-
 @event(Client.closing)
 def client_closing(client, reason):
   client.send_channels_common(":{client} QUIT :{reason}", reason=reason)

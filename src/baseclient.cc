@@ -183,7 +183,8 @@ ClientPtr BaseClient::find_by_name(const irc_string name)
 
 void BaseClient::del_name(const ClientPtr client)
 {
-  names.erase(client->name);
+  if(!client->name.empty())
+    names.erase(client->name);
 }
 
 bool BaseClient::is_client(const ClientPtr client)

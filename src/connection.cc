@@ -48,6 +48,7 @@ Connection::Connection() : dns_state(Reverse), parser(Parser::get_default()), cl
 Connection::~Connection()
 {
   Client::disconnected(client);
+  BaseClient::del_name(client);
   Client::remove(client);
   Logging::trace << "Destroyed Connection: " << this << Logging::endl;
 }
