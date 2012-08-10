@@ -73,8 +73,8 @@ public:
   virtual ~BaseClient() = 0;
 
   // members
-  virtual void close(string);
-  virtual void send(string);
+  virtual void close(const string);
+  virtual void send(const string);
   virtual irc_string str() const;
   virtual bool check_timeout();
  

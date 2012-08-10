@@ -42,7 +42,7 @@ class Connection;
 class Client : public BaseClient
 {
 private:
-  static list<ClientPtr> client_list;
+  static map<BaseClient *, ClientPtr> client_list;
   static list<ClientPtr> unregistered_list;
   static uv_timer_t ping_timer;
 
@@ -71,6 +71,7 @@ public:
 
   // Members
   void add_channel(const ChannelPtr);
+  void close(const string);
   void send(const string arg, int);
   void send(int, ...);
   void send_channels_common(const string);

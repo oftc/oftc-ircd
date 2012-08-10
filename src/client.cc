@@ -43,19 +43,29 @@ Event<ClientPtr> Client::connected;
 Event<ClientPtr> Client::registering;
 Event<ClientPtr> Client::disconnected;
 list<ClientPtr> Client::unregistered_list;
-list<ClientPtr> Client::client_list;
+map<BaseClient *, ClientPtr> Client::client_list;
 uv_timer_t Client::ping_timer;
 
 Client::Client() : invisible(false), last_message(time(NULL))
 {
 }
 
-void Client::add_channel(ChannelPtr channel)
+void Client::add_channel(const ChannelPtr channel)
 {
   channels.push_back(channel);
 }
 
-void Client::send(string arg, int numeric)
+void Client::close(const string reason)
+{
+  BaseClient::close(reason);
+  for(auto it = channels.begin(); it != channels.end(); it++)
+  {
+    ChannelPtr channel = *it;
+    channel->remove_member(client_list[this]);
+  }
+}
+
+void Client::send(const string arg, int numeric)
 {
   stringstream buffer;
 
@@ -90,11 +100,11 @@ void Client::send_channels_common(string message)
   for(auto it = channels.begin(); it != channels.end(); it++)
   {
     ChannelPtr channel = *it;
-    list<Membership> members = channel->get_members();
+    map<ClientPtr, Membership> members = channel->get_members();
 
     for(auto mit = members.begin(); mit != members.end(); mit++)
     {
-      Membership ms = *mit;
+      Membership ms = mit->second;
 
       if(sent_clients[ms.client.get()])
         continue;
@@ -172,7 +182,7 @@ void Client::add(ClientPtr ptr)
   if(!registering(client))
     return;
 
-  client_list.push_back(client);
+  client_list[client.get()] = client;
   client->set_registered();
 
   unregistered_list.remove(client);
@@ -192,7 +202,7 @@ void Client::add_unregistered(ClientPtr client)
 void Client::remove(ClientPtr client)
 {
   if(client->is_registered())
-    client_list.remove(client);
+    client_list.erase(client.get());
   else
     unregistered_list.remove(client);
 }
@@ -201,7 +211,7 @@ void Client::check_pings(uv_timer_t *handle, int status)
 {
   for(auto it = client_list.begin(); it != client_list.end(); it++)
   {
-    ClientPtr client = *it;
+    ClientPtr client = it->second;
 
     if(!client->check_timeout())
     {

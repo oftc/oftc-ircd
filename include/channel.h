@@ -60,7 +60,7 @@ private:
   static unordered_map<irc_string, ChannelPtr> names;
   static map<Channel *, ChannelPtr> channels;
 
-  list<Membership> members;
+  map<ClientPtr, Membership> members;
   irc_string name;
 public:
   // Ctor/dtor
@@ -74,13 +74,14 @@ public:
 
   // getters
   irc_string get_name() const;
-  list<Membership> get_members() const;
+  map<ClientPtr, Membership> get_members() const;
 
   // setters
   void set_name(const irc_string);
   
   // members
   void add_member(const ClientPtr);
+  void remove_member(const ClientPtr);
   void send_names(const ClientPtr);
   void send(const ClientPtr, const string);
   void send_common(const ClientPtr, const string);

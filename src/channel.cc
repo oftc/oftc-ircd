@@ -58,8 +58,13 @@ void Channel::add_member(const ClientPtr client)
   ss << ":" << client->str() << " JOIN :" << name;
   send(client, ss.str());
 
-  members.push_back(member);
+  members[client] = member;
   ptr->add_channel(channels[this]);
+}
+
+void Channel::remove_member(const ClientPtr client)
+{
+  members.erase(client);
 }
 
 irc_string Channel::get_name() const
@@ -67,7 +72,7 @@ irc_string Channel::get_name() const
   return name;
 }
 
-list<Membership> Channel::get_members() const
+map<ClientPtr, Membership> Channel::get_members() const
 {
   return members;
 }
@@ -90,7 +95,8 @@ void Channel::send_names(ClientPtr client)
 
   for(auto it = members.begin(); it != members.end(); it++)
   {
-    if(min_len + reply.str().length() + it->client->get_name().length() >= 510)
+    Membership ms = it->second;
+    if(min_len + reply.str().length() + ms.client->get_name().length() >= 510)
     {
       ptr->send(reply.str(), Numeric::Rpl_NamesReply);
       reply.clear();
@@ -103,12 +109,12 @@ void Channel::send_names(ClientPtr client)
     else
       reply << ' ';
 
-    if(it->flags & ChanOp)
+    if(ms.flags & ChanOp)
       reply << '@';
-    else if(it->flags & Voice)
+    else if(ms.flags & Voice)
       reply << '+';
 
-    reply << it->client->get_name();
+    reply << ms.client->get_name();
   }
   
   ptr->send(reply.str(), Numeric::Rpl_NamesReply);
@@ -120,8 +126,8 @@ void Channel::send(const ClientPtr client, const string str)
 {
   for(auto it = members.begin(); it != members.end(); it++)
   {
-    if(it->client != client)
-      it->client->send(str);
+    if(it->second.client != client)
+      it->second.client->send(str);
   }
 }
 
