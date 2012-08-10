@@ -21,7 +21,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #  OTHER DEALINGS IN THE SOFTWARE.
 
-from ircd import register, event, have_target
+from ircd import register, event, Target, have_target
 from ircd.user import *
 from pythonwrap import Client, Channel
 import numerics
@@ -139,14 +139,14 @@ def handle_names(client, target):
   target.send_names(client)
 
 @register("PART", min_args=1, max_args=2)
-@have_target()
+@have_target(Target.CHANNEL)
 def handle_part(client, target, *args):
   if len(args) > 0:
     reason = args[0]
   else:
     reason = ""
 
-  client.send_channels_common(":{client} PART {channel} :{reason}", channel=target.Name, reason=reason)
+  target.send(":{client} PART {channel} :{reason}", client=client, channel=target.Name, reason=reason)
   client.remove_channel(target)
   target.remove_member(client)
 
