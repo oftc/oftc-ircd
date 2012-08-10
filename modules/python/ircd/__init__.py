@@ -67,7 +67,12 @@ def event(evt):
     return wrapper
   return decorator
 
-def have_target(numeric=numerics.ERR_NOSUCHNICK, epilog=None):
+class Target:
+  ANY = 0
+  CHANNEL = 1
+  NICK = 2
+
+def have_target(target_type=Target.ANY, numeric=numerics.ERR_NOSUCHNICK, epilog=None):
   def wrapper(func):
     @wraps(func)
     def decorator(client, name, *args, **kwargs):
@@ -86,7 +91,22 @@ def have_target(numeric=numerics.ERR_NOSUCHNICK, epilog=None):
           client.numeric(epilog, name)
         return
       else:
-        return func(client, target, *args, **kwargs)
+        valid = True
+
+        if target_type == Target.CHANNEL and not target is Channel:
+          if _numeric == numerics.ERR_NOSUCHNICK:
+            _numeric = numerics.ERR_NOSUCHCHANNEL
+          valid = False
+        elif target_type == Target.NICK and not target is Client:
+          valid = False
+
+        if valid:
+          return func(client, target, *args, **kwargs)
+        else:
+          client.numeric(_numeric, name)
+          if epilog:
+            client.numeric(epilog, name)
+          return
 
     return decorator
   return wrapper
