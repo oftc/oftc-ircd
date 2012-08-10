@@ -134,13 +134,9 @@ def handle_join(client, name, *args):
   channel.send_names(client)
 
 @register("NAMES", min_args=1, max_args=1)
-#@have_target(numeric=numerics.ERR_NOSUCHCHANNEL)
+@have_target(numeric=numerics.ERR_NOSUCHCHANNEL)
 def handle_names(client, target):
-  chan = Channel.find(target)
-  if not chan:
-    client.numeric(numerics.ERR_NOSUCHCHANNEL, target)
-    return
-  chan.send_names(client)
+  target.send_names(client)
 
 @event(Client.disconnected)
 def client_disconnected(client):
