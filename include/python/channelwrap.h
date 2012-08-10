@@ -53,6 +53,7 @@ public:
   static int compare(ChannelWrap *, ChannelWrap *);
   static PyObject *del(PyObject *, ChannelWrap *);
   static PyObject *find(PyObject *, PyObject *);
+  static PyObject *is_member(ChannelWrap *, ClientWrap *);
   static PyObject *remove_member(ChannelWrap *, ClientWrap *);
   static PyObject *send_names(ChannelWrap *, ClientWrap *);
   static PyObject *send(ChannelWrap *, PyObject *, PyObject *);

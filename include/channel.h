@@ -81,6 +81,7 @@ public:
   
   // members
   void add_member(const ClientPtr);
+  bool is_member(const ClientPtr);
   void remove_member(const ClientPtr);
   void send_names(const ClientPtr);
   void send(const ClientPtr, const string);

@@ -38,10 +38,12 @@ static PyMethodDef channel_methods[] =
     METH_STATIC, "Create a new channel" },
   { "add_member", reinterpret_cast<PyCFunction>(ChannelWrap::add_member), 
     METH_OLDARGS, "Add a client to a channel" },
-  { "find", reinterpret_cast<PyCFunction>(ChannelWrap::find), 
-    METH_STATIC, "find a channel by name" },
   { "del", reinterpret_cast<PyCFunction>(ChannelWrap::del), 
     METH_STATIC, "delete a channel" },
+  { "find", reinterpret_cast<PyCFunction>(ChannelWrap::find), 
+    METH_STATIC, "find a channel by name" },
+  { "is_member", reinterpret_cast<PyCFunction>(ChannelWrap::is_member),
+    METH_OLDARGS, "Test is a client is on a channel" },
   { "remove_member", reinterpret_cast<PyCFunction>(ChannelWrap::remove_member), 
     METH_OLDARGS, "Remove a client from the channel" },
   { "send_names", reinterpret_cast<PyCFunction>(ChannelWrap::send_names), 
@@ -272,6 +274,14 @@ PyObject *ChannelWrap::send(ChannelWrap *self, PyObject *args, PyObject *kwargs)
   Py_DECREF(result);
 
   Py_RETURN_NONE;
+}
+
+PyObject *ChannelWrap::is_member(ChannelWrap *self, ClientWrap *client)
+{
+  if(self->channel->is_member(client->get_client()))
+    Py_RETURN_TRUE;
+  else
+    Py_RETURN_FALSE;
 }
 
 PyObject *ChannelWrap::remove_member(ChannelWrap *self, ClientWrap *client)

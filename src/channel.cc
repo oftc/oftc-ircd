@@ -62,6 +62,12 @@ void Channel::add_member(const ClientPtr client)
   ptr->add_channel(channels[this]);
 }
 
+bool Channel::is_member(const ClientPtr client)
+{
+  auto it = members.find(client);
+  return it != members.end();
+}
+
 void Channel::remove_member(const ClientPtr client)
 {
   members.erase(client);

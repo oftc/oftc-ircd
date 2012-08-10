@@ -23,6 +23,7 @@
     "433": "%s :Nickname is already in use",
     "461": "%s :Not enough parameters.  Got %d, expected at least %d",
     "462": ":You are already registered and may not re-register",
+    "479": "%s :Bad channel name",
     "501": ":Unknown MODE flag",
     "502": ":Cannot change mode for other users"
   }
