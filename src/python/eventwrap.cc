@@ -29,7 +29,7 @@
 #include "python/pythonwrap.h"
 #include "python/eventwrap.h"
 
-PyTypeObject PythonWrap<EventWrap>::type_object;
+template<> PyTypeObject PythonWrap<EventWrap>::type_object = {};
 
 static PyMethodDef event_methods[] =
 {

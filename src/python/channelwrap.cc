@@ -30,7 +30,7 @@
 #include "python/pythonutil.h"
 #include "channel.h"
 
-PyTypeObject PythonWrap<ChannelWrap>::type_object;
+template<> PyTypeObject PythonWrap<ChannelWrap>::type_object = {};
 
 PyObject *ChannelWrap::joining;
 PyObject *ChannelWrap::joined;

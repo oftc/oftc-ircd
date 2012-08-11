@@ -34,7 +34,7 @@
 #include "parser.h"
 #include "client.h"
 
-PyTypeObject PythonWrap<ParserWrap>::type_object;
+template<> PyTypeObject PythonWrap<ParserWrap>::type_object = {};
 
 static PyMethodDef parser_methods[] =
 {
