@@ -129,7 +129,7 @@ CollectionWrap<T, W> *CollectionWrap<T, W>::wrap(void *arg)
 
   args = Py_BuildValue("(O)", obj);
 
-  wrapped = reinterpret_cast<CollectionWrap<T, W> *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
+  wrapped = reinterpret_cast<CollectionWrap<T, W> *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&CollectionWrap<T, W>::type_object), args));
   Py_DECREF(obj);
   if(wrapped == NULL)
     return NULL;
