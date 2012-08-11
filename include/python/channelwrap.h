@@ -29,6 +29,7 @@
 #include "Python.h"
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
+#include "python/eventwrap.h"
 #include "channel.h"
 
 class ClientWrap;
@@ -37,11 +38,19 @@ class ChannelWrap : public PythonWrap<ChannelWrap>
 {
 private:
   ChannelPtr channel;
+  static PyObject *joining;
+  static PyObject *joined;
 public:
   // Non Python methods
   static void init(PyObject *);
 
   // Event callbacks
+  static bool on_joining(ChannelPtr, ClientPtr);
+  static bool on_joined(ChannelPtr, ClientPtr);
+
+  // Event fires
+  static PyObject *fire_joining(EventWrap *, PyObject *);
+  static PyObject *fire_joined(EventWrap *, PyObject *);
 
   // Get/Setters
   static PyObject *get_wrap(ChannelWrap *, void *);

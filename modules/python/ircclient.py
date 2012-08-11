@@ -147,9 +147,8 @@ def handle_join(client, cname, *args):
       channel.Name = name
       Channel.add(channel)
 
-    if not channel.is_member(client):
-      channel.add_member(client)
-      client.send(":{client} JOIN :{channel}", channel=str(channel));
+    if not channel.is_member(client) and Channel.joining.fire(channel, client):
+      channel.add_member(client):
       channel.send_names(client)
 
 @register("NAMES", min_args=1, max_args=1)
@@ -181,3 +180,7 @@ def client_closing(client, reason):
 @event(Client.nick_changed)
 def client_nick_changed(client, old_source):
   client.send_channels_common(":{old} NICK :{new}", old=old_source, new=client.Name)
+
+@event(Channel.joined)
+def channel_joined(channel, client):
+  channel.send(":{client} JOIN :{channel}", client=client)

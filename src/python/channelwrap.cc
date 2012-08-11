@@ -32,6 +32,9 @@
 
 template class PythonWrap<ChannelWrap>;
 
+PyObject *ChannelWrap::joining;
+PyObject *ChannelWrap::joined;
+
 static PyMethodDef channel_methods[] =
 {
   { "add", reinterpret_cast<PyCFunction>(ChannelWrap::add), 
@@ -113,6 +116,15 @@ void ChannelWrap::init(PyObject *module)
   PythonWrap<ChannelWrap>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
   PythonWrap<ChannelWrap>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ChannelWrap>::init(module, "Channel");
+
+  joining = EventWrap::wrap(reinterpret_cast<void *>(&fire_joining));
+  joined = EventWrap::wrap(reinterpret_cast<void *>(&fire_joined));
+
+  PyDict_SetItemString(type_object.tp_dict, "joining", joining);
+  PyDict_SetItemString(type_object.tp_dict, "joined", joined);
+
+  Channel::joining += function<bool(ChannelPtr, ClientPtr)>(on_joining);
+  Channel::joined += function<bool(ChannelPtr, ClientPtr)>(on_joined);
 }
 
 PyObject *ChannelWrap::get_wrap(ChannelWrap *self, void *closure)
@@ -320,4 +332,70 @@ int ChannelWrap::compare(ChannelWrap *self, ChannelWrap *other)
     return 1;
   else
     return -1;
+}
+
+PyObject *ChannelWrap::fire_joining(EventWrap *, PyObject *args)
+{
+  ChannelWrap *channel;
+  ClientWrap *client;
+
+  if(!PyArg_ParseTuple(args, "OO", &channel, &client))
+    return NULL;
+
+  if(Channel::joining(channel->channel, client->get_client()))
+    return Py_True;
+  else
+    return Py_False;
+}
+
+PyObject *ChannelWrap::fire_joined(EventWrap *, PyObject *args)
+{
+  ChannelWrap *channel;
+  ClientWrap *client;
+
+  if(!PyArg_ParseTuple(args, "OO", &channel, &client))
+    return NULL;
+
+  if(Channel::joined(channel->channel, client->get_client()))
+    return Py_True;
+  else
+    return Py_False;
+}
+
+bool ChannelWrap::on_joining(ChannelPtr channel, ClientPtr client)
+{
+  PyObject *args, *chan_ptr, *client_ptr;
+  bool ret;
+
+  chan_ptr = wrap(&channel);
+  client_ptr = ClientWrap::wrap(&client);
+
+  args = Py_BuildValue("(OO)", chan_ptr, client_ptr);
+
+  ret = handle_event(joining, args);
+
+  Py_DECREF(args);
+  Py_DECREF(chan_ptr);
+  Py_DECREF(client_ptr);
+
+  return ret;
+}
+
+bool ChannelWrap::on_joined(ChannelPtr channel, ClientPtr client)
+{
+  PyObject *args, *chan_ptr, *client_ptr;
+  bool ret;
+
+  chan_ptr = wrap(&channel);
+  client_ptr = ClientWrap::wrap(&client);
+
+  args = Py_BuildValue("(OO)", chan_ptr, client_ptr);
+
+  ret = handle_event(joined, args);
+
+  Py_DECREF(args);
+  Py_DECREF(chan_ptr);
+  Py_DECREF(client_ptr);
+
+  return ret;
 }

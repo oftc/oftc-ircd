@@ -63,6 +63,10 @@ private:
   map<ClientPtr, Membership> members;
   irc_string name;
 public:
+  // Events
+  static Event<ChannelPtr, ClientPtr> joining;
+  static Event<ChannelPtr, ClientPtr> joined;
+
   // Ctor/dtor
   Channel();
   ~Channel();

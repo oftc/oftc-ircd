@@ -29,6 +29,8 @@
 #include "client.h"
 #include "server.h"
 
+Event<ChannelPtr, ClientPtr> Channel::joining;
+Event<ChannelPtr, ClientPtr> Channel::joined;
 map<Channel *, ChannelPtr> Channel::channels;
 unordered_map<irc_string, ChannelPtr> Channel::names;
 
@@ -53,13 +55,10 @@ void Channel::add_member(const ClientPtr client)
   else
     member.flags = Member;
 
-  stringstream ss;
-
-  ss << ":" << client->str() << " JOIN :" << name;
-  send(client, ss.str());
-
   members[client] = member;
   ptr->add_channel(channels[this]);
+
+  joined(channels[this], client);
 }
 
 bool Channel::is_member(const ClientPtr client)
