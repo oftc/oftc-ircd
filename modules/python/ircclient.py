@@ -102,8 +102,8 @@ def handle_whois(client, target, *arg):
       channels = ""
     channels += channel.Name + " "
 
-  #if len(target.Channels) > 0:
-  client.numeric(numerics.RPL_WHOISCHANNELS, target.Name, channels)
+  if len(target.Channels) > 0:
+    client.numeric(numerics.RPL_WHOISCHANNELS, target.Name, channels)
 
   if target.is_ssl():
     client.numeric(numerics.RPL_WHOISSSL, target.Name)

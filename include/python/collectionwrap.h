@@ -36,14 +36,26 @@ using std::list;
 template <class T, class W> class CollectionWrap : public PythonWrap<CollectionWrap<T, W> >
 {
 private:
+
   typename T::const_iterator curr;
   T iterable;
 public:
   // Non Python methods
+  static Py_ssize_t get_length(PyObject *self)
+  {
+    return reinterpret_cast<CollectionWrap<T, W> *>(self)->length();
+  }
+
   static void init(PyObject *module)
   {
+    static PySequenceMethods seq_methods = 
+    {
+      get_length
+    };
+
     PythonWrap<CollectionWrap>::type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
     PythonWrap<CollectionWrap>::type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
+    PythonWrap<CollectionWrap>::type_object.tp_as_sequence = &seq_methods;
     PythonWrap<CollectionWrap>::type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
     PythonWrap<CollectionWrap>::init(module, "Collection");
   }
@@ -99,6 +111,11 @@ public:
   }
 
   // methods
+  Py_ssize_t length() const
+  {
+    return iterable.size();
+  }
+
   void reset()
   {
     curr = iterable.begin();
