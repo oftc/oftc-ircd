@@ -8,6 +8,7 @@
     "311": "%s %s %s * :%s",
     "312": "%s %s :%s",
     "317": "%s %d :seconds idle",
+    "319": "%s :%s",
     "318": "%s :End of WHOIS list",
     "353": "%c %s :%s",
     "366": "%s :End of NAMES list",
