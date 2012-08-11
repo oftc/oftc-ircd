@@ -95,6 +95,8 @@ def handle_whois(client, target, *arg):
   client.numeric(numerics.RPL_WHOISIDLE, target.Name, target.Idletime);
   client.numeric(numerics.RPL_WHOISSERVER, target.Name, str(Client.Me), Client.Me.Info)
   client.numeric(numerics.RPL_ENDOFWHOIS, target.Name)
+  for channel in client.Channels:
+    print channel.Name
 
 @register("WHOWAS", min_args=1, max_args=2)
 @have_target(numeric=numerics.ERR_WASNOSUCHNICK, epilog=numerics.RPL_ENDOFWHOWAS)

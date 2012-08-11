@@ -31,6 +31,7 @@
 #include "python/eventwrap.h"
 #include "python/channelwrap.h"
 #include "python/connectionwrap.h"
+#include "python/collectionwrap.h"
 #include "python/pythonutil.h"
 
 // Static initialisers
@@ -41,6 +42,7 @@ template void PythonWrap<EventWrap>::init(PyObject *, const char *);
 template void PythonWrap<ClientWrap>::init(PyObject *, const char *);
 template void PythonWrap<ChannelWrap>::init(PyObject *, const char *);
 template void PythonWrap<ConnectionWrap>::init(PyObject *, const char *);
+template void PythonWrap<CollectionWrap<list<ChannelPtr>, ChannelWrap> >::init(PyObject *, const char *);
 
 template ParserWrap *PythonWrap<ParserWrap>::wrap(void *);
 template EventWrap *PythonWrap<EventWrap>::wrap(void *);
@@ -53,12 +55,14 @@ template bool PythonWrap<EventWrap>::handle_event(PyObject *, PyObject *);
 template bool PythonWrap<ClientWrap>::handle_event(PyObject *, PyObject *);
 template bool PythonWrap<ChannelWrap>::handle_event(PyObject *, PyObject *);
 template bool PythonWrap<ConnectionWrap>::handle_event(PyObject *, PyObject *);
+//template bool PythonWrap<CollectionWrap>::handle_event(PyObject *, PyObject *);
 
 template bool PythonWrap<ParserWrap>::check(PyObject *);
 template bool PythonWrap<EventWrap>::check(PyObject *);
 template bool PythonWrap<ClientWrap>::check(PyObject *);
 template bool PythonWrap<ChannelWrap>::check(PyObject *);
 template bool PythonWrap<ConnectionWrap>::check(PyObject *);
+//template bool PythonWrap<CollectionWrap>::check(PyObject *);
 
 template<class T>
 void PythonWrap<T>::init(PyObject *module, const char *name)
@@ -70,7 +74,7 @@ void PythonWrap<T>::init(PyObject *module, const char *name)
   type_object.tp_dealloc = dealloc;
   type_object.tp_basicsize = sizeof(T);
   type_object.tp_name = name;
-  type_object.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
+  type_object.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
 
   if(PyType_Ready(&type_object) < 0)
   {

@@ -35,6 +35,8 @@
 #include "python/eventwrap.h"
 #include "python/channelwrap.h"
 #include "python/pythonutil.h"
+#include "python/collectionwrap.h"
+#include "channel.h"
 #include "module.h"
 #include "system.h"
 
@@ -86,6 +88,7 @@ void PythonLoader::init()
   EventWrap::init(m);
   ClientWrap::init(m);
   ChannelWrap::init(m);
+  CollectionWrap<list<ChannelPtr>, ChannelWrap>::init(m);
 }
 
 void PythonLoader::load(string name)

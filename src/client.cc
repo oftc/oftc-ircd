@@ -157,6 +157,11 @@ time_t Client::get_idletime() const
   return time(NULL) - last_message;
 }
 
+list<ChannelPtr> Client::get_channels() const
+{
+  return channels;
+}
+
 void Client::set_invisible(bool invis)
 {
   invisible = invis;

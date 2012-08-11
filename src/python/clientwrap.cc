@@ -28,6 +28,7 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
+#include "python/collectionwrap.h"
 #include "python/pythonutil.h"
 #include "numeric.h"
 #include "client.h"
@@ -83,6 +84,7 @@ enum Property
   Invisible   = 0x00000006,
   Idletime    = 0x00000007,
   LastMessage = 0x00000008,
+  Channels    = 0x00000009,
   PropMask    = 0x000000ff
 };
 
@@ -121,6 +123,9 @@ static PyGetSetDef client_getsetters[] =
   { const_cast<char*>("LastMessage"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Idle Time"), 
     reinterpret_cast<void *>(LastMessage | IntArg | ClientOnly) },
+  { const_cast<char*>("Channels"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    NULL, const_cast<char*>("Channel list"),
+    reinterpret_cast<void *>(Channels | ClientOnly) },
   { NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -235,6 +240,12 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
     break;
   case Idletime:
     value = PyInt_FromLong(client_ptr->get_idletime());
+    break;
+  case Channels:
+    {
+      list<ChannelPtr> channels = client_ptr->get_channels();
+      value = CollectionWrap<list<ChannelPtr>, ChannelWrap>::wrap(&channels);
+    }
     break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;

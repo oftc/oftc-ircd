@@ -88,7 +88,7 @@ public:
   string get_username() const;
   string get_realname() const;
   time_t get_idletime() const;
-
+  list<ChannelPtr> get_channels() const;
 
   // Setters
   void set_username(const string);
