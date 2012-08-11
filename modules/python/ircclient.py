@@ -96,13 +96,17 @@ def handle_whois(client, target, *arg):
   client.numeric(numerics.RPL_WHOISSERVER, target.Name, str(Client.Me), Client.Me.Info)
   min_len = 1 + len(str(Client.Me)) + 1 + 3 + 1 + len(target.Name) # ":foo.server.com 000 client :"
   channels = ""
-  for channel in client.Channels:
+  for channel in target.Channels:
     if min_len + len(channels) + len(channel.Name) >= 510:
       client.numeric(numerics.RPL_WHOISCHANNELS, target.Name, channels)
       channels = ""
     channels += channel.Name + " "
 
+  #if len(target.Channels) > 0:
   client.numeric(numerics.RPL_WHOISCHANNELS, target.Name, channels)
+
+  if target.is_ssl():
+    client.numeric(numerics.RPL_WHOISSSL, target.Name)
   client.numeric(numerics.RPL_ENDOFWHOIS, target.Name)
 
 @register("WHOWAS", min_args=1, max_args=2)
