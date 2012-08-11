@@ -128,21 +128,22 @@ def handle_motd(client, *args):
   send_motd(client)
 
 @register("JOIN", min_args=1, max_args=2)
-def handle_join(client, name, *args):
-  channel = Channel.find(name)
-  if not channel:
-    if name[0] != '#':
-      client.numeric(numerics.ERR_BADCHANNAME, name)
-      return
+def handle_join(client, cname, *args):
+  for name in cname.split(','):
+    channel = Channel.find(name)
+    if not channel:
+      if name[0] != '#':
+        client.numeric(numerics.ERR_BADCHANNAME, name)
+        continue
 
-    channel = Channel()
-    channel.Name = name
-    Channel.add(channel)
+      channel = Channel()
+      channel.Name = name
+      Channel.add(channel)
 
-  if not channel.is_member(client):
-    channel.add_member(client)
-    client.send(":{client} JOIN :{channel}", channel=str(channel));
-    channel.send_names(client)
+    if not channel.is_member(client):
+      channel.add_member(client)
+      client.send(":{client} JOIN :{channel}", channel=str(channel));
+      channel.send_names(client)
 
 @register("NAMES", min_args=1, max_args=1)
 @have_target()
