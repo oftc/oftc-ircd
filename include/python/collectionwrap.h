@@ -40,18 +40,92 @@ private:
   T iterable;
 public:
   // Non Python methods
-  static void init(PyObject *);
-  static CollectionWrap<T, W> *wrap(void *);
-  static CollectionWrap<T, W> *iter(CollectionWrap<T, W> *);
-  static W *iter_next(CollectionWrap<T, W> *);
+  static void init(PyObject *module)
+  {
+    PythonWrap<CollectionWrap>::type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
+    PythonWrap<CollectionWrap>::type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
+    PythonWrap<CollectionWrap>::type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
+    PythonWrap<CollectionWrap>::init(module, "Collection");
+  }
+
+  static CollectionWrap<T, W> *wrap(void *arg)
+  {
+    PyObject *obj, *args;
+    CollectionWrap<T, W> *wrapped;
+
+    obj = PyCObject_FromVoidPtr(arg, NULL);
+
+    args = Py_BuildValue("(O)", obj);
+
+    wrapped = reinterpret_cast<CollectionWrap<T, W> *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&CollectionWrap<T, W>::type_object), args));
+    Py_DECREF(obj);
+    if(wrapped == NULL)
+      return NULL;
+
+    return wrapped;
+  }
+
+  static CollectionWrap<T, W> *iter(CollectionWrap<T, W> *self)
+  {
+    self->reset();
+    Py_INCREF(self);
+    return self;
+  }
+
+  static W *iter_next(CollectionWrap<T, W> *iterator)
+  {
+    return iterator->next();
+  }
 
   // Ctor/dtors
-  CollectionWrap(PyObject *, PyObject *);
-  ~CollectionWrap();
+  CollectionWrap(PyObject *args, PyObject *kwargs)
+  {
+    PyObject *list_ptr;
+
+    if(args != NULL)
+    {
+      PyArg_ParseTuple(args, "O", &list_ptr);
+
+      iterable = *reinterpret_cast<T *>(PyCObject_AsVoidPtr(list_ptr));
+
+      curr = iterable.begin();
+    }
+
+    Logging::trace << "Created CollectionWrap: " << this << Logging::endl;
+  }
+  ~CollectionWrap()
+  {
+    Logging::trace << "Destroyed CollectionWrap: " << this << Logging::endl;
+  }
 
   // methods
-  void reset();
-  W *next();
+  void reset()
+  {
+    curr = iterable.begin();
+  }
+  W *next()
+  {
+    typename T::value_type item;
+    if(curr == iterable.end())
+      return NULL;
+
+    item = *curr;
+    curr++;
+
+    PyObject *obj, *args;
+    W *wrapped;
+
+    obj = PyCObject_FromVoidPtr(&item, NULL);
+
+    args = Py_BuildValue("(O)", obj);
+
+    wrapped = PythonWrap<W>::call(args);
+    Py_DECREF(obj);
+    if(wrapped == NULL)
+      return NULL;
+
+    return wrapped;
+  }
 };
 
 #endif

@@ -82,7 +82,6 @@
       'src/system.cc',
       'src/python/channelwrap.cc',
       'src/python/clientwrap.cc',
-      'src/python/collectionwrap.cc',
       'src/python/connectionwrap.cc',
       'src/python/eventwrap.cc',
       'src/python/pythonloader.cc',
