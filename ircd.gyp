@@ -86,7 +86,6 @@
       'src/python/eventwrap.cc',
       'src/python/pythonloader.cc',
       'src/python/pythonutil.cc',
-      'src/python/pythonwrap.cc',
       'src/python/parserwrap.cc',
       'modules/python/ircd/__init__.py',
       'modules/python/ircd/user.py',

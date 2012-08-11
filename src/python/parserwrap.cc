@@ -34,6 +34,8 @@
 #include "parser.h"
 #include "client.h"
 
+PyTypeObject PythonWrap<ParserWrap>::type_object;
+
 static PyMethodDef parser_methods[] =
 {
   { "Register", reinterpret_cast<PyCFunction>(ParserWrap::register_command),  

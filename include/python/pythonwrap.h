@@ -27,6 +27,7 @@
 #define PYTHONWRAP_H_INC
 
 #include "Python.h"
+#include "python/pythonutil.h"
 
 template <class T> class PythonWrap : public PyObject
 {
@@ -34,17 +35,125 @@ protected:
   static PyTypeObject type_object;
 public:
   // Non Python methods
-  static void init(PyObject *, const char *);
+  static void init(PyObject *module, const char *name)
+  {
+    type_object.ob_refcnt = 1;
+    type_object.tp_alloc = alloc;
+    type_object.tp_free = free;
+    type_object.tp_new = create;
+    type_object.tp_dealloc = dealloc;
+    type_object.tp_basicsize = sizeof(T);
+    type_object.tp_name = name;
+    type_object.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
+
+    if(PyType_Ready(&type_object) < 0)
+    {
+      PythonUtil::log_error();
+      throw runtime_error("Unable to create type");
+    }
+
+    Py_INCREF(&type_object);
+    PyModule_AddObject(module, type_object.tp_name, reinterpret_cast<PyObject *>(&type_object));
+  }
 
   // Python methods
-  static PyObject *alloc(PyTypeObject *, Py_ssize_t);
-  static T *call(PyObject *);
-  static bool check(PyObject *);
-  static PyObject *create(PyTypeObject *, PyObject *, PyObject *);
-  static void dealloc(PyObject *);
-  static void free(void *);
-  static bool handle_event(PyObject *, PyObject *);
-  static T *wrap(void *arg);
+  static PyObject *alloc(PyTypeObject *type, Py_ssize_t items)
+  {
+    char *ret;
+    PyObject *obj;
+
+    ret = new char[_PyObject_VAR_SIZE(type, items)]();
+
+    obj = reinterpret_cast<PyObject *>(ret);
+    static_cast<void>(PyObject_INIT(obj, type));
+
+    Logging::trace << "Created Python object: " << type->tp_name << " at: " << static_cast<void*>(obj) << Logging::endl;
+
+    return obj;
+  }
+
+  static T *call(PyObject *args)
+  {
+
+    return reinterpret_cast<T*>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
+  }
+
+  inline static bool check(PyObject *arg)
+  {
+    return Py_TYPE(arg) == &type_object;  
+  }
+
+  static PyObject *create(PyTypeObject *type, PyObject *args, PyObject *kwds)
+  {
+    PyObject *ptr = type->tp_alloc(type, 0);
+    T *obj = new(ptr) T(args, kwds);
+
+    return reinterpret_cast<PyObject*>(obj);
+  }
+
+  static void dealloc(PyObject *obj)
+  {
+    T *ptr = reinterpret_cast<T *>(obj);
+    ptr->~T();
+    obj->ob_type->tp_free(obj);
+  }
+
+  static void free(void *ptr)
+  {
+    char *obj = static_cast<char *>(ptr);
+
+    Logging::trace << "Destroyed python object: " << ptr << Logging::endl;
+
+    delete[] obj;
+  }
+
+  static bool handle_event(PyObject *event, PyObject *args)
+  {
+    PyObject *handler, *ret;
+
+    handler = PyObject_GetAttrString(event, "handler");
+
+    if(handler == NULL || !PyCallable_Check(handler))
+    {
+      // No handler, return true to say that everything is ok, we just dont have
+      // anything attached
+      return true;
+    }
+
+    ret = PyObject_CallObject(handler, args);
+    if(ret == NULL)
+    {
+      PythonUtil::log_error();
+      return false;
+    }
+    else if(ret == Py_True)
+    {
+      Py_DECREF(Py_True);
+      return true;
+    }
+    else
+    {
+      Py_DECREF(Py_False);
+      return false;
+    }
+  }
+
+  static T *wrap(void *arg)
+  {
+    PyObject *obj, *args;
+    T *wrapped;
+
+    obj = PyCObject_FromVoidPtr(arg, NULL);
+
+    args = Py_BuildValue("(O)", obj);
+
+    wrapped = PythonWrap<T>::call(args);
+    Py_DECREF(obj);
+    if(wrapped == NULL)
+      return NULL;
+
+    return wrapped;
+  }
 
   // Getters
 };

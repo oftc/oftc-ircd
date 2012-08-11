@@ -52,6 +52,7 @@ static PyMethodDef module_methods[] =
 };
 
 vector<PyObject *> PythonLoader::loaded_modules;
+PyTypeObject PythonWrap<CollectionWrap<list<ChannelPtr>, ChannelWrap> >::type_object;
 
 void PythonLoader::init()
 {

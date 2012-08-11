@@ -34,7 +34,7 @@
 #include "client.h"
 #include "server.h"
 
-template class PythonWrap<ClientWrap>;
+PyTypeObject PythonWrap<ClientWrap>::type_object;
 
 ClientWrap *ClientWrap::me;
 PyObject *ClientWrap::connected;

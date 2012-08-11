@@ -31,7 +31,7 @@
 #include "python/connectionwrap.h"
 #include "python/pythonloader.h"
 
-template class PythonWrap<ConnectionWrap>;
+PyTypeObject PythonWrap<ConnectionWrap>::type_object;
 
 PyObject *ConnectionWrap::ip_connecting;
 PyObject *ConnectionWrap::dns_finished;
