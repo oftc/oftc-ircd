@@ -5,6 +5,7 @@
     "002": ":Your host is %s, running version %s",
     "003": ":This server was created %s",
     "004": ":%s %s %s %s",
+    "275": "%s :is connected via SSL",
     "311": "%s %s %s * :%s",
     "312": "%s %s :%s",
     "317": "%s %d :seconds idle",

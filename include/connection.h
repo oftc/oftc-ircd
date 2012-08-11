@@ -80,6 +80,7 @@ public:
   // static methods
   static void add(ConnectionPtr);
   static void del(ConnectionPtr);
+  static bool is_ssl(ConnectionPtr);
 
   // callbacks
   static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);

@@ -80,6 +80,11 @@ bool BaseClient::is_registered() const
   return level >= Registered;
 }
 
+bool BaseClient::is_ssl() const
+{
+  return Connection::is_ssl(connection);
+}
+
 void BaseClient::clear_connection()
 {
   connection.reset();

@@ -80,6 +80,7 @@ public:
  
   // tests
   bool is_registered() const;
+  bool is_ssl() const;
 
   // clears
   void clear_connection();

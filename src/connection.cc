@@ -32,6 +32,7 @@
 #include "system.h"
 #include "client.h"
 #include "server.h"
+#include "sslconnection.h"
 
 using std::getline;
 using std::pair;
@@ -302,4 +303,9 @@ void Connection::free_buffer(uv_buf_t &buf)
   delete[] buf.base;
   buf.base = 0;
   buf.len = 0;
+}
+
+bool Connection::is_ssl(ConnectionPtr ptr)
+{
+  return typeid(*ptr) == typeid(SSLConnection);
 }

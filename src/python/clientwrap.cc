@@ -58,6 +58,8 @@ static PyMethodDef client_methods[] =
     METH_STATIC, "delete a client name from the names list" },
   { "is_registered", reinterpret_cast<PyCFunction>(ClientWrap::is_registered),
     METH_NOARGS, "Check if a client is registered or not" },
+  { "is_ssl", reinterpret_cast<PyCFunction>(ClientWrap::is_ssl),
+    METH_NOARGS, "Check if a client is connected with SSL" },
   { "numeric", reinterpret_cast<PyCFunction>(ClientWrap::numeric),
     METH_VARARGS, "Send the client a numeric" },
   { "remove_channel", reinterpret_cast<PyCFunction>(ClientWrap::remove_channel),
@@ -444,6 +446,14 @@ PyObject *ClientWrap::send_channels_common(ClientWrap *self, PyObject *args, PyO
 PyObject *ClientWrap::is_registered(ClientWrap *self, PyObject *args)
 {
   if(self->client->is_registered())
+    Py_RETURN_TRUE;
+  else
+    Py_RETURN_FALSE;
+}
+
+PyObject *ClientWrap::is_ssl(ClientWrap *self, PyObject *args)
+{
+  if(self->client->is_ssl())
     Py_RETURN_TRUE;
   else
     Py_RETURN_FALSE;

@@ -41,6 +41,7 @@ public:
   static const int Rpl_YourHost = 002;
   static const int Rpl_Created = 003;
   static const int Rpl_MyInfo = 004;
+  static const int Rpl_WhoisSsl = 275;
   static const int Rpl_WhoisUser = 311;
   static const int Rpl_WhoisServer = 312;
   static const int Rpl_WhoisIdle = 317;
