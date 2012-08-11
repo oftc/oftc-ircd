@@ -337,7 +337,7 @@ int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 
 PyObject *ClientWrap::add(ClientWrap *self, ClientWrap *client)
 {
-  if(Py_TYPE(client) != &type_object)
+  if(!ClientWrap::check(client))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Client object");
     return NULL;
