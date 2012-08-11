@@ -159,6 +159,11 @@
         '-lssl',
         '-lcrypto',
       ],
+      'conditions': [
+        ['OS == "mac"', {
+          'libraries': [ '-lc++' ],
+        }],
+      ],
     }
     ],
   ], 
