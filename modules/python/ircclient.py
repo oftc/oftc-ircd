@@ -148,7 +148,7 @@ def handle_join(client, cname, *args):
       Channel.add(channel)
 
     if not channel.is_member(client) and Channel.joining.fire(channel, client):
-      channel.add_member(client):
+      channel.add_member(client)
       channel.send_names(client)
 
 @register("NAMES", min_args=1, max_args=1)
