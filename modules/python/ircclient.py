@@ -92,7 +92,14 @@ def handle_mode(client, name, *arg):
 def handle_who(client, target, *arg):
   if isinstance(target, Channel):
     for ms in target.Members:
-      client.numeric(numerics.RPL_WHOREPLY, target.Name, ms.Client.Username, ms.Client.Host, ms.Client.Server.Name, ms.Client.Name, "H", 0, ms.Client.Realname)
+      if ms.Flags & msflags.CHANOP:
+        modestr = "H@"
+      elif ms.Flags & msflags.VOICE:
+        modestr = "H+"
+      else:
+        modestr = "H"
+
+      client.numeric(numerics.RPL_WHOREPLY, target.Name, ms.Client.Username, ms.Client.Host, ms.Client.Server.Name, ms.Client.Name, modestr, 0, ms.Client.Realname)
   else:
     client.numeric(numerics.RPL_WHOREPLY, '*', target.Username, target.Host, target.Server.Name, target.Name, "H", 0, target.Realname)
   
