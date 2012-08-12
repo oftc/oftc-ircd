@@ -78,19 +78,3 @@ def set_channel_mode(client, channel, *args):
   if len(mode) > 0:
     client.send(":{client} MODE {channel} :{mode}", channel=channel, mode=mode)
     channel.send(":{client} MODE {channel} :{mode}", client=client, channel=channel, mode=mode)
-
-def send_motd(client):
-  motd = get_motd()
-
-  if len(motd) == 0:
-    client.numeric(numerics.ERR_NOMOTD)
-    return
-
-  client.numeric(numerics.RPL_MOTDSTART, Client.Me.Name)
-
-  lines = motd.split("\n")
-
-  for s in lines:
-    client.numeric(numerics.RPL_MOTD, s[:-1])
-
-  client.numeric(numerics.RPL_MOTDEND)
