@@ -27,6 +27,27 @@ import numerics
 def set_channel_mode(client, channel, *args):
   set_before = set()
   
+  if channel.InviteOnly:
+    set_before.add('i')
+
+  if channel.Moderated:
+    set_before.add('m')
+
+  if channel.NoExternal:
+    set_before.add('n')
+
+  if channel.Private:
+    set_before.add('p')
+
+  if channel.Secret:
+    set_before.add('s')
+
+  if channel.TopicOpsOnly:
+    set_before.add('t')
+
+  if channel.Secure:
+    set_before.add('S')
+
   if not args[0]:
     mode = "+"
     for c in set_before:
@@ -36,8 +57,7 @@ def set_channel_mode(client, channel, *args):
     return
 
   plus = True
-  invalid = False
-  set_after = set()
+  set_after = set_before.copy()
 
   modes = set('imnpstS')
 
@@ -52,20 +72,18 @@ def set_channel_mode(client, channel, *args):
       if len(args) == 1:
         client.numeric(numerics.RPL_ENDOFBANLIST, channel.Name)
     elif c in modes:
-      if plus:
+      channel.set_mode_char(c, plus)
+      if plus and not c in set_after:
         set_after.add(c)
-      else:
-        if c in set_after:
-          set_after.remove(c)
+      elif not plus and c in set_after:
+        set_after.remove(c)
     else:
-      invalid = True
-
-  if invalid:
-    client.numeric(numerics.ERR_UNKNOWNMODE, c, channel.Name)
+      client.numeric(numerics.ERR_UNKNOWNMODE, c, channel.Name)
 
   mode = ""
   added = set_after - set_before
   removed = set_before - set_after
+
   if len(added) > 0:
     mode += '+'
     for c in added:

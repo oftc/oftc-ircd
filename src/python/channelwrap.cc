@@ -51,6 +51,8 @@ static PyMethodDef channel_methods[] =
     METH_OLDARGS, "Test is a client is on a channel" },
   { "remove_member", reinterpret_cast<PyCFunction>(ChannelWrap::remove_member), 
     METH_OLDARGS, "Remove a client from the channel" },
+  { "set_mode_char", reinterpret_cast<PyCFunction>(ChannelWrap::set_mode_char), 
+    METH_VARARGS, "Set a mode on the channel from its mode char" },
   { "send_names", reinterpret_cast<PyCFunction>(ChannelWrap::send_names), 
     METH_OLDARGS, "Send names reply to a client" },
   { "send", reinterpret_cast<PyCFunction>(ChannelWrap::send), 
@@ -65,8 +67,15 @@ static PyMemberDef channel_members[] =
 
 enum Property
 {
-  Name        = 0x00000001,
-  Members     = 0x00000002,
+  Name = 1,
+  Members,
+  InviteOnly,
+  Moderated,
+  NoExternal,
+  Private,
+  Secret,
+  TopicOpsOnly,
+  Secure,
   PropMask    = 0x000000ff
 };
 
@@ -80,11 +89,32 @@ enum PropertyFlag
 static PyGetSetDef channel_getsetters[] = 
 {
   { const_cast<char*>("Name"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Name"), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Channel Name"), 
     reinterpret_cast<void *>(Name | StringArg) },
   { const_cast<char*>("Members"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Members"), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Channel Members"), 
     reinterpret_cast<void *>(Members) },
+  { const_cast<char*>("InviteOnly"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is invite only"), 
+    reinterpret_cast<void *>(InviteOnly | BoolArg) },
+  { const_cast<char*>("Moderated"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is moderated"), 
+    reinterpret_cast<void *>(Moderated | BoolArg) },
+  { const_cast<char*>("NoExternal"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is invite only"), 
+    reinterpret_cast<void *>(NoExternal | BoolArg) },
+  { const_cast<char*>("Private"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is private"), 
+    reinterpret_cast<void *>(Private | BoolArg) },
+  { const_cast<char*>("Secret"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is secret"), 
+    reinterpret_cast<void *>(Secret | BoolArg) },
+  { const_cast<char*>("TopicOpsOnly"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel topic is settable by ops only"), 
+    reinterpret_cast<void *>(TopicOpsOnly | BoolArg) },
+  { const_cast<char*>("Secure"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is secure"), 
+    reinterpret_cast<void *>(Secure | BoolArg) },
   { NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -148,6 +178,27 @@ PyObject *ChannelWrap::get_wrap(ChannelWrap *self, void *closure)
       map<ClientPtr, Membership> channels = self->channel->get_members();
       value = CollectionWrap<map<ClientPtr, Membership>, MembershipWrap>::wrap(&channels);
     }
+    break;
+  case InviteOnly:
+    value = PyBool_FromLong(self->channel->is_invite_only());
+    break;
+  case Moderated:
+    value = PyBool_FromLong(self->channel->is_moderated());
+    break;
+  case NoExternal:
+    value = PyBool_FromLong(self->channel->is_no_external_msgs());
+    break;
+  case Private:
+    value = PyBool_FromLong(self->channel->is_private());
+    break;
+  case Secret:
+    value = PyBool_FromLong(self->channel->is_secret());
+    break;
+  case TopicOpsOnly:
+    value = PyBool_FromLong(self->channel->is_topic_op_only());
+    break;
+  case Secure:
+    value = PyBool_FromLong(self->channel->is_secure());
     break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;
@@ -296,6 +347,18 @@ PyObject *ChannelWrap::send(ChannelWrap *self, PyObject *args, PyObject *kwargs)
   self->channel->send(client->get_client(), PyString_AsString(result));
 
   Py_DECREF(result);
+
+  Py_RETURN_NONE;
+}
+
+PyObject *ChannelWrap::set_mode_char(ChannelWrap *self, PyObject *args)
+{
+  char c;
+  PyObject *set;
+
+  PyArg_ParseTuple(args, "cO", &c, &set);
+
+  self->channel->set_mode_char(c, PyObject_IsTrue(set));
 
   Py_RETURN_NONE;
 }

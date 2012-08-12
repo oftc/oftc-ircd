@@ -63,6 +63,13 @@ private:
 
   map<ClientPtr, Membership> members;
   irc_string name;
+  bool moderated;
+  bool invite_only;
+  bool no_external_msgs;
+  bool private_chan;
+  bool secret;
+  bool topic_op_only;
+  bool secure;
 public:
   // Events
   static Event<ChannelPtr, ClientPtr> joining;
@@ -77,12 +84,22 @@ public:
   static ChannelPtr find(const irc_string);
   static void del(const ChannelPtr);
 
+  // tests
+  inline bool is_moderated() const { return moderated; }
+  inline bool is_invite_only() const { return invite_only; }
+  inline bool is_no_external_msgs() const { return no_external_msgs; }
+  inline bool is_private() const { return private_chan; }
+  inline bool is_secret() const { return secret; }
+  inline bool is_topic_op_only() const { return topic_op_only; }
+  inline bool is_secure() const { return secure; }
+
   // getters
   irc_string get_name() const;
   map<ClientPtr, Membership> get_members() const;
 
   // setters
   void set_name(const irc_string);
+  void set_mode_char(char, bool);
   
   // members
   void add_member(const ClientPtr);

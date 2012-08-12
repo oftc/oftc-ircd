@@ -66,6 +66,7 @@ public:
   static PyObject *remove_member(ChannelWrap *, ClientWrap *);
   static PyObject *send_names(ChannelWrap *, ClientWrap *);
   static PyObject *send(ChannelWrap *, PyObject *, PyObject *);
+  static PyObject *set_mode_char(ChannelWrap *, PyObject *);
   static PyObject *str(ChannelWrap *);
 
   // ctor/dtor

@@ -34,7 +34,8 @@ Event<ChannelPtr, ClientPtr> Channel::joined;
 map<Channel *, ChannelPtr> Channel::channels;
 unordered_map<irc_string, ChannelPtr> Channel::names;
 
-Channel::Channel() 
+Channel::Channel() : moderated(false), invite_only(false), no_external_msgs(false),
+  private_chan(false), secret(false), topic_op_only(false), secure(false)
 {
   Logging::trace << "Created Channel: " << this << Logging::endl;
 }
@@ -86,6 +87,37 @@ map<ClientPtr, Membership> Channel::get_members() const
 void Channel::set_name(const irc_string _name)
 {
   name = _name;
+}
+
+void Channel::set_mode_char(char mode, bool set)
+{
+  switch(mode)
+  {
+  case 'i':
+    invite_only = set;
+    break;
+  case 'm':
+    moderated = set;
+    break;
+  case 'n':
+    no_external_msgs = set;
+    break;
+  case 'p':
+    private_chan = set;
+    break;
+  case 's':
+    secret = set;
+    break;
+  case 't':
+    topic_op_only = set;
+    break;
+  case 'S':
+    secure = set;
+    break;
+  default:
+    Logging::debug << "unknown mode char: " << mode << Logging::endl;
+    break;
+  }
 }
 
 void Channel::send_names(ClientPtr client)
