@@ -90,6 +90,7 @@
       'src/python/pythonutil.cc',
       'src/python/parserwrap.cc',
       'modules/python/ircd/__init__.py',
+      'modules/python/ircd/channel.py',
       'modules/python/ircd/msflags.py',
       'modules/python/ircd/numerics.py',
       'modules/python/ircd/user.py',

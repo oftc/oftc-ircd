@@ -517,6 +517,7 @@ PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
       switch(*i)
       {
       case 's':
+      case 'c':
         if(!PyString_Check(item))
         {
           stringstream ss;
@@ -524,7 +525,10 @@ PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
           PyErr_SetString(PyExc_TypeError, ss.str().c_str());
           return NULL;
         }
-        output << PyString_AsString(item);
+        if(*i == 's')
+          output << PyString_AsString(item);
+        else
+          output << PyString_AsString(item)[0];
         break;
       case 'd':
         if(!PyInt_Check(item))

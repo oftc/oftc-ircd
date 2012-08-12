@@ -23,6 +23,7 @@
 
 from ircd import register, event, Target, have_target, numerics, msflags
 from ircd.user import *
+from ircd.channel import *
 from pythonwrap import Client, Channel
 import time
 
@@ -68,12 +69,9 @@ def handle_pong(client, *args):
   pass
 
 @register("MODE", min_args=1, max_args=2)
-def handle_mode(client, name, *arg):
-  if name[0] == '#':
-    client.numeric(numerics.RPL_CHANNELMODEIS, name, '+', '')
-  else:
-    target = Client.find_by_name(name)
-
+@have_target()
+def handle_mode(client, target, *args):
+  if isinstance(target, Client):
     if not target:
       client.numeric(numerics.ERR_NOSUCHNICK, name)
       return
@@ -82,10 +80,15 @@ def handle_mode(client, name, *arg):
       client.numeric(numerics.ERR_USERSDONTMATCH)
       return
 
-    if len(arg) > 0:
-      set_user_mode(client, arg[0])
+    if len(args) > 0:
+      set_user_mode(client, args[0])
     else:
       set_user_mode(client, None)
+  else:
+    if len(args) > 0:
+      set_channel_mode(client, target, args[0])
+    else:
+      set_channel_mode(client, target, None)
 
 @register("WHO", min_args=1, max_args=2)
 @have_target(epilog=numerics.RPL_ENDOFWHO)

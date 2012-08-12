@@ -52,6 +52,8 @@ public:
   static const int Rpl_WhoReply = 352;
   static const int Rpl_NamesReply = 353;
   static const int Rpl_EndOfNames = 366;
+  static const int Rpl_BanList = 367;
+  static const int Rpl_EndOfBanList = 368;
   static const int Rpl_EndOfWhowas = 369;
 
   // Error replies
@@ -63,6 +65,7 @@ public:
   static const int Err_NotOnChannel = 442;
   static const int Err_NeedMoreParams = 461;
   static const int Err_AlreadyRegistered = 462;
+  static const int Err_UnknownMode = 472;
   static const int Err_BadChannelName = 479;
   static const int Err_UmodeUnknownFlag = 501;
   static const int Err_UsersDontMatch = 502;
