@@ -21,7 +21,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #  OTHER DEALINGS IN THE SOFTWARE.
 
-from ircd import register, event, Target, have_target, numerics
+from ircd import register, event, Target, have_target, numerics, msflags
 from ircd.user import *
 from pythonwrap import Client, Channel
 import time
@@ -99,7 +99,12 @@ def handle_whois(client, target, *arg):
     if min_len + len(channels) + len(membership.Channel.Name) >= 510:
       client.numeric(numerics.RPL_WHOISCHANNELS, target.Name, channels)
       channels = ""
-     
+    
+    if membership.Flags & msflags.CHANOP:
+      channels += '@'
+    elif membership.Flags & msflags.VOICE:
+      channels += '+'
+
     channels += membership.Channel.Name + " "
 
   if len(target.Channels) > 0:
