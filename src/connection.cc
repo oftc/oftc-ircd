@@ -295,7 +295,8 @@ void Connection::on_dns(void *arg, int status, int timeouts, hostent *hostent)
   DnsCallbackState *state = static_cast<DnsCallbackState *>(arg);
   Connection *connection = state->connection;
 
-  connection->dns_done(status, hostent, state);
+  if(connections[connection])
+    connection->dns_done(status, hostent, state);
 }
 
 void Connection::free_buffer(uv_buf_t &buf)
