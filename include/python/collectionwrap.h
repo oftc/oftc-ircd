@@ -57,7 +57,7 @@ public:
     PythonWrap<CollectionWrap>::type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
     PythonWrap<CollectionWrap>::type_object.tp_as_sequence = &seq_methods;
     PythonWrap<CollectionWrap>::type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
-    PythonWrap<CollectionWrap>::init(module, "Collection");
+    PythonWrap<CollectionWrap>::init(module, (string("Collection ") + typeid(T).name()).c_str());
   }
 
   static CollectionWrap<T, W> *wrap(void *arg)
@@ -69,7 +69,7 @@ public:
 
     args = Py_BuildValue("(O)", obj);
 
-    wrapped = reinterpret_cast<CollectionWrap<T, W> *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&CollectionWrap<T, W>::type_object), args));
+    wrapped = reinterpret_cast<CollectionWrap<T, W> *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&PythonWrap<CollectionWrap>::type_object), args));
     Py_DECREF(obj);
     if(wrapped == NULL)
       return NULL;

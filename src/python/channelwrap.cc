@@ -28,6 +28,8 @@
 #include "stdinc.h"
 #include "python/channelwrap.h"
 #include "python/pythonutil.h"
+#include "python/collectionwrap.h"
+#include "python/membershipwrap.h"
 #include "channel.h"
 
 template<> PyTypeObject PythonWrap<ChannelWrap>::type_object = {};
@@ -64,6 +66,7 @@ static PyMemberDef channel_members[] =
 enum Property
 {
   Name        = 0x00000001,
+  Members     = 0x00000002,
   PropMask    = 0x000000ff
 };
 
@@ -79,6 +82,9 @@ static PyGetSetDef channel_getsetters[] =
   { const_cast<char*>("Name"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
     reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Name"), 
     reinterpret_cast<void *>(Name | StringArg) },
+  { const_cast<char*>("Members"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
+    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Members"), 
+    reinterpret_cast<void *>(Members) },
   { NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -136,6 +142,12 @@ PyObject *ChannelWrap::get_wrap(ChannelWrap *self, void *closure)
   {
   case Name:
     value = PyString_FromString(self->channel->get_name().c_str());
+    break;
+  case Members:
+    {
+      map<ClientPtr, Membership> channels = self->channel->get_members();
+      value = CollectionWrap<map<ClientPtr, Membership>, MembershipWrap>::wrap(&channels);
+    }
     break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;

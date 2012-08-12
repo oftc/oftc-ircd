@@ -54,7 +54,7 @@ static PyMethodDef module_methods[] =
 
 vector<PyObject *> PythonLoader::loaded_modules;
 template<> PyTypeObject PythonWrap<CollectionWrap<map<ChannelPtr, Membership>, MembershipWrap> >::type_object = {};
-
+template<> PyTypeObject PythonWrap<CollectionWrap<map<ClientPtr, Membership>, MembershipWrap> >::type_object = {};
 
 void PythonLoader::init()
 {
@@ -93,6 +93,7 @@ void PythonLoader::init()
   ChannelWrap::init(m);
   MembershipWrap::init(m);
   CollectionWrap<map<ChannelPtr, Membership>, MembershipWrap>::init(m);
+  CollectionWrap<map<ClientPtr, Membership>, MembershipWrap>::init(m);
 }
 
 void PythonLoader::load(string name)
