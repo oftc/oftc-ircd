@@ -51,6 +51,7 @@ private:
   bool invisible;
   time_t last_message;
   map<ChannelPtr, Membership> channels;
+  ClientPtr server;
 public:
   // Events
   static Event<ClientPtr> connected;
@@ -89,12 +90,14 @@ public:
   string get_realname() const;
   time_t get_idletime() const;
   map<ChannelPtr, Membership> get_channels() const;
+  ClientPtr get_server() const;
 
   // Setters
   void set_username(const string);
   void set_realname(const string);
   void set_invisible(bool invis);
   void set_last_message(time_t);
+  void set_server(const ClientPtr);
 };
 
 #endif

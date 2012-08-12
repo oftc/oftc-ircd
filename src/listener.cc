@@ -36,6 +36,7 @@
 #include "listenersection.h"
 #include "connection.h"
 #include "ssl.h"
+#include "server.h"
 
 ListenerSection Listener::config;
 vector<ListenerPtr> Listener::listeners;
@@ -89,6 +90,10 @@ void Listener::connected(uv_stream_t *stream, int status)
   client->set_connection(connection);
 
   client->set_first_seen(time(NULL));
+  
+  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
+  ptr->set_server(Server::get_me());
+
   Client::add_unregistered(client);
 
   connection->accept(stream);

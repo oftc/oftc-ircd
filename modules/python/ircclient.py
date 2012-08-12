@@ -90,7 +90,7 @@ def handle_mode(client, name, *arg):
 @register("WHO", min_args=1, max_args=2)
 @have_target(epilog=numerics.RPL_ENDOFWHO)
 def handle_who(client, target, *arg):
-  client.numeric(numerics.RPL_WHOREPLY, '*', target.Username, target.Host, Client.Me.Name, target.Name, "H", 0, target.Realname)
+  client.numeric(numerics.RPL_WHOREPLY, '*', target.Username, target.Host, target.Server.Name, target.Name, "H", 0, target.Realname)
   client.numeric(numerics.RPL_ENDOFWHO, target.Name)
 
 @register("WHOIS", min_args=1, max_args=2)

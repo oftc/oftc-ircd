@@ -88,6 +88,7 @@ enum Property
   Idletime    = 0x00000007,
   LastMessage = 0x00000008,
   Channels    = 0x00000009,
+  ServerProp  = 0x0000000a,
   PropMask    = 0x000000ff
 };
 
@@ -129,6 +130,9 @@ static PyGetSetDef client_getsetters[] =
   { const_cast<char*>("Channels"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
     NULL, const_cast<char*>("Channel list"),
     reinterpret_cast<void *>(Channels | ClientOnly) },
+  { const_cast<char*>("Server"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
+    NULL, const_cast<char*>("Server client belongs to"),
+    reinterpret_cast<void *>(ServerProp | ClientOnly) },
   { NULL, NULL, NULL, NULL, NULL }
 };
 
@@ -249,6 +253,9 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
       map<ChannelPtr, Membership> channels = client_ptr->get_channels();
       value = CollectionWrap<map<ChannelPtr, Membership>, MembershipWrap>::wrap(&channels);
     }
+    break;
+  case ServerProp:
+    value = ClientWrap::wrap(&client_ptr->get_server());
     break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;

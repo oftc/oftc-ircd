@@ -162,6 +162,11 @@ map<ChannelPtr, Membership> Client::get_channels() const
   return channels;
 }
 
+ClientPtr Client::get_server() const
+{
+  return server;
+}
+
 void Client::set_invisible(bool invis)
 {
   invisible = invis;
@@ -180,6 +185,11 @@ void Client::set_realname(const string real)
 void Client::set_last_message(time_t when)
 {
   last_message = when;
+}
+
+void Client::set_server(ClientPtr ptr)
+{
+  server = ptr;
 }
 
 // Statics
