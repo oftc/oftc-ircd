@@ -70,8 +70,8 @@ def handle_pong(client, *args):
 
 @register("MODE", min_args=1, max_args=2)
 def handle_mode(client, name, *arg):
-  if name[:1] == '#':
-    pass
+  if name[0] == '#':
+    client.numeric(numerics.RPL_CHANNELMODEIS, name, '+', '')
   else:
     target = Client.find_by_name(name)
 

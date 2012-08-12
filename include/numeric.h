@@ -47,6 +47,7 @@ public:
   static const int Rpl_WhoisIdle = 317;
   static const int Rpl_WhoisChannels = 319;
   static const int Rpl_EndOfWhois = 318;
+  static const int Rpl_ChannelModeIs = 324;
   static const int Rpl_NamesReply = 353;
   static const int Rpl_EndOfNames = 366;
   static const int Rpl_EndOfWhowas = 369;
