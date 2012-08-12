@@ -21,10 +21,9 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #  OTHER DEALINGS IN THE SOFTWARE.
 
-from ircd import register, event, Target, have_target
+from ircd import register, event, Target, have_target, numerics
 from ircd.user import *
 from pythonwrap import Client, Channel
-import numerics
 import time
 
 @register("NICK", min_args=1, max_args=1, access=0)
