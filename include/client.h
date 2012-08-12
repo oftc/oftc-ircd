@@ -50,7 +50,7 @@ private:
   string realname;
   bool invisible;
   time_t last_message;
-  list<ChannelPtr> channels;
+  map<ChannelPtr, Membership> channels;
 public:
   // Events
   static Event<ClientPtr> connected;
@@ -72,7 +72,7 @@ public:
   Client();
 
   // Members
-  void add_channel(const ChannelPtr);
+  void add_channel(const Membership);
   void close(const string);
   void remove_channel(const ChannelPtr);
   void send(const string arg, int);
@@ -88,7 +88,7 @@ public:
   string get_username() const;
   string get_realname() const;
   time_t get_idletime() const;
-  list<ChannelPtr> get_channels() const;
+  map<ChannelPtr, Membership> get_channels() const;
 
   // Setters
   void set_username(const string);

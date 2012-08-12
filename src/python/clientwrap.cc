@@ -29,6 +29,7 @@
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
 #include "python/collectionwrap.h"
+#include "python/membershipwrap.h"
 #include "python/pythonutil.h"
 #include "numeric.h"
 #include "client.h"
@@ -245,8 +246,8 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
     break;
   case Channels:
     {
-      list<ChannelPtr> channels = client_ptr->get_channels();
-      value = CollectionWrap<list<ChannelPtr>, ChannelWrap>::wrap(&channels);
+      map<ChannelPtr, Membership> channels = client_ptr->get_channels();
+      value = CollectionWrap<map<ChannelPtr, Membership>, MembershipWrap>::wrap(&channels);
     }
     break;
   default:

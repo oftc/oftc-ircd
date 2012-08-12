@@ -55,16 +55,17 @@ void Channel::add_member(const ClientPtr client)
   else
     member.flags = Member;
 
-  members[client] = member;
-  ptr->add_channel(channels[this]);
+  member.channel = channels[this];
 
-  joined(channels[this], client);
+  members[client] = member;
+  ptr->add_channel(member);
+
+  joined(member.channel, client);
 }
 
 bool Channel::is_member(const ClientPtr client)
 {
-  auto it = members.find(client);
-  return it != members.end();
+  return members.find(client) != members.end();
 }
 
 void Channel::remove_member(const ClientPtr client)

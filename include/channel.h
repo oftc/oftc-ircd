@@ -51,6 +51,7 @@ enum MembershipFlags
 struct Membership
 {
   ClientPtr client;
+  ChannelPtr channel;
   MembershipFlags flags;
 };
 

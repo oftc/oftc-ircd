@@ -74,7 +74,6 @@ public:
 
   static T *call(PyObject *args)
   {
-
     return reinterpret_cast<T*>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
   }
 

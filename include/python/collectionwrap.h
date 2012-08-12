@@ -120,13 +120,15 @@ public:
   {
     curr = iterable.begin();
   }
+
   W *next()
   {
-    typename T::value_type item;
+    typename T::mapped_type item;
+
     if(curr == iterable.end())
       return NULL;
 
-    item = *curr;
+    item = curr->second;
     curr++;
 
     PyObject *obj, *args;

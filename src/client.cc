@@ -52,9 +52,9 @@ Client::Client() : invisible(false), last_message(time(NULL))
 {
 }
 
-void Client::add_channel(const ChannelPtr channel)
+void Client::add_channel(const Membership ms)
 {
-  channels.push_back(channel);
+  channels[ms.channel] = ms;
 }
 
 void Client::close(const string reason)
@@ -62,14 +62,14 @@ void Client::close(const string reason)
   BaseClient::close(reason);
   for(auto it = channels.begin(); it != channels.end(); it++)
   {
-    ChannelPtr channel = *it;
+    ChannelPtr channel = it->first;
     channel->remove_member(client_list[this]);
   }
 }
 
 void Client::remove_channel(const ChannelPtr channel)
 {
-  channels.remove(channel);
+  channels.erase(channel);
 }
 
 void Client::send(const string arg, int numeric)
@@ -106,7 +106,7 @@ void Client::send_channels_common(string message)
 
   for(auto it = channels.begin(); it != channels.end(); it++)
   {
-    ChannelPtr channel = *it;
+    ChannelPtr channel = it->first;
     map<ClientPtr, Membership> members = channel->get_members();
 
     for(auto mit = members.begin(); mit != members.end(); mit++)
@@ -157,7 +157,7 @@ time_t Client::get_idletime() const
   return time(NULL) - last_message;
 }
 
-list<ChannelPtr> Client::get_channels() const
+map<ChannelPtr, Membership> Client::get_channels() const
 {
   return channels;
 }

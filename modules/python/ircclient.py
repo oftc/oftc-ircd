@@ -96,11 +96,12 @@ def handle_whois(client, target, *arg):
   client.numeric(numerics.RPL_WHOISSERVER, target.Name, str(Client.Me), Client.Me.Info)
   min_len = 1 + len(str(Client.Me)) + 1 + 3 + 1 + len(target.Name) # ":foo.server.com 000 client :"
   channels = ""
-  for channel in target.Channels:
-    if min_len + len(channels) + len(channel.Name) >= 510:
+  for membership in target.Channels:
+    if min_len + len(channels) + len(membership.Channel.Name) >= 510:
       client.numeric(numerics.RPL_WHOISCHANNELS, target.Name, channels)
       channels = ""
-    channels += channel.Name + " "
+     
+    channels += membership.Channel.Name + " "
 
   if len(target.Channels) > 0:
     client.numeric(numerics.RPL_WHOISCHANNELS, target.Name, channels)
