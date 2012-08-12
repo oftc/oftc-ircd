@@ -255,7 +255,10 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
     }
     break;
   case ServerProp:
-    value = ClientWrap::wrap(&client_ptr->get_server());
+    {
+      ClientPtr tmp = client_ptr->get_server();
+      value = ClientWrap::wrap(&tmp);
+    }
     break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;
