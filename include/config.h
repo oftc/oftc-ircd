@@ -33,10 +33,12 @@
 
 using std::string;
 
+typedef unordered_map<string, ConfigSection *> ConfigSectionHash;
+
 class Config
 {
 private:
-  static unordered_map<string, ConfigSection *> sections;
+  static ConfigSectionHash sections;
   static ConfigSection *find_section(const char *name);
 public:
   static void add_section(const string name, ConfigSection* const section);
@@ -47,7 +49,7 @@ public:
 class config_error : public runtime_error
 {
 public:
-  config_error(const string message) : runtime_error(message) { }
+  config_error(const string& message) : runtime_error(message) { }
 };
 
 #endif

@@ -65,7 +65,6 @@
       'src/command.cc',
       'src/config.cc',
       'src/connection.cc',
-      'src/event.cc',
       'src/generalsection.cc',
       'src/listener.cc',
       'src/listenersection.cc',

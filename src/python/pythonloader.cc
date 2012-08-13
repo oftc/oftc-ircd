@@ -40,6 +40,7 @@
 #include "channel.h"
 #include "module.h"
 #include "system.h"
+#include "client.h"
 
 using std::stringstream;
 using std::string;
@@ -49,12 +50,12 @@ using std::endl;
 static PyMethodDef module_methods[] =
 {
   { "get_motd", PythonUtil::get_motd, 0, "Return the MOTD for the server" },
-  { NULL, NULL, 0, NULL }
+  PY_METHOD_END
 };
 
-vector<PyObject *> PythonLoader::loaded_modules;
-template<> PyTypeObject PythonWrap<CollectionWrap<map<ChannelPtr, Membership>, MembershipWrap> >::type_object = {};
-template<> PyTypeObject PythonWrap<CollectionWrap<map<ClientPtr, Membership>, MembershipWrap> >::type_object = {};
+PyObjectList PythonLoader::loaded_modules;
+template<> PyTypeObject PythonWrap<CollectionWrap<ChannelMemberList, MembershipWrap> >::type_object = {};
+template<> PyTypeObject PythonWrap<CollectionWrap<ClientMemberList, MembershipWrap> >::type_object = {};
 
 void PythonLoader::init()
 {
@@ -65,9 +66,9 @@ void PythonLoader::init()
   stringstream path;
 
   path << Py_GetPath();
-  vector<string> paths = Module::get_module_paths();
+  StringList paths = Module::get_module_paths();
 
-  for(auto it = paths.begin(); it != paths.end(); it++)
+  for(auto it = paths.cbegin(); it != paths.cend(); it++)
   {
 #ifdef _WIN32
     path << ";" << *it;
@@ -92,8 +93,8 @@ void PythonLoader::init()
   ClientWrap::init(m);
   ChannelWrap::init(m);
   MembershipWrap::init(m);
-  CollectionWrap<map<ChannelPtr, Membership>, MembershipWrap>::init(m);
-  CollectionWrap<map<ClientPtr, Membership>, MembershipWrap>::init(m);
+  CollectionWrap<ChannelMemberList, MembershipWrap>::init(m);
+  CollectionWrap<ClientMemberList, MembershipWrap>::init(m);
 }
 
 void PythonLoader::load(string name)

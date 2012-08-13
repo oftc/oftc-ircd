@@ -131,15 +131,10 @@ public:
     item = curr->second;
     curr++;
 
-    PyObject *obj, *args;
     W *wrapped;
 
-    obj = PyCObject_FromVoidPtr(&item, NULL);
+    wrapped = PythonWrap<W>::wrap(&item);
 
-    args = Py_BuildValue("(O)", obj);
-
-    wrapped = PythonWrap<W>::call(args);
-    Py_DECREF(obj);
     if(wrapped == NULL)
       return NULL;
 

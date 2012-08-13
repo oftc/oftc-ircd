@@ -26,10 +26,11 @@
 #include "stdinc.h"
 #include "baseclient.h"
 #include "connection.h"
+#include "client.h"
 #include "server.h"
 #include "system.h"
 
-unordered_map<irc_string, ClientPtr> BaseClient::names;
+NameHash BaseClient::names;
 Event<ClientPtr, string> BaseClient::closing;
 
 BaseClient::BaseClient() : level(Unregistered), last_data(0)
@@ -168,7 +169,7 @@ void BaseClient::set_first_seen(time_t when)
 void BaseClient::init()
 {
   ClientPtr me = ClientPtr(new Server);
-  shared_ptr<Server> me_ptr = dynamic_pointer_cast<Server>(me);
+  ServerPtr me_ptr = dynamic_pointer_cast<Server>(me);
 
   me->set_name(System::get_server_name());
   me_ptr->set_info(System::get_server_info());

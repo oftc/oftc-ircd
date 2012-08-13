@@ -33,18 +33,22 @@
 using std::string;
 using std::vector;
 
+class Module;
+
+typedef vector<Module> ModuleList;
+
 class Module
 {
 private:
   static ModuleSection config;
-  static vector<Module> modules;
+  static ModuleList modules;
 
   string name;
   string filename;
 public:
   // static methods
   static void init();
-  static inline vector<string> get_module_paths() { return config.get_paths(); }
+  static inline StringList get_module_paths() { return config.get_paths(); }
   static Module create(const string, const string);
   static void load_all();
 

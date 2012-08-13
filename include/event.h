@@ -44,13 +44,18 @@ public:
 
   bool fire(T... args)
   {
+    bool ret;
+
     for(auto it = handlers.begin();  it != handlers.end(); it++)
     {
       function<bool(T...)> func = *it;
-      func(args...);
+      ret = func(args...);
+
+      if(!ret)
+        break;
     }
 
-    return true;
+    return ret;
   }
 
   const Event<T...>& operator += (function<bool(T...)> func)
@@ -135,57 +140,82 @@ public:
 
   bool fire(T1 arg)
   {
+    bool ret;
+
     for(auto it = handlers.begin();  it != handlers.end(); it++)
     {
       function<bool(T1)> func = *it;
-      func(arg);
+      ret = func(arg);
+
+      if(!ret)
+        break;
     }
 
-    return true;
+    return ret;
   }
 
   bool fire(T1 arg, T2 arg2)
   {
+    bool ret;
+
     for(auto it = handlers2.begin();  it != handlers2.end(); it++)
     {
       function<bool(T1, T2)> func = *it;
-      func(arg, arg2);
+      ret = func(arg, arg2);
+
+      if(!ret)
+        break;
     }
 
-    return true;
+    return ret;
   }
 
   bool fire(T1 arg, T2 arg2, T3 arg3)
   {
+    bool ret;
+
     for(auto it = handlers3.begin();  it != handlers3.end(); it++)
     {
       function<bool(T1, T2, T3)> func = *it;
-      func(arg, arg2, arg3);
+      ret = func(arg, arg2, arg3);
+
+      if(!ret)
+        break;
     }
 
-    return true;
+    return ret;
   }
 
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4)
   {
+    bool ret;
+
     for(auto it = handlers4.begin();  it != handlers4.end(); it++)
     {
       function<bool(T1, T2, T3, T4)> func = *it;
-      func(arg, arg2, arg3, arg4);
+      ret = func(arg, arg2, arg3, arg4);
+
+      if(!ret)
+        break;
     }
 
-    return true;
+    return ret;
   }
 
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
   {
+    bool ret;
+
     for(auto it = handlers5.begin();  it != handlers5.end(); it++)
     {
       function<bool(T1, T2, T3, T4, T5)> func = *it;
-      func(arg, arg2, arg3, arg4, arg5);
+      ret = func(arg, arg2, arg3, arg4, arg5);
+
+      if(!ret)
+        break;
     }
 
-    return true;
+    return ret;
   }
 
   bool operator()(T1 arg)

@@ -37,9 +37,10 @@ class ClientWrap;
 class ChannelWrap : public PythonWrap<ChannelWrap>
 {
 private:
-  ChannelPtr channel;
   static PyObject *joining;
   static PyObject *joined;
+
+  ChannelPtr channel;
 public:
   // Non Python methods
   static void init(PyObject *);

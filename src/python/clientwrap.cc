@@ -47,34 +47,18 @@ PyObject *ClientWrap::nick_changed;
 
 static PyMethodDef client_methods[] =
 {
-  { "add", reinterpret_cast<PyCFunction>(ClientWrap::add), 
-    METH_STATIC, "Register the client" },
-  { "add_name", reinterpret_cast<PyCFunction>(ClientWrap::add_name), 
-    METH_STATIC, "Add a name to the names list" },
-  { "find_by_name", reinterpret_cast<PyCFunction>(ClientWrap::find_by_name), 
-    METH_STATIC, "find a client by name" },
-  { "close", reinterpret_cast<PyCFunction>(ClientWrap::close), 
-    METH_OLDARGS, "Close a client connection" },
-  { "del_name", reinterpret_cast<PyCFunction>(ClientWrap::del_name), 
-    METH_STATIC, "delete a client name from the names list" },
-  { "is_registered", reinterpret_cast<PyCFunction>(ClientWrap::is_registered),
-    METH_NOARGS, "Check if a client is registered or not" },
-  { "is_ssl", reinterpret_cast<PyCFunction>(ClientWrap::is_ssl),
-    METH_NOARGS, "Check if a client is connected with SSL" },
-  { "numeric", reinterpret_cast<PyCFunction>(ClientWrap::numeric),
-    METH_VARARGS, "Send the client a numeric" },
-  { "remove_channel", reinterpret_cast<PyCFunction>(ClientWrap::remove_channel),
-    METH_OLDARGS, "Remove the client from the specified channel" },
-  { "send", reinterpret_cast<PyCFunction>(ClientWrap::send),
-    METH_KEYWORDS | METH_VARARGS, "Send the client a message" },
-  { "send_channels_common", reinterpret_cast<PyCFunction>(ClientWrap::send_channels_common),
-    METH_KEYWORDS | METH_VARARGS, "Send a message to the users that share channels with this client" },
-  { NULL, NULL, 0, NULL }
-};
-
-static PyMemberDef client_members[] =
-{
-  { NULL, 0, 0, 0, NULL }
+  PY_METHOD("add", ClientWrap::add, METH_STATIC, "Register the client"),
+  PY_METHOD("add_name", ClientWrap::add_name, METH_STATIC, "Add a name to the names list"),
+  PY_METHOD("find_by_name", ClientWrap::find_by_name, METH_STATIC, "find a client by name"),
+  PY_METHOD("close", ClientWrap::close, METH_OLDARGS, "Close a client connection"),
+  PY_METHOD("del_name", ClientWrap::del_name, METH_STATIC, "delete a client name from the names list"),
+  PY_METHOD("is_registered", ClientWrap::is_registered, METH_NOARGS, "Check if a client is registered or not"),
+  PY_METHOD("is_ssl", ClientWrap::is_ssl, METH_NOARGS, "Check if a client is connected with SSL"),
+  PY_METHOD("numeric", ClientWrap::numeric, METH_VARARGS, "Send the client a numeric"),
+  PY_METHOD("remove_channel", ClientWrap::remove_channel, METH_OLDARGS, "Remove the client from the specified channel"),
+  PY_METHOD("send", ClientWrap::send, METH_KEYWORDS, "Send the client a message"),
+  PY_METHOD("send_channels_common", ClientWrap::send_channels_common, METH_KEYWORDS, "Send a message to the users that share channels with this client"),
+  PY_METHOD_END
 };
 
 enum Property
@@ -103,37 +87,17 @@ enum PropertyFlag
 
 static PyGetSetDef client_getsetters[] = 
 {
-  { const_cast<char*>("Name"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Name"), 
-    reinterpret_cast<void *>(Name | StringArg) },
-  { const_cast<char*>("Username"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Username"), 
-    reinterpret_cast<void *>(Username | StringArg | ClientOnly) },
-  { const_cast<char*>("Realname"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Real Name"), 
-    reinterpret_cast<void *>(Realname | StringArg | ClientOnly) },
-  { const_cast<char*>("Host"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Host"), 
-    reinterpret_cast<void *>(Host | StringArg) },
-  { const_cast<char*>("Info"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Info"), 
-    reinterpret_cast<void *>(Info | StringArg | ServerOnly) },
-  { const_cast<char*>("Invisible"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Invisible"), 
-    reinterpret_cast<void *>(Invisible | BoolArg | ClientOnly) },
-  { const_cast<char*>("Idletime"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Idle Time"), 
-    reinterpret_cast<void *>(Idletime | IntArg | ClientOnly) },
-  { const_cast<char*>("LastMessage"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    reinterpret_cast<setter>(ClientWrap::set_wrap), const_cast<char*>("Idle Time"), 
-    reinterpret_cast<void *>(LastMessage | IntArg | ClientOnly) },
-  { const_cast<char*>("Channels"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    NULL, const_cast<char*>("Channel list"),
-    reinterpret_cast<void *>(Channels | ClientOnly) },
-  { const_cast<char*>("Server"), reinterpret_cast<getter>(ClientWrap::get_wrap), 
-    NULL, const_cast<char*>("Server client belongs to"),
-    reinterpret_cast<void *>(ServerProp | ClientOnly) },
-  { NULL, NULL, NULL, NULL, NULL }
+  PY_GETSET("Name", ClientWrap, "Name", Name | StringArg),
+  PY_GETSET("Username", ClientWrap, "Username", Username | StringArg | ClientOnly),
+  PY_GETSET("Realname", ClientWrap, "Real Name", Realname | StringArg | ClientOnly),
+  PY_GETSET("Host", ClientWrap, "Host", Host | StringArg),
+  PY_GETSET("Info", ClientWrap, "Info", Info | StringArg | ServerOnly),
+  PY_GETSET("Invisible", ClientWrap, "Invisible", Invisible | BoolArg | ClientOnly),
+  PY_GETSET("Idletime", ClientWrap, "Idle Time", Idletime | IntArg | ClientOnly),
+  PY_GETSET("LastMessage", ClientWrap, "Idle Time", LastMessage | IntArg | ClientOnly),
+  PY_GETSET("Channels", ClientWrap, "Channel list", Channels | ClientOnly),
+  PY_GETSET("Server", ClientWrap, "Server client belongs to", ServerProp | ClientOnly),
+  PY_GETSET_END
 };
 
 ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
@@ -159,7 +123,6 @@ ClientWrap::~ClientWrap()
 void ClientWrap::init(PyObject *module)
 {
   PythonWrap<ClientWrap>::type_object.tp_methods = client_methods;
-  PythonWrap<ClientWrap>::type_object.tp_members = client_members;
   PythonWrap<ClientWrap>::type_object.tp_getset = client_getsetters;
   PythonWrap<ClientWrap>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
   PythonWrap<ClientWrap>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
@@ -173,12 +136,12 @@ void ClientWrap::init(PyObject *module)
     throw runtime_error("Python failed to initialise");
   }
 
-  connected = EventWrap::wrap(reinterpret_cast<void *>(&fire_connected));
-  registering = EventWrap::wrap(reinterpret_cast<void *>(&fire_registering));
-  disconnected = EventWrap::wrap(reinterpret_cast<void *>(&fire_disconnected));
-  closing = EventWrap::wrap(reinterpret_cast<void *>(&fire_closing));
-  nick_changing = EventWrap::wrap(reinterpret_cast<void *>(&fire_nick_changing));
-  nick_changed = EventWrap::wrap(reinterpret_cast<void *>(&fire_nick_changed));
+  connected = EventWrap::wrap(&fire_connected);
+  registering = EventWrap::wrap(&fire_registering);
+  disconnected = EventWrap::wrap(&fire_disconnected);
+  closing = EventWrap::wrap(&fire_closing);
+  nick_changing = EventWrap::wrap(&fire_nick_changing);
+  nick_changed = EventWrap::wrap(&fire_nick_changed);
 
   PyDict_SetItemString(type_object.tp_dict, "Me", me);
   PyDict_SetItemString(type_object.tp_dict, "connected", connected);
@@ -201,7 +164,7 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
   int prop = *reinterpret_cast<int *>(&closure);
   PyObject *value;
   shared_ptr<Client> client_ptr;
-  shared_ptr<Server> server_ptr;
+  ServerPtr server_ptr;
 
   if(prop & ClientOnly)
   {
@@ -250,8 +213,8 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
     break;
   case Channels:
     {
-      map<ChannelPtr, Membership> channels = client_ptr->get_channels();
-      value = CollectionWrap<map<ChannelPtr, Membership>, MembershipWrap>::wrap(&channels);
+      ClientMemberList channels = client_ptr->get_channels();
+      value = CollectionWrap<ClientMemberList, MembershipWrap>::wrap(&channels);
     }
     break;
   case ServerProp:
@@ -273,7 +236,7 @@ int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 {
   int prop = *reinterpret_cast<int *>(&closure);
   shared_ptr<Client> client_ptr;
-  shared_ptr<Server> server_ptr;
+  ServerPtr server_ptr;
 
   if(value == NULL)
   {
@@ -345,7 +308,7 @@ int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
     self->client->set_host(PyString_AsString(value));
     break;
   case Invisible:
-    client_ptr->set_invisible(value == Py_True);
+    client_ptr->set_invisible(PyObject_IsTrue(value) != 0);
     break;
   case LastMessage:
     client_ptr->set_last_message(PyInt_AsLong(value));

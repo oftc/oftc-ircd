@@ -34,7 +34,7 @@
 using std::transform;
 
 ModuleSection Module::config;
-vector<Module> Module::modules;
+ModuleList Module::modules;
 
 Module::Module()
 {
@@ -69,7 +69,7 @@ Module Module::create(string name, string filename)
 
 void Module::load_all()
 {
-  for(auto it = modules.begin(); it != modules.end(); it++)
+  for(auto it = modules.cbegin(); it != modules.cend(); it++)
   {
     Module module = *it;
     string filename = module.get_filename();

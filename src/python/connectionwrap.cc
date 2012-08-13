@@ -38,17 +38,12 @@ PyObject *ConnectionWrap::dns_finished;
 
 static PyMethodDef connection_methods[] =
 {
-  { NULL, NULL, 0, NULL }
-};
-
-static PyMemberDef connection_members[] =
-{
-  { NULL, 0, 0, 0, NULL }
+  PY_METHOD_END
 };
 
 static PyGetSetDef connection_getsetters[] = 
 {
-  { NULL, NULL, NULL, NULL, NULL }
+  PY_GETSET_END
 };
 
 ConnectionWrap::ConnectionWrap(PyObject *args, PyObject *kwds)
@@ -74,7 +69,6 @@ ConnectionWrap::~ConnectionWrap()
 void ConnectionWrap::init(PyObject *module)
 {
   PythonWrap<ConnectionWrap>::type_object.tp_methods = connection_methods;
-  PythonWrap<ConnectionWrap>::type_object.tp_members = connection_members;
   PythonWrap<ConnectionWrap>::type_object.tp_getset = connection_getsetters;
   PythonWrap<ConnectionWrap>::init(module, "Connection");
 

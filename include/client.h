@@ -39,18 +39,20 @@ using std::vector;
 class Client;
 class Connection;
 
+typedef map<ChannelPtr, Membership> ClientMemberList;
+
 class Client : public BaseClient
 {
 private:
-  static map<BaseClient *, ClientPtr> client_list;
-  static list<ClientPtr> unregistered_list;
+  static ClientList client_list;
+  static ClientList unregistered_list;
   static uv_timer_t ping_timer;
 
   string username;
   string realname;
   bool invisible;
   time_t last_message;
-  map<ChannelPtr, Membership> channels;
+  ClientMemberList channels;
   ClientPtr server;
 public:
   // Events
@@ -89,7 +91,7 @@ public:
   string get_username() const;
   string get_realname() const;
   time_t get_idletime() const;
-  map<ChannelPtr, Membership> get_channels() const;
+  ClientMemberList get_channels() const;
   ClientPtr get_server() const;
 
   // Setters

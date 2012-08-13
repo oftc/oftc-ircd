@@ -34,7 +34,7 @@ template<> PyTypeObject PythonWrap<MembershipWrap>::type_object = {};
 
 static PyMethodDef membership_methods[] =
 {
-  { NULL, NULL, 0, NULL }
+  PY_METHOD_END
 };
 
 static PyMemberDef membership_members[] =
@@ -59,16 +59,10 @@ enum PropertyFlag
 
 static PyGetSetDef membership_getsetters[] = 
 {
-  { const_cast<char*>("Channel"), reinterpret_cast<getter>(MembershipWrap::get_wrap), 
-    reinterpret_cast<setter>(MembershipWrap::set_wrap), const_cast<char*>("Channel"), 
-    reinterpret_cast<void *>(Channel) },
-  { const_cast<char*>("Client"), reinterpret_cast<getter>(MembershipWrap::get_wrap), 
-    reinterpret_cast<setter>(MembershipWrap::set_wrap), const_cast<char*>("Client"), 
-    reinterpret_cast<void *>(Client) },
-  { const_cast<char*>("Flags"), reinterpret_cast<getter>(MembershipWrap::get_wrap), 
-    reinterpret_cast<setter>(MembershipWrap::set_wrap), const_cast<char*>("Flags"), 
-    reinterpret_cast<void *>(Flags | IntArg) },
-  { NULL, NULL, NULL, NULL, NULL }
+  PY_GETSET("Channel", MembershipWrap, "Channel", Channel),
+  PY_GETSET("Client", MembershipWrap, "Client", Client),
+  PY_GETSET("Flags", MembershipWrap, "Flags", Flags | IntArg),
+  PY_GETSET_END
 };
 
 MembershipWrap::MembershipWrap(PyObject *args, PyObject *kwds)

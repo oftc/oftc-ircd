@@ -44,8 +44,8 @@ Event<ClientPtr> Client::registering;
 Event<ClientPtr> Client::disconnected;
 Event<ClientPtr, irc_string> Client::nick_changing;
 Event<ClientPtr, string> Client::nick_changed;
-list<ClientPtr> Client::unregistered_list;
-map<BaseClient *, ClientPtr> Client::client_list;
+ClientList Client::unregistered_list;
+ClientList Client::client_list;
 uv_timer_t Client::ping_timer;
 
 Client::Client() : invisible(false), last_message(time(NULL))
@@ -60,7 +60,7 @@ void Client::add_channel(const Membership ms)
 void Client::close(const string reason)
 {
   BaseClient::close(reason);
-  for(auto it = channels.begin(); it != channels.end(); it++)
+  for(auto it = channels.cbegin(); it != channels.cend(); it++)
   {
     ChannelPtr channel = it->first;
     channel->remove_member(client_list[this]);
@@ -102,14 +102,14 @@ void Client::send(int numeric, ...)
 
 void Client::send_channels_common(string message)
 {
-  unordered_map<BaseClient *, ClientPtr> sent_clients;
+  ClientList sent_clients;
 
-  for(auto it = channels.begin(); it != channels.end(); it++)
+  for(auto it = channels.cbegin(); it != channels.cend(); it++)
   {
     ChannelPtr channel = it->first;
-    map<ClientPtr, Membership> members = channel->get_members();
+    ChannelMemberList members = channel->get_members();
 
-    for(auto mit = members.begin(); mit != members.end(); mit++)
+    for(auto mit = members.cbegin(); mit != members.cend(); mit++)
     {
       Membership ms = mit->second;
 
@@ -157,7 +157,7 @@ time_t Client::get_idletime() const
   return time(NULL) - last_message;
 }
 
-map<ChannelPtr, Membership> Client::get_channels() const
+ClientMemberList Client::get_channels() const
 {
   return channels;
 }
@@ -210,7 +210,7 @@ void Client::add(ClientPtr ptr)
   client_list[ptr.get()] = ptr;
   client->set_registered();
 
-  unregistered_list.remove(client);
+  unregistered_list.erase(ptr.get());
 
   connected(client);
 
@@ -221,7 +221,7 @@ void Client::add(ClientPtr ptr)
 
 void Client::add_unregistered(ClientPtr client)
 {
-  unregistered_list.push_back(client);
+  unregistered_list[client.get()] = client;
 }
 
 void Client::remove(ClientPtr client)
@@ -229,12 +229,12 @@ void Client::remove(ClientPtr client)
   if(client->is_registered())
     client_list.erase(client.get());
   else
-    unregistered_list.remove(client);
+    unregistered_list.erase(client.get());
 }
 
 void Client::check_pings(uv_timer_t *handle, int status)
 {
-  for(auto it = client_list.begin(); it != client_list.end(); it++)
+  for(auto it = client_list.cbegin(); it != client_list.cend(); it++)
   {
     ClientPtr client = it->second;
 
@@ -244,9 +244,9 @@ void Client::check_pings(uv_timer_t *handle, int status)
     }
   }
 
-  for(auto it = unregistered_list.begin(); it != unregistered_list.end(); it++)
+  for(auto it = unregistered_list.cbegin(); it != unregistered_list.cend(); it++)
   {
-    ClientPtr client = *it;
+    ClientPtr client = it->second;
 
     if(!client->check_timeout())
     {

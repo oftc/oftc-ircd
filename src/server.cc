@@ -27,7 +27,7 @@
 #include "server.h"
 
 ClientPtr Server::me;
-list<ClientPtr> Server::servers;
+ClientList Server::servers;
 
 string Server::get_info() const
 {
@@ -50,6 +50,6 @@ void Server::set_me(ClientPtr ptr)
   if(!me)
   {
     me = ptr;
-    servers.push_front(me);
+    servers[me.get()] = me;
   }
 }

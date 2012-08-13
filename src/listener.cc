@@ -36,10 +36,11 @@
 #include "listenersection.h"
 #include "connection.h"
 #include "ssl.h"
+#include "client.h"
 #include "server.h"
 
 ListenerSection Listener::config;
-vector<ListenerPtr> Listener::listeners;
+ListenerList Listener::listeners;
 
 Listener::Listener() : host(""), port(6667), flags(static_cast<ListenerFlag>(0))
 {
@@ -131,7 +132,7 @@ void Listener::start()
   if(ret < 0)
     throw runtime_error(System::uv_perror("Failed to start listener"));
 
-  ret = uv_listen((uv_stream_t *)&listener, 128, Listener::on_connected);
+  ret = uv_listen(reinterpret_cast<uv_stream_t *>(&listener), 128, Listener::on_connected);
 
   if(ret < 0)
     throw runtime_error(System::uv_perror("Failed to start listener"));
@@ -155,7 +156,7 @@ void Listener::create(string host, int port, ListenerFlag flags)
 
 void Listener::start_listeners()
 {
-  for(auto it = listeners.begin(); it != listeners.end(); it++)
+  for(auto it = listeners.cbegin(); it != listeners.cend(); it++)
   {
     (*it)->start();
   }

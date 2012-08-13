@@ -30,13 +30,18 @@
 #include <sstream>
 
 #include <uv.h>
-#include "parser.h"
+
+class Connection;
+typedef shared_ptr<Connection> ConnectionPtr;
+#include "baseclient.h"
 
 using std::vector;
 using std::stringstream;
 
-class Connection;
-typedef shared_ptr<Connection> ConnectionPtr;
+class Parser;
+
+typedef unordered_map<Connection *, ConnectionPtr> ConnectionList;
+typedef shared_ptr<uv_tcp_t> uv_tcp_ptr;
 
 enum DnsState
 {
@@ -57,9 +62,9 @@ struct DnsCallbackState
 class Connection 
 {
 protected:
-  static unordered_map<Connection *, ConnectionPtr> connections;
+  static ConnectionList connections;
 
-  shared_ptr<uv_tcp_t> handle;
+  uv_tcp_ptr handle;
   DnsState dns_state;
   bool closing;
 
@@ -78,9 +83,9 @@ public:
   static Event<ConnectionPtr> dns_finished;
 
   // static methods
-  static void add(ConnectionPtr);
-  static void del(ConnectionPtr);
-  static bool is_ssl(ConnectionPtr);
+  static void add(const ConnectionPtr);
+  static void del(const ConnectionPtr);
+  static bool is_ssl(const ConnectionPtr);
 
   // callbacks
   static uv_buf_t on_buf_alloc(uv_handle_t *, size_t);
@@ -99,6 +104,7 @@ public:
   virtual void send(const char *, size_t);
   void dns_done(int, hostent *, DnsCallbackState *);
   void close();
+
   inline bool is_closing() { return closing; }
 
   // getters

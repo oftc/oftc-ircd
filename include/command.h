@@ -36,7 +36,9 @@ using std::vector;
 class Command; 
 class BaseClient;
 
-typedef function<void(const shared_ptr<BaseClient> client, const Command& command, const vector<string>& params)> CommandHandler;
+typedef vector<string> ParamList;
+
+typedef function<void(const shared_ptr<BaseClient> client, const Command& command, const ParamList& params)> CommandHandler;
 
 enum AccessLevel
 {
@@ -65,7 +67,7 @@ public:
   inline void *get_data() const { return data; }
   inline unsigned int get_min_args() const { return min_args; }
   inline unsigned int get_max_args() const { return max_args; }
-  inline AccessLevel get_min_access() { return min_access; }
+  inline AccessLevel get_min_access() const { return min_access; }
 };
 
 #endif

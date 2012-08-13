@@ -28,27 +28,32 @@
 
 #include "stdinc.h"
 #include <string>
-#include <list>
+#include <map>
 #include "command.h"
 #include "ircstring.h"
 #include "event.h"
 
+typedef shared_ptr<BaseClient> ClientPtr;
+
+#include "connection.h"
+
 using std::string;
-using std::list;
+using std::map;
 
 class Connection;
 class BaseClient;
 
-typedef shared_ptr<BaseClient> ClientPtr;
+typedef unordered_map<irc_string, ClientPtr> NameHash;
+typedef map<BaseClient *, ClientPtr> ClientList;
 
 class BaseClient
 {
 protected:
-  static unordered_map<irc_string, ClientPtr> names;
+  static NameHash names;
 
   irc_string name;
   string host;
-  shared_ptr<Connection> connection;
+  ConnectionPtr connection;
   AccessLevel level;
   time_t first_seen;
   time_t last_data;

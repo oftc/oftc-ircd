@@ -35,7 +35,7 @@ using std::cerr;
 using std::endl;
 
 // Initialise the static member
-unordered_map<string, ConfigSection *> Config::sections;
+ConfigSectionHash Config::sections;
 
 // Statics
 void Config::init(const string path)
@@ -47,7 +47,7 @@ void Config::init(const string path)
   if(!config.is_open())
     throw config_error(string("Failed to open config: ") + path);
 
-  for(auto it = sections.begin(); it != sections.end(); it++)
+  for(auto it = sections.cbegin(); it != sections.cend(); it++)
   {
     it->second->set_defaults();
   }
@@ -60,7 +60,7 @@ void Config::init(const string path)
 
   Json::Value::Members members = root.getMemberNames();
 
-  for(auto mit = members.begin(); mit != members.end(); mit++)
+  for(auto mit = members.cbegin(); mit != members.cend(); mit++)
   {
     const string name = *mit;
     ConfigSection *section = sections[name];

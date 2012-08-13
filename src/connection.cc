@@ -33,11 +33,12 @@
 #include "client.h"
 #include "server.h"
 #include "sslconnection.h"
+#include "parser.h"
 
 using std::getline;
 using std::pair;
 
-unordered_map<Connection *, ConnectionPtr> Connection::connections;
+ConnectionList Connection::connections;
 Event<ConnectionPtr> Connection::ip_connecting;
 Event<ConnectionPtr> Connection::dns_finished;
 
@@ -63,7 +64,7 @@ void Connection::accept(uv_stream_t *server_handle)
   int addrlen = sizeof(addr);
   int ret;
 
-  handle = shared_ptr<uv_tcp_t>(new uv_tcp_t);
+  handle = uv_tcp_ptr(new uv_tcp_t);
 
   uv_tcp_init(uv_default_loop(), handle.get());
 

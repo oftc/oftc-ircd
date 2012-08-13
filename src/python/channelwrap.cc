@@ -32,37 +32,23 @@
 #include "python/membershipwrap.h"
 #include "channel.h"
 
-template<> PyTypeObject PythonWrap<ChannelWrap>::type_object = {};
+template<> PyTypeObject PythonWrap<ChannelWrap>::type_object = { 0 };
 
 PyObject *ChannelWrap::joining;
 PyObject *ChannelWrap::joined;
 
 static PyMethodDef channel_methods[] =
 {
-  { "add", reinterpret_cast<PyCFunction>(ChannelWrap::add), 
-    METH_STATIC, "Create a new channel" },
-  { "add_member", reinterpret_cast<PyCFunction>(ChannelWrap::add_member), 
-    METH_OLDARGS, "Add a client to a channel" },
-  { "del", reinterpret_cast<PyCFunction>(ChannelWrap::del), 
-    METH_STATIC, "delete a channel" },
-  { "find", reinterpret_cast<PyCFunction>(ChannelWrap::find), 
-    METH_STATIC, "find a channel by name" },
-  { "is_member", reinterpret_cast<PyCFunction>(ChannelWrap::is_member),
-    METH_OLDARGS, "Test is a client is on a channel" },
-  { "remove_member", reinterpret_cast<PyCFunction>(ChannelWrap::remove_member), 
-    METH_OLDARGS, "Remove a client from the channel" },
-  { "set_mode_char", reinterpret_cast<PyCFunction>(ChannelWrap::set_mode_char), 
-    METH_VARARGS, "Set a mode on the channel from its mode char" },
-  { "send_names", reinterpret_cast<PyCFunction>(ChannelWrap::send_names), 
-    METH_OLDARGS, "Send names reply to a client" },
-  { "send", reinterpret_cast<PyCFunction>(ChannelWrap::send), 
-    METH_KEYWORDS, "Send a message to all clients on the channel" },
-  { NULL, NULL, 0, NULL }
-};
-
-static PyMemberDef channel_members[] =
-{
-  { NULL, 0, 0, 0, NULL }
+  PY_METHOD("add", ChannelWrap::add, METH_STATIC, "Create a new channel"),
+  PY_METHOD("add_member", ChannelWrap::add_member, METH_OLDARGS, "Add a client to a channel"),
+  PY_METHOD("del", ChannelWrap::del, METH_STATIC, "delete a channel"),
+  PY_METHOD("find", ChannelWrap::find, METH_STATIC, "find a channel by name"),
+  PY_METHOD("is_member", ChannelWrap::is_member, METH_OLDARGS, "Test is a client is on a channel"),
+  PY_METHOD("remove_member", ChannelWrap::remove_member, METH_OLDARGS, "Remove a client from the channel"),
+  PY_METHOD("set_mode_char", ChannelWrap::set_mode_char, METH_VARARGS, "Set a mode on the channel from its mode char"),
+  PY_METHOD("send_names", ChannelWrap::send_names, METH_OLDARGS, "Send names reply to a client"),
+  PY_METHOD("send", ChannelWrap::send, METH_KEYWORDS, "Send a message to all clients on the channel"),
+  PY_METHOD_END
 };
 
 enum Property
@@ -88,34 +74,16 @@ enum PropertyFlag
 
 static PyGetSetDef channel_getsetters[] = 
 {
-  { const_cast<char*>("Name"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Channel Name"), 
-    reinterpret_cast<void *>(Name | StringArg) },
-  { const_cast<char*>("Members"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Channel Members"), 
-    reinterpret_cast<void *>(Members) },
-  { const_cast<char*>("InviteOnly"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is invite only"), 
-    reinterpret_cast<void *>(InviteOnly | BoolArg) },
-  { const_cast<char*>("Moderated"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is moderated"), 
-    reinterpret_cast<void *>(Moderated | BoolArg) },
-  { const_cast<char*>("NoExternal"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is invite only"), 
-    reinterpret_cast<void *>(NoExternal | BoolArg) },
-  { const_cast<char*>("Private"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is private"), 
-    reinterpret_cast<void *>(Private | BoolArg) },
-  { const_cast<char*>("Secret"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is secret"), 
-    reinterpret_cast<void *>(Secret | BoolArg) },
-  { const_cast<char*>("TopicOpsOnly"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel topic is settable by ops only"), 
-    reinterpret_cast<void *>(TopicOpsOnly | BoolArg) },
-  { const_cast<char*>("Secure"), reinterpret_cast<getter>(ChannelWrap::get_wrap), 
-    reinterpret_cast<setter>(ChannelWrap::set_wrap), const_cast<char*>("Whether channel is secure"), 
-    reinterpret_cast<void *>(Secure | BoolArg) },
-  { NULL, NULL, NULL, NULL, NULL }
+  PY_GETSET("Name", ChannelWrap, "Channel Name", Name | StringArg),
+  PY_GETSET("Members", ChannelWrap, "Channel Members", Members),
+  PY_GETSET("InviteOnly", ChannelWrap, "Whether channel is invite only", InviteOnly | BoolArg),
+  PY_GETSET("Moderated", ChannelWrap, "Whether channel is moderated", Moderated | BoolArg),
+  PY_GETSET("NoExternal", ChannelWrap, "Whether channel is invite only", NoExternal | BoolArg),
+  PY_GETSET("Private", ChannelWrap, "Whether channel is private", Private | BoolArg),
+  PY_GETSET("Secret", ChannelWrap, "Whether channel is secret", Secret | BoolArg),
+  PY_GETSET("TopicOpsOnly", ChannelWrap, "Whether channel topic is settable by ops only", TopicOpsOnly | BoolArg),
+  PY_GETSET("Secure", ChannelWrap, "Whether channel is secure", Secure | BoolArg),
+  PY_GETSET_END
 };
 
 ChannelWrap::ChannelWrap(PyObject *args, PyObject *kwds)
@@ -147,7 +115,6 @@ ChannelWrap::~ChannelWrap()
 void ChannelWrap::init(PyObject *module)
 {
   PythonWrap<ChannelWrap>::type_object.tp_methods = channel_methods;
-  PythonWrap<ChannelWrap>::type_object.tp_members = channel_members;
   PythonWrap<ChannelWrap>::type_object.tp_getset = channel_getsetters;
   PythonWrap<ChannelWrap>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
   PythonWrap<ChannelWrap>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
@@ -175,8 +142,8 @@ PyObject *ChannelWrap::get_wrap(ChannelWrap *self, void *closure)
     break;
   case Members:
     {
-      map<ClientPtr, Membership> channels = self->channel->get_members();
-      value = CollectionWrap<map<ClientPtr, Membership>, MembershipWrap>::wrap(&channels);
+      ChannelMemberList channels = self->channel->get_members();
+      value = CollectionWrap<ChannelMemberList, MembershipWrap>::wrap(&channels);
     }
     break;
   case InviteOnly:
@@ -358,7 +325,7 @@ PyObject *ChannelWrap::set_mode_char(ChannelWrap *self, PyObject *args)
 
   PyArg_ParseTuple(args, "cO", &c, &set);
 
-  self->channel->set_mode_char(c, PyObject_IsTrue(set));
+  self->channel->set_mode_char(c, PyObject_IsTrue(set) != 0);
 
   Py_RETURN_NONE;
 }
@@ -418,9 +385,9 @@ PyObject *ChannelWrap::fire_joining(EventWrap *, PyObject *args)
     return NULL;
 
   if(Channel::joining(channel->channel, client->get_client()))
-    return Py_True;
+    Py_RETURN_TRUE;
   else
-    return Py_False;
+    Py_RETURN_FALSE;
 }
 
 PyObject *ChannelWrap::fire_joined(EventWrap *, PyObject *args)
@@ -432,9 +399,9 @@ PyObject *ChannelWrap::fire_joined(EventWrap *, PyObject *args)
     return NULL;
 
   if(Channel::joined(channel->channel, client->get_client()))
-    return Py_True;
+    Py_RETURN_TRUE;
   else
-    return Py_False;
+    Py_RETURN_FALSE;
 }
 
 bool ChannelWrap::on_joining(ChannelPtr channel, ClientPtr client)

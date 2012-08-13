@@ -38,14 +38,8 @@ template<> PyTypeObject PythonWrap<ParserWrap>::type_object = {};
 
 static PyMethodDef parser_methods[] =
 {
-  { "Register", reinterpret_cast<PyCFunction>(ParserWrap::register_command),  
-    METH_STATIC | METH_KEYWORDS | METH_VARARGS, "Register a command with the parser" },
-  { NULL, NULL, 0, NULL }
-};
-
-static PyMemberDef parser_members[] =
-{
-  { NULL, 0, 0, 0, NULL }
+  PY_METHOD("Register", ParserWrap::register_command, METH_STATIC, "Register a command with the parser"),
+  PY_METHOD_END
 };
 
 ParserWrap::ParserWrap(PyObject *args, PyObject *kwds)
@@ -63,7 +57,6 @@ ParserWrap::~ParserWrap()
 void ParserWrap::init(PyObject *module)
 {
   PythonWrap<ParserWrap>::type_object.tp_methods = parser_methods;
-  PythonWrap<ParserWrap>::type_object.tp_members = parser_members;
   PythonWrap<ParserWrap>::init(module, "Parser");
 }
 
@@ -107,7 +100,7 @@ PyObject *ParserWrap::register_command(PyObject *self, PyObject *args, PyObject 
   Py_RETURN_NONE;
 }
 
-void ParserWrap::handle_command(const ClientPtr client, const Command& command, const vector<string>& params)
+void ParserWrap::handle_command(const ClientPtr client, const Command& command, const ParamList& params)
 {
   PyObject *args;
   ClientWrap *wrapped_client;

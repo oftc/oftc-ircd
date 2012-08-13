@@ -33,10 +33,12 @@
 using std::string;
 using std::vector;
 
+typedef vector<PyObject *> PyObjectList;
+
 class PythonLoader
 {
 private:
-  static vector<PyObject *> loaded_modules;
+  static PyObjectList loaded_modules;
 public:
   static void init();
   static void load(string);

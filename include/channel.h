@@ -55,13 +55,17 @@ struct Membership
   MembershipFlags flags;
 };
 
+typedef unordered_map<irc_string, ChannelPtr> ChannelNameHash;
+typedef map<Channel *, ChannelPtr> ChannelList;
+typedef map<ClientPtr, Membership> ChannelMemberList;
+
 class Channel
 {
 private:
-  static unordered_map<irc_string, ChannelPtr> names;
-  static map<Channel *, ChannelPtr> channels;
+  static ChannelNameHash names;
+  static ChannelList channels;
 
-  map<ClientPtr, Membership> members;
+  ChannelMemberList members;
   irc_string name;
   bool moderated;
   bool invite_only;
@@ -95,7 +99,7 @@ public:
 
   // getters
   irc_string get_name() const;
-  map<ClientPtr, Membership> get_members() const;
+  ChannelMemberList get_members() const;
 
   // setters
   void set_name(const irc_string);

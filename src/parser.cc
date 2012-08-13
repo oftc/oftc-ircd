@@ -68,12 +68,12 @@ void Parser::parse(const ClientPtr client, const string& line)
 
   transform(command.begin(), command.end(), command.begin(), toupper);
 
-  unordered_map<string, Command>::iterator it = commands.find(command);
+  auto it = commands.find(command);
   if(it == commands.end())
   {
     if(client->is_registered() && Client::is_client(client))
     {
-      Client *ptr = dynamic_cast<Client *>(client.get());
+      shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
       ptr->send(Numeric::Err_UnknownCommand, command.c_str());
     }
     return;
@@ -105,7 +105,7 @@ void Parser::parse(const ClientPtr client, const string& line)
   {
     if(Client::is_client(client))
     {
-      Client *ptr = dynamic_cast<Client *>(client.get());
+      shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
       ptr->send(Numeric::Err_NeedMoreParams, command.c_str(), args.size(), 
         cmd.get_min_args());
     }

@@ -33,11 +33,14 @@
 using std::list;
 using std::string;
 
+class Server;
+typedef shared_ptr<Server> ServerPtr;
+
 class Server : public BaseClient
 {
 private:
   static ClientPtr me;
-  static list<ClientPtr> servers;
+  static ClientList servers;
 
   string info;
 public:

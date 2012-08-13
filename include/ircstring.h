@@ -39,16 +39,19 @@ using std::transform;
 
 inline static char to_upper(char left)
 {
-  if(left == '{')
+  switch(left)
+  {
+  case '{':
     return '[';
-  if(left == '}')
+  case '}':
     return ']';
-  if(left == '|')
+  case '|':
     return '\\';
-  if(left == '^')
+  case '^':
     return '~';
-
-  return toupper(left);
+  default:
+    return toupper(left);
+  }
 }
 
 class irc_traits : public char_traits<char>

@@ -40,7 +40,7 @@ void ModuleSection::process(const Json::Value value)
 
   Json::Value::Members members = value.getMemberNames();
 
-  for(auto mit = members.begin(); mit != members.end(); mit++)
+  for(auto mit = members.cbegin(); mit != members.cend(); mit++)
   {
     const string name = *mit;
     if(name == "paths")

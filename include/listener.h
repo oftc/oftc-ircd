@@ -37,6 +37,7 @@ using std::string;
 class Listener;
 
 typedef shared_ptr<Listener> ListenerPtr;
+typedef vector<ListenerPtr> ListenerList;
 
 enum ListenerFlag
 {
@@ -47,7 +48,7 @@ class Listener
 {
 private:
   static ListenerSection config;
-  static vector<ListenerPtr> listeners;
+  static ListenerList listeners;
 
   uv_tcp_t listener;
   string host;
@@ -63,12 +64,12 @@ public:
 
   // static methods
   static void init();
-  static void create(string, int, ListenerFlag);
+  static void create(const string, int, ListenerFlag);
   static void start_listeners();
 
   // ctor/dtor
   Listener();
-  Listener(string, int, ListenerFlag);
+  Listener(const string, int, ListenerFlag);
   ~Listener();
 
   // methods

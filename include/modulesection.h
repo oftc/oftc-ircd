@@ -34,6 +34,8 @@
 using std::vector;
 using std::string;
 
+typedef vector<string> StringList;
+
 class ModuleSection : public ConfigSection
 {
 private:
@@ -43,7 +45,7 @@ public:
   void process(const Json::Value);
   void verify() const;
 
-  inline vector<string> get_paths() const { return search_paths; }
+  inline StringList get_paths() const { return search_paths; }
 };
 
 #endif

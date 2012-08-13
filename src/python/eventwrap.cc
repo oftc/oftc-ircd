@@ -34,23 +34,14 @@ template<> PyTypeObject PythonWrap<EventWrap>::type_object = {};
 static PyMethodDef event_methods[] =
 {
   { "fire", reinterpret_cast<PyCFunction>(EventWrap::fire), METH_VARARGS, "fire the event" },
-  { NULL, NULL, 0, NULL }
-};
-
-static PyMemberDef event_members[] =
-{
-  { NULL, 0, 0, 0, NULL }
+  PY_METHOD_END
 };
 
 static PyGetSetDef event_getsetters[] = 
 {
-  { const_cast<char*>("listeners"), reinterpret_cast<getter>(EventWrap::get_wrap), 
-    reinterpret_cast<setter>(EventWrap::set_wrap), const_cast<char*>("listeners"), 
-    reinterpret_cast<void *>(const_cast<char *>("listeners")) },
-  { const_cast<char*>("handler"), reinterpret_cast<getter>(EventWrap::get_wrap), 
-    reinterpret_cast<setter>(EventWrap::set_wrap), const_cast<char*>("handler"), 
-    reinterpret_cast<void *>(const_cast<char *>("handler")) },
-  { NULL, NULL, NULL, NULL, NULL }
+  PY_GETSET("listeners", EventWrap, "listeners", "listeners"),
+  PY_GETSET("handler", EventWrap, "handler", "handler"),
+  PY_GETSET_END
 };
 
 EventWrap::EventWrap(PyObject *args, PyObject *kwds) : fire_func(NULL)
@@ -111,7 +102,6 @@ void EventWrap::set_handler(PyObject *value)
 void EventWrap::init(PyObject *module)
 {
   PythonWrap<EventWrap>::type_object.tp_methods = event_methods;
-  PythonWrap<EventWrap>::type_object.tp_members = event_members;
   PythonWrap<EventWrap>::type_object.tp_getset = event_getsetters;
   PythonWrap<EventWrap>::init(module, "Event");
 }

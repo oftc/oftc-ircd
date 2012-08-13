@@ -31,8 +31,8 @@
 
 Event<ChannelPtr, ClientPtr> Channel::joining;
 Event<ChannelPtr, ClientPtr> Channel::joined;
-map<Channel *, ChannelPtr> Channel::channels;
-unordered_map<irc_string, ChannelPtr> Channel::names;
+ChannelList Channel::channels;
+ChannelNameHash Channel::names;
 
 Channel::Channel() : moderated(false), invite_only(false), no_external_msgs(false),
   private_chan(false), secret(false), topic_op_only(false), secure(false)
@@ -79,7 +79,7 @@ irc_string Channel::get_name() const
   return name;
 }
 
-map<ClientPtr, Membership> Channel::get_members() const
+ChannelMemberList Channel::get_members() const
 {
   return members;
 }
@@ -131,7 +131,7 @@ void Channel::send_names(ClientPtr client)
   reply_format = Numeric::format_str(Numeric::Rpl_NamesReply, '=', name.c_str(), "");
   reply << reply_format;
 
-  for(auto it = members.begin(); it != members.end(); it++)
+  for(auto it = members.cbegin(); it != members.cend(); it++)
   {
     Membership ms = it->second;
     if(min_len + reply.str().length() + ms.client->get_name().length() >= 510)
@@ -162,7 +162,7 @@ void Channel::send_names(ClientPtr client)
 
 void Channel::send(const ClientPtr client, const string str)
 {
-  for(auto it = members.begin(); it != members.end(); it++)
+  for(auto it = members.cbegin(); it != members.cend(); it++)
   {
     if(it->second.client != client)
       it->second.client->send(str);

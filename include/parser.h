@@ -28,16 +28,18 @@
 
 #include <string>
 #include "command.h"
-#include "client.h"
+#include "baseclient.h"
 
 using std::string;
+
+typedef unordered_map<string, Command> CommandHash;
 
 class Parser
 {
 private:
   static Parser default_parser;
   
-  unordered_map<string, Command> commands;
+  CommandHash commands;
 public:
   void parse(const ClientPtr, const string& line);
   void register_command(const Command command);
