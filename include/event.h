@@ -44,7 +44,7 @@ public:
 
   bool fire(T... args)
   {
-    bool ret;
+    bool ret = true;
 
     for(auto it = handlers.begin();  it != handlers.end(); it++)
     {
@@ -140,7 +140,7 @@ public:
 
   bool fire(T1 arg)
   {
-    bool ret;
+    bool ret = true;
 
     for(auto it = handlers.begin();  it != handlers.end(); it++)
     {
@@ -156,7 +156,7 @@ public:
 
   bool fire(T1 arg, T2 arg2)
   {
-    bool ret;
+    bool ret = true;
 
     for(auto it = handlers2.begin();  it != handlers2.end(); it++)
     {
@@ -172,7 +172,7 @@ public:
 
   bool fire(T1 arg, T2 arg2, T3 arg3)
   {
-    bool ret;
+    bool ret = true;
 
     for(auto it = handlers3.begin();  it != handlers3.end(); it++)
     {
@@ -188,7 +188,7 @@ public:
 
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4)
   {
-    bool ret;
+    bool ret = true;
 
     for(auto it = handlers4.begin();  it != handlers4.end(); it++)
     {
@@ -204,7 +204,7 @@ public:
 
   bool fire(T1 arg, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
   {
-    bool ret;
+    bool ret = true;
 
     for(auto it = handlers5.begin();  it != handlers5.end(); it++)
     {

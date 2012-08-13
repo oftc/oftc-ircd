@@ -119,7 +119,7 @@ EventWrap *EventWrap::register_event(EventCallback callback)
 
 PyObject *EventWrap::get_wrap(EventWrap *event, void *closure)
 {
-  int prop = *reinterpret_cast<int *>(closure);
+  int prop = *reinterpret_cast<int *>(&closure);
 
   switch(prop)
   {
@@ -134,7 +134,7 @@ PyObject *EventWrap::get_wrap(EventWrap *event, void *closure)
 
 int EventWrap::set_wrap(EventWrap *event, PyObject *value, void *closure)
 {
-  int prop = *reinterpret_cast<int *>(closure);
+  int prop = *reinterpret_cast<int *>(&closure);
   
   switch(prop)
   {

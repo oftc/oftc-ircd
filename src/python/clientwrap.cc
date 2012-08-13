@@ -56,8 +56,8 @@ static PyMethodDef client_methods[] =
   PY_METHOD("is_ssl", ClientWrap::is_ssl, METH_NOARGS, "Check if a client is connected with SSL"),
   PY_METHOD("numeric", ClientWrap::numeric, METH_VARARGS, "Send the client a numeric"),
   PY_METHOD("remove_channel", ClientWrap::remove_channel, METH_OLDARGS, "Remove the client from the specified channel"),
-  PY_METHOD("send", ClientWrap::send, METH_KEYWORDS, "Send the client a message"),
-  PY_METHOD("send_channels_common", ClientWrap::send_channels_common, METH_KEYWORDS, "Send a message to the users that share channels with this client"),
+  PY_METHOD("send", ClientWrap::send, METH_KEYWORDS | METH_VARARGS, "Send the client a message"),
+  PY_METHOD("send_channels_common", ClientWrap::send_channels_common, METH_KEYWORDS | METH_VARARGS, "Send a message to the users that share channels with this client"),
   PY_METHOD_END
 };
 

@@ -38,7 +38,7 @@ template<> PyTypeObject PythonWrap<ParserWrap>::type_object = {};
 
 static PyMethodDef parser_methods[] =
 {
-  PY_METHOD("Register", ParserWrap::register_command, METH_STATIC, "Register a command with the parser"),
+  PY_METHOD("Register", ParserWrap::register_command, METH_STATIC | METH_KEYWORDS | METH_VARARGS, "Register a command with the parser"),
   PY_METHOD_END
 };
 
