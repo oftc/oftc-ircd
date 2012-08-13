@@ -97,6 +97,9 @@ Logging& Logging::endl(Logging &log)
 {
   Logging& tmp = log << "\n";
 
+  if(!log_stream.is_open())
+    return tmp;
+
   log_stream << stream.str();
   log_stream.flush();
   flush = false;
