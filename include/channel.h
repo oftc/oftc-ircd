@@ -58,6 +58,7 @@ struct Membership
 typedef unordered_map<irc_string, ChannelPtr> ChannelNameHash;
 typedef map<Channel *, ChannelPtr> ChannelList;
 typedef map<ClientPtr, Membership> ChannelMemberList;
+typedef map<string, string> ChannelHostList;
 
 class Channel
 {
@@ -66,6 +67,10 @@ private:
   static ChannelList channels;
 
   ChannelMemberList members;
+  ChannelHostList bans;
+  ChannelHostList invexes;
+  ChannelHostList quiets;
+  ChannelHostList exceptions;
   irc_string name;
   bool moderated;
   bool invite_only;
