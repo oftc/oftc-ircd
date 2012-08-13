@@ -120,8 +120,10 @@ void ChannelWrap::init(PyObject *module)
   PythonWrap<ChannelWrap>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ChannelWrap>::init(module, "Channel");
 
-  joining = EventWrap::wrap(reinterpret_cast<void *>(&fire_joining));
-  joined = EventWrap::wrap(reinterpret_cast<void *>(&fire_joined));
+  EventCallback func = fire_joining;
+  joining = EventWrap::wrap(&func);
+  func = fire_joined;
+  joined = EventWrap::wrap(&func);
 
   PyDict_SetItemString(type_object.tp_dict, "joining", joining);
   PyDict_SetItemString(type_object.tp_dict, "joined", joined);

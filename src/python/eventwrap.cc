@@ -58,7 +58,7 @@ EventWrap::EventWrap(PyObject *args, PyObject *kwds) : fire_func(NULL)
   {
     PyArg_ParseTuple(args, "O", &func);
 
-    fire_func = reinterpret_cast<PyCFunction>(PyCObject_AsVoidPtr(func));
+    fire_func = *reinterpret_cast<EventCallback *>(PyCObject_AsVoidPtr(func));
   }
   Logging::trace << "Created EventWrap: " << this << Logging::endl;
 }
@@ -146,5 +146,5 @@ int EventWrap::set_wrap(EventWrap *event, PyObject *value, void *closure)
 
 PyObject *EventWrap::fire(EventWrap *event, PyObject *args)
 {
-  return (*event->fire_func)(event, args);
+  return event->fire_func(event, args);
 }

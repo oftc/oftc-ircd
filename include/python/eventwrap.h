@@ -28,12 +28,15 @@
 
 #include "Python.h"
 
+class EventWrap;
+typedef function<PyObject *(EventWrap *, PyObject *)> EventCallback;
+
 class EventWrap : public PythonWrap<EventWrap>
 {
 private:
   PyObject *listeners;
   PyObject *handler;
-  PyCFunction fire_func;
+  EventCallback fire_func;
 public:
   // Non Python methods
   static void init(PyObject *);
