@@ -42,7 +42,7 @@ ConnectionList Connection::connections;
 Event<ConnectionPtr> Connection::ip_connecting;
 Event<ConnectionPtr> Connection::dns_finished;
 
-Connection::Connection() : dns_state(Reverse), parser(Parser::get_default()), closing(false)
+Connection::Connection() : dns_state(Reverse), closing(false), parser(Parser::get_default())
 {
   Logging::trace << "Created Connection: " << this << Logging::endl;
 }

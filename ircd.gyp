@@ -132,7 +132,6 @@
         'WARNING_CFLAGS': [
           '-Wall',
           '-Wextra',
-          '-pedantic',
           '-Wno-long-long',
           '-Wno-unused-parameter',
           '-Wno-deprecated-declarations',
@@ -150,7 +149,8 @@
         '-Wextra',
         '-pedantic',
         '-Wno-long-long',
-        '-Wno-unused-parameter'
+        '-Wno-unused-parameter',
+        '-Wno-missing-field-initializers',
       ],
       'defines': 
       [ 

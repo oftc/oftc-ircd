@@ -32,7 +32,7 @@
 #include "python/membershipwrap.h"
 #include "channel.h"
 
-template<> PyTypeObject PythonWrap<ChannelWrap>::type_object = { 0 };
+template<> PyTypeObject PythonWrap<ChannelWrap>::type_object = {};
 
 PyObject *ChannelWrap::joining;
 PyObject *ChannelWrap::joined;

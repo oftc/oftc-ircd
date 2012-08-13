@@ -32,8 +32,8 @@
 #define PY_METHOD(name, func, flags, doc) { name, reinterpret_cast<PyCFunction>(func), flags, doc }
 #define PY_METHOD_END { NULL, NULL, 0, NULL }
 
-#define PY_GETSET(name, type, doc, flags) { const_cast<char *>(name), reinterpret_cast<getter>(type##::get_wrap), \
-  reinterpret_cast<setter>(type##::set_wrap), const_cast<char *>(doc), reinterpret_cast<void *>(flags) }
+#define PY_GETSET(name, type, doc, flags) { const_cast<char *>(name), reinterpret_cast<getter>(type::get_wrap), \
+  reinterpret_cast<setter>(type::set_wrap), const_cast<char *>(doc), reinterpret_cast<void *>(flags) }
 #define PY_GETSET_END { NULL, NULL, NULL, NULL, NULL }
 
 template <class T> class PythonWrap : public PyObject

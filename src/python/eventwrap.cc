@@ -31,6 +31,12 @@
 
 template<> PyTypeObject PythonWrap<EventWrap>::type_object = {};
 
+enum Property
+{
+  Listeners = 1,
+  Handler
+};
+
 static PyMethodDef event_methods[] =
 {
   { "fire", reinterpret_cast<PyCFunction>(EventWrap::fire), METH_VARARGS, "fire the event" },
@@ -39,8 +45,8 @@ static PyMethodDef event_methods[] =
 
 static PyGetSetDef event_getsetters[] = 
 {
-  PY_GETSET("listeners", EventWrap, "listeners", "listeners"),
-  PY_GETSET("handler", EventWrap, "handler", "handler"),
+  PY_GETSET("listeners", EventWrap, "listeners", Listeners), 
+  PY_GETSET("handler", EventWrap, "handler", Handler),
   PY_GETSET_END
 };
 
@@ -108,24 +114,32 @@ void EventWrap::init(PyObject *module)
 
 PyObject *EventWrap::get_wrap(EventWrap *event, void *closure)
 {
-  string prop = string(static_cast<char *>(closure));
+  int prop = *reinterpret_cast<int *>(closure);
 
-  if(prop == "listeners")
-    return event->get_listeners();
-  else if(prop == "handler")
-    return event->get_handler();
+  switch(prop)
+  {
+    case Listeners:
+      return event->get_listeners();
+    case Handler:
+      return event->get_handler();
+  }
 
   return NULL;
 }
 
 int EventWrap::set_wrap(EventWrap *event, PyObject *value, void *closure)
 {
-  string prop = string(static_cast<char *>(closure));
-
-  if(prop == "listeners")
-    event->set_listeners(value);
-  else if(prop == "handler")
-    event->set_handler(value);
+  int prop = *reinterpret_cast<int *>(closure);
+  
+  switch(prop)
+  {
+    case Listeners:
+      event->set_listeners(value);
+      break;
+    case Handler:
+      event->set_handler(value);
+      break;
+  }
 
   return 0;
 }
