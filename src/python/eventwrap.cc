@@ -112,6 +112,11 @@ void EventWrap::init(PyObject *module)
   PythonWrap<EventWrap>::init(module, "Event");
 }
 
+EventWrap *EventWrap::register_event(EventCallback callback)
+{
+  return EventWrap::wrap(&callback);
+}
+
 PyObject *EventWrap::get_wrap(EventWrap *event, void *closure)
 {
   int prop = *reinterpret_cast<int *>(closure);

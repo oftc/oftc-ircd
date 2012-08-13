@@ -44,6 +44,7 @@ public:
   // Get/Set Wrappers
   static PyObject *get_wrap(EventWrap *, void *);
   static int set_wrap(EventWrap *, PyObject *, void *);
+  static EventWrap *register_event(EventCallback);
 
   // static methods
   static PyObject *fire(EventWrap *, PyObject *);

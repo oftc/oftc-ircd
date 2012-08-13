@@ -136,12 +136,12 @@ void ClientWrap::init(PyObject *module)
     throw runtime_error("Python failed to initialise");
   }
 
-  connected = EventWrap::wrap(reinterpret_cast<void *>(&fire_connected));
-  registering = EventWrap::wrap(reinterpret_cast<void *>(&fire_registering));
-  disconnected = EventWrap::wrap(reinterpret_cast<void *>(&fire_disconnected));
-  closing = EventWrap::wrap(reinterpret_cast<void *>(&fire_closing));
-  nick_changing = EventWrap::wrap(reinterpret_cast<void *>(&fire_nick_changing));
-  nick_changed = EventWrap::wrap(reinterpret_cast<void *>(&fire_nick_changed));
+  connected = EventWrap::register_event(fire_connected);
+  registering = EventWrap::register_event(fire_registering);
+  disconnected = EventWrap::register_event(fire_disconnected);
+  closing = EventWrap::register_event(fire_closing);
+  nick_changing = EventWrap::register_event(fire_nick_changing);
+  nick_changed = EventWrap::register_event(fire_nick_changed);
 
   PyDict_SetItemString(type_object.tp_dict, "Me", me);
   PyDict_SetItemString(type_object.tp_dict, "connected", connected);
