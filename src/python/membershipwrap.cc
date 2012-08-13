@@ -37,11 +37,6 @@ static PyMethodDef membership_methods[] =
   PY_METHOD_END
 };
 
-static PyMemberDef membership_members[] =
-{
-  { NULL, 0, 0, 0, NULL }
-};
-
 enum Property
 {
   Channel     = 0x00000001,
@@ -89,7 +84,6 @@ MembershipWrap::~MembershipWrap()
 void MembershipWrap::init(PyObject *module)
 {
   PythonWrap<MembershipWrap>::type_object.tp_methods = membership_methods;
-  PythonWrap<MembershipWrap>::type_object.tp_members = membership_members;
   PythonWrap<MembershipWrap>::type_object.tp_getset = membership_getsetters;
   PythonWrap<MembershipWrap>::init(module, "Membership");
 }
