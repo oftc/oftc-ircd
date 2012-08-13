@@ -72,8 +72,8 @@ void ConnectionWrap::init(PyObject *module)
   PythonWrap<ConnectionWrap>::type_object.tp_getset = connection_getsetters;
   PythonWrap<ConnectionWrap>::init(module, "Connection");
 
-  ip_connecting = PythonWrap<EventWrap>::call(NULL);
-  dns_finished = PythonWrap<EventWrap>::call(NULL);
+  ip_connecting = EventWrap::register_event(fire_ip_connecting);
+  dns_finished = EventWrap::register_event(fire_dns_finished);
 
   PyDict_SetItemString(type_object.tp_dict, "ip_connecting", ip_connecting);
   PyDict_SetItemString(type_object.tp_dict, "dns_finished", dns_finished);
@@ -115,3 +115,28 @@ bool ConnectionWrap::on_dns_finished(ConnectionPtr connection)
   return ret;
 }
 
+PyObject *ConnectionWrap::fire_ip_connecting(EventWrap *event, PyObject *args)
+{
+  ConnectionWrap *connection;
+
+  if(!PyArg_ParseTuple(args, "O", &connection))
+    return NULL;
+
+  if(Connection::ip_connecting(connection->connection))
+    return Py_True;
+  else
+    return Py_False;
+}
+
+PyObject *ConnectionWrap::fire_dns_finished(EventWrap *event, PyObject *args)
+{
+  ConnectionWrap *connection;
+  
+  if(!PyArg_ParseTuple(args, "O", &connection))
+    return NULL;
+
+  if(Connection::dns_finished(connection->connection))
+    return Py_True;
+  else
+    return Py_False;
+}

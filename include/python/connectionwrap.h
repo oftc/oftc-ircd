@@ -44,6 +44,13 @@ public:
   static bool on_ip_connecting(ConnectionPtr);
   static bool on_dns_finished(ConnectionPtr);
 
+  // Event fires
+  static PyObject *fire_ip_connecting(EventWrap *, PyObject *);
+  static PyObject *fire_dns_finished(EventWrap *, PyObject *);
+
+
+  // Python methods
+
   // ctor/dtor
   ConnectionWrap(PyObject *, PyObject *);
   ~ConnectionWrap();
