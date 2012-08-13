@@ -57,7 +57,7 @@ def set_channel_mode(client, channel, args):
   plus = True
   set_after = set_before.copy()
 
-  modes = set('imnpstS')
+  modes = set(Channel.supported_modes())
 
   mode = args[0]
 

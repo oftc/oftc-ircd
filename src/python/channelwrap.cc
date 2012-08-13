@@ -48,6 +48,7 @@ static PyMethodDef channel_methods[] =
   PY_METHOD("set_mode_char", ChannelWrap::set_mode_char, METH_VARARGS, "Set a mode on the channel from its mode char"),
   PY_METHOD("send_names", ChannelWrap::send_names, METH_OLDARGS, "Send names reply to a client"),
   PY_METHOD("send", ChannelWrap::send, METH_KEYWORDS, "Send a message to all clients on the channel"),
+  PY_METHOD("supported_modes", ChannelWrap::supported_modes, METH_STATIC | METH_NOARGS, "Get the list of supported channel modes"),
   PY_METHOD_END
 };
 
@@ -328,6 +329,12 @@ PyObject *ChannelWrap::set_mode_char(ChannelWrap *self, PyObject *args)
   self->channel->set_mode_char(c, PyObject_IsTrue(set) != 0);
 
   Py_RETURN_NONE;
+}
+
+PyObject *ChannelWrap::supported_modes(ChannelWrap *self, PyObject *arg)
+{
+  string modes = Channel::supported_modes();
+  return PyString_FromString(modes.c_str());
 }
 
 PyObject *ChannelWrap::is_member(ChannelWrap *self, ClientWrap *client)

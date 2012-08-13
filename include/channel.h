@@ -83,6 +83,9 @@ public:
   Channel();
   ~Channel();
 
+  // statics
+  inline static string supported_modes() { return "imnpstS"; }
+
   // list managers
   static void add(const ChannelPtr);
   static ChannelPtr find(const irc_string);

@@ -69,6 +69,7 @@ public:
   static PyObject *send(ChannelWrap *, PyObject *, PyObject *);
   static PyObject *set_mode_char(ChannelWrap *, PyObject *);
   static PyObject *str(ChannelWrap *);
+  static PyObject *supported_modes(ChannelWrap *, PyObject *);
 
   // ctor/dtor
   ChannelWrap(PyObject *, PyObject *);
