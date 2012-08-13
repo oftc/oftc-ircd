@@ -85,10 +85,7 @@ def handle_mode(client, target, *args):
     else:
       set_user_mode(client, None)
   else:
-    if len(args) > 0:
-      set_channel_mode(client, target, args[0])
-    else:
-      set_channel_mode(client, target, None)
+    set_channel_mode(client, target, args)
 
 @register("WHO", min_args=1, max_args=2)
 @have_target(epilog=numerics.RPL_ENDOFWHO)

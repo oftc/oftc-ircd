@@ -24,7 +24,7 @@
 from pythonwrap import Channel
 import numerics
 
-def set_channel_mode(client, channel, *args):
+def set_channel_mode(client, channel, args):
   set_before = set()
   
   if channel.InviteOnly:
@@ -48,10 +48,8 @@ def set_channel_mode(client, channel, *args):
   if channel.Secure:
     set_before.add('S')
 
-  if not args[0]:
-    mode = "+"
-    for c in set_before:
-      mode += c
+  if len(args) == 0:
+    mode = "+" + ''.join(set_before)
 
     client.numeric(numerics.RPL_CHANNELMODEIS, channel.Name, mode, '')
     return
@@ -85,13 +83,9 @@ def set_channel_mode(client, channel, *args):
   removed = set_before - set_after
 
   if len(added) > 0:
-    mode += '+'
-    for c in added:
-      mode += c
+    mode = '+' + ''.join(added)
   if len(removed) > 0:
-    mode += '-'
-    for c in removed:
-      mode += c
+    mode += '-' + ''.join(removed)
 
   if len(mode) > 0:
     client.send(":{client} MODE {channel} :{mode}", channel=channel, mode=mode)
