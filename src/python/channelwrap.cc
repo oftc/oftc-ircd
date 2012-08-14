@@ -30,6 +30,7 @@
 #include "python/pythonutil.h"
 #include "python/collectionwrap.h"
 #include "python/membershipwrap.h"
+#include "python/channelmaskwrap.h"
 #include "channel.h"
 
 template<> PyTypeObject PythonWrap<ChannelWrap>::type_object = {};
@@ -63,6 +64,10 @@ enum Property
   Secret,
   TopicOpsOnly,
   Secure,
+  Bans,
+  Invexes,
+  Quiets,
+  Excepts,
   PropMask    = 0x000000ff
 };
 
@@ -84,6 +89,10 @@ static PyGetSetDef channel_getsetters[] =
   PY_GETSET("Secret", ChannelWrap, "Whether channel is secret", Secret | BoolArg),
   PY_GETSET("TopicOpsOnly", ChannelWrap, "Whether channel topic is settable by ops only", TopicOpsOnly | BoolArg),
   PY_GETSET("Secure", ChannelWrap, "Whether channel is secure", Secure | BoolArg),
+  PY_GETSET("Bans", ChannelWrap, "Channel ban list", Bans),
+  PY_GETSET("Invexes", ChannelWrap, "Channel invex list", Invexes),
+  PY_GETSET("Quiets", ChannelWrap, "Channel quiet list", Quiets),
+  PY_GETSET("Excepts", ChannelWrap, "Channel except list", Excepts),
   PY_GETSET_END
 };
 
@@ -167,6 +176,12 @@ PyObject *ChannelWrap::get_wrap(ChannelWrap *self, void *closure)
     break;
   case Secure:
     value = PyBool_FromLong(self->channel->is_secure());
+    break;
+  case Bans:
+    {
+      ChannelMaskList bans = self->channel->get_bans();
+      value = MaskListWrap::wrap(&bans);
+    }
     break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;

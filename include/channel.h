@@ -32,6 +32,7 @@
 #include <map>
 #include "ircstring.h"
 #include "baseclient.h"
+#include "channelmask.h"
 
 using std::list;
 using std::string;
@@ -58,7 +59,6 @@ struct Membership
 typedef unordered_map<irc_string, ChannelPtr> ChannelNameHash;
 typedef map<Channel *, ChannelPtr> ChannelList;
 typedef map<ClientPtr, Membership> ChannelMemberList;
-typedef map<string, string> ChannelHostList;
 
 class Channel
 {
@@ -67,10 +67,10 @@ private:
   static ChannelList channels;
 
   ChannelMemberList members;
-  ChannelHostList bans;
-  ChannelHostList invexes;
-  ChannelHostList quiets;
-  ChannelHostList exceptions;
+  ChannelMaskList bans;
+  ChannelMaskList invexes;
+  ChannelMaskList quiets;
+  ChannelMaskList exceptions;
   irc_string name;
   bool moderated;
   bool invite_only;
@@ -106,6 +106,7 @@ public:
   inline bool is_secure() const { return secure; }
 
   // getters
+  ChannelMaskList get_bans() const;
   irc_string get_name() const;
   ChannelMemberList get_members() const;
 

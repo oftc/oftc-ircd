@@ -84,6 +84,11 @@ ChannelMemberList Channel::get_members() const
   return members;
 }
 
+ChannelMaskList Channel::get_bans() const
+{
+  return bans;
+}
+
 void Channel::set_name(const irc_string _name)
 {
   name = _name;

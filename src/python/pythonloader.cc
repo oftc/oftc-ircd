@@ -37,6 +37,7 @@
 #include "python/pythonutil.h"
 #include "python/collectionwrap.h"
 #include "python/membershipwrap.h"
+#include "python/channelmaskwrap.h"
 #include "channel.h"
 #include "module.h"
 #include "system.h"
@@ -56,6 +57,7 @@ static PyMethodDef module_methods[] =
 PyObjectList PythonLoader::loaded_modules;
 template<> PyTypeObject PythonWrap<CollectionWrap<ChannelMemberList, MembershipWrap> >::type_object = {};
 template<> PyTypeObject PythonWrap<CollectionWrap<ClientMemberList, MembershipWrap> >::type_object = {};
+template<> PyTypeObject PythonWrap<MaskListWrap>::type_object = {};
 
 void PythonLoader::init()
 {
@@ -95,6 +97,7 @@ void PythonLoader::init()
   MembershipWrap::init(m);
   CollectionWrap<ChannelMemberList, MembershipWrap>::init(m);
   CollectionWrap<ClientMemberList, MembershipWrap>::init(m);
+  MaskListWrap::init(m);
 }
 
 void PythonLoader::load(string name)
