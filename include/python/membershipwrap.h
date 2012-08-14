@@ -35,7 +35,6 @@
 class MembershipWrap : public PythonWrap<MembershipWrap, Membership>
 {
 private:
-  Membership membership;
   static PyObject *joining;
   static PyObject *joined;
 public:
@@ -57,7 +56,6 @@ public:
   ~MembershipWrap();
 
   // members
-  inline Membership get_membership() const { return membership; }
 };
 
 #endif

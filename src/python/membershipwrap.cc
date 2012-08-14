@@ -29,8 +29,11 @@
 #include "python/membershipwrap.h"
 #include "python/pythonutil.h"
 #include "channel.h"
+#include "client.h"
 
 template<> PyTypeObject PythonWrap<MembershipWrap, Membership>::type_object = {};
+template<> PyTypeObject PythonWrap<MembershipWrap, ChannelMemberList>::type_object = {};
+template<> PyTypeObject PythonWrap<MembershipWrap, ClientMemberList>::type_object = {};
 
 static PyMethodDef membership_methods[] =
 {
@@ -60,23 +63,12 @@ static PyGetSetDef membership_getsetters[] =
   PY_GETSET_END
 };
 
-/*MembershipWrap::MembershipWrap(PyObject *args, PyObject *kwds)
+MembershipWrap::MembershipWrap(PyObject *args, PyObject *kwds) : PythonWrap(args, kwds)
 {
-  PyObject *membership_obj;
-  Membership ptr;
-
-  PyArg_ParseTuple(args, "O", &membership_obj);
-
-  ptr = *(reinterpret_cast<Membership*>(PyCObject_AsVoidPtr(membership_obj)));
-
-  membership = ptr;
-
-  Logging::trace << "Created MembershipWrap: " << this << Logging::endl;
-}*/
+}
 
 MembershipWrap::~MembershipWrap()
 {
-  Logging::trace << "Destroyed MembershipWrap: " << this << Logging::endl;
 }
 
 // Statics
@@ -96,13 +88,13 @@ PyObject *MembershipWrap::get_wrap(MembershipWrap *self, void *closure)
   switch(prop & PropMask)
   {
   case Channel:
-    value = ChannelWrap::wrap(&self->membership.channel);
+    value = ChannelWrap::wrap(&self->get_wrapped().channel);
     break;
   case Client:
-    value = ClientWrap::wrap(&self->membership.client);
+    value = ClientWrap::wrap(&self->get_wrapped().client);
     break;
   case Flags:
-    value = PyInt_FromLong(self->membership.flags);
+    value = PyInt_FromLong(self->get_wrapped().flags);
     break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;

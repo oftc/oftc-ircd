@@ -42,14 +42,12 @@ static PyMethodDef parser_methods[] =
   PY_METHOD_END
 };
 
-/*ParserWrap::ParserWrap(PyObject *args, PyObject *kwds)
+ParserWrap::ParserWrap(PyObject *args, PyObject *kwds) : PythonWrap(args, kwds)
 {
-  Logging::trace << "Created ParserWrap: " << this << Logging::endl;
-}*/
+}
 
 ParserWrap::~ParserWrap()
 {
-  Logging::trace << "Destroyed ParserWrap: " << this << Logging::endl;
 }
 
 // Statics

@@ -34,7 +34,6 @@
 class ParserWrap : public PythonWrap<ParserWrap, ParserPtr>
 {
 private:
-  ParserPtr parser;
 public:
   // Non Python methods
   static void init(PyObject *);

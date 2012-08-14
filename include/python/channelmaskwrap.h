@@ -33,12 +33,11 @@
 
 class ChannelMaskWrap;
 
-typedef CollectionWrap<map<string, ChannelMask>, ChannelMaskWrap> MaskListWrap;
+typedef CollectionWrap<ChannelMaskList, ChannelMaskWrap> MaskListWrap;
 
 class ChannelMaskWrap : public PythonWrap<ChannelMaskWrap, ChannelMask>
 {
 private:
-  ChannelMask mask;
 public:
   // Non Python methods
   static void init(PyObject *);
@@ -58,7 +57,6 @@ public:
   ~ChannelMaskWrap();
 
   // members
-  inline ChannelMask get_mask() const { return mask; }
 };
 
 #endif

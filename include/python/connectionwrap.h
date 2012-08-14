@@ -34,8 +34,6 @@ class ConnectionWrap : public PythonWrap<ConnectionWrap, ConnectionPtr>
 private:
   static PyObject *ip_connecting;
   static PyObject *dns_finished;
-
-  ConnectionPtr connection;
 public:
   // Non Python methods
   static void init(PyObject *);

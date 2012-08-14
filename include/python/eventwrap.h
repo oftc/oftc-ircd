@@ -36,7 +36,6 @@ class EventWrap : public PythonWrap<EventWrap, EventCallback>
 private:
   PyObject *listeners;
   PyObject *handler;
-  EventCallback fire_func;
 public:
   // Non Python methods
   static void init(PyObject *);

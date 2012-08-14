@@ -40,7 +40,6 @@ private:
   static PyObject *joining;
   static PyObject *joined;
 
-  ChannelPtr channel;
 public:
   // Non Python methods
   static void init(PyObject *);
@@ -76,7 +75,6 @@ public:
   ~ChannelWrap();
 
   // members
-  inline ChannelPtr get_channel() const { return channel; }
 };
 
 #endif

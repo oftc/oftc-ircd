@@ -31,6 +31,8 @@
 #include "channelmask.h"
 
 template<> PyTypeObject PythonWrap<ChannelMaskWrap, ChannelMask>::type_object = {};
+template<> PyTypeObject PythonWrap<MaskListWrap, ChannelMaskList>::type_object = {};
+template<> PyTypeObject PythonWrap<ChannelMaskWrap, ChannelMaskList>::type_object = {};
 
 static PyMethodDef mask_methods[] =
 {
@@ -54,23 +56,12 @@ static PyGetSetDef mask_getsetters[] =
   PY_GETSET_END
 };
 
-/*ChannelMaskWrap::ChannelMaskWrap(PyObject *args, PyObject *kwds)
+ChannelMaskWrap::ChannelMaskWrap(PyObject *args, PyObject *kwds) : PythonWrap(args, kwds)
 {
-  PyObject *mask_obj;
-  ChannelMask *maskptr;
-
-  PyArg_ParseTuple(args, "O", &mask_obj);
-
-  maskptr = (reinterpret_cast<ChannelMask *>(PyCObject_AsVoidPtr(mask_obj)));
-
-  mask = *maskptr;
-
-  Logging::trace << "Created ChannelMaskWrap: " << this << Logging::endl;
-}*/
+}
 
 ChannelMaskWrap::~ChannelMaskWrap()
 {
-  Logging::trace << "Destroyed ChannelMaskWrap: " << this << Logging::endl;
 }
 
 // Statics

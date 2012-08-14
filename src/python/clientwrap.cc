@@ -100,22 +100,12 @@ static PyGetSetDef client_getsetters[] =
   PY_GETSET_END
 };
 
-/*ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
+ClientWrap::ClientWrap(PyObject *args, PyObject *kwds) : PythonWrap(args, kwds)
 {
-  PyObject *client_obj;
-  ClientPtr ptr;
-
-  PyArg_ParseTuple(args, "O", &client_obj);
-
-  ptr = *(reinterpret_cast<ClientPtr*>(PyCObject_AsVoidPtr(client_obj)));
-  client = ptr;
-
-  Logging::trace << "Created ClientWrap: " << this << Logging::endl;
-}*/
+}
 
 ClientWrap::~ClientWrap()
 {
-  Logging::trace << "Destroyed ClientWrap: " << this << Logging::endl;
 }
 
 // Statics
@@ -168,33 +158,33 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
 
   if(prop & ClientOnly)
   {
-    if(!Client::is_client(self->client))
+    if(!Client::is_client(self->get_wrapped()))
     {
       PyErr_SetString(PyExc_TypeError, "Property only applicable to Client types");
       return NULL;
     }
 
-    client_ptr = dynamic_pointer_cast<Client>(self->client);
+    client_ptr = dynamic_pointer_cast<Client>(self->get_wrapped());
   }
 
   if(prop & ServerOnly)
   {
-    if(!Client::is_server(self->client))
+    if(!Client::is_server(self->get_wrapped()))
     {
       PyErr_SetString(PyExc_TypeError, "Property only applicable to Server types");
       return NULL;
     }
 
-    server_ptr = dynamic_pointer_cast<Server>(self->client);
+    server_ptr = dynamic_pointer_cast<Server>(self->get_wrapped());
   }
 
   switch(prop & PropMask)
   {
   case Name:
-    value = PyString_FromString(self->client->get_name().c_str());
+    value = PyString_FromString(self->get_wrapped()->get_name().c_str());
     break;
   case Host:
-    value = PyString_FromString(self->client->get_host().c_str());
+    value = PyString_FromString(self->get_wrapped()->get_host().c_str());
     break;
   case Username:
     value = PyString_FromString(client_ptr->get_username().c_str());
@@ -246,24 +236,24 @@ int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
 
   if(prop & ClientOnly)
   {
-    if(!Client::is_client(self->client))
+    if(!Client::is_client(self->get_wrapped()))
     {
       PyErr_SetString(PyExc_TypeError, "Property only applicable to Client types");
       return -1;
     }
 
-    client_ptr = dynamic_pointer_cast<Client>(self->client);
+    client_ptr = dynamic_pointer_cast<Client>(self->get_wrapped());
   }
 
   if(prop & ServerOnly)
   {
-    if(!Client::is_server(self->client))
+    if(!Client::is_server(self->get_wrapped()))
     {
       PyErr_SetString(PyExc_TypeError, "Property only applicable to Server types");
       return -1;
     }
 
-    server_ptr = dynamic_pointer_cast<Server>(self->client);
+    server_ptr = dynamic_pointer_cast<Server>(self->get_wrapped());
   }
 
   if(prop & StringArg)
@@ -296,7 +286,7 @@ int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
   switch(prop & PropMask)
   {
   case Name:
-    self->client->set_name(PyString_AsString(value));
+    self->get_wrapped()->set_name(PyString_AsString(value));
     break;
   case Username:
     client_ptr->set_username(PyString_AsString(value));
@@ -305,7 +295,7 @@ int ClientWrap::set_wrap(ClientWrap *self, PyObject *value, void *closure)
     client_ptr->set_realname(PyString_AsString(value));
     break;
   case Host:
-    self->client->set_host(PyString_AsString(value));
+    self->get_wrapped()->set_host(PyString_AsString(value));
     break;
   case Invisible:
     client_ptr->set_invisible(PyObject_IsTrue(value) != 0);
@@ -330,7 +320,7 @@ PyObject *ClientWrap::add(ClientWrap *self, ClientWrap *client)
     return NULL;
   }
 
-  Client::add(client->client);
+  Client::add(client->get_wrapped());
 
   Py_RETURN_NONE;
 }
@@ -342,7 +332,7 @@ PyObject *ClientWrap::add_name(PyObject *self, ClientWrap *client)
     PyErr_SetString(PyExc_TypeError, "Argument must be a Client");
     return NULL;
   }
-  Client::add_name(client->client);
+  Client::add_name(client->get_wrapped());
 
   Py_RETURN_NONE;
 }
@@ -354,7 +344,7 @@ PyObject *ClientWrap::close(ClientWrap *self, PyObject *args)
     PyErr_SetString(PyExc_TypeError, "argument must be a string");
     return NULL;
   }
-  self->client->close(PyString_AsString(args));
+  self->get_wrapped()->close(PyString_AsString(args));
 
   Py_RETURN_NONE;
 }
@@ -383,7 +373,7 @@ PyObject *ClientWrap::del_name(PyObject *self, ClientWrap *client)
     return NULL;
   }
 
-  Client::del_name(client->client);
+  Client::del_name(client->get_wrapped());
 
   Py_RETURN_NONE;
 }
@@ -395,7 +385,7 @@ PyObject *ClientWrap::send(ClientWrap *self, PyObject *args, PyObject *kwargs)
   if(result == NULL)
     return NULL;
 
-  self->client->send(PyString_AsString(result));
+  self->get_wrapped()->send(PyString_AsString(result));
 
   Py_DECREF(result);
 
@@ -409,7 +399,7 @@ PyObject *ClientWrap::send_channels_common(ClientWrap *self, PyObject *args, PyO
   if(result == NULL)
     return NULL;
 
-  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->client);
+  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->get_wrapped());
   ptr->send_channels_common(PyString_AsString(result));
 
   Py_DECREF(result);
@@ -419,7 +409,7 @@ PyObject *ClientWrap::send_channels_common(ClientWrap *self, PyObject *args, PyO
 
 PyObject *ClientWrap::is_registered(ClientWrap *self, PyObject *args)
 {
-  if(self->client->is_registered())
+  if(self->get_wrapped()->is_registered())
     Py_RETURN_TRUE;
   else
     Py_RETURN_FALSE;
@@ -427,7 +417,7 @@ PyObject *ClientWrap::is_registered(ClientWrap *self, PyObject *args)
 
 PyObject *ClientWrap::is_ssl(ClientWrap *self, PyObject *args)
 {
-  if(self->client->is_ssl())
+  if(self->get_wrapped()->is_ssl())
     Py_RETURN_TRUE;
   else
     Py_RETURN_FALSE;
@@ -435,7 +425,7 @@ PyObject *ClientWrap::is_ssl(ClientWrap *self, PyObject *args)
 
 PyObject *ClientWrap::str(ClientWrap *self)
 {
-  return PyString_FromString(self->client->str().c_str());
+  return PyString_FromString(self->get_wrapped()->str().c_str());
 }
 
 PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
@@ -447,13 +437,13 @@ PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
   int numeric;
   shared_ptr<Client> ptr;
 
-  if(!Client::is_client(self->client))
+  if(!Client::is_client(self->get_wrapped()))
   {
     PyErr_SetString(PyExc_RuntimeError, "Cannot send a numeric to a non-client");
     return NULL;
   }
 
-  ptr = dynamic_pointer_cast<Client>(self->client);
+  ptr = dynamic_pointer_cast<Client>(self->get_wrapped());
 
   item = PyTuple_GetItem(args, index++);
   if(!PyInt_Check(item))
@@ -525,7 +515,7 @@ PyObject *ClientWrap::numeric(ClientWrap *self, PyObject *args)
 
 PyObject *ClientWrap::remove_channel(ClientWrap *self, ChannelWrap *channel)
 {
-  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->client);
+  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(self->get_wrapped());
 
   if(!ChannelWrap::check(channel))
   {
@@ -533,7 +523,7 @@ PyObject *ClientWrap::remove_channel(ClientWrap *self, ChannelWrap *channel)
     return NULL;
   }
 
-  ptr->remove_channel(channel->get_channel());
+  ptr->remove_channel(channel->get_wrapped());
 
   Py_RETURN_NONE;
 }
@@ -543,10 +533,10 @@ int ClientWrap::compare(ClientWrap *self, ClientWrap *other)
   if(self->ob_type != &type_object || other->ob_type != &type_object)
     return PyObject_Compare(self, other);
 
-  if(self->client == other->client)
+  if(self->get_wrapped() == other->get_wrapped())
     return 0;
 
-  if(self->client->get_name() > other->client->get_name())
+  if(self->get_wrapped()->get_name() > other->get_wrapped()->get_name())
     return 1;
   else
     return -1;
@@ -559,7 +549,7 @@ PyObject *ClientWrap::fire_connected(EventWrap *, PyObject *args)
   if(!PyArg_ParseTuple(args, "O", &client))
     return NULL;
 
-  if(Client::connected(client->client))
+  if(Client::connected(client->get_wrapped()))
     return Py_True;
   else
     return Py_False;
@@ -572,7 +562,7 @@ PyObject *ClientWrap::fire_disconnected(EventWrap *, PyObject *args)
   if(!PyArg_ParseTuple(args, "O", &client))
     return NULL;
 
-  if(Client::disconnected(client->client))
+  if(Client::disconnected(client->get_wrapped()))
     return Py_True;
   else
     return Py_False;
@@ -585,7 +575,7 @@ PyObject *ClientWrap::fire_registering(EventWrap *, PyObject *args)
   if(!PyArg_ParseTuple(args, "O", &client))
     return NULL;
 
-  if(Client::registering(client->client))
+  if(Client::registering(client->get_wrapped()))
     return Py_True;
   else
     return Py_False;
@@ -599,7 +589,7 @@ PyObject *ClientWrap::fire_closing(EventWrap *event, PyObject *args)
   if(!PyArg_ParseTuple(args, "Os", &client, &reason))
     return NULL;
 
-  if(Client::closing(client->client, reason))
+  if(Client::closing(client->get_wrapped(), reason))
     return Py_True;
   else
     return Py_False;
@@ -613,7 +603,7 @@ PyObject *ClientWrap::fire_nick_changing(EventWrap *event, PyObject *args)
   if(!PyArg_ParseTuple(args, "Os", &client, &nick))
     return NULL;
 
-  if(Client::nick_changing(client->client, nick))
+  if(Client::nick_changing(client->get_wrapped(), nick))
     return Py_True;
   else
     return Py_False;
@@ -627,7 +617,7 @@ PyObject *ClientWrap::fire_nick_changed(EventWrap *event, PyObject *args)
   if(!PyArg_ParseTuple(args, "Os", &client, &old_str))
     return NULL;
 
-  if(Client::nick_changed(client->client, old_str))
+  if(Client::nick_changed(client->get_wrapped(), old_str))
     return Py_True;
   else
     return Py_False;

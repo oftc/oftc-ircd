@@ -48,7 +48,11 @@ public:
     PyObject *obj;
     Wrapped ptr;
 
-    PyArg_ParseTuple(args, "O", &obj);
+    if(!PyArg_ParseTuple(args, "O", &obj))
+    {
+      PythonUtil::log_error();
+      return;
+    }
 
     ptr = *(reinterpret_cast<Wrapped *>(PyCObject_AsVoidPtr(obj)));
     wrapped = ptr;
@@ -56,7 +60,11 @@ public:
     Logging::trace << "Created PythonWrap: " << this << Logging::endl;
   }
 
-  // Non Python methods
+  Wrapped get_wrapped() const
+  {
+    return wrapped;
+  }
+
   static void init(PyObject *module, const char *name)
   {
     type_object.ob_refcnt = 1;
@@ -78,7 +86,6 @@ public:
     PyModule_AddObject(module, type_object.tp_name, reinterpret_cast<PyObject *>(&type_object));
   }
 
-  // Python methods
   static PyObject *alloc(PyTypeObject *type, Py_ssize_t items)
   {
     char *ret;
@@ -99,7 +106,7 @@ public:
     return reinterpret_cast<Wrap *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
   }
 
-  inline static bool check(PyObject *arg)
+  static bool check(PyObject *arg)
   {
     return Py_TYPE(arg) == &type_object;  
   }
@@ -171,8 +178,6 @@ public:
 
     return wrapped;
   }
-
-  // Getters
 };
 
 #endif

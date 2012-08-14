@@ -36,9 +36,7 @@ using std::list;
 template <class T, class W> class CollectionWrap : public PythonWrap<CollectionWrap<T, W>, T>
 {
 private:
-
   typename T::const_iterator curr;
-  T iterable;
 public:
   // Non Python methods
   static Py_ssize_t get_length(PyObject *self)
@@ -59,11 +57,11 @@ public:
       PY_METHOD_END
     };
 
-    PythonWrap<CollectionWrap, T>::type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
-    PythonWrap<CollectionWrap, T>::type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
-    PythonWrap<CollectionWrap, T>::type_object.tp_as_sequence = &seq_methods;
-    PythonWrap<CollectionWrap, T>::type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
-    PythonWrap<CollectionWrap, T>::init(module, (string("Collection ") + typeid(T).name()).c_str());
+    type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
+    type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
+    type_object.tp_as_sequence = &seq_methods;
+    type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
+    PythonWrap::init(module, (string("Collection ") + typeid(T).name()).c_str());
   }
 
   static CollectionWrap<T, W> *wrap(void *arg)
@@ -100,43 +98,28 @@ public:
   }
 
   // Ctor/dtors
-/*  CollectionWrap(PyObject *args, PyObject *kwargs)
+  CollectionWrap(PyObject *args, PyObject *kwargs) : PythonWrap(args, kwargs)
   {
-    PyObject *list_ptr;
-
-    if(args != NULL)
-    {
-      PyArg_ParseTuple(args, "O", &list_ptr);
-
-      iterable = *reinterpret_cast<T *>(PyCObject_AsVoidPtr(list_ptr));
-
-      curr = iterable.begin();
-    }
-
-    Logging::trace << "Created CollectionWrap: " << this << Logging::endl;
-  }*/
-
-  ~CollectionWrap()
-  {
-    Logging::trace << "Destroyed CollectionWrap: " << this << Logging::endl;
   }
 
   // methods
   Py_ssize_t length() const
   {
-    return iterable.size();
+    return get_wrapped().size();
   }
 
   void reset()
   {
-    curr = iterable.begin();
+    T tmp = get_wrapped();
+    curr = tmp.begin();
   }
 
   W *next()
   {
     typename T::mapped_type item;
+    T tmp = get_wrapped();
 
-    if(curr == iterable.end())
+    if(curr == tmp.end())
       return NULL;
 
     item = curr->second;

@@ -50,20 +50,12 @@ static PyGetSetDef event_getsetters[] =
   PY_GETSET_END
 };
 
-/*EventWrap::EventWrap(PyObject *args, PyObject *kwds)
+EventWrap::EventWrap(PyObject *args, PyObject *kwds) : PythonWrap(args, kwds)
 {
-  PyObject *func;
-
-  PyArg_ParseTuple(args, "O", &func);
-
-  fire_func = *reinterpret_cast<EventCallback *>(PyCObject_AsVoidPtr(func));
-
-  Logging::trace << "Created EventWrap: " << this << Logging::endl;
-}*/
+}
 
 EventWrap::~EventWrap()
 {
-  Logging::trace << "Destroyed EventWrap: " << this << Logging::endl;
 }
 
 PyObject *EventWrap::get_listeners() const 
@@ -149,5 +141,5 @@ int EventWrap::set_wrap(EventWrap *event, PyObject *value, void *closure)
 
 PyObject *EventWrap::fire(EventWrap *event, PyObject *args)
 {
-  return event->fire_func(event, args);
+  return event->get_wrapped()(event, args);
 }

@@ -46,22 +46,12 @@ static PyGetSetDef connection_getsetters[] =
   PY_GETSET_END
 };
 
-/*ConnectionWrap::ConnectionWrap(PyObject *args, PyObject *kwds)
+ConnectionWrap::ConnectionWrap(PyObject *args, PyObject *kwds) : PythonWrap(args, kwds)
 {
-  PyObject *connection_obj;
-  ConnectionPtr ptr;
-
-  PyArg_ParseTuple(args, "O", &connection_obj);
-
-  ptr = *(reinterpret_cast<ConnectionPtr*>(PyCObject_AsVoidPtr(connection_obj)));
-  connection = ptr;
-
-  Logging::trace << "Created ConnectionWrap: " << this << Logging::endl;
-}*/
+}
 
 ConnectionWrap::~ConnectionWrap()
 {
-  Logging::trace << "Destroyed ConnectionWrap: " << this << Logging::endl;
 }
 
 // Statics
@@ -122,7 +112,7 @@ PyObject *ConnectionWrap::fire_ip_connecting(EventWrap *event, PyObject *args)
   if(!PyArg_ParseTuple(args, "O", &connection))
     return NULL;
 
-  if(Connection::ip_connecting(connection->connection))
+  if(Connection::ip_connecting(connection->get_wrapped()))
     return Py_True;
   else
     return Py_False;
@@ -135,7 +125,7 @@ PyObject *ConnectionWrap::fire_dns_finished(EventWrap *event, PyObject *args)
   if(!PyArg_ParseTuple(args, "O", &connection))
     return NULL;
 
-  if(Connection::dns_finished(connection->connection))
+  if(Connection::dns_finished(connection->get_wrapped()))
     return Py_True;
   else
     return Py_False;

@@ -33,7 +33,7 @@
 #include "python/channelmaskwrap.h"
 #include "channel.h"
 
-template<> PyTypeObject PythonWrap<ChannelWrap, ClientPtr>::type_object = {};
+template<> PyTypeObject PythonWrap<ChannelWrap, ChannelPtr>::type_object = {};
 
 PyObject *ChannelWrap::joining;
 PyObject *ChannelWrap::joined;
@@ -96,28 +96,16 @@ static PyGetSetDef channel_getsetters[] =
   PY_GETSET_END
 };
 
-/*ChannelWrap::ChannelWrap(PyObject *args, PyObject *kwds)
+ChannelWrap::ChannelWrap(PyObject *args, PyObject *kwds) : PythonWrap(args, kwds)
 {
-  PyObject *channel_obj;
-  ChannelPtr ptr;
-
   if(PyTuple_Size(args) == 0)
-    ptr = ChannelPtr(new Channel);
-  else
   {
-    PyArg_ParseTuple(args, "O", &channel_obj);
-
-    ptr = *(reinterpret_cast<ChannelPtr*>(PyCObject_AsVoidPtr(channel_obj)));
+    wrapped = ChannelPtr(new Channel());
   }
-
-  channel = ptr;
-
-  Logging::trace << "Created ChannelWrap: " << this << Logging::endl;
-}*/
+}
 
 ChannelWrap::~ChannelWrap()
 {
-  Logging::trace << "Destroyed ChannelWrap: " << this << Logging::endl;
 }
 
 // Statics
@@ -148,38 +136,38 @@ PyObject *ChannelWrap::get_wrap(ChannelWrap *self, void *closure)
   switch(prop & PropMask)
   {
   case Name:
-    value = PyString_FromString(self->channel->get_name().c_str());
+    value = PyString_FromString(self->get_wrapped()->get_name().c_str());
     break;
   case Members:
     {
-      ChannelMemberList channels = self->channel->get_members();
+      ChannelMemberList channels = self->get_wrapped()->get_members();
       value = CollectionWrap<ChannelMemberList, MembershipWrap>::wrap(&channels);
     }
     break;
   case InviteOnly:
-    value = PyBool_FromLong(self->channel->is_invite_only());
+    value = PyBool_FromLong(self->get_wrapped()->is_invite_only());
     break;
   case Moderated:
-    value = PyBool_FromLong(self->channel->is_moderated());
+    value = PyBool_FromLong(self->get_wrapped()->is_moderated());
     break;
   case NoExternal:
-    value = PyBool_FromLong(self->channel->is_no_external_msgs());
+    value = PyBool_FromLong(self->get_wrapped()->is_no_external_msgs());
     break;
   case Private:
-    value = PyBool_FromLong(self->channel->is_private());
+    value = PyBool_FromLong(self->get_wrapped()->is_private());
     break;
   case Secret:
-    value = PyBool_FromLong(self->channel->is_secret());
+    value = PyBool_FromLong(self->get_wrapped()->is_secret());
     break;
   case TopicOpsOnly:
-    value = PyBool_FromLong(self->channel->is_topic_op_only());
+    value = PyBool_FromLong(self->get_wrapped()->is_topic_op_only());
     break;
   case Secure:
-    value = PyBool_FromLong(self->channel->is_secure());
+    value = PyBool_FromLong(self->get_wrapped()->is_secure());
     break;
   case Bans:
     {
-      ChannelMaskList bans = self->channel->get_bans();
+      ChannelMaskList bans = self->get_wrapped()->get_bans();
       value = MaskListWrap::wrap(&bans);
     }
     break;
@@ -232,7 +220,7 @@ int ChannelWrap::set_wrap(ChannelWrap *self, PyObject *value, void *closure)
   switch(prop & PropMask)
   {
   case Name:
-    self->channel->set_name(PyString_AsString(value));
+    self->get_wrapped()->set_name(PyString_AsString(value));
     break;
   default:
     Logging::warning << "Unknown property requested: " << prop << Logging::endl;
@@ -245,13 +233,13 @@ int ChannelWrap::set_wrap(ChannelWrap *self, PyObject *value, void *closure)
 
 PyObject *ChannelWrap::add_member(ChannelWrap *self, ClientWrap *client)
 {
-  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_wrapped()))
   {
     PyErr_SetString(PyExc_TypeError, "Argument must be a Client type");
     return NULL;
   }
 
-  self->channel->add_member(client->get_client());
+  self->get_wrapped()->add_member(client->get_wrapped());
 
   Py_RETURN_NONE;
 }
@@ -264,7 +252,7 @@ PyObject *ChannelWrap::add(ChannelWrap *self, ChannelWrap *channel)
     return NULL;
   }
 
-  Channel::add(channel->channel);
+  Channel::add(channel->get_wrapped());
 
   Py_RETURN_NONE;
 }
@@ -293,20 +281,20 @@ PyObject *ChannelWrap::del(PyObject *self, ChannelWrap *channel)
     return NULL;
   }
 
-  Channel::del(channel->channel);
+  Channel::del(channel->get_wrapped());
 
   Py_RETURN_NONE;
 }
 
 PyObject *ChannelWrap::send_names(ChannelWrap *self, ClientWrap *client)
 {
-  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_wrapped()))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
     return NULL;
   }
   
-  self->channel->send_names(client->get_client());
+  self->get_wrapped()->send_names(client->get_wrapped());
 
   Py_RETURN_NONE;
 }
@@ -318,7 +306,7 @@ PyObject *ChannelWrap::send(ChannelWrap *self, PyObject *args, PyObject *kwargs)
 
   client = reinterpret_cast<ClientWrap *>(PyDict_GetItemString(kwargs, "client"));
 
-  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_wrapped()))
   {
     PyErr_SetString(PyExc_TypeError, "client argument must be a Client type");
     return NULL;
@@ -327,7 +315,7 @@ PyObject *ChannelWrap::send(ChannelWrap *self, PyObject *args, PyObject *kwargs)
   if(result == NULL)
     return NULL;
 
-  self->channel->send(client->get_client(), PyString_AsString(result));
+  self->get_wrapped()->send(client->get_wrapped(), PyString_AsString(result));
 
   Py_DECREF(result);
 
@@ -341,7 +329,7 @@ PyObject *ChannelWrap::set_mode_char(ChannelWrap *self, PyObject *args)
 
   PyArg_ParseTuple(args, "cO", &c, &set);
 
-  self->channel->set_mode_char(c, PyObject_IsTrue(set) != 0);
+  self->get_wrapped()->set_mode_char(c, PyObject_IsTrue(set) != 0);
 
   Py_RETURN_NONE;
 }
@@ -354,13 +342,13 @@ PyObject *ChannelWrap::supported_modes(ChannelWrap *self, PyObject *arg)
 
 PyObject *ChannelWrap::is_member(ChannelWrap *self, ClientWrap *client)
 {
-  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_wrapped()))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
     return NULL;
   }
 
-  if(self->channel->is_member(client->get_client()))
+  if(self->get_wrapped()->is_member(client->get_wrapped()))
     Py_RETURN_TRUE;
   else
     Py_RETURN_FALSE;
@@ -368,20 +356,20 @@ PyObject *ChannelWrap::is_member(ChannelWrap *self, ClientWrap *client)
 
 PyObject *ChannelWrap::remove_member(ChannelWrap *self, ClientWrap *client)
 {
-  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_client()))
+  if(!ClientWrap::check(client) || !BaseClient::is_client(client->get_wrapped()))
   {
     PyErr_SetString(PyExc_TypeError, "Argument must be a Client type");
     return NULL;
   }
 
-  self->channel->remove_member(client->get_client());
+  self->get_wrapped()->remove_member(client->get_wrapped());
 
   Py_RETURN_NONE;
 }
 
 PyObject *ChannelWrap::str(ChannelWrap *self)
 {
-  return PyString_FromString(self->channel->str().c_str());
+  return PyString_FromString(self->get_wrapped()->str().c_str());
 }
 
 int ChannelWrap::compare(ChannelWrap *self, ChannelWrap *other)
@@ -389,10 +377,10 @@ int ChannelWrap::compare(ChannelWrap *self, ChannelWrap *other)
   if(self->ob_type != &type_object || other->ob_type != &type_object)
     return PyObject_Compare(self, other);
 
-  if(self->channel == other->channel)
+  if(self->get_wrapped() == other->get_wrapped())
     return 0;
 
-  if(self->channel->get_name() > other->channel->get_name())
+  if(self->get_wrapped()->get_name() > other->get_wrapped()->get_name())
     return 1;
   else
     return -1;
@@ -406,7 +394,7 @@ PyObject *ChannelWrap::fire_joining(EventWrap *, PyObject *args)
   if(!PyArg_ParseTuple(args, "OO", &channel, &client))
     return NULL;
 
-  if(Channel::joining(channel->channel, client->get_client()))
+  if(Channel::joining(channel->get_wrapped(), client->get_wrapped()))
     Py_RETURN_TRUE;
   else
     Py_RETURN_FALSE;
@@ -420,7 +408,7 @@ PyObject *ChannelWrap::fire_joined(EventWrap *, PyObject *args)
   if(!PyArg_ParseTuple(args, "OO", &channel, &client))
     return NULL;
 
-  if(Channel::joined(channel->channel, client->get_client()))
+  if(Channel::joined(channel->get_wrapped(), client->get_wrapped()))
     Py_RETURN_TRUE;
   else
     Py_RETURN_FALSE;

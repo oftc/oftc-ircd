@@ -43,8 +43,6 @@ private:
   static PyObject *closing;
   static PyObject *nick_changing;
   static PyObject *nick_changed;
-  
-  ClientPtr client;
 public:
   // Non Python methods
   static void init(PyObject *);
@@ -90,7 +88,6 @@ public:
   ~ClientWrap();
 
   // members
-  inline ClientPtr get_client() const { return client; }
 };
 
 #endif
