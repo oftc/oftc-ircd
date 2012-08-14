@@ -30,7 +30,7 @@
 #include "python/pythonwrap.h"
 #include "channelmask.h"
 
-template<> PyTypeObject PythonWrap<ChannelMaskWrap>::type_object = {};
+template<> PyTypeObject PythonWrap<ChannelMaskWrap, ChannelMask>::type_object = {};
 
 static PyMethodDef mask_methods[] =
 {
@@ -54,7 +54,7 @@ static PyGetSetDef mask_getsetters[] =
   PY_GETSET_END
 };
 
-ChannelMaskWrap::ChannelMaskWrap(PyObject *args, PyObject *kwds)
+/*ChannelMaskWrap::ChannelMaskWrap(PyObject *args, PyObject *kwds)
 {
   PyObject *mask_obj;
   ChannelMask *maskptr;
@@ -66,7 +66,7 @@ ChannelMaskWrap::ChannelMaskWrap(PyObject *args, PyObject *kwds)
   mask = *maskptr;
 
   Logging::trace << "Created ChannelMaskWrap: " << this << Logging::endl;
-}
+}*/
 
 ChannelMaskWrap::~ChannelMaskWrap()
 {
@@ -77,9 +77,9 @@ ChannelMaskWrap::~ChannelMaskWrap()
 
 void ChannelMaskWrap::init(PyObject *module)
 {
-  PythonWrap<ChannelMaskWrap>::type_object.tp_methods = mask_methods;
-  PythonWrap<ChannelMaskWrap>::type_object.tp_getset = mask_getsetters;
-  PythonWrap<ChannelMaskWrap>::init(module, "Channel");
+  PythonWrap<ChannelMaskWrap, ChannelMask>::type_object.tp_methods = mask_methods;
+  PythonWrap<ChannelMaskWrap, ChannelMask>::type_object.tp_getset = mask_getsetters;
+  PythonWrap<ChannelMaskWrap, ChannelMask>::init(module, "Channel");
 }
 
 PyObject *ChannelMaskWrap::get_wrap(ChannelMaskWrap *self, void *closure)

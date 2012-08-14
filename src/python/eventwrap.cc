@@ -29,7 +29,7 @@
 #include "python/pythonwrap.h"
 #include "python/eventwrap.h"
 
-template<> PyTypeObject PythonWrap<EventWrap>::type_object = {};
+template<> PyTypeObject PythonWrap<EventWrap, EventCallback>::type_object = {};
 
 enum Property
 {
@@ -50,7 +50,7 @@ static PyGetSetDef event_getsetters[] =
   PY_GETSET_END
 };
 
-EventWrap::EventWrap(PyObject *args, PyObject *kwds)
+/*EventWrap::EventWrap(PyObject *args, PyObject *kwds)
 {
   PyObject *func;
 
@@ -59,7 +59,7 @@ EventWrap::EventWrap(PyObject *args, PyObject *kwds)
   fire_func = *reinterpret_cast<EventCallback *>(PyCObject_AsVoidPtr(func));
 
   Logging::trace << "Created EventWrap: " << this << Logging::endl;
-}
+}*/
 
 EventWrap::~EventWrap()
 {
@@ -105,9 +105,9 @@ void EventWrap::set_handler(PyObject *value)
 
 void EventWrap::init(PyObject *module)
 {
-  PythonWrap<EventWrap>::type_object.tp_methods = event_methods;
-  PythonWrap<EventWrap>::type_object.tp_getset = event_getsetters;
-  PythonWrap<EventWrap>::init(module, "Event");
+  PythonWrap<EventWrap, EventCallback>::type_object.tp_methods = event_methods;
+  PythonWrap<EventWrap, EventCallback>::type_object.tp_getset = event_getsetters;
+  PythonWrap<EventWrap, EventCallback>::init(module, "Event");
 }
 
 EventWrap *EventWrap::register_event(EventCallback callback)

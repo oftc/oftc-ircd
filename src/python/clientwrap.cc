@@ -35,7 +35,7 @@
 #include "client.h"
 #include "server.h"
 
-template<> PyTypeObject PythonWrap<ClientWrap>::type_object = {};
+template<> PyTypeObject PythonWrap<ClientWrap, ClientPtr>::type_object = {};
 
 ClientWrap *ClientWrap::me;
 PyObject *ClientWrap::connected;
@@ -100,7 +100,7 @@ static PyGetSetDef client_getsetters[] =
   PY_GETSET_END
 };
 
-ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
+/*ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
 {
   PyObject *client_obj;
   ClientPtr ptr;
@@ -111,7 +111,7 @@ ClientWrap::ClientWrap(PyObject *args, PyObject *kwds)
   client = ptr;
 
   Logging::trace << "Created ClientWrap: " << this << Logging::endl;
-}
+}*/
 
 ClientWrap::~ClientWrap()
 {
@@ -122,11 +122,11 @@ ClientWrap::~ClientWrap()
 
 void ClientWrap::init(PyObject *module)
 {
-  PythonWrap<ClientWrap>::type_object.tp_methods = client_methods;
-  PythonWrap<ClientWrap>::type_object.tp_getset = client_getsetters;
-  PythonWrap<ClientWrap>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
-  PythonWrap<ClientWrap>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
-  PythonWrap<ClientWrap>::init(module, "Client");
+  PythonWrap<ClientWrap, ClientPtr>::type_object.tp_methods = client_methods;
+  PythonWrap<ClientWrap, ClientPtr>::type_object.tp_getset = client_getsetters;
+  PythonWrap<ClientWrap, ClientPtr>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
+  PythonWrap<ClientWrap, ClientPtr>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
+  PythonWrap<ClientWrap, ClientPtr>::init(module, "Client");
 
   ClientPtr ptr = Server::get_me();
   me = ClientWrap::wrap(&ptr);

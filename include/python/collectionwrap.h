@@ -33,7 +33,7 @@
 
 using std::list;
 
-template <class T, class W> class CollectionWrap : public PythonWrap<CollectionWrap<T, W> >
+template <class T, class W> class CollectionWrap : public PythonWrap<CollectionWrap<T, W>, T>
 {
 private:
 
@@ -53,11 +53,17 @@ public:
       get_length
     };
 
-    PythonWrap<CollectionWrap>::type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
-    PythonWrap<CollectionWrap>::type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
-    PythonWrap<CollectionWrap>::type_object.tp_as_sequence = &seq_methods;
-    PythonWrap<CollectionWrap>::type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
-    PythonWrap<CollectionWrap>::init(module, (string("Collection ") + typeid(T).name()).c_str());
+    static PyMethodDef methods[] =
+    {
+      PY_METHOD("append", append, METH_OLDARGS, "Add an item to the collection"),
+      PY_METHOD_END
+    };
+
+    PythonWrap<CollectionWrap, T>::type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
+    PythonWrap<CollectionWrap, T>::type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
+    PythonWrap<CollectionWrap, T>::type_object.tp_as_sequence = &seq_methods;
+    PythonWrap<CollectionWrap, T>::type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
+    PythonWrap<CollectionWrap, T>::init(module, (string("Collection ") + typeid(T).name()).c_str());
   }
 
   static CollectionWrap<T, W> *wrap(void *arg)
@@ -69,7 +75,7 @@ public:
 
     args = Py_BuildValue("(O)", obj);
 
-    wrapped = reinterpret_cast<CollectionWrap<T, W> *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&PythonWrap<CollectionWrap>::type_object), args));
+    wrapped = reinterpret_cast<CollectionWrap<T, W> *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&PythonWrap<CollectionWrap, T>::type_object), args));
     Py_DECREF(obj);
     if(wrapped == NULL)
       return NULL;
@@ -89,8 +95,12 @@ public:
     return iterator->next();
   }
 
+  static PyObject *append(CollectionWrap<T, W> *self, W *item)
+  {
+  }
+
   // Ctor/dtors
-  CollectionWrap(PyObject *args, PyObject *kwargs)
+/*  CollectionWrap(PyObject *args, PyObject *kwargs)
   {
     PyObject *list_ptr;
 
@@ -104,7 +114,8 @@ public:
     }
 
     Logging::trace << "Created CollectionWrap: " << this << Logging::endl;
-  }
+  }*/
+
   ~CollectionWrap()
   {
     Logging::trace << "Destroyed CollectionWrap: " << this << Logging::endl;
@@ -133,7 +144,7 @@ public:
 
     W *wrapped;
 
-    wrapped = PythonWrap<W>::wrap(&item);
+    wrapped = PythonWrap<W, T>::wrap(&item);
 
     if(wrapped == NULL)
       return NULL;

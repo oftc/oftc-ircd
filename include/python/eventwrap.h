@@ -31,7 +31,7 @@
 class EventWrap;
 typedef function<PyObject *(EventWrap *, PyObject *)> EventCallback;
 
-class EventWrap : public PythonWrap<EventWrap>
+class EventWrap : public PythonWrap<EventWrap, EventCallback>
 {
 private:
   PyObject *listeners;

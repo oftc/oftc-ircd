@@ -33,7 +33,7 @@
 #include "python/channelmaskwrap.h"
 #include "channel.h"
 
-template<> PyTypeObject PythonWrap<ChannelWrap>::type_object = {};
+template<> PyTypeObject PythonWrap<ChannelWrap, ClientPtr>::type_object = {};
 
 PyObject *ChannelWrap::joining;
 PyObject *ChannelWrap::joined;
@@ -96,7 +96,7 @@ static PyGetSetDef channel_getsetters[] =
   PY_GETSET_END
 };
 
-ChannelWrap::ChannelWrap(PyObject *args, PyObject *kwds)
+/*ChannelWrap::ChannelWrap(PyObject *args, PyObject *kwds)
 {
   PyObject *channel_obj;
   ChannelPtr ptr;
@@ -113,7 +113,7 @@ ChannelWrap::ChannelWrap(PyObject *args, PyObject *kwds)
   channel = ptr;
 
   Logging::trace << "Created ChannelWrap: " << this << Logging::endl;
-}
+}*/
 
 ChannelWrap::~ChannelWrap()
 {
@@ -124,11 +124,11 @@ ChannelWrap::~ChannelWrap()
 
 void ChannelWrap::init(PyObject *module)
 {
-  PythonWrap<ChannelWrap>::type_object.tp_methods = channel_methods;
-  PythonWrap<ChannelWrap>::type_object.tp_getset = channel_getsetters;
-  PythonWrap<ChannelWrap>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
-  PythonWrap<ChannelWrap>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
-  PythonWrap<ChannelWrap>::init(module, "Channel");
+  PythonWrap<ChannelWrap, ChannelPtr>::type_object.tp_methods = channel_methods;
+  PythonWrap<ChannelWrap, ChannelPtr>::type_object.tp_getset = channel_getsetters;
+  PythonWrap<ChannelWrap, ChannelPtr>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
+  PythonWrap<ChannelWrap, ChannelPtr>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
+  PythonWrap<ChannelWrap, ChannelPtr>::init(module, "Channel");
 
   joining = EventWrap::register_event(fire_joining);
   joined = EventWrap::register_event(fire_joined);

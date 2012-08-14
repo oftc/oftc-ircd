@@ -31,7 +31,7 @@
 #include "baseclient.h"
 #include "python/pythonwrap.h"
 
-class ParserWrap : public PythonWrap<ParserWrap>
+class ParserWrap : public PythonWrap<ParserWrap, ParserPtr>
 {
 private:
   ParserPtr parser;

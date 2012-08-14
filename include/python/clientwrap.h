@@ -33,7 +33,7 @@
 
 class ChannelWrap;
 
-class ClientWrap : public PythonWrap<ClientWrap>
+class ClientWrap : public PythonWrap<ClientWrap, ClientPtr>
 {
 private:
   static ClientWrap *me;

@@ -29,7 +29,7 @@
 #include "Python.h"
 #include "connection.h"
 
-class ConnectionWrap : public PythonWrap<ConnectionWrap>
+class ConnectionWrap : public PythonWrap<ConnectionWrap, ConnectionPtr>
 {
 private:
   static PyObject *ip_connecting;

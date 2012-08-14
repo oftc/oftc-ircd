@@ -36,11 +36,26 @@
   reinterpret_cast<setter>(type::set_wrap), const_cast<char *>(doc), reinterpret_cast<void *>(flags) }
 #define PY_GETSET_END { NULL, NULL, NULL, NULL, NULL }
 
-template <class T> class PythonWrap : public PyObject
+template <class Wrap, class Wrapped> class PythonWrap : public PyObject
 {
 protected:
   static PyTypeObject type_object;
+  
+  Wrapped wrapped;
 public:
+  PythonWrap(PyObject *args, PyObject *kwds)
+  {
+    PyObject *obj;
+    Wrapped ptr;
+
+    PyArg_ParseTuple(args, "O", &obj);
+
+    ptr = *(reinterpret_cast<Wrapped *>(PyCObject_AsVoidPtr(obj)));
+    wrapped = ptr;
+
+    Logging::trace << "Created PythonWrap: " << this << Logging::endl;
+  }
+
   // Non Python methods
   static void init(PyObject *module, const char *name)
   {
@@ -49,7 +64,7 @@ public:
     type_object.tp_free = free;
     type_object.tp_new = create;
     type_object.tp_dealloc = dealloc;
-    type_object.tp_basicsize = sizeof(T);
+    type_object.tp_basicsize = sizeof(Wrap);
     type_object.tp_name = name;
     type_object.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
 
@@ -79,9 +94,9 @@ public:
     return obj;
   }
 
-  static T *call(PyObject *args)
+  static Wrap *call(PyObject *args)
   {
-    return reinterpret_cast<T*>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
+    return reinterpret_cast<Wrap *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
   }
 
   inline static bool check(PyObject *arg)
@@ -92,15 +107,15 @@ public:
   static PyObject *create(PyTypeObject *type, PyObject *args, PyObject *kwds)
   {
     PyObject *ptr = type->tp_alloc(type, 0);
-    T *obj = new(ptr) T(args, kwds);
+    Wrap *obj = new(ptr) Wrap(args, kwds);
 
     return reinterpret_cast<PyObject*>(obj);
   }
 
   static void dealloc(PyObject *obj)
   {
-    T *ptr = reinterpret_cast<T *>(obj);
-    ptr->~T();
+    Wrap *ptr = reinterpret_cast<Wrap *>(obj);
+    ptr->~Wrap();
     obj->ob_type->tp_free(obj);
   }
 
@@ -140,16 +155,16 @@ public:
     return success;
   }
 
-  static T *wrap(void *arg)
+  static Wrap *wrap(void *arg)
   {
     PyObject *obj, *args;
-    T *wrapped;
+    Wrap *wrapped;
 
     obj = PyCObject_FromVoidPtr(arg, NULL);
 
     args = Py_BuildValue("(O)", obj);
 
-    wrapped = PythonWrap<T>::call(args);
+    wrapped = PythonWrap<Wrap, Wrapped>::call(args);
     Py_DECREF(obj);
     if(wrapped == NULL)
       return NULL;

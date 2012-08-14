@@ -30,7 +30,7 @@
 #include "python/pythonutil.h"
 #include "channel.h"
 
-template<> PyTypeObject PythonWrap<MembershipWrap>::type_object = {};
+template<> PyTypeObject PythonWrap<MembershipWrap, Membership>::type_object = {};
 
 static PyMethodDef membership_methods[] =
 {
@@ -60,7 +60,7 @@ static PyGetSetDef membership_getsetters[] =
   PY_GETSET_END
 };
 
-MembershipWrap::MembershipWrap(PyObject *args, PyObject *kwds)
+/*MembershipWrap::MembershipWrap(PyObject *args, PyObject *kwds)
 {
   PyObject *membership_obj;
   Membership ptr;
@@ -72,7 +72,7 @@ MembershipWrap::MembershipWrap(PyObject *args, PyObject *kwds)
   membership = ptr;
 
   Logging::trace << "Created MembershipWrap: " << this << Logging::endl;
-}
+}*/
 
 MembershipWrap::~MembershipWrap()
 {
@@ -83,9 +83,9 @@ MembershipWrap::~MembershipWrap()
 
 void MembershipWrap::init(PyObject *module)
 {
-  PythonWrap<MembershipWrap>::type_object.tp_methods = membership_methods;
-  PythonWrap<MembershipWrap>::type_object.tp_getset = membership_getsetters;
-  PythonWrap<MembershipWrap>::init(module, "Membership");
+  PythonWrap<MembershipWrap, Membership>::type_object.tp_methods = membership_methods;
+  PythonWrap<MembershipWrap, Membership>::type_object.tp_getset = membership_getsetters;
+  PythonWrap<MembershipWrap, Membership>::init(module, "Membership");
 }
 
 PyObject *MembershipWrap::get_wrap(MembershipWrap *self, void *closure)

@@ -34,7 +34,7 @@
 #include "parser.h"
 #include "client.h"
 
-template<> PyTypeObject PythonWrap<ParserWrap>::type_object = {};
+template<> PyTypeObject PythonWrap<ParserWrap, ParserPtr>::type_object = {};
 
 static PyMethodDef parser_methods[] =
 {
@@ -42,10 +42,10 @@ static PyMethodDef parser_methods[] =
   PY_METHOD_END
 };
 
-ParserWrap::ParserWrap(PyObject *args, PyObject *kwds)
+/*ParserWrap::ParserWrap(PyObject *args, PyObject *kwds)
 {
   Logging::trace << "Created ParserWrap: " << this << Logging::endl;
-}
+}*/
 
 ParserWrap::~ParserWrap()
 {
@@ -56,8 +56,8 @@ ParserWrap::~ParserWrap()
 
 void ParserWrap::init(PyObject *module)
 {
-  PythonWrap<ParserWrap>::type_object.tp_methods = parser_methods;
-  PythonWrap<ParserWrap>::init(module, "Parser");
+  PythonWrap<ParserWrap, ParserPtr>::type_object.tp_methods = parser_methods;
+  PythonWrap<ParserWrap, ParserPtr>::init(module, "Parser");
 }
 
 PyObject *ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)

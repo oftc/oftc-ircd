@@ -55,9 +55,9 @@ static PyMethodDef module_methods[] =
 };
 
 PyObjectList PythonLoader::loaded_modules;
-template<> PyTypeObject PythonWrap<CollectionWrap<ChannelMemberList, MembershipWrap> >::type_object = {};
-template<> PyTypeObject PythonWrap<CollectionWrap<ClientMemberList, MembershipWrap> >::type_object = {};
-template<> PyTypeObject PythonWrap<MaskListWrap>::type_object = {};
+template<> PyTypeObject PythonWrap<CollectionWrap<ChannelMemberList, MembershipWrap>, ChannelMemberList>::type_object = {};
+template<> PyTypeObject PythonWrap<CollectionWrap<ClientMemberList, MembershipWrap>, ClientMemberList>::type_object = {};
+template<> PyTypeObject PythonWrap<MaskListWrap, ChannelMask>::type_object = {};
 
 void PythonLoader::init()
 {

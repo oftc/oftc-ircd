@@ -32,7 +32,7 @@
 #include "python/eventwrap.h"
 #include "channel.h"
 
-class MembershipWrap : public PythonWrap<MembershipWrap>
+class MembershipWrap : public PythonWrap<MembershipWrap, Membership>
 {
 private:
   Membership membership;

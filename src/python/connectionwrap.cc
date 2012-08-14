@@ -31,7 +31,7 @@
 #include "python/connectionwrap.h"
 #include "python/pythonloader.h"
 
-template<> PyTypeObject PythonWrap<ConnectionWrap>::type_object = {};
+template<> PyTypeObject PythonWrap<ConnectionWrap, ConnectionPtr>::type_object = {};
 
 PyObject *ConnectionWrap::ip_connecting;
 PyObject *ConnectionWrap::dns_finished;
@@ -46,7 +46,7 @@ static PyGetSetDef connection_getsetters[] =
   PY_GETSET_END
 };
 
-ConnectionWrap::ConnectionWrap(PyObject *args, PyObject *kwds)
+/*ConnectionWrap::ConnectionWrap(PyObject *args, PyObject *kwds)
 {
   PyObject *connection_obj;
   ConnectionPtr ptr;
@@ -57,7 +57,7 @@ ConnectionWrap::ConnectionWrap(PyObject *args, PyObject *kwds)
   connection = ptr;
 
   Logging::trace << "Created ConnectionWrap: " << this << Logging::endl;
-}
+}*/
 
 ConnectionWrap::~ConnectionWrap()
 {
@@ -68,9 +68,9 @@ ConnectionWrap::~ConnectionWrap()
 
 void ConnectionWrap::init(PyObject *module)
 {
-  PythonWrap<ConnectionWrap>::type_object.tp_methods = connection_methods;
-  PythonWrap<ConnectionWrap>::type_object.tp_getset = connection_getsetters;
-  PythonWrap<ConnectionWrap>::init(module, "Connection");
+  PythonWrap<ConnectionWrap, ConnectionPtr>::type_object.tp_methods = connection_methods;
+  PythonWrap<ConnectionWrap, ConnectionPtr>::type_object.tp_getset = connection_getsetters;
+  PythonWrap<ConnectionWrap, ConnectionPtr>::init(module, "Connection");
 
   ip_connecting = EventWrap::register_event(fire_ip_connecting);
   dns_finished = EventWrap::register_event(fire_dns_finished);

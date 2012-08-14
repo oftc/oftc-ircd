@@ -35,7 +35,7 @@ class ChannelMaskWrap;
 
 typedef CollectionWrap<map<string, ChannelMask>, ChannelMaskWrap> MaskListWrap;
 
-class ChannelMaskWrap : public PythonWrap<ChannelMaskWrap>
+class ChannelMaskWrap : public PythonWrap<ChannelMaskWrap, ChannelMask>
 {
 private:
   ChannelMask mask;
