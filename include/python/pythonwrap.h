@@ -43,16 +43,17 @@ protected:
   
   Wrapped wrapped;
 public:
+  PythonWrap()
+  {
+  }
+
   PythonWrap(PyObject *args, PyObject *kwds)
   {
     PyObject *obj;
     Wrapped ptr;
 
     if(!PyArg_ParseTuple(args, "O", &obj))
-    {
-      PythonUtil::log_error();
       return;
-    }
 
     ptr = *(reinterpret_cast<Wrapped *>(PyCObject_AsVoidPtr(obj)));
     wrapped = ptr;
@@ -60,7 +61,7 @@ public:
     Logging::trace << "Created PythonWrap: " << this << Logging::endl;
   }
 
-  Wrapped get_wrapped() const
+  const Wrapped& get_wrapped() const
   {
     return wrapped;
   }
@@ -171,7 +172,7 @@ public:
 
     args = Py_BuildValue("(O)", obj);
 
-    wrapped = PythonWrap<Wrap, Wrapped>::call(args);
+    wrapped = call(args);
     Py_DECREF(obj);
     if(wrapped == NULL)
       return NULL;
