@@ -57,11 +57,11 @@ public:
       PY_METHOD_END
     };
 
-    type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
-    type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
-    type_object.tp_as_sequence = &seq_methods;
-    type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
-    PythonWrap::init(module, (string("Collection ") + typeid(T).name()).c_str());
+    CollectionWrap<T, W>::type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
+    CollectionWrap<T, W>::type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
+    CollectionWrap<T, W>::type_object.tp_as_sequence = &seq_methods;
+    CollectionWrap<T, W>::type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
+    PythonWrap<W, T>::init(module, (string("Collection ") + typeid(T).name()).c_str());
   }
 
   static CollectionWrap<T, W> *wrap(void *arg)
@@ -95,29 +95,30 @@ public:
 
   static PyObject *append(CollectionWrap<T, W> *self, W *item)
   {
+    return NULL;
   }
 
   // Ctor/dtors
-  CollectionWrap(PyObject *args, PyObject *kwargs) : PythonWrap(args, kwargs)
+  CollectionWrap(PyObject *args, PyObject *kwargs) 
   {
   }
 
   // methods
   Py_ssize_t length() const
   {
-    return get_wrapped().size();
+    return this->get_wrapped().size();
   }
 
   void reset()
   {
-    T tmp = get_wrapped();
+    T tmp = this->get_wrapped();
     curr = tmp.begin();
   }
 
   W *next()
   {
     typename T::mapped_type item;
-    T tmp = get_wrapped();
+    T tmp = this->get_wrapped();
 
     if(curr == tmp.end())
       return NULL;

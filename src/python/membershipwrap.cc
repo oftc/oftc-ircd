@@ -84,14 +84,17 @@ PyObject *MembershipWrap::get_wrap(MembershipWrap *self, void *closure)
 {
   int prop = *reinterpret_cast<int *>(&closure);
   PyObject *value;
+  Membership ms;
 
   switch(prop & PropMask)
   {
   case Channel:
-    value = ChannelWrap::wrap(&self->get_wrapped().channel);
+    ms = self->get_wrapped();
+    value = ChannelWrap::wrap(&ms.channel);
     break;
   case Client:
-    value = ClientWrap::wrap(&self->get_wrapped().client);
+    ms = self->get_wrapped();
+    value = ClientWrap::wrap(&ms.client);
     break;
   case Flags:
     value = PyInt_FromLong(self->get_wrapped().flags);
