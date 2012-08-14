@@ -64,18 +64,23 @@ Services Burst
 --------------
 
 Adding decentralized services to the software means that not only client and
-channel state need to be propagated, but so will services state. However, since
-modifications to services state require authentication there are fewer conflict
-states that need to be handled. Account, Nick, and Channel could contain a
-modification TS, where the newest one wins. Lists again function as the union
-of both sides.
+channel state need to be propagated, but so will services state. The important
+distinction here is that there is no real difference between a registered
+channels active ban-list and its akick-list.
 
-The question becomes how to handle Account/Nick/Channel drop/add between bursts.
+Channel/Nick/Group registration, along with meta-data related (description,
+email, password etc) changes to those types will only be allwoed if a network
+quorum is reached. The number of servers to reach a quorum will be configurable,
+but will prevent most of the cases for desync to occur throughout the network.
 
-Hypothetical situations, these all presume NetworkA and NetworkB rejoin.
+When the quorum is not met, you will still be able to identify with services,
+and perform other certain authenticated tasks such as adding to/from
+ban/quiet/invite lists, but you will not be able to add/delete/modify registered
+accounts/channels.
 
-Situations:
-
+As a server joins the network it reconciles the state/services-db, generally
+the union of ban/quiet/invite lists are taken (there is some timestamp that is
+probably too old to consider for the union).
 
 Actual Data Burst
 -----------------
