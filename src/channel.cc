@@ -84,7 +84,7 @@ ChannelMemberList Channel::get_members() const
   return members;
 }
 
-ChannelMaskList Channel::get_bans() const
+NuhMaskList Channel::get_bans() const
 {
   return bans;
 }

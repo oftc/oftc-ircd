@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CHANNELMASK_H_INC
-#define CHANNELMASK_H_INC
+#ifndef NUHMASK_H_INC
+#define NUHMASK_H_INC
 
 #include "stdinc.h"
 #include <string>
@@ -34,11 +34,11 @@
 using std::string;
 using std::map;
 
-class ChannelMask;
+class NuhMask;
 
-typedef map<string, ChannelMask> ChannelMaskList;
+typedef map<string, NuhMask> NuhMaskList;
 
-class ChannelMask
+class NuhMask
 {
 private:
   irc_string name;
@@ -46,8 +46,8 @@ private:
   string host;
 public:  
   // ctor/dtor
-  ChannelMask();
-  ~ChannelMask();
+  NuhMask();
+  ~NuhMask();
 
   // members
  

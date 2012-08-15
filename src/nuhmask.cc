@@ -23,40 +23,15 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CHANNELMASKWRAP_H_INC
-#define CHANNELMASKWRAP_H_INC
+#include "stdinc.h"
+#include "nuhmask.h"
 
-#include "Python.h"
-#include "python/pythonwrap.h"
-#include "python/collectionwrap.h"
-#include "channelmask.h"
-
-class ChannelMaskWrap;
-
-typedef CollectionWrap<ChannelMaskList, ChannelMaskWrap> MaskListWrap;
-
-class ChannelMaskWrap : public PythonWrap<ChannelMaskWrap, ChannelMask>
+NuhMask::NuhMask() 
 {
-private:
-public:
-  // Non Python methods
-  static void init(PyObject *);
+  Logging::trace << "Created NuhMask: " << this << Logging::endl;
+}
 
-  // Event callbacks
-
-  // Event fires
-
-  // Get/Setters
-  static PyObject *get_wrap(ChannelMaskWrap *, void *);
-  static int set_wrap(ChannelMaskWrap *, PyObject *, void *);
-
-  // Python methods
-
-  // ctor/dtor
-  ChannelMaskWrap(PyObject *, PyObject *);
-  ~ChannelMaskWrap();
-
-  // members
-};
-
-#endif
+NuhMask::~NuhMask()
+{
+  Logging::trace << "Destroyed NuhMask: " << this << Logging::endl;
+}

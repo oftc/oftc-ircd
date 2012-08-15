@@ -26,13 +26,13 @@
 #include <Python.h>
 #include <structmember.h>
 #include "stdinc.h"
-#include "python/channelmaskwrap.h"
+#include "python/nuhmaskwrap.h"
 #include "python/pythonwrap.h"
-#include "channelmask.h"
+#include "nuhmask.h"
 
-template<> PyTypeObject PythonWrap<ChannelMaskWrap, ChannelMask>::type_object = {};
-template<> PyTypeObject PythonWrap<MaskListWrap, ChannelMaskList>::type_object = {};
-template<> PyTypeObject PythonWrap<ChannelMaskWrap, ChannelMaskList>::type_object = {};
+template<> PyTypeObject PythonWrap<NuhMaskWrap, NuhMask>::type_object = {};
+template<> PyTypeObject PythonWrap<MaskListWrap, NuhMaskList>::type_object = {};
+template<> PyTypeObject PythonWrap<NuhMaskWrap, NuhMaskList>::type_object = {};
 
 static PyMethodDef mask_methods[] =
 {
@@ -56,24 +56,24 @@ static PyGetSetDef mask_getsetters[] =
   PY_GETSET_END
 };
 
-ChannelMaskWrap::ChannelMaskWrap(PyObject *args, PyObject *kwds) : PythonWrap(args, kwds)
+NuhMaskWrap::NuhMaskWrap(PyObject *args, PyObject *kwds) : PythonWrap(args, kwds)
 {
 }
 
-ChannelMaskWrap::~ChannelMaskWrap()
+NuhMaskWrap::~NuhMaskWrap()
 {
 }
 
 // Statics
 
-void ChannelMaskWrap::init(PyObject *module)
+void NuhMaskWrap::init(PyObject *module)
 {
-  PythonWrap<ChannelMaskWrap, ChannelMask>::type_object.tp_methods = mask_methods;
-  PythonWrap<ChannelMaskWrap, ChannelMask>::type_object.tp_getset = mask_getsetters;
-  PythonWrap<ChannelMaskWrap, ChannelMask>::init(module, "Channel");
+  PythonWrap<NuhMaskWrap, NuhMask>::type_object.tp_methods = mask_methods;
+  PythonWrap<NuhMaskWrap, NuhMask>::type_object.tp_getset = mask_getsetters;
+  PythonWrap<NuhMaskWrap, NuhMask>::init(module, "Channel");
 }
 
-PyObject *ChannelMaskWrap::get_wrap(ChannelMaskWrap *self, void *closure)
+PyObject *NuhMaskWrap::get_wrap(NuhMaskWrap *self, void *closure)
 {
   int prop = *reinterpret_cast<int *>(&closure);
   PyObject *value;
@@ -89,7 +89,7 @@ PyObject *ChannelMaskWrap::get_wrap(ChannelMaskWrap *self, void *closure)
   return value;
 }
 
-int ChannelMaskWrap::set_wrap(ChannelMaskWrap *self, PyObject *value, void *closure)
+int NuhMaskWrap::set_wrap(NuhMaskWrap *self, PyObject *value, void *closure)
 {
   int prop = *reinterpret_cast<int *>(&closure);
 

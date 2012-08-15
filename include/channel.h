@@ -32,7 +32,7 @@
 #include <map>
 #include "ircstring.h"
 #include "baseclient.h"
-#include "channelmask.h"
+#include "nuhmask.h"
 
 using std::list;
 using std::string;
@@ -67,10 +67,10 @@ private:
   static ChannelList channels;
 
   ChannelMemberList members;
-  ChannelMaskList bans;
-  ChannelMaskList invexes;
-  ChannelMaskList quiets;
-  ChannelMaskList exceptions;
+  NuhMaskList bans;
+  NuhMaskList invexes;
+  NuhMaskList quiets;
+  NuhMaskList exceptions;
   irc_string name;
   bool moderated;
   bool invite_only;
@@ -106,7 +106,7 @@ public:
   inline bool is_secure() const { return secure; }
 
   // getters
-  ChannelMaskList get_bans() const;
+  NuhMaskList get_bans() const;
   irc_string get_name() const;
   ChannelMemberList get_members() const;
 

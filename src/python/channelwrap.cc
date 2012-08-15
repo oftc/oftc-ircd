@@ -30,7 +30,7 @@
 #include "python/pythonutil.h"
 #include "python/collectionwrap.h"
 #include "python/membershipwrap.h"
-#include "python/channelmaskwrap.h"
+#include "python/nuhmaskwrap.h"
 #include "channel.h"
 
 template<> PyTypeObject PythonWrap<ChannelWrap, ChannelPtr>::type_object = {};
@@ -167,7 +167,7 @@ PyObject *ChannelWrap::get_wrap(ChannelWrap *self, void *closure)
     break;
   case Bans:
     {
-      ChannelMaskList bans = self->get_wrapped()->get_bans();
+      NuhMaskList bans = self->get_wrapped()->get_bans();
       value = MaskListWrap::wrap(&bans);
     }
     break;
