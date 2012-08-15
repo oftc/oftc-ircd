@@ -52,8 +52,14 @@ public:
     PyObject *obj;
     Wrapped ptr;
 
-    if(!PyArg_ParseTuple(args, "O", &obj))
+    if(PyTuple_Size(args) == 0)
       return;
+
+    if(!PyArg_ParseTuple(args, "O", &obj))
+    {
+      PythonUtil::log_error();
+      return;
+    }
 
     ptr = *(reinterpret_cast<Wrapped *>(PyCObject_AsVoidPtr(obj)));
     wrapped = ptr;
