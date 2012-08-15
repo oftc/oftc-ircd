@@ -82,26 +82,26 @@ public:
   }
 
   // Ctor/dtors
-  CollectionWrap(PyObject *args, PyObject *kwargs) : PythonWrap(args, kwargs)
+  CollectionWrap(PyObject *args, PyObject *kwargs) 
   {
   }
 
   // methods
   Py_ssize_t length() const
   {
-    return this->get_wrapped().size();
+    return this->wrapped.size();
   }
 
   void reset()
   {
-    curr = get_wrapped().begin();
+    curr = this->wrapped.begin();
   }
 
   W *next()
   {
     typename T::mapped_type item;
 
-    if(curr == get_wrapped().end())
+    if(curr == this->wrapped.end())
       return NULL;
 
     item = curr->second;
