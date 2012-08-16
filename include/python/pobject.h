@@ -23,38 +23,17 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PYTHONBASE_H_INC
-#define PYTHONBASE_H_INC
+#ifndef PYBASEOBJECT_H_INC
+#define PYBASEOBJECT_H_INC
 
 #include "Python.h"
 
-#define PY_METHOD(name, func, flags, doc) { name, reinterpret_cast<PyCFunction>(func), flags, doc }
-#define PY_METHOD_END { NULL, NULL, 0, NULL }
-
-#define PY_GETSET(name, type, doc, flags) { const_cast<char *>(name), reinterpret_cast<getter>(type::get_wrap), \
-  reinterpret_cast<setter>(type::set_wrap), const_cast<char *>(doc), reinterpret_cast<void *>(flags) }
-#define PY_GETSET_END { NULL, NULL, NULL, NULL, NULL }
-
-#define PY_METHOD_NOARGS(name, type) \
-  static PyObject *name##_wrapper(PyObject *self, PyObject *args) \
-  { \
-    type *ptr = self; \
-    \
-    ptr->name(args); \
-  } \
-  \
-  PyObject *name(PyObject *);
-
-class PythonBase : public PyObject
+class PObject : public PyObject
 {
-protected:
-  PyObject *object;
 public:
-  static PyObject *alloc(PyTypeObject *, Py_ssize_t);
-  static void free(void *);
-  static void init();
-  static PyTypeObject& type_object();
-
+  PObject();
+  PObject(int a) { }; // empty constructor only for use in derived classes
+  PObject& operator=(const PyObject * const);
 };
 
 #endif
