@@ -25,6 +25,7 @@
 
 #include "stdinc.h"
 #include "python/pobject.h"
+#include "python/pstring.h"
 
 PObject::PObject()
 {
@@ -40,5 +41,15 @@ PObject& PObject::operator=(const PyObject * const right)
   this->_ob_next = right->_ob_next;
   this->_ob_prev = right->_ob_prev;
 
+  this->_ob_next->_ob_prev = this;
+  this->_ob_prev->_ob_next = this;
+
+  PyObject_Free(const_cast<PyObject *>(right));
+
   return *this;
+}
+
+PString PObject::str()
+{
+  return PString();
 }

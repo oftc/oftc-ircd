@@ -23,22 +23,22 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef POBJECT_H_INC
-#define POBJECT_H_INC
+#include "stdinc.h"
+#include "python/pstring.h"
 
-#include "Python.h"
-
-class PString;
-
-class PObject : public PyObject
+PString::PString()
 {
-public:
-  PObject();
-  PObject(int a) { }; // empty constructor only for use in derived classes
+  PyObject *obj = PyObject_New(PyObject, &PyString_Type);
 
-  virtual PString str();
+  *this = obj;
+}
 
-  virtual PObject& operator=(const PyObject * const);
-};
+/*PObject& PObject::operator=(const PyObject * const right)
+{
+  this->ob_refcnt = right->ob_refcnt;
+  this->ob_type = right->ob_type;
+  this->_ob_next = right->_ob_next;
+  this->_ob_prev = right->_ob_prev;
 
-#endif
+  return *this;
+}*/
