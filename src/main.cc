@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     Client::init();
 
     Ssl::init();
-//    PythonLoader::init();
+    PythonLoader::init();
     Module::load_all();
     Listener::start_listeners();
     uv_run(uv_loop);
