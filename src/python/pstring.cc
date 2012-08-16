@@ -26,19 +26,18 @@
 #include "stdinc.h"
 #include "python/pstring.h"
 
-PString::PString()
+PString::PString() : PObject(0)
 {
   PyObject *obj = PyObject_New(PyObject, &PyString_Type);
 
   *this = obj;
 }
 
-/*PObject& PObject::operator=(const PyObject * const right)
+PString::PString(PyObject *str) : PObject(str)
 {
-  this->ob_refcnt = right->ob_refcnt;
-  this->ob_type = right->ob_type;
-  this->_ob_next = right->_ob_next;
-  this->_ob_prev = right->_ob_prev;
+}
 
-  return *this;
-}*/
+const char *PString::c_str() const
+{
+  return PyString_AsString(object);
+}

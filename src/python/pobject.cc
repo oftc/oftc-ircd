@@ -29,27 +29,17 @@
 
 PObject::PObject()
 {
-  PyObject *obj = PyObject_New(PyObject, &PyBaseObject_Type);
-
-  *this = obj;
+  object = PyObject_New(PyObject, &PyBaseObject_Type);
 }
 
-PObject& PObject::operator=(const PyObject * const right)
+PObject::PObject(PyObject *ptr)
 {
-  this->ob_refcnt = right->ob_refcnt;
-  this->ob_type = right->ob_type;
-  this->_ob_next = right->_ob_next;
-  this->_ob_prev = right->_ob_prev;
-
-  this->_ob_next->_ob_prev = this;
-  this->_ob_prev->_ob_next = this;
-
-  PyObject_Free(const_cast<PyObject *>(right));
-
-  return *this;
+  object = ptr;
+  Py_INCREF(object);
 }
 
 PString PObject::str()
 {
-  return PString();
+  PyObject *str = PyObject_Str(object);
+  return PString(str);
 }

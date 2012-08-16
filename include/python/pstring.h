@@ -33,8 +33,9 @@ class PString : public PObject
 {
 public:
   PString();
-  using PObject::operator=;
-  //PObject& operator=(const PyObject * const);
+  PString(PyObject *);
+
+  const char *c_str() const;
 };
 
 #endif

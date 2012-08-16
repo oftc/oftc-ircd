@@ -30,15 +30,21 @@
 
 class PString;
 
-class PObject : public PyObject
+class PObject
 {
+protected:
+  PyObject *object;
 public:
   PObject();
+  PObject(PyObject *);
   PObject(int a) { }; // empty constructor only for use in derived classes
 
-  virtual PString str();
+  operator PyObject* () 
+  {
+    return object;
+  }
 
-  virtual PObject& operator=(const PyObject * const);
+  virtual PString str();
 };
 
 #endif
