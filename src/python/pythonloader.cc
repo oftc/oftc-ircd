@@ -28,6 +28,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include "python/pythonbase.h"
 #include "python/pythonloader.h"
 #include "python/pythonwrap.h"
 #include "python/parserwrap.h"
@@ -55,9 +56,6 @@ static PyMethodDef module_methods[] =
 };
 
 PyObjectList PythonLoader::loaded_modules;
-template<> PyTypeObject PythonWrap<CollectionWrap<ChannelMemberList, MembershipWrap>, ChannelMemberList>::type_object = {};
-template<> PyTypeObject PythonWrap<CollectionWrap<ClientMemberList, MembershipWrap>, ClientMemberList>::type_object = {};
-template<> PyTypeObject PythonWrap<MaskListWrap, NuhMask>::type_object = {};
 
 void PythonLoader::init()
 {
@@ -90,14 +88,14 @@ void PythonLoader::init()
     throw runtime_error("Error initialising python");
   }
 
-  ParserWrap::init(m);
+/*  ParserWrap::init(m);
   EventWrap::init(m);
   ClientWrap::init(m);
   ChannelWrap::init(m);
   MembershipWrap::init(m);
   CollectionWrap<ChannelMemberList, MembershipWrap>::init(m);
   CollectionWrap<ClientMemberList, MembershipWrap>::init(m);
-  MaskListWrap::init(m);
+  MaskListWrap::init(m);*/
 }
 
 void PythonLoader::load(string name)

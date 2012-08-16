@@ -23,6 +23,7 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if 0
 #include "Python.h"
 #include "structmember.h"
 #include "stdinc.h"
@@ -138,3 +139,4 @@ void ParserWrap::handle_command(const ClientPtr client, const Command& command, 
   Py_DECREF(ret);
   Py_DECREF(args);
 }
+#endif

@@ -23,6 +23,7 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if 0
 #include <Python.h>
 #include <structmember.h>
 #include "stdinc.h"
@@ -136,3 +137,4 @@ int NuhMaskWrap::set_wrap(NuhMaskWrap *self, PyObject *value, void *closure)
 
   return 0;
 }
+#endif

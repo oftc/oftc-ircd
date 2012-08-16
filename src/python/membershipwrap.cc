@@ -23,6 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if 0
+
 #include <Python.h>
 #include <structmember.h>
 #include "stdinc.h"
@@ -155,3 +157,4 @@ int MembershipWrap::set_wrap(MembershipWrap *self, PyObject *value, void *closur
 
   return 0;
 }
+#endif

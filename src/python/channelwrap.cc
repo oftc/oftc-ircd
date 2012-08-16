@@ -23,6 +23,7 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if 0
 #include <Python.h>
 #include <structmember.h>
 #include "stdinc.h"
@@ -451,3 +452,4 @@ bool ChannelWrap::on_joined(ChannelPtr channel, ClientPtr client)
 
   return ret;
 }
+#endif

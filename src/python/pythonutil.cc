@@ -89,6 +89,7 @@ PyObject *PythonUtil::get_motd(PyObject *self, PyObject *arg)
   return ret;
 }
 
+#if 0
 PyObject *PythonUtil::send_format(PyObject *source, PyObject *args, PyObject *kwargs)
 {
   PyObject *fmt, *result, *meth, *fargs, *fdict;
@@ -128,3 +129,4 @@ PyObject *PythonUtil::send_format(PyObject *source, PyObject *args, PyObject *kw
 
   return result;
 }
+#endif

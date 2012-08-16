@@ -23,6 +23,7 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if 0
 #include <Python.h>
 #include <structmember.h>
 #include "stdinc.h"
@@ -143,3 +144,4 @@ PyObject *EventWrap::fire(EventWrap *event, PyObject *args)
 {
   return event->get_wrapped()(event, args);
 }
+#endif

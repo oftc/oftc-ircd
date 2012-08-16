@@ -23,6 +23,7 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if 0
 #include <Python.h>
 #include <structmember.h>
 #include "stdinc.h"
@@ -130,3 +131,4 @@ PyObject *ConnectionWrap::fire_dns_finished(EventWrap *event, PyObject *args)
   else
     return Py_False;
 }
+#endif

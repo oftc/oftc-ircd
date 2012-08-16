@@ -23,6 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if 0
+
 #include <Python.h>
 #include <structmember.h>
 #include "stdinc.h"
@@ -723,3 +725,4 @@ bool ClientWrap::on_nick_changed(ClientPtr client, string old_str)
 
   return ret;
 }
+#endif
