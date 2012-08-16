@@ -23,19 +23,11 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#if 0
-#include "Python.h"
-#include "structmember.h"
 #include "stdinc.h"
-#include "python/pythonwrap.h"
 #include "python/parserwrap.h"
-#include "python/pythonutil.h"
-#include "python/clientwrap.h"
 #include "command.h"
 #include "parser.h"
 #include "client.h"
-
-template<> PyTypeObject PythonWrap<ParserWrap, ParserPtr>::type_object = {};
 
 static PyMethodDef parser_methods[] =
 {
@@ -53,11 +45,6 @@ ParserWrap::~ParserWrap()
 
 // Statics
 
-void ParserWrap::init(PyObject *module)
-{
-  PythonWrap<ParserWrap, ParserPtr>::type_object.tp_methods = parser_methods;
-  PythonWrap<ParserWrap, ParserPtr>::init(module, "Parser");
-}
 
 PyObject *ParserWrap::register_command(PyObject *self, PyObject *args, PyObject *kwargs)
 {
@@ -89,16 +76,18 @@ PyObject *ParserWrap::register_command(PyObject *self, PyObject *args, PyObject 
     return NULL;
   }
 
-  Command command(handle_command, string(name), static_cast<AccessLevel>(access),
+/*  Command command(handle_command, string(name), static_cast<AccessLevel>(access),
     min_args, max_args, rate_control, function);
 
   Parser::get_default().register_command(command);
 
   Py_INCREF(function);
-
+*/
   Py_RETURN_NONE;
+
 }
 
+#if 0
 void ParserWrap::handle_command(const ClientPtr client, const Command& command, const ParamList& params)
 {
   PyObject *args;

@@ -49,20 +49,10 @@ using std::string;
 using std::cerr;
 using std::endl;
 
-static PyMethodDef module_methods[] =
-{
-  { "get_motd", PythonUtil::get_motd, 0, "Return the MOTD for the server" },
-  PY_METHOD_END
-};
-
 PyObjectList PythonLoader::loaded_modules;
 
 void PythonLoader::init()
 {
-  PyObject *m;
-
-  Py_InitializeEx(0);
-
   stringstream path;
 
   path << Py_GetPath();
@@ -78,24 +68,6 @@ void PythonLoader::init()
   }
 
   PySys_SetPath(const_cast<char*>(path.str().c_str()));
-
-  m = Py_InitModule3("pythonwrap", module_methods, 
-    "Wrapper module for oftc-ircd C(++) interface");
-
-  if(m == NULL)
-  {
-    PythonUtil::log_error();
-    throw runtime_error("Error initialising python");
-  }
-
-/*  ParserWrap::init(m);
-  EventWrap::init(m);
-  ClientWrap::init(m);
-  ChannelWrap::init(m);
-  MembershipWrap::init(m);
-  CollectionWrap<ChannelMemberList, MembershipWrap>::init(m);
-  CollectionWrap<ClientMemberList, MembershipWrap>::init(m);
-  MaskListWrap::init(m);*/
 }
 
 void PythonLoader::load(string name)

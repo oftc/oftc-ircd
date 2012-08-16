@@ -37,8 +37,10 @@ class PythonUtil
 {
 private:
 public:
-  static void log_error();
   static PyObject *get_motd(PyObject *, PyObject *);
+  static void init_python();
+  static void log_error();
+  static void register_type(PyObject *, PyTypeObject&);
   static PyObject *send_format(PyObject *, PyObject *, PyObject *);
 };
 

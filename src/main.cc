@@ -35,6 +35,7 @@
 #include "client.h"
 #include "ssl.h"
 #include "python/pythonloader.h"
+#include "python/pythonutil.h"
 
 using std::cerr;
 using std::endl;
@@ -77,6 +78,7 @@ int main(int argc, char *argv[])
     Client::init();
 
     Ssl::init();
+    PythonUtil::init_python();
     PythonLoader::init();
     Module::load_all();
     Listener::start_listeners();

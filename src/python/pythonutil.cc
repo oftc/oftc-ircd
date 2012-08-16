@@ -41,6 +41,36 @@ using std::stringstream;
 using std::string;
 using std::cerr;
 using std::endl;
+
+static PyMethodDef module_methods[] =
+{
+  { "get_motd", PythonUtil::get_motd, 0, "Return the MOTD for the server" },
+  PY_METHOD_END
+};
+
+
+void PythonUtil::init_python()
+{
+  PyObject *module;
+  Py_InitializeEx(0);
+
+  module = Py_InitModule3("pythonwrap", module_methods, "Wrapper module for oftc-ircd C(++) interface");
+
+  if(module == NULL)
+  {
+    PythonUtil::log_error();
+    throw runtime_error("Error initialising python");
+  }
+
+  ParserWrap::init("Parser");
+  register_type(module, ParserWrap::type_object());
+}
+
+void PythonUtil::register_type(PyObject *module, PyTypeObject& type)
+{
+  Py_INCREF(&type);
+  PyModule_AddObject(module, type.tp_name, reinterpret_cast<PyObject *>(&type));
+}
   
 void PythonUtil::log_error()
 {
@@ -62,7 +92,6 @@ void PythonUtil::log_error()
     arg = Py_BuildValue("(OOO)", type, value, Py_None);
   else
     arg = Py_BuildValue("(OOO)", type, value, traceback);
-    
 
   ret = PyObject_CallObject(attr, arg);
 

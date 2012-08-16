@@ -55,8 +55,10 @@ void PythonBase::init()
 {
   PyTypeObject& type = type_object();
 
+  type.ob_refcnt = 1;
   type.tp_alloc = alloc;
   type.tp_free = free;
+  type.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
 
   if(!PyType_Ready(&type))
   {
