@@ -23,29 +23,5 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef POBJECT_H_INC
-#define POBJECT_H_INC
-
-#include "Python.h"
-
-class PString;
-
-class PObject
-{
-protected:
-  PyObject *object;
-public:
-  PObject();
-  PObject(PyObject *);
-  PObject(int a) { }; // empty constructor only for use in derived classes
-  ~PObject();
-
-  operator PyObject* () 
-  {
-    return object;
-  }
-
-  virtual PString str();
-};
-
-#endif
+#include "stdinc.h"
+#include "python/psequence.h"

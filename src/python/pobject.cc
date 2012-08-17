@@ -38,6 +38,11 @@ PObject::PObject(PyObject *ptr)
   Py_INCREF(object);
 }
 
+PObject::~PObject()
+{
+  Py_DECREF(object);
+}
+
 PString PObject::str()
 {
   PyObject *str = PyObject_Str(object);
