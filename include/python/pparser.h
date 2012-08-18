@@ -23,16 +23,21 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PDICT_H_INC
-#define PDICT_H_INC
+#ifndef PPARSER_H_INC
+#define PPARSER_H_INC
 
 #include "Python.h"
-#include "PSequence.h"
+#include "PCType.h"
+#include "parser.h"
 
-class PDict : PSequence<PObject>
+class PParser : public PCType<PParser, Parser>
 {
 public:
-  PDict(PyObject *);
+  PParser();
+  PParser(PTuple, PDict);
+  ~PParser();
+
+  static void init();
 };
 
 #endif

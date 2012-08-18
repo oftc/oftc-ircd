@@ -28,13 +28,17 @@
 
 PString::PString() : PObject(0)
 {
-  PyObject *obj = PyObject_New(PyObject, &PyString_Type);
-
-  *this = obj;
+  object = PyObject_New(PyObject, &PyString_Type);
 }
 
 PString::PString(PyObject *str) : PObject(str)
 {
+}
+
+PString::PString(string str)
+{
+  object = PyString_FromString(str.c_str());
+  Py_INCREF(object);
 }
 
 const char *PString::c_str() const

@@ -23,16 +23,26 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PDICT_H_INC
-#define PDICT_H_INC
+#include "stdinc.h"
+#include "python/PParser.h"
 
-#include "Python.h"
-#include "PSequence.h"
-
-class PDict : PSequence<PObject>
+PParser::PParser()
 {
-public:
-  PDict(PyObject *);
-};
+}
 
-#endif
+PParser::PParser(PTuple args, PDict kwargs)
+{
+}
+
+PParser::~PParser()
+{
+}
+
+void PParser::init()
+{
+  PyTypeObject& type = type_object();
+
+  type.tp_name = "Parser";
+
+  PCType::init();
+}

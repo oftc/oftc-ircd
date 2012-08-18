@@ -25,3 +25,7 @@
 
 #include "stdinc.h"
 #include "python/ptuple.h"
+
+PTuple::PTuple(PyObject *ptr)
+{
+}

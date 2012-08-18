@@ -23,16 +23,5 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PDICT_H_INC
-#define PDICT_H_INC
-
-#include "Python.h"
-#include "PSequence.h"
-
-class PDict : PSequence<PObject>
-{
-public:
-  PDict(PyObject *);
-};
-
-#endif
+#include "stdinc.h"
+#include "python/pctype.h"

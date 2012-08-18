@@ -34,6 +34,8 @@ class PString : public PObject
 public:
   PString();
   PString(PyObject *);
+  PString(const char *);
+  PString(string);
 
   const char *c_str() const;
 };

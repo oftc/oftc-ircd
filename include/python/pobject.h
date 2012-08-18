@@ -40,7 +40,7 @@ public:
   PObject(int a) { }; // empty constructor only for use in derived classes
   ~PObject();
 
-  operator PyObject* () 
+  virtual operator PyObject* () 
   {
     return object;
   }

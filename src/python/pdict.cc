@@ -25,3 +25,7 @@
 
 #include "stdinc.h"
 #include "python/pdict.h"
+
+PDict::PDict(PyObject *ptr)
+{
+}

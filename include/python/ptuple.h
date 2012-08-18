@@ -32,6 +32,7 @@
 class PTuple : PSequence<PObject>
 {
 public:
+  PTuple(PyObject *);
 };
 
 #endif
