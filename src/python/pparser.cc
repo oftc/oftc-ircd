@@ -40,9 +40,12 @@ PParser::~PParser()
 {
 }
 
-PObject PParser::register_command(PTuple, PDict)
+PyObject *PParser::register_command(PyObject *self, PyObject *arg, PyObject *kwargs)
 {
-  Py_RETURN_NONE;
+  PTuple args(arg);
+  PDict kwds(kwargs);
+
+   Py_RETURN_NONE;
 }
 
 // Statics
@@ -53,7 +56,7 @@ void PParser::init()
 
   type.tp_name = "Parser";
 
-  add_method("register_command", METH_VARARGS, "register a command in the parser", KeywordArgsMethod(&PParser::register_command));
+  add_method("Register", "register a command in the parser", reinterpret_cast<PyCFunctionWithKeywords>(PParser::register_command));
 
   PCType::init();
 }

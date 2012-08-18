@@ -38,6 +38,7 @@ private:
   typename T::NoArgsMethod noargs;
   typename T::VarArgsMethod varargs;
   typename T::KeywordArgsMethod kwargs;
+
   const char *name;
   const char *doc;
   unsigned int flags;
@@ -47,27 +48,35 @@ public:
   {
   }
 
-  PMethod(const char *meth_name, unsigned int meth_flags, PyCFunction meth_callback, const char *meth_doc, typename T::NoArgsMethod arg)
+  PMethod(const char *meth_name, PyCFunction meth_callback, const char *meth_doc, typename T::NoArgsMethod arg)
   {
     noargs = arg;
     name = meth_name;
-    flags = meth_flags;
+    flags = METH_VARARGS;
     callback = meth_callback;
     doc = meth_doc;
   }
 
-  PMethod(const char *meth_name, unsigned int meth_flags, PyCFunction meth_callback, const char *meth_doc, typename T::VarArgsMethod arg)
+  PMethod(const char *meth_name, PyCFunction meth_callback, const char *meth_doc, typename T::VarArgsMethod arg)
   {
     varags = arg;
     name = meth_name;
-    flags = meth_flags;
+    flags = METH_VARARGS;
     callback = meth_callback;
     doc = meth_doc;
   }
 
-  PMethod(const char *meth_name, unsigned int meth_flags, PyCFunction meth_callback, const char *meth_doc, typename T::KeywordArgsMethod arg)
+  PMethod(const char *meth_name, PyCFunction meth_callback, const char *meth_doc, typename T::KeywordArgsMethod arg)
   {
     kwargs = arg;
+    name = meth_name;
+    flags = METH_KEYWORDS| METH_VARARGS;
+    callback = meth_callback;
+    doc = meth_doc;
+  }
+
+  PMethod(const char *meth_name, unsigned int meth_flags, PyCFunction meth_callback, const char *meth_doc)
+  {
     name = meth_name;
     flags = meth_flags;
     callback = meth_callback;

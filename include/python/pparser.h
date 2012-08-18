@@ -37,7 +37,7 @@ public:
   PParser(PTuple, PDict);
   ~PParser();
 
-  PObject register_command(PTuple, PDict);
+  static PyObject *register_command(PyObject *, PyObject *, PyObject *);
 
   static void init();
 };

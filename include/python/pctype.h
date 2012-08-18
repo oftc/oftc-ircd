@@ -79,7 +79,7 @@ public:
     PyObject *ptr = type->tp_alloc(type, 0);
     Outer *obj = new(ptr) Outer(PTuple(args), PDict(kwds));
 
-    return reinterpret_cast<PyObject*>(obj);
+    return static_cast<PyObject *>(obj);
   }
 
   static PyObject *alloc(PyTypeObject *type, Py_ssize_t items)
@@ -113,24 +113,39 @@ public:
     obj->ob_type->tp_free(obj);
   }
 
-  static void add_method(const char *name, unsigned int flags, const char *doc, NoArgsMethod method)
+  static void add_method(const char *name, const char *doc, NoArgsMethod method)
   {
-    methods[name] = PMethod<Outer>(name, flags, noargs_callback, doc, method);
+    methods[name] = PMethod<Outer>(name, noargs_callback, doc, method);
   }
 
-  static void add_method(const char *name, unsigned int flags, const char *doc, VarArgsMethod method)
+  static void add_method(const char *name, const char *doc, VarArgsMethod method)
   {
-    methods[name] = PMethod<Outer>(name, flags, varargs_callback, doc, method);
+    methods[name] = PMethod<Outer>(name, varargs_callback, doc, method);
   }
 
-  static void add_method(const char *name, unsigned int flags, const char *doc, KeywordArgsMethod method)
+  static void add_method(const char *name, const char *doc, KeywordArgsMethod method)
   {
-    methods[name] = PMethod<Outer>(name, flags, reinterpret_cast<PyCFunction>(kwargs_callback), doc, method);
+    methods[name] = PMethod<Outer>(name, reinterpret_cast<PyCFunction>(kwargs_callback), doc, method);
+  }
+
+  static void add_method(const char *name, const char *doc, PyCFunction method)
+  {
+    methods[name] = PMethod<Outer>(name, METH_VARARGS | METH_STATIC, method, doc);
+  }
+
+  static void add_method(const char *name, const char *doc, PyCFunctionWithKeywords method)
+  {
+    methods[name] = PMethod<Outer>(name, METH_VARARGS | METH_STATIC | METH_KEYWORDS, reinterpret_cast<PyCFunction>(method), doc);
   }
 
   static PyObject *getattro_callback(PyObject *self, PyObject *name)
   {
     return PyObject_GenericGetAttr(self, name);
+  }
+
+  static PyObject *getattr_callback(PyObject *self, char *name)
+  {
+    return PyObject_GetAttrString(self, name);
   }
 
   static PyObject *noargs_callback(PyObject *self)
@@ -145,7 +160,7 @@ public:
   {
     Py_RETURN_NONE;
   }
-
+  
   static void init()
   {
     PyTypeObject& type = type_object();
@@ -156,7 +171,8 @@ public:
     type.tp_new = create;
     type.tp_dealloc = dealloc;
     type.tp_getattro = getattro_callback;
-    type.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
+    type.tp_getattr = getattr_callback;
+    type.tp_flags |= Py_TPFLAGS_DEFAULT;
     if(type.tp_name == NULL)
       type.tp_name = (string(typeid(Outer).name()) + string("Wrap")).c_str();
 
