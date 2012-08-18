@@ -33,9 +33,9 @@
 #include "python/pstring.h"
 #include "python/pythonwrap.h"
 #include "python/pparser.h"
-#include "python/clientwrap.h"
+#include "python/pchannel.h"
+#include "python/pclient.h"
 #include "python/eventwrap.h"
-#include "python/channelwrap.h"
 #include "module.h"
 #include "system.h"
 
@@ -66,6 +66,10 @@ void PythonUtil::init_python()
 
   PParser::init();
   register_type(module, PParser::type_object());
+  PChannel::init();
+  register_type(module, PChannel::type_object());
+  PClient::init();
+  register_type(module, PClient::type_object());
 }
 
 void PythonUtil::register_type(PyObject *module, PyTypeObject& type)
