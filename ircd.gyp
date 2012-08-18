@@ -60,6 +60,7 @@
       'include/python/pctype.h',
       'include/python/pdict.h',
       'include/python/plist.h',
+      'include/python/pmethod.h',
       'include/python/pparser.h',
       'include/python/pobject.h',
       'include/python/psequence.h',

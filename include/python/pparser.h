@@ -27,7 +27,7 @@
 #define PPARSER_H_INC
 
 #include "Python.h"
-#include "PCType.h"
+#include "pctype.h"
 #include "parser.h"
 
 class PParser : public PCType<PParser, Parser>
@@ -36,6 +36,8 @@ public:
   PParser();
   PParser(PTuple, PDict);
   ~PParser();
+
+  PObject register_command(PTuple, PDict);
 
   static void init();
 };

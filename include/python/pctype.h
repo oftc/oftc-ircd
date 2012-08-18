@@ -27,17 +27,29 @@
 #define PCTYPE_H_INC
 
 #include "Python.h"
+#include <map>
+#include <string>
 #include "python/pythonutil.h"
 #include "python/pstring.h"
 #include "python/pdict.h"
 #include "python/ptuple.h"
+#include "python/pmethod.h"
+
+using std::map;
+using std::string;
 
 template<class Outer, class Inner>
 class PCType : public PyObject
 {
+private:
+  static map<string, PMethod<Outer> > methods;
 protected:
   Inner inner;
 public:
+  typedef function<PObject(Outer)> NoArgsMethod;
+  typedef function<PObject(Outer, const PTuple)> VarArgsMethod;
+  typedef function<PObject(Outer, const PTuple, const PDict)> KeywordArgsMethod;
+
   PCType()
   {
     PyObject_Init(this, &type_object());
@@ -49,7 +61,7 @@ public:
 
   virtual ~PCType() = 0 { }
 
-  operator PyObject * ()
+  operator PyObject *()
   {
     return this;
   }
@@ -58,7 +70,7 @@ public:
   {
     stringstream ss;
 
-    ss << "(" << type_object().tp_name << " object at " << std::hex << this << ")";
+    ss << "(" << type_object().tp_name << " object at " << std::hex << std::showbase << this << ")";
     return PString(ss.str());
   }
 
@@ -101,6 +113,39 @@ public:
     obj->ob_type->tp_free(obj);
   }
 
+  static void add_method(const char *name, unsigned int flags, const char *doc, NoArgsMethod method)
+  {
+    methods[name] = PMethod<Outer>(name, flags, noargs_callback, doc, method);
+  }
+
+  static void add_method(const char *name, unsigned int flags, const char *doc, VarArgsMethod method)
+  {
+    methods[name] = PMethod<Outer>(name, flags, varargs_callback, doc, method);
+  }
+
+  static void add_method(const char *name, unsigned int flags, const char *doc, KeywordArgsMethod method)
+  {
+    methods[name] = PMethod<Outer>(name, flags, reinterpret_cast<PyCFunction>(kwargs_callback), doc, method);
+  }
+
+  static PyObject *getattro_callback(PyObject *self, PyObject *name)
+  {
+    return PyObject_GenericGetAttr(self, name);
+  }
+
+  static PyObject *noargs_callback(PyObject *self)
+  {
+  }
+
+  static PyObject *varargs_callback(PyObject *self, PyObject *args)
+  {
+  }
+
+  static PyObject *kwargs_callback(PyObject *self, PyObject *args, PyObject *kwargs)
+  {
+    Py_RETURN_NONE;
+  }
+
   static void init()
   {
     PyTypeObject& type = type_object();
@@ -110,9 +155,29 @@ public:
     type.tp_free = free;
     type.tp_new = create;
     type.tp_dealloc = dealloc;
+    type.tp_getattro = getattro_callback;
     type.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
     if(type.tp_name == NULL)
       type.tp_name = (string(typeid(Outer).name()) + string("Wrap")).c_str();
+
+    int methodlen = methods.size() + 1;
+    PyMethodDef *pymeth = new PyMethodDef[methodlen];
+
+    int i = 0;
+
+    for(auto it = methods.begin(); it != methods.end(); it++, i++)
+    {
+      PyMethodDef *def = &pymeth[i];
+      
+      it->second.fill_pymethod(*def);
+    }
+
+    pymeth[i].ml_doc = NULL;
+    pymeth[i].ml_flags = 0;
+    pymeth[i].ml_meth = NULL;
+    pymeth[i].ml_name = NULL;
+
+    type.tp_methods = pymeth;
 
     if(PyType_Ready(&type) != 0)
     {

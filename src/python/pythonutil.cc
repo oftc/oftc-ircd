@@ -29,8 +29,10 @@
 #include <string>
 #include <iostream>
 #include "python/pythonutil.h"
+#include "python/pobject.h"
+#include "python/pstring.h"
 #include "python/pythonwrap.h"
-#include "python/parserwrap.h"
+#include "python/pparser.h"
 #include "python/clientwrap.h"
 #include "python/eventwrap.h"
 #include "python/channelwrap.h"
@@ -44,7 +46,7 @@ using std::endl;
 
 static PyMethodDef module_methods[] =
 {
-  { "get_motd", PythonUtil::get_motd, 0, "Return the MOTD for the server" },
+  { "get_motd", PythonUtil::get_motd, METH_VARARGS, "Return the MOTD for the server" },
   PY_METHOD_END
 };
 
@@ -62,8 +64,8 @@ void PythonUtil::init_python()
     throw runtime_error("Error initialising python");
   }
 
-  ParserWrap::init("Parser");
-  register_type(module, ParserWrap::type_object());
+  PParser::init();
+  register_type(module, PParser::type_object());
 }
 
 void PythonUtil::register_type(PyObject *module, PyTypeObject& type)
