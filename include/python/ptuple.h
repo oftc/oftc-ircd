@@ -29,7 +29,7 @@
 #include "Python.h"
 #include "PSequence.h"
 
-class PTuple : PSequence<PObject>
+class PTuple : public PSequence<PObject>
 {
 public:
   PTuple(PyObject *);

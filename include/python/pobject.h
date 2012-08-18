@@ -40,9 +40,15 @@ public:
   PObject(int a) { }; // empty constructor only for use in derived classes
   ~PObject();
 
-  virtual operator PyObject* () 
+  virtual operator PyObject *() const
   {
     return object;
+  }
+
+  virtual PObject& operator=(const PObject& right)
+  {
+    object = right;
+    return *this;
   }
 
   virtual PString str();

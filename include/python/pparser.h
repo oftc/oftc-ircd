@@ -29,6 +29,7 @@
 #include "Python.h"
 #include "pctype.h"
 #include "parser.h"
+#include "client.h"
 
 class PParser : public PCType<PParser, Parser>
 {
@@ -39,6 +40,7 @@ public:
 
   static PyObject *register_command(PyObject *, PyObject *, PyObject *);
 
+  static void handle_command(const ClientPtr, const Command&, const ParamList&);
   static void init();
 };
 

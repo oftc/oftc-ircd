@@ -25,6 +25,7 @@
 
 #include "stdinc.h"
 #include "python/pparser.h"
+#include "python/pint.h"
 
 template<> map<string, PMethod<PParser> > PCType<PParser, Parser>::methods;
 
@@ -44,8 +45,33 @@ PyObject *PParser::register_command(PyObject *self, PyObject *arg, PyObject *kwa
 {
   PTuple args(arg);
   PDict kwds(kwargs);
+  PString name;
+  PObject function;
+  PInt min_args, max_args, access, rate_control;
 
-   Py_RETURN_NONE;
+  if(!(name = kwds["name"]))
+    name = args[0];
+
+  if(!(function = kwds["function"]))
+    function = args[1];
+
+  if(!(min_args = kwds["min_args"]))
+    min_args = args[2];
+
+  if(!(max_args = kwds["max_args"]))
+    max_args = args[3];
+
+  if(!(access = kwds["access"]))
+    access = args[4];
+
+  if(!(rate_control = kwds["rate_control"]))
+    rate_control = args[5];
+
+  Command command(handle_command, name, access, min_args, max_args, rate_control, function);
+
+  Parser::get_default().register_command(command);
+
+  Py_RETURN_NONE;
 }
 
 // Statics
@@ -59,4 +85,8 @@ void PParser::init()
   add_method("Register", "register a command in the parser", reinterpret_cast<PyCFunctionWithKeywords>(PParser::register_command));
 
   PCType::init();
+}
+
+void PParser::handle_command(const ClientPtr client, const Command& command, const ParamList& params)
+{
 }

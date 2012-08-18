@@ -26,6 +26,6 @@
 #include "stdinc.h"
 #include "python/ptuple.h"
 
-PTuple::PTuple(PyObject *ptr)
+PTuple::PTuple(PyObject *ptr) : PSequence<PObject>(ptr)
 {
 }

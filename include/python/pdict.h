@@ -29,10 +29,15 @@
 #include "Python.h"
 #include "PSequence.h"
 
-class PDict : PSequence<PObject>
+class PDict : public PSequence<PObject>
 {
 public:
   PDict(PyObject *);
+
+  PObject operator [](const char *key)
+  {
+    return PyDict_GetItemString(object, key);
+  }
 };
 
 #endif

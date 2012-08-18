@@ -37,6 +37,18 @@ public:
   PString(const char *);
   PString(string);
 
+  operator string() const
+  {
+    return string(c_str());
+  }
+
+  operator const char *() const
+  {
+    return c_str();
+  }
+
+  using PObject::operator=;
+
   const char *c_str() const;
 };
 

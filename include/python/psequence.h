@@ -30,9 +30,19 @@
 #include "PObject.h"
 
 template<class T>
-class PSequence : PObject
+class PSequence : public PObject
 {
 public:
+  PSequence() { }
+
+  PSequence(PyObject *ptr) : PObject(ptr)
+  {
+  }
+
+  PObject operator[] (int index)
+  {
+    return PySequence_GetItem(object, index);
+  }
 };
 
 #endif
