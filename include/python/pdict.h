@@ -27,7 +27,7 @@
 #define PDICT_H_INC
 
 #include "Python.h"
-#include "PSequence.h"
+#include "psequence.h"
 
 class PDict : public PSequence<PObject>
 {

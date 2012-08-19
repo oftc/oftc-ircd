@@ -26,7 +26,7 @@
 #include "stdinc.h"
 #include "python/pchannel.h"
 
-template<> map<string, PMethod<PChannel> > PCType<PChannel, Channel>::methods;
+template<> map<string, PMethod<PChannel> > PCType<PChannel, Channel>::methods = {};
 
 PChannel::PChannel()
 {

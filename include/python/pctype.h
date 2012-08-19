@@ -59,7 +59,7 @@ public:
   {
   }
 
-  virtual ~PCType() = 0 { }
+  virtual ~PCType() {}
 
   operator PyObject *()
   {

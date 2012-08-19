@@ -27,7 +27,7 @@
 #define PTUPLE_H_INC
 
 #include "Python.h"
-#include "PSequence.h"
+#include "psequence.h"
 
 class PTuple : public PSequence<PObject>
 {

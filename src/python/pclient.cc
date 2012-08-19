@@ -26,7 +26,7 @@
 #include "stdinc.h"
 #include "python/pclient.h"
 
-template<> map<string, PMethod<PClient> > PCType<PClient, Client>::methods;
+template<> map<string, PMethod<PClient> > PCType<PClient, Client>::methods = {};
 
 PClient::PClient()
 {

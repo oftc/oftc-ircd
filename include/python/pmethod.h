@@ -59,7 +59,7 @@ public:
 
   PMethod(const char *meth_name, PyCFunction meth_callback, const char *meth_doc, typename T::VarArgsMethod arg)
   {
-    varags = arg;
+    varargs = arg;
     name = meth_name;
     flags = METH_VARARGS;
     callback = meth_callback;

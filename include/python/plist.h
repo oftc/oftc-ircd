@@ -27,7 +27,7 @@
 #define PLIST_H_INC
 
 #include "Python.h"
-#include "PSequence.h"
+#include "psequence.h"
 
 class PList : PSequence<PObject>
 {

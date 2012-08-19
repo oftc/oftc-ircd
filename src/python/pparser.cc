@@ -27,7 +27,7 @@
 #include "python/pparser.h"
 #include "python/pint.h"
 
-template<> map<string, PMethod<PParser> > PCType<PParser, Parser>::methods;
+template<> map<string, PMethod<PParser> > PCType<PParser, Parser>::methods = {};
 
 PParser::PParser()
 {

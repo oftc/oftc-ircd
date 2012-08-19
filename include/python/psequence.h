@@ -27,7 +27,7 @@
 #define PSEQUENCE_H_INC
 
 #include "Python.h"
-#include "PObject.h"
+#include "pobject.h"
 
 template<class T>
 class PSequence : public PObject
