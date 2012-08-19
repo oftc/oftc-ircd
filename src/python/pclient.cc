@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include "python/pclient.h"
+#include "stdinc.h"
 
 PClient::PClient()
 {

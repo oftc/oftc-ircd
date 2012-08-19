@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include "python/pchannel.h"
+#include "stdinc.h"
 
 PChannel::PChannel()
 {

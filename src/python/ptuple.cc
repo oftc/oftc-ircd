@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include "python/ptuple.h"
+#include "stdinc.h"
 
 PTuple::PTuple(PyObject *ptr) : PSequence<PObject>(ptr)
 {

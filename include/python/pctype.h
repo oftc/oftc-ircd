@@ -149,10 +149,12 @@ public:
 
   static PyObject *noargs_callback(PyObject *self)
   {
+    Py_RETURN_NONE;
   }
 
   static PyObject *varargs_callback(PyObject *self, PyObject *args)
   {
+    Py_RETURN_NONE;
   }
 
   static PyObject *kwargs_callback(PyObject *self, PyObject *args, PyObject *kwargs)

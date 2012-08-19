@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include "python/pobject.h"
+#include "stdinc.h"
 #include "python/pstring.h"
 
 PObject::PObject()

@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include "python/pdict.h"
+#include "stdinc.h"
 
 PDict::PDict(PyObject *ptr) : PSequence<PObject>(ptr)
 {
