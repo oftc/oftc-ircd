@@ -23,5 +23,5 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include "python/psequence.h"
+#include "stdinc.h"

@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include "python/pparser.h"
+#include "stdinc.h"
 #include "python/pint.h"
 
 template<> map<string, PMethod<PParser> > PCType<PParser, Parser>::methods = {};

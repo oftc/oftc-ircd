@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "stdinc.h"
 #include "python/pint.h"
+#include "stdinc.h"
 
 PInt::PInt()
 {
