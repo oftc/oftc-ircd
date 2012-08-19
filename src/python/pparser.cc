@@ -98,5 +98,8 @@ void PParser::handle_command(const ClientPtr client, const Command& command, con
     args.set_item(i, PString(params[i-1]));
   }
 
-  callback(args);
+  PObject ret = callback(args);
+
+  if(!ret)
+    PythonUtil::log_error();
 }

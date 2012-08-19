@@ -41,6 +41,8 @@ using std::string;
 template<class Outer, class Inner>
 class PCType : public PyObject
 {
+private:
+  bool heap;
 protected:
   Inner inner;
 public:
@@ -49,17 +51,17 @@ public:
   typedef function<PObject(Outer, const PTuple, const PDict)> KeywordArgsMethod;
   typedef map<string, PMethod<Outer> > MethodMap;
 
-  PCType()
+  PCType() : heap(false)
   {
     PyObject_Init(this, &type_object());
   }
 
-  PCType(const Inner ptr) : inner(ptr)
+  PCType(const Inner ptr) : inner(ptr), heap(false)
   {
     PyObject_Init(this, &type_object());
   }
 
-  PCType(PTuple args, PDict kwargs)
+  PCType(PTuple args, PDict kwargs) : heap(true)
   {
   }
 
@@ -82,6 +84,8 @@ public:
     ss << "(" << type_object().tp_name << " object at " << std::hex << std::showbase << this << ")";
     return PString(ss.str());
   }
+
+  inline bool is_heap() const { return heap; }
 
   static PyObject *create(PyTypeObject *type, PyObject *args, PyObject *kwds)
   {
@@ -117,9 +121,10 @@ public:
 
   static void dealloc(PyObject *obj)
   {
-    Outer *ptr = reinterpret_cast<Outer *>(obj);
+    Outer *ptr = static_cast<Outer *>(obj);
     ptr->~Outer();
-    obj->ob_type->tp_free(obj);
+    if(ptr->is_heap())
+      obj->ob_type->tp_free(obj);
   }
 
   static void add_method(const char *name, const char *doc, NoArgsMethod method)
@@ -152,11 +157,6 @@ public:
     return PyObject_GenericGetAttr(self, name);
   }
 
-  static PyObject *getattr_callback(PyObject *self, char *name)
-  {
-    return PyObject_GetAttrString(self, name);
-  }
-
   static PyObject *noargs_callback(PyObject *self)
   {
     Py_RETURN_NONE;
@@ -182,7 +182,6 @@ public:
     type.tp_new = create;
     type.tp_dealloc = dealloc;
     type.tp_getattro = getattro_callback;
-    type.tp_getattr = getattr_callback;
     type.tp_flags |= Py_TPFLAGS_DEFAULT;
     if(type.tp_name == NULL)
       type.tp_name = (string(typeid(Outer).name()) + string("Wrap")).c_str();
