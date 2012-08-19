@@ -29,3 +29,8 @@
 PTuple::PTuple(PyObject *ptr) : PSequence<PObject>(ptr)
 {
 }
+
+PTuple::PTuple(int size)
+{
+  object = PyTuple_New(size);
+}

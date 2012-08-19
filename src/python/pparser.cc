@@ -26,6 +26,7 @@
 #include "python/pparser.h"
 #include "stdinc.h"
 #include "python/pint.h"
+#include "python/pclient.h"
 
 PParser::PParser()
 {
@@ -87,4 +88,15 @@ void PParser::init()
 
 void PParser::handle_command(const ClientPtr client, const Command& command, const ParamList& params)
 {
+  PObject callback(static_cast<PyObject *>(command.get_data()));
+  PTuple args(params.size() + 1);
+
+  args.set_item(0, PClient(client));
+
+  for(unsigned int i = 1; i < params.size() + 1; i++)
+  {
+    args.set_item(i, PString(params[i-1]));
+  }
+
+  callback(args);
 }

@@ -51,6 +51,19 @@ public:
     return *this;
   }
 
+  virtual PObject& operator=(const PyObject *right)
+  {
+    return *this;
+  }
+
+  virtual PObject operator()(const PObject& args)
+  {
+    if(!PyCallable_Check(object))
+      Py_RETURN_NONE;
+
+    return PyObject_CallObject(object, args);
+  }
+
   virtual PString str();
 };
 

@@ -27,12 +27,26 @@
 #define PTUPLE_H_INC
 
 #include "Python.h"
+#include "stdinc.h"
 #include "psequence.h"
 
 class PTuple : public PSequence<PObject>
 {
 public:
+  PTuple(int);
   PTuple(PyObject *);
+
+  using PSequence<PObject>::operator=;
+
+  virtual void set_item(int index, const PObject& item)
+  {
+    if(PyTuple_SetItem(object, index, item) == -1)
+    {
+      PythonUtil::log_error();
+      throw runtime_error("Error setting tuple item");
+    }
+  }
+
 };
 
 #endif

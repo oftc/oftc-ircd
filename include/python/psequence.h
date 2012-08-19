@@ -27,7 +27,8 @@
 #define PSEQUENCE_H_INC
 
 #include "Python.h"
-#include "pobject.h"
+#include "python/pobject.h"
+#include "python/pythonutil.h"
 
 template<class T>
 class PSequence : public PObject
@@ -39,9 +40,20 @@ public:
   {
   }
 
-  PObject operator[] (int index)
+  using PObject::operator=;
+
+  const T operator[] (int index) const
   {
     return PySequence_GetItem(object, index);
+  }
+
+  virtual void set_item(int index, T item)
+  {
+    if(PySequence_SetItem(object, index, item) == -1)
+    {
+      PythonUtil::log_error();
+      throw runtime_error("Error setting sequence item");
+    }
   }
 };
 

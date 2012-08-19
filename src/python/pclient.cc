@@ -30,6 +30,10 @@ PClient::PClient()
 {
 }
 
+PClient::PClient(ClientPtr ptr) : PCType(ptr)
+{
+}
+
 PClient::PClient(PTuple args, PDict kwargs)
 {
 }

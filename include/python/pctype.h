@@ -54,6 +54,11 @@ public:
     PyObject_Init(this, &type_object());
   }
 
+  PCType(const Inner ptr) : inner(ptr)
+  {
+    PyObject_Init(this, &type_object());
+  }
+
   PCType(PTuple args, PDict kwargs)
   {
   }
@@ -63,6 +68,11 @@ public:
   operator PyObject *()
   {
     return this;
+  }
+
+  operator PObject()
+  {
+    return PObject(this);
   }
 
   virtual PString str()

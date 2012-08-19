@@ -30,11 +30,12 @@
 #include "pctype.h"
 #include "client.h"
 
-class PClient : public PCType<PClient, Client>
+class PClient : public PCType<PClient, ClientPtr>
 {
 public:
   PClient();
   PClient(PTuple, PDict);
+  PClient(ClientPtr);
   ~PClient();
 
   static void init();
