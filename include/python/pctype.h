@@ -41,14 +41,13 @@ using std::string;
 template<class Outer, class Inner>
 class PCType : public PyObject
 {
-private:
-  static map<string, PMethod<Outer> > methods;
 protected:
   Inner inner;
 public:
   typedef function<PObject(Outer)> NoArgsMethod;
   typedef function<PObject(Outer, const PTuple)> VarArgsMethod;
   typedef function<PObject(Outer, const PTuple, const PDict)> KeywordArgsMethod;
+  typedef map<string, PMethod<Outer> > MethodMap;
 
   PCType()
   {
@@ -115,27 +114,27 @@ public:
 
   static void add_method(const char *name, const char *doc, NoArgsMethod method)
   {
-    methods[name] = PMethod<Outer>(name, noargs_callback, doc, method);
+    methods()[name] = PMethod<Outer>(name, noargs_callback, doc, method);
   }
 
   static void add_method(const char *name, const char *doc, VarArgsMethod method)
   {
-    methods[name] = PMethod<Outer>(name, varargs_callback, doc, method);
+    methods()[name] = PMethod<Outer>(name, varargs_callback, doc, method);
   }
 
   static void add_method(const char *name, const char *doc, KeywordArgsMethod method)
   {
-    methods[name] = PMethod<Outer>(name, reinterpret_cast<PyCFunction>(kwargs_callback), doc, method);
+    methods()[name] = PMethod<Outer>(name, reinterpret_cast<PyCFunction>(kwargs_callback), doc, method);
   }
 
   static void add_method(const char *name, const char *doc, PyCFunction method)
   {
-    methods[name] = PMethod<Outer>(name, METH_VARARGS | METH_STATIC, method, doc);
+    methods()[name] = PMethod<Outer>(name, METH_VARARGS | METH_STATIC, method, doc);
   }
 
   static void add_method(const char *name, const char *doc, PyCFunctionWithKeywords method)
   {
-    methods[name] = PMethod<Outer>(name, METH_VARARGS | METH_STATIC | METH_KEYWORDS, reinterpret_cast<PyCFunction>(method), doc);
+    methods()[name] = PMethod<Outer>(name, METH_VARARGS | METH_STATIC | METH_KEYWORDS, reinterpret_cast<PyCFunction>(method), doc);
   }
 
   static PyObject *getattro_callback(PyObject *self, PyObject *name)
@@ -176,12 +175,12 @@ public:
     if(type.tp_name == NULL)
       type.tp_name = (string(typeid(Outer).name()) + string("Wrap")).c_str();
 
-    int methodlen = methods.size() + 1;
+    int methodlen = methods().size() + 1;
     PyMethodDef *pymeth = new PyMethodDef[methodlen];
 
     int i = 0;
 
-    for(auto it = methods.begin(); it != methods.end(); it++, i++)
+    for(auto it = methods().begin(); it != methods().end(); it++, i++)
     {
       PyMethodDef *def = &pymeth[i];
       
@@ -207,6 +206,13 @@ public:
     static PyTypeObject type;
   
     return type;
+  }
+
+  static MethodMap& methods()
+  {
+    static MethodMap method_map;
+
+    return method_map;
   }
 };
 
