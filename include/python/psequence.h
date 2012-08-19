@@ -27,6 +27,7 @@
 #define PSEQUENCE_H_INC
 
 #include "Python.h"
+#include "stdinc.h"
 #include "python/pobject.h"
 #include "python/pythonutil.h"
 
@@ -47,7 +48,7 @@ public:
     return PySequence_GetItem(object, index);
   }
 
-  virtual void set_item(int index, T item)
+  virtual void set_item(int index, const T& item)
   {
     if(PySequence_SetItem(object, index, item) == -1)
     {

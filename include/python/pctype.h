@@ -56,7 +56,7 @@ public:
     PyObject_Init(this, &type_object());
   }
 
-  PCType(const Inner ptr) : inner(ptr), heap(false)
+  PCType(const Inner ptr) : heap(false), inner(ptr)
   {
     PyObject_Init(this, &type_object());
   }
