@@ -46,9 +46,9 @@ private:
 protected:
   Inner inner;
 public:
-  typedef function<PObject(Outer)> NoArgsMethod;
-  typedef function<PObject(Outer, const PTuple)> VarArgsMethod;
-  typedef function<PObject(Outer, const PTuple, const PDict)> KeywordArgsMethod;
+  typedef function<PObject(Outer *)> NoArgsMethod;
+  typedef function<PObject(Outer *, const PTuple)> VarArgsMethod;
+  typedef function<PObject(Outer *, const PTuple, const PDict)> KeywordArgsMethod;
   typedef map<string, PMethod<Outer> > MethodMap;
 
   PCType() : heap(false)
@@ -56,9 +56,13 @@ public:
     PyObject_Init(this, &type_object());
   }
 
-  PCType(const Inner ptr) : heap(false), inner(ptr)
+  PCType(const Inner ptr) : heap(true), inner(ptr)
   {
     PyObject_Init(this, &type_object());
+  }
+
+  PCType(PObject ptr) : heap(false)
+  {
   }
 
   PCType(PTuple args, PDict kwargs) : heap(true)
@@ -83,6 +87,21 @@ public:
 
     ss << "(" << type_object().tp_name << " object at " << std::hex << std::showbase << this << ")";
     return PString(ss.str());
+  }
+
+  virtual PObject getattro(PString name)
+  {
+    auto it = methods().find(name);
+
+    if(it == methods().end())
+      return PyObject_GenericGetAttr(this, name);
+
+    PTuple args(2);
+
+    args.set_item(0, this);
+    args.set_item(1, PyCObject_FromVoidPtr(it->second, NULL));
+
+    return PyCFunction_NewEx(it->second, args, NULL);
   }
 
   inline bool is_heap() const { return heap; }
@@ -129,7 +148,7 @@ public:
 
   static void add_method(const char *name, const char *doc, NoArgsMethod method)
   {
-    methods()[name] = PMethod<Outer>(name, noargs_callback, doc, method);
+    methods()[name] = PMethod<Outer>(name, reinterpret_cast<PyCFunction>(noargs_callback), doc, method);
   }
 
   static void add_method(const char *name, const char *doc, VarArgsMethod method)
@@ -154,12 +173,19 @@ public:
 
   static PyObject *getattro_callback(PyObject *self, PyObject *name)
   {
-    return PyObject_GenericGetAttr(self, name);
+    PCType<Outer, Inner> *base = static_cast<PCType<Outer, Inner> *>(self);
+
+    return base->getattro(name);
   }
 
-  static PyObject *noargs_callback(PyObject *self)
+  static PyObject *noargs_callback(PyObject *arg)
   {
-    Py_RETURN_NONE;
+    PTuple args(arg);
+
+    PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(args[1]));
+    PyObject *tmp = args[0];
+    Outer *self = static_cast<Outer *>(tmp);
+    return method(self);
   }
 
   static PyObject *varargs_callback(PyObject *self, PyObject *args)
@@ -195,7 +221,7 @@ public:
     {
       PyMethodDef *def = &pymeth[i];
       
-      it->second.fill_pymethod(*def);
+      *def = it->second;
     }
 
     pymeth[i].ml_doc = NULL;

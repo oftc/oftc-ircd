@@ -32,17 +32,12 @@
 #include "python/pdict.h"
 
 template<class T>
-class PMethod
+class PMethod : public PyMethodDef
 {
 private:
   typename T::NoArgsMethod noargs;
   typename T::VarArgsMethod varargs;
   typename T::KeywordArgsMethod kwargs;
-
-  const char *name;
-  const char *doc;
-  unsigned int flags;
-  PyCFunction callback;
 public:
   PMethod()
   {
@@ -51,44 +46,46 @@ public:
   PMethod(const char *meth_name, PyCFunction meth_callback, const char *meth_doc, typename T::NoArgsMethod arg)
   {
     noargs = arg;
-    name = meth_name;
-    flags = METH_VARARGS;
-    callback = meth_callback;
-    doc = meth_doc;
+    ml_doc = meth_doc;
+    ml_flags = METH_NOARGS;
+    ml_meth = meth_callback;
+    ml_name = meth_name;
   }
 
   PMethod(const char *meth_name, PyCFunction meth_callback, const char *meth_doc, typename T::VarArgsMethod arg)
   {
     varargs = arg;
-    name = meth_name;
-    flags = METH_VARARGS;
-    callback = meth_callback;
-    doc = meth_doc;
+    ml_name = meth_name;
+    ml_flags = METH_VARARGS;
+    ml_meth = meth_callback;
+    ml_doc = meth_doc;
   }
 
   PMethod(const char *meth_name, PyCFunction meth_callback, const char *meth_doc, typename T::KeywordArgsMethod arg)
   {
     kwargs = arg;
-    name = meth_name;
-    flags = METH_KEYWORDS| METH_VARARGS;
-    callback = meth_callback;
-    doc = meth_doc;
+    ml_name = meth_name;
+    ml_flags = METH_KEYWORDS| METH_VARARGS;
+    ml_meth = meth_callback;
+    ml_doc = meth_doc;
   }
 
   PMethod(const char *meth_name, unsigned int meth_flags, PyCFunction meth_callback, const char *meth_doc)
   {
-    name = meth_name;
-    flags = meth_flags;
-    callback = meth_callback;
-    doc = meth_doc;
+    ml_name = meth_name;
+    ml_flags = meth_flags;
+    ml_meth = meth_callback;
+    ml_doc = meth_doc;
   }
 
-  void fill_pymethod(PyMethodDef& def)
+  PObject operator ()(T* self)
   {
-    def.ml_name = name;
-    def.ml_doc = doc;
-    def.ml_flags = flags;
-    def.ml_meth = callback;
+    return noargs(self);
+  }
+
+  operator PyMethodDef *()
+  {
+    return this;
   }
 };
 
