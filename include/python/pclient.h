@@ -44,7 +44,7 @@ public:
   static PyObject *find_by_name(PyObject *self, PyObject *varargs) 
   { 
     PTuple args(varargs);
-    PString name = args[0];
+    PString name = static_cast<PString>(args[0]);
     ClientPtr ptr = Client::find_by_name(name.c_str());
 
     if(ptr)
