@@ -23,38 +23,25 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "python/pclient.h"
-#include "stdinc.h"
-#include "python/pevent.h"
+#ifndef PEVENT_H_INC
+#define PEVENT_H_INC
 
-PClient::PClient()
+#include "Python.h"
+#include "pctype.h"
+#include "event.h"
+
+struct Unused
 {
-}
+};
 
-PClient::PClient(ClientPtr ptr) : PCType(ptr)
+class PEvent : public PCType<PEvent, Unused>
 {
-}
+public:
+  PEvent();
+  PEvent(PTuple, PDict);
+  ~PEvent();
 
-PClient::PClient(PTuple args, PDict kwargs)
-{
-}
+  static void init();
+};
 
-PClient::~PClient()
-{
-}
-
-// Statics
-
-void PClient::init()
-{
-  PyTypeObject& type = type_object();
-
-  add_method("is_registered", "Check is the client is registered or not", NoArgsMethod(&PClient::is_registered));
-  add_method("find_by_name", "Search the client list for a named client", &find_by_name);
-
-  type.tp_name = "Client";
-
-  PCType::init();
-
-  PyDict_SetItemString(type.tp_dict, "nick_changing", new PEvent());
-}
+#endif

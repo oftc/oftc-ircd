@@ -31,11 +31,10 @@
 #include "python/pythonutil.h"
 #include "python/pobject.h"
 #include "python/pstring.h"
-#include "python/pythonwrap.h"
 #include "python/pparser.h"
 #include "python/pchannel.h"
 #include "python/pclient.h"
-#include "python/eventwrap.h"
+#include "python/pevent.h"
 #include "module.h"
 #include "system.h"
 
@@ -47,7 +46,7 @@ using std::endl;
 static PyMethodDef module_methods[] =
 {
   { "get_motd", PythonUtil::get_motd, METH_VARARGS, "Return the MOTD for the server" },
-  PY_METHOD_END
+  { NULL, NULL, 0, NULL }
 };
 
 
@@ -70,6 +69,8 @@ void PythonUtil::init_python()
   register_type(module, PChannel::type_object());
   PClient::init();
   register_type(module, PClient::type_object());
+  PEvent::init();
+  register_type(module, PEvent::type_object());
 }
 
 void PythonUtil::register_type(PyObject *module, PyTypeObject& type)
