@@ -63,20 +63,10 @@ void PythonUtil::init_python()
     throw runtime_error("Error initialising python");
   }
 
-  PParser::init();
-  register_type(module, PParser::type_object());
-  PChannel::init();
-  register_type(module, PChannel::type_object());
-  PClient::init();
-  register_type(module, PClient::type_object());
-  PEvent::init();
-  register_type(module, PEvent::type_object());
-}
-
-void PythonUtil::register_type(PyObject *module, PyTypeObject& type)
-{
-  Py_INCREF(&type);
-  PyModule_AddObject(module, type.tp_name, reinterpret_cast<PyObject *>(&type));
+  PParser::init(module);
+  PChannel::init(module);
+  PClient::init(module);
+  PEvent::init(module);
 }
   
 void PythonUtil::log_error()

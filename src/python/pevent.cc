@@ -40,11 +40,11 @@ PEvent::~PEvent()
 
 // Statics
 
-void PEvent::init()
+void PEvent::init(const PObject& module)
 {
   PyTypeObject& type = type_object();
 
   type.tp_name = "Event";
 
-  PCType::init();
+  PCType::init(module);
 }

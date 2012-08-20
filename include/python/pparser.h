@@ -41,7 +41,7 @@ public:
   static PyObject *register_command(PyObject *, PyObject *, PyObject *);
 
   static void handle_command(const ClientPtr, const Command&, const ParamList&);
-  static void init();
+  static void init(const PObject&);
 };
 
 #endif

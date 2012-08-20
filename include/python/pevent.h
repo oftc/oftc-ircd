@@ -41,7 +41,7 @@ public:
   PEvent(PTuple, PDict);
   ~PEvent();
 
-  static void init();
+  static void init(const PObject&);
 };
 
 #endif

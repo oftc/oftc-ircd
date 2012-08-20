@@ -53,7 +53,7 @@ public:
       Py_RETURN_NONE;
   }
 
-  static void init();
+  static void init(const PObject&);
 };
 
 #endif

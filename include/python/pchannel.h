@@ -37,7 +37,7 @@ public:
   PChannel(PTuple, PDict);
   ~PChannel();
 
-  static void init();
+  static void init(const PObject&);
 };
 
 #endif

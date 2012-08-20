@@ -75,7 +75,7 @@ PyObject *PParser::register_command(PyObject *self, PyObject *arg, PyObject *kwa
 
 // Statics
 
-void PParser::init()
+void PParser::init(const PObject& module)
 {
   PyTypeObject& type = type_object();
 
@@ -83,7 +83,7 @@ void PParser::init()
 
   add_method("Register", "register a command in the parser", reinterpret_cast<PyCFunctionWithKeywords>(PParser::register_command));
 
-  PCType::init();
+  PCType::init(module);
 }
 
 void PParser::handle_command(const ClientPtr client, const Command& command, const ParamList& params)

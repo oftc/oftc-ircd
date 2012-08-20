@@ -198,7 +198,7 @@ public:
     Py_RETURN_NONE;
   }
   
-  static void init()
+  static void init(const PObject& module)
   {
     PyTypeObject& type = type_object();
 
@@ -236,6 +236,8 @@ public:
       PythonUtil::log_error();
       return;
     }
+
+    PyModule_AddObject(module, type.tp_name, reinterpret_cast<PyObject *>(&type));
   }
 
   static PyTypeObject& type_object()

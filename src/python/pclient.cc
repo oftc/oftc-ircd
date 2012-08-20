@@ -45,7 +45,7 @@ PClient::~PClient()
 
 // Statics
 
-void PClient::init()
+void PClient::init(const PObject& module)
 {
   PyTypeObject& type = type_object();
 
@@ -54,7 +54,7 @@ void PClient::init()
 
   type.tp_name = "Client";
 
-  PCType::init();
+  PCType::init(module);
 
   PyDict_SetItemString(type.tp_dict, "nick_changing", new PEvent());
 }

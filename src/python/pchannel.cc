@@ -40,11 +40,11 @@ PChannel::~PChannel()
 
 // Statics
 
-void PChannel::init()
+void PChannel::init(const PObject& module)
 {
   PyTypeObject& type = type_object();
 
   type.tp_name = "Channel";
 
-  PCType::init();
+  PCType::init(module);
 }
