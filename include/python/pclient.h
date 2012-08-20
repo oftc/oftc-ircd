@@ -27,7 +27,8 @@
 #define PCLIENT_H_INC
 
 #include "Python.h"
-#include "pctype.h"
+#include "python/pctype.h"
+#include "python/pbool.h"
 #include "client.h"
 
 class PClient : public PCType<PClient, ClientPtr>
@@ -37,6 +38,20 @@ public:
   PClient(PTuple, PDict);
   PClient(ClientPtr);
   ~PClient();
+
+  inline PBool is_registered() const { return inner->is_registered(); }
+
+  static PyObject *find_by_name(PyObject *self, PyObject *varargs) 
+  { 
+    PTuple args(varargs);
+    PString name = args[0];
+    ClientPtr ptr = Client::find_by_name(name.c_str());
+
+    if(ptr)
+      return new PClient(ptr);
+    else
+      Py_RETURN_NONE;
+  }
 
   static void init();
 };

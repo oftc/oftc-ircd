@@ -48,6 +48,9 @@ void PClient::init()
 {
   PyTypeObject& type = type_object();
 
+  add_method("is_registered", "Check is the client is registered or not", NoArgsMethod(&is_registered));
+  add_method("find_by_name", "Search the client list for a named client", &find_by_name);
+
   type.tp_name = "Client";
 
   PCType::init();
