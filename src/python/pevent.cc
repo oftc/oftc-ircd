@@ -25,26 +25,3 @@
 
 #include "python/pevent.h"
 #include "stdinc.h"
-
-PEvent::PEvent()
-{
-}
-
-PEvent::PEvent(PTuple args, PDict kwargs)
-{
-}
-
-PEvent::~PEvent()
-{
-}
-
-// Statics
-
-void PEvent::init(const PObject& module)
-{
-  PyTypeObject& type = type_object();
-
-  type.tp_name = "Event";
-
-  PCType::init(module);
-}

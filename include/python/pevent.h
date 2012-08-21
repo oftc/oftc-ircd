@@ -30,18 +30,86 @@
 #include "pctype.h"
 #include "event.h"
 
-struct Unused
-{
-};
+class PEventBase;
 
-class PEvent : public PCType<PEvent, Unused>
+typedef function<PObject(PEventBase *, PTuple args)> EventCallback;
+
+class PEventBase : public PCType<PEventBase, EventCallback>
 {
 public:
-  PEvent();
-  PEvent(PTuple, PDict);
-  ~PEvent();
+  PEventBase()
+  {
+  }
 
-  static void init(const PObject&);
+  PEventBase(PTuple, PDict)
+  {
+  }
+
+  PEventBase(EventCallback event)
+  {
+    inner = event;
+  }
+
+  ~PEventBase()
+  {
+  }
+
+  virtual PObject fire(PTuple args)
+  {
+    return inner(this, args);
+  }
+
+  virtual PObject client_string_callback(PTuple args)
+  {
+    // This shouldn't get called, we don't want to create events from python
+    Py_RETURN_NONE;
+  }
+
+  static void init(const PObject& module)
+  {
+    PyTypeObject& type = type_object();
+
+    type.tp_name = "Event";
+
+    add_method("fire", "Fire the event", VarArgsMethod(&fire));
+
+    PCType::init(module);
+  }
+};
+
+template<class T1=NullArg, class T2=NullArg, class T3=NullArg, class T4=NullArg, class T5=NullArg>
+class PEvent : public PEventBase
+{
+private:
+  Event<T1, T2, T3, T4, T5> inner_event;
+public:
+  PEvent()
+  {
+  }
+
+  PEvent(PTuple, PDict)
+  {
+  }
+
+  PEvent(Event<T1, T2, T3, T4, T5> event, EventCallback callback)
+  {
+    inner_event = event;
+    inner = callback;
+  }
+
+  ~PEvent()
+  {
+  }
+
+  PObject client_string_callback(PTuple args)
+  {
+    PyObject *obj = args[0];
+    PClient *client = static_cast<PClient *>(obj);
+    PString str = args[1];
+    PBool ret(inner_event(*client, str.c_str()));
+
+    return ret;
+  }
 };
 
 #endif

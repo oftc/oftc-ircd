@@ -66,7 +66,7 @@ void PythonUtil::init_python()
   PParser::init(module);
   PChannel::init(module);
   PClient::init(module);
-  PEvent::init(module);
+  PEventBase::init(module);
 }
   
 void PythonUtil::log_error()

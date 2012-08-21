@@ -49,12 +49,12 @@ void PClient::init(const PObject& module)
 {
   PyTypeObject& type = type_object();
 
-  add_method("is_registered", "Check is the client is registered or not", NoArgsMethod(&PClient::is_registered));
+  add_method("is_registered", "Check if the client is registered or not", NoArgsMethod(&PClient::is_registered));
   add_method("find_by_name", "Search the client list for a named client", &find_by_name);
 
   type.tp_name = "Client";
 
   PCType::init(module);
 
-  PyDict_SetItemString(type.tp_dict, "nick_changing", new PEvent());
+  PyDict_SetItemString(type.tp_dict, "nick_changing", new PEvent<ClientPtr, irc_string>(Client::nick_changing, &PEventBase::client_string_callback));
 }

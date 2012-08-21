@@ -56,7 +56,7 @@ public:
     PyObject_Init(this, &type_object());
   }
 
-  PCType(const Inner ptr) : heap(true), inner(ptr)
+  PCType(const Inner ptr) : heap(false), inner(ptr)
   {
     PyObject_Init(this, &type_object());
   }
@@ -74,6 +74,11 @@ public:
   operator PyObject *()
   {
     return this;
+  }
+
+  operator Inner()
+  {
+    return inner;
   }
 
   operator PObject()
@@ -178,19 +183,26 @@ public:
     return base->getattro(name);
   }
 
-  static PyObject *noargs_callback(PyObject *arg)
+  static PyObject *noargs_callback(PyObject *self)
   {
-    PTuple args(arg);
+    PTuple data(self);
 
-    PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(args[1]));
-    PyObject *tmp = args[0];
-    Outer *self = static_cast<Outer *>(tmp);
-    return method(self);
+    PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(data[1]));
+    PyObject *tmp = data[0];
+    Outer *ptr = static_cast<Outer *>(tmp);
+
+    return method(ptr);
   }
 
   static PyObject *varargs_callback(PyObject *self, PyObject *args)
   {
-    Py_RETURN_NONE;
+    PTuple data(self);
+
+    PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(data[1]));
+    PyObject *tmp = data[0];
+    Outer *ptr = static_cast<Outer *>(tmp);
+
+    return method(ptr, args);
   }
 
   static PyObject *kwargs_callback(PyObject *self, PyObject *args, PyObject *kwargs)

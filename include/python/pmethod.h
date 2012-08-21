@@ -83,6 +83,11 @@ public:
     return noargs(self);
   }
 
+  PObject operator ()(T* self, PTuple args)
+  {
+    return varargs(self, args);
+  }
+
   operator PyMethodDef *()
   {
     return this;
