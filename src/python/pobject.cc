@@ -38,6 +38,12 @@ PObject::PObject(PyObject *ptr)
   Py_XINCREF(object);
 }
 
+PObject::PObject(const PObject& copy)
+{
+  object = copy.object;
+  Py_XINCREF(object);
+}
+
 PObject::~PObject()
 {
   Py_XDECREF(object);

@@ -38,6 +38,7 @@ public:
   PObject();
   PObject(PyObject *);
   PObject(int a) { }; // empty constructor only for use in derived classes
+  PObject(const PObject &);
   ~PObject();
 
   virtual operator PyObject *() const
