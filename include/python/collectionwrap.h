@@ -63,7 +63,8 @@ public:
     type.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
     type.tp_as_sequence = &seq_methods;
     type.tp_flags |= Py_TPFLAGS_HAVE_ITER;
-    PythonWrap<CollectionWrap<T, W>, T>::init(module, (string("Collection ") + typeid(T).name()).c_str());
+    type.tp_name = (string("Collection ") + typeid(T).name()).c_str();
+    PythonWrap::init(module);
   }
 
   static CollectionWrap<T, W> *iter(CollectionWrap<T, W> *self)

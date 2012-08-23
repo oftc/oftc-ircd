@@ -99,7 +99,8 @@ void EventWrap::init(PyObject *module)
 
   type.tp_methods = event_methods;
   type.tp_getset = event_getsetters;
-  PythonWrap<EventWrap, EventCallback>::init(module, "Event");
+  type.tp_name = "Event";
+  PythonWrap::init(module);
 }
 
 EventWrap *EventWrap::register_event(EventCallback callback)

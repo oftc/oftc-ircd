@@ -116,7 +116,8 @@ void ClientWrap::init(PyObject *module)
   type.tp_getset = client_getsetters;
   type.tp_compare = reinterpret_cast<cmpfunc>(compare);
   type.tp_str = reinterpret_cast<reprfunc>(str);
-  PythonWrap<ClientWrap, ClientPtr>::init(module, "Client");
+  type.tp_name = "Client";
+  PythonWrap::init(module);
 
   ClientPtr ptr = Server::get_me();
   me = ClientWrap::wrap(&ptr);

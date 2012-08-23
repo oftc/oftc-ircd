@@ -75,7 +75,8 @@ void MembershipWrap::init(PyObject *module)
 
   type.tp_methods = membership_methods;
   type.tp_getset = membership_getsetters;
-  PythonWrap<MembershipWrap, Membership>::init(module, "Membership");
+  type.tp_name = "Membership";
+  PythonWrap::init(module);
 }
 
 PyObject *MembershipWrap::get_wrap(MembershipWrap *self, void *closure)

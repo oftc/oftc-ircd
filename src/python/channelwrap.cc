@@ -116,7 +116,8 @@ void ChannelWrap::init(PyObject *module)
   type.tp_getset = channel_getsetters;
   type.tp_compare = reinterpret_cast<cmpfunc>(compare);
   type.tp_str = reinterpret_cast<reprfunc>(str);
-  PythonWrap<ChannelWrap, ChannelPtr>::init(module, "Channel");
+  type.tp_name = "Channel";
+  PythonWrap::init(module);
 
   joining = EventWrap::register_event(fire_joining);
   joined = EventWrap::register_event(fire_joined);

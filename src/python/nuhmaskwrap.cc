@@ -68,7 +68,8 @@ void NuhMaskWrap::init(PyObject *module)
 
   type.tp_methods = mask_methods;
   type.tp_getset = mask_getsetters;
-  PythonWrap<NuhMaskWrap, NuhMask>::init(module, "Channel");
+  type.tp_name = "Channel";
+  PythonWrap::init(module);
 }
 
 PyObject *NuhMaskWrap::get_wrap(NuhMaskWrap *self, void *closure)

@@ -36,10 +36,10 @@
   reinterpret_cast<setter>(type::set_wrap), const_cast<char *>(doc), reinterpret_cast<void *>(flags) }
 #define PY_GETSET_END { NULL, NULL, NULL, NULL, NULL }
 
-template <class Wrap, class Wrapped> class PythonWrap : public PyObject
+template <class Outer, class Inner> class PythonWrap : public PyObject
 {
 protected:
-  Wrapped wrapped;
+  Inner wrapped;
 public:
   PythonWrap()
   {
@@ -48,7 +48,7 @@ public:
   PythonWrap(PyObject *args, PyObject *kwds)
   {
     PyObject *obj;
-    Wrapped ptr;
+    Inner ptr;
 
     if(PyTuple_Size(args) == 0)
       return;
@@ -59,13 +59,13 @@ public:
       return;
     }
 
-    ptr = *(reinterpret_cast<Wrapped *>(PyCObject_AsVoidPtr(obj)));
+    ptr = *(reinterpret_cast<Inner *>(PyCObject_AsVoidPtr(obj)));
     wrapped = ptr;
 
     Logging::trace << "Created PythonWrap: " << this << Logging::endl;
   }
 
-  const Wrapped& get_wrapped() const
+  const Inner& get_wrapped() const
   {
     return wrapped;
   }
@@ -77,7 +77,7 @@ public:
     return type;
   }
 
-  static void init(PyObject *module, const char *name)
+  static void init(PyObject *module)
   {
     PyTypeObject& type = type_object();
 
@@ -86,8 +86,9 @@ public:
     type.tp_free = free;
     type.tp_new = create;
     type.tp_dealloc = dealloc;
-    type.tp_basicsize = sizeof(Wrap);
-    type.tp_name = name;
+    type.tp_basicsize = sizeof(Outer);
+    if(type.tp_name == NULL)
+      type.tp_name = typeid(Inner).name();
     type.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
 
     if(PyType_Ready(&type) < 0)
@@ -115,9 +116,9 @@ public:
     return obj;
   }
 
-  static Wrap *call(PyObject *args)
+  static Outer *call(PyObject *args)
   {
-    return reinterpret_cast<Wrap *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
+    return reinterpret_cast<Outer *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
   }
 
   static bool check(PyObject *arg)
@@ -128,15 +129,15 @@ public:
   static PyObject *create(PyTypeObject *type, PyObject *args, PyObject *kwds)
   {
     PyObject *ptr = type->tp_alloc(type, 0);
-    Wrap *obj = new(ptr) Wrap(args, kwds);
+    Outer *obj = new(ptr) Outer(args, kwds);
 
     return reinterpret_cast<PyObject*>(obj);
   }
 
   static void dealloc(PyObject *obj)
   {
-    Wrap *ptr = reinterpret_cast<Wrap *>(obj);
-    ptr->~Wrap();
+    Outer *ptr = reinterpret_cast<Outer *>(obj);
+    ptr->~Outer();
     obj->ob_type->tp_free(obj);
   }
 
@@ -176,10 +177,10 @@ public:
     return success;
   }
 
-  static Wrap *wrap(void *arg)
+  static Outer *wrap(void *arg)
   {
     PyObject *obj, *args;
-    Wrap *wrapped;
+    Outer *wrapped;
 
     obj = PyCObject_FromVoidPtr(arg, NULL);
 

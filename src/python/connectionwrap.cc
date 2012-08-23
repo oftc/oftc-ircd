@@ -60,7 +60,8 @@ void ConnectionWrap::init(PyObject *module)
 
   type.tp_methods = connection_methods;
   type.tp_getset = connection_getsetters;
-  PythonWrap<ConnectionWrap, ConnectionPtr>::init(module, "Connection");
+  type.tp_name = "Connection";
+  PythonWrap::init(module);
 
   ip_connecting = EventWrap::register_event(fire_ip_connecting);
   dns_finished = EventWrap::register_event(fire_dns_finished);
