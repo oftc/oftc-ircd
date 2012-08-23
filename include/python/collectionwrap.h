@@ -44,6 +44,8 @@ public:
     return reinterpret_cast<CollectionWrap<T, W> *>(self)->length();
   }
 
+  using PythonWrap<CollectionWrap<T, W>, T>::type_object;
+
   static void init(PyObject *module)
   {
     static PySequenceMethods seq_methods = 
@@ -64,7 +66,7 @@ public:
     type.tp_as_sequence = &seq_methods;
     type.tp_flags |= Py_TPFLAGS_HAVE_ITER;
     type.tp_name = (string("Collection ") + typeid(T).name()).c_str();
-    PythonWrap::init(module);
+    PythonWrap<CollectionWrap<T, W>, T>::init(module);
   }
 
   static CollectionWrap<T, W> *iter(CollectionWrap<T, W> *self)
