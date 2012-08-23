@@ -177,7 +177,7 @@ public:
     return success;
   }
 
-  static Outer *wrap(void *arg)
+  static Outer *wrap(Inner *arg)
   {
     PyObject *obj, *args;
     Outer *wrapped;
