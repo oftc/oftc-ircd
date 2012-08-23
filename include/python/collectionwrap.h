@@ -57,10 +57,12 @@ public:
       PY_METHOD_END
     };
 
-    CollectionWrap<T, W>::type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
-    CollectionWrap<T, W>::type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
-    CollectionWrap<T, W>::type_object.tp_as_sequence = &seq_methods;
-    CollectionWrap<T, W>::type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
+    PyTypeObject& type = type_object();
+
+    type.tp_iter = reinterpret_cast<getiterfunc>(iter);
+    type.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
+    type.tp_as_sequence = &seq_methods;
+    type.tp_flags |= Py_TPFLAGS_HAVE_ITER;
     PythonWrap<CollectionWrap<T, W>, T>::init(module, (string("Collection ") + typeid(T).name()).c_str());
   }
 

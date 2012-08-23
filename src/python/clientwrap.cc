@@ -35,8 +35,6 @@
 #include "client.h"
 #include "server.h"
 
-template<> PyTypeObject PythonWrap<ClientWrap, ClientPtr>::type_object = {};
-
 ClientWrap *ClientWrap::me;
 PyObject *ClientWrap::connected;
 PyObject *ClientWrap::registering;
@@ -112,10 +110,12 @@ ClientWrap::~ClientWrap()
 
 void ClientWrap::init(PyObject *module)
 {
-  PythonWrap<ClientWrap, ClientPtr>::type_object.tp_methods = client_methods;
-  PythonWrap<ClientWrap, ClientPtr>::type_object.tp_getset = client_getsetters;
-  PythonWrap<ClientWrap, ClientPtr>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
-  PythonWrap<ClientWrap, ClientPtr>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
+  PyTypeObject& type = type_object();
+
+  type.tp_methods = client_methods;
+  type.tp_getset = client_getsetters;
+  type.tp_compare = reinterpret_cast<cmpfunc>(compare);
+  type.tp_str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ClientWrap, ClientPtr>::init(module, "Client");
 
   ClientPtr ptr = Server::get_me();
@@ -133,13 +133,13 @@ void ClientWrap::init(PyObject *module)
   nick_changing = EventWrap::register_event(fire_nick_changing);
   nick_changed = EventWrap::register_event(fire_nick_changed);
 
-  PyDict_SetItemString(type_object.tp_dict, "Me", me);
-  PyDict_SetItemString(type_object.tp_dict, "connected", connected);
-  PyDict_SetItemString(type_object.tp_dict, "registering", registering);
-  PyDict_SetItemString(type_object.tp_dict, "disconnected", disconnected);
-  PyDict_SetItemString(type_object.tp_dict, "closing", closing);
-  PyDict_SetItemString(type_object.tp_dict, "nick_changing", nick_changing);
-  PyDict_SetItemString(type_object.tp_dict, "nick_changed", nick_changed);
+  PyDict_SetItemString(type.tp_dict, "Me", me);
+  PyDict_SetItemString(type.tp_dict, "connected", connected);
+  PyDict_SetItemString(type.tp_dict, "registering", registering);
+  PyDict_SetItemString(type.tp_dict, "disconnected", disconnected);
+  PyDict_SetItemString(type.tp_dict, "closing", closing);
+  PyDict_SetItemString(type.tp_dict, "nick_changing", nick_changing);
+  PyDict_SetItemString(type.tp_dict, "nick_changed", nick_changed);
 
   Client::connected += function<bool(ClientPtr)>(on_connected);
   Client::registering += function<bool(ClientPtr)>(on_registering);
@@ -530,7 +530,7 @@ PyObject *ClientWrap::remove_channel(ClientWrap *self, ChannelWrap *channel)
 
 int ClientWrap::compare(ClientWrap *self, ClientWrap *other)
 {
-  if(self->ob_type != &type_object || other->ob_type != &type_object)
+  if(self->ob_type != &type_object() || other->ob_type != &type_object())
     return PyObject_Compare(self, other);
 
   if(self->get_wrapped() == other->get_wrapped())

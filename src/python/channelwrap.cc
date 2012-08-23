@@ -33,8 +33,6 @@
 #include "python/nuhmaskwrap.h"
 #include "channel.h"
 
-template<> PyTypeObject PythonWrap<ChannelWrap, ChannelPtr>::type_object = {};
-
 PyObject *ChannelWrap::joining;
 PyObject *ChannelWrap::joined;
 
@@ -112,17 +110,19 @@ ChannelWrap::~ChannelWrap()
 
 void ChannelWrap::init(PyObject *module)
 {
-  PythonWrap<ChannelWrap, ChannelPtr>::type_object.tp_methods = channel_methods;
-  PythonWrap<ChannelWrap, ChannelPtr>::type_object.tp_getset = channel_getsetters;
-  PythonWrap<ChannelWrap, ChannelPtr>::type_object.tp_compare = reinterpret_cast<cmpfunc>(compare);
-  PythonWrap<ChannelWrap, ChannelPtr>::type_object.tp_str = reinterpret_cast<reprfunc>(str);
+  PyTypeObject& type = type_object();
+
+  type.tp_methods = channel_methods;
+  type.tp_getset = channel_getsetters;
+  type.tp_compare = reinterpret_cast<cmpfunc>(compare);
+  type.tp_str = reinterpret_cast<reprfunc>(str);
   PythonWrap<ChannelWrap, ChannelPtr>::init(module, "Channel");
 
   joining = EventWrap::register_event(fire_joining);
   joined = EventWrap::register_event(fire_joined);
 
-  PyDict_SetItemString(type_object.tp_dict, "joining", joining);
-  PyDict_SetItemString(type_object.tp_dict, "joined", joined);
+  PyDict_SetItemString(type.tp_dict, "joining", joining);
+  PyDict_SetItemString(type.tp_dict, "joined", joined);
 
   Channel::joining += function<bool(ChannelPtr, ClientPtr)>(on_joining);
   Channel::joined += function<bool(ChannelPtr, ClientPtr)>(on_joined);
@@ -374,7 +374,7 @@ PyObject *ChannelWrap::str(ChannelWrap *self)
 
 int ChannelWrap::compare(ChannelWrap *self, ChannelWrap *other)
 {
-  if(self->ob_type != &type_object || other->ob_type != &type_object)
+  if(self->ob_type != &type_object() || other->ob_type != &type_object())
     return PyObject_Compare(self, other);
 
   if(self->get_wrapped() == other->get_wrapped())

@@ -39,8 +39,6 @@
 template <class Wrap, class Wrapped> class PythonWrap : public PyObject
 {
 protected:
-  static PyTypeObject type_object;
-  
   Wrapped wrapped;
 public:
   PythonWrap()
@@ -72,25 +70,34 @@ public:
     return wrapped;
   }
 
+  static PyTypeObject& type_object()
+  {
+    static PyTypeObject type;
+
+    return type;
+  }
+
   static void init(PyObject *module, const char *name)
   {
-    type_object.ob_refcnt = 1;
-    type_object.tp_alloc = alloc;
-    type_object.tp_free = free;
-    type_object.tp_new = create;
-    type_object.tp_dealloc = dealloc;
-    type_object.tp_basicsize = sizeof(Wrap);
-    type_object.tp_name = name;
-    type_object.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
+    PyTypeObject& type = type_object();
 
-    if(PyType_Ready(&type_object) < 0)
+    type.ob_refcnt = 1;
+    type.tp_alloc = alloc;
+    type.tp_free = free;
+    type.tp_new = create;
+    type.tp_dealloc = dealloc;
+    type.tp_basicsize = sizeof(Wrap);
+    type.tp_name = name;
+    type.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
+
+    if(PyType_Ready(&type) < 0)
     {
       PythonUtil::log_error();
       throw runtime_error("Unable to create type");
     }
 
-    Py_INCREF(&type_object);
-    PyModule_AddObject(module, type_object.tp_name, reinterpret_cast<PyObject *>(&type_object));
+    Py_INCREF(&type);
+    PyModule_AddObject(module, type.tp_name, reinterpret_cast<PyObject *>(&type));
   }
 
   static PyObject *alloc(PyTypeObject *type, Py_ssize_t items)
@@ -115,7 +122,7 @@ public:
 
   static bool check(PyObject *arg)
   {
-    return Py_TYPE(arg) == &type_object;  
+    return Py_TYPE(arg) == &type_object();  
   }
 
   static PyObject *create(PyTypeObject *type, PyObject *args, PyObject *kwds)
