@@ -131,7 +131,7 @@ public:
     PyObject *ptr = type->tp_alloc(type, 0);
     Outer *obj = new(ptr) Outer(args, kwds);
 
-    return reinterpret_cast<PyObject*>(obj);
+    return reinterpret_cast<PyObject *>(obj);
   }
 
   static void dealloc(PyObject *obj)
