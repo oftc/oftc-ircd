@@ -188,8 +188,6 @@ public:
 
     wrapped = call(args);
     Py_DECREF(obj);
-    if(wrapped == NULL)
-      return NULL;
 
     return wrapped;
   }
