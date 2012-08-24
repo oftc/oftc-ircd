@@ -88,7 +88,7 @@ public:
   static PyObject *wrap(const Map& map)
   {
     MapWrapType *wrapped = new MapWrapType();
-    PyObject_INIT(wrapped, &type_object());
+    wrapped = PyObject_INIT(wrapped, &type_object());
 
     wrapped->set_map(map);
 

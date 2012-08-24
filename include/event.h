@@ -30,6 +30,8 @@
 
 using std::list;
 
+struct NullArg {};
+
 #ifndef _MSC_VER
 template<typename... T>
 class Event
@@ -71,7 +73,6 @@ public:
 };
 
 #else
-struct NullArg {};
 
 template<class T1 = NullArg, class T2 = NullArg, class T3 = NullArg, class T4 = NullArg, class T5 = NullArg> 
 class Event

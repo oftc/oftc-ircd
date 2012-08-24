@@ -74,21 +74,21 @@ public:
     return 0;
   }
 
-  static PyObject *append(PyObject *self, PyObject *args)
+  static PyObject *collection_append(PyObject *self, PyObject *args)
   {
     CollectionWrap *collection = static_cast<CollectionWrap *>(self);
 
     return collection->append(args);
   }
 
-  static PyObject *iter(PyObject *self)
+  static PyObject *collection_iter(PyObject *self)
   {
     CollectionWrap *collection = static_cast<CollectionWrap *>(self);
 
     return collection->iter();
   }
 
-  static PyObject *iter_next(PyObject *self)
+  static PyObject *collection_iter_next(PyObject *self)
   {
     CollectionWrap *collection = static_cast<CollectionWrap *>(self);
 
@@ -131,15 +131,15 @@ public:
 
     static PyMethodDef methods[] =
     {
-      PY_METHOD("append", append, METH_OLDARGS, "Add an item to the collection"),
+      PY_METHOD("append", collection_append, METH_OLDARGS, "Add an item to the collection"),
       PY_METHOD_END
     }; 
 
     PyTypeObject& type = type_object();
 
     type.tp_free = free;
-    type.tp_iter = reinterpret_cast<getiterfunc>(iter);
-    type.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);    
+    type.tp_iter = reinterpret_cast<getiterfunc>(collection_iter);
+    type.tp_iternext = reinterpret_cast<iternextfunc>(collection_iter_next);    
     type.tp_as_sequence = &seq_methods;
     type.tp_as_mapping = &map_methods;
     type.tp_methods = methods;
