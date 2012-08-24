@@ -1,0 +1,6 @@
+language: cpp
+before_script:
+    - gyp --depth=. -Goutput_dir=ircd -Dlibrary=static_library -Icommon.gypi -f make
+script:
+    - make
+
