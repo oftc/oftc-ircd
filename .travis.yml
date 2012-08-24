@@ -8,3 +8,8 @@ before_script:
 script:
     - make
 
+notifications:
+    irc:
+        channels:
+            - "irc.oftc.net#oftc-dev"
+        
