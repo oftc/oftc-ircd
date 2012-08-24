@@ -1,4 +1,8 @@
 language: cpp
+before_install:
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq gyp
+
 before_script:
     - gyp --depth=. -Goutput_dir=ircd -Dlibrary=static_library -Icommon.gypi -f make
 script:
