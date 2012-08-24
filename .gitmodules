@@ -1,6 +1,6 @@
 [submodule "libuv"]
 	path = libuv
-	url = git@github.com:oftc/libuv.git
+	url = git://github.com/oftc/libuv.git
 [submodule "jsoncpp"]
 	path = jsoncpp
-	url = git@github.com:oftc/jsoncpp.git
+	url = git://github.com/oftc/jsoncpp.git
