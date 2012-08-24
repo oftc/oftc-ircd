@@ -56,7 +56,10 @@ void PClient::init(const PObject& module)
 
   PCType::init(module);
 
-  PyDict_SetItemString(type.tp_dict, "nick_changing", new PEvent<ClientPtr, irc_string>(Client::nick_changing, &PEventBase::client_string_callback));
+  PyDict_SetItemString(type.tp_dict, "closing", 
+    new PEvent<ClientPtr, string>(Client::closing, &PEventBase::client_string_callback));
+  PyDict_SetItemString(type.tp_dict, "nick_changing", 
+    new PEvent<ClientPtr, irc_string>(Client::nick_changing, &PEventBase::client_string_callback));
 }
 
 PyObject *PClient::find_by_name(PyObject *self, PyObject *varargs)

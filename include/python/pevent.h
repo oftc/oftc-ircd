@@ -61,6 +61,11 @@ public:
     return inner(this, args);
   }
 
+  virtual PObject string_callback(PTuple args)
+  {
+    Py_RETURN_NONE;
+  }
+
   virtual PObject client_string_callback(PTuple args)
   {
     // This shouldn't get called, we don't want to create events from python
@@ -103,17 +108,29 @@ public:
 
 #ifndef _MSC_VER
   PEvent(Event<T...> event, EventCallback callback)
-#else
-  PEvent(Event<T1, T2, T3, T4, T5> event, EventCallback callback)
-#endif
   {
     inner_event = event;
     inner = callback;
   }
+#else
+  PEvent(Event<T1, T2, T3, T4, T5> event, EventCallback callback)
+  {
+    inner_event = event;
+    inner = callback;
+  }
+#endif
 
   ~PEvent()
   {
   }
+
+/*  PObject string_callback(PTuple args)
+  {
+    PString str = static_cast<PString>(args[0]);
+    PBool ret(inner_event(str.c_str()));
+
+    return ret;
+  }*/
 
   PObject client_string_callback(PTuple args)
   {
