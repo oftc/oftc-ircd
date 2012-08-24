@@ -30,6 +30,7 @@
 #include "python/pythonwrap.h"
 #include "nuhmask.h"
 
+#if 0
 static PyMethodDef mask_methods[] =
 {
   PY_METHOD_END
@@ -135,3 +136,4 @@ int NuhMaskWrap::set_wrap(NuhMaskWrap *self, PyObject *value, void *closure)
 
   return 0;
 }
+#endif

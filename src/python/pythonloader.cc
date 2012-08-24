@@ -92,9 +92,7 @@ void PythonLoader::init()
   ClientWrap::init(m);
   ChannelWrap::init(m);
   MembershipWrap::init(m);
-  CollectionWrap<ChannelMemberList, MembershipWrap>::init(m);
-  CollectionWrap<ClientMemberList, MembershipWrap>::init(m);
-  MaskListWrap::init(m);
+  CollectionWrap::init(m);
 }
 
 void PythonLoader::load(string name)

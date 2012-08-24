@@ -205,7 +205,7 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
   case Channels:
     {
       ClientMemberList channels = client_ptr->get_channels();
-      value = CollectionWrap<ClientMemberList, MembershipWrap>::wrap(&channels);
+//      value = CollectionWrap<ClientMemberList, MembershipWrap>::wrap(&channels);
     }
     break;
   case ServerProp:

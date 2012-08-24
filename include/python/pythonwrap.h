@@ -83,7 +83,8 @@ public:
 
     type.ob_refcnt = 1;
     type.tp_alloc = alloc;
-    type.tp_free = free;
+    if(type.tp_free == NULL)
+      type.tp_free = free;
     type.tp_new = create;
     type.tp_dealloc = dealloc;
     type.tp_basicsize = sizeof(Outer);
@@ -118,7 +119,7 @@ public:
 
   static Outer *call(PyObject *args)
   {
-    return reinterpret_cast<Outer *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object), args));
+    return reinterpret_cast<Outer *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object()), args));
   }
 
   static bool check(PyObject *arg)
@@ -136,7 +137,7 @@ public:
 
   static void dealloc(PyObject *obj)
   {
-    Outer *ptr = reinterpret_cast<Outer *>(obj);
+    Outer *ptr = static_cast<Outer *>(obj);
     ptr->~Outer();
     obj->ob_type->tp_free(obj);
   }
@@ -177,12 +178,12 @@ public:
     return success;
   }
 
-  static Outer *wrap(Inner *arg)
+  static Outer *wrap(const Inner *arg)
   {
     PyObject *obj, *args;
     Outer *wrapped;
 
-    obj = PyCObject_FromVoidPtr(arg, NULL);
+    obj = PyCObject_FromVoidPtr(const_cast<Inner *>(arg), NULL);
 
     args = Py_BuildValue("(O)", obj);
 

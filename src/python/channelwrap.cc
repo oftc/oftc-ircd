@@ -28,7 +28,7 @@
 #include "stdinc.h"
 #include "python/channelwrap.h"
 #include "python/pythonutil.h"
-#include "python/collectionwrap.h"
+#include "python/mapwrap.h"
 #include "python/membershipwrap.h"
 #include "python/nuhmaskwrap.h"
 #include "channel.h"
@@ -142,7 +142,7 @@ PyObject *ChannelWrap::get_wrap(ChannelWrap *self, void *closure)
   case Members:
     {
       ChannelMemberList channels = self->get_wrapped()->get_members();
-      value = CollectionWrap<ChannelMemberList, MembershipWrap>::wrap(&channels);
+      value = MapWrap<ChannelMemberList, ClientWrap, MembershipWrap>::wrap(channels);
     }
     break;
   case InviteOnly:
@@ -169,7 +169,8 @@ PyObject *ChannelWrap::get_wrap(ChannelWrap *self, void *closure)
   case Bans:
     {
       NuhMaskList bans = self->get_wrapped()->get_bans();
-      value = MaskListWrap::wrap(&bans);
+      value = Py_None;
+//      value = MaskListWrap::wrap(&bans);
     }
     break;
   default:
