@@ -55,6 +55,7 @@
       'include/python/collectionwrap.h',
       'include/python/connectionwrap.h',
       'include/python/eventwrap.h',
+      'include/python/listwrap.h',
       'include/python/mapwrap.h',
       'include/python/membershipwrap.h',
       'include/python/nuhmaskwrap.h',

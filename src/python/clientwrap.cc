@@ -28,7 +28,7 @@
 #include "stdinc.h"
 #include "python/pythonwrap.h"
 #include "python/clientwrap.h"
-#include "python/collectionwrap.h"
+#include "python/mapwrap.h"
 #include "python/membershipwrap.h"
 #include "python/pythonutil.h"
 #include "numeric.h"
@@ -205,7 +205,7 @@ PyObject *ClientWrap::get_wrap(ClientWrap *self, void *closure)
   case Channels:
     {
       ClientMemberList channels = client_ptr->get_channels();
-//      value = CollectionWrap<ClientMemberList, MembershipWrap>::wrap(&channels);
+      value = MapWrap<ClientMemberList, ChannelWrap, MembershipWrap>::wrap(channels);
     }
     break;
   case ServerProp:

@@ -23,38 +23,77 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef NUHMASKWRAP_H_INC
-#define NUHMASKWRAP_H_INC
+#ifndef LISTWRAP_H_INC
+#define LISTWRAP_H_INC
 
 #include "Python.h"
 #include "python/pythonwrap.h"
 #include "python/collectionwrap.h"
-#include "nuhmask.h"
 
-class NuhMaskWrap;
-
-class NuhMaskWrap : public PythonWrap<NuhMaskWrap, NuhMask>
+template<class List, class WrappedValue>
+class ListWrap : public CollectionWrap
 {
 private:
+  typedef ListWrap<List, WrappedValue> ListWrapType;
+  List inner_list;
+  typename List::const_iterator current;
 public:
-  // Non Python methods
-  static void init(PyObject *);
+  ListWrap()
+  {
+  }
 
-  // Event callbacks
+  ListWrap(PyObject *args, PyObject *kwargs)
+  {
+  }
 
-  // Event fires
+  ~ListWrap()
+  {
+  }
 
-  // Get/Setters
-  static PyObject *get_wrap(NuhMaskWrap *, void *);
-  static int set_wrap(NuhMaskWrap *, PyObject *, void *);
+  void set_list(const List& l)
+  {
+    inner_list = l;
+  }
 
-  // Python methods
+  PyObject *append(PyObject *args)
+  {
+   /* PyObject *key, *value;
+    Wrapped *wrapped;
 
-  // ctor/dtor
-  NuhMaskWrap(PyObject *, PyObject *);
-  ~NuhMaskWrap();
+    PyArg_ParseTuple(args, "OO", &item);
 
-  // members
+    wrapped = item;
+*/
+    Py_RETURN_NONE;
+  }
+
+  PyObject *iter()
+  {
+    current = inner_list.begin();
+    Py_INCREF(this);
+    return this;
+  }
+
+  PyObject *next()
+  {
+    if(current == inner_list.end())
+      return NULL;
+
+    WrappedValue *value = WrappedValue::wrap(&(*current));
+    current++;
+
+    return value;
+  }
+
+  static PyObject *wrap(const List& list)
+  {
+    ListWrapType *wrapped = new ListWrapType();
+    wrapped = PyObject_INIT(wrapped, &type_object());
+
+    wrapped->set_list(list);
+
+    return wrapped;
+  }
 };
 
 #endif
