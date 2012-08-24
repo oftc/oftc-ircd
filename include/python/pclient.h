@@ -41,18 +41,7 @@ public:
 
   inline PBool is_registered() const { return inner->is_registered(); }
 
-  static PyObject *find_by_name(PyObject *self, PyObject *varargs) 
-  { 
-    PTuple args(varargs);
-    PString name = static_cast<PString>(args[0]);
-    ClientPtr ptr = Client::find_by_name(name.c_str());
-
-    if(ptr)
-      return new PClient(ptr);
-    else
-      Py_RETURN_NONE;
-  }
-
+  static PyObject *find_by_name(PyObject *, PyObject *);
   static void init(const PObject&);
 };
 
