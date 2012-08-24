@@ -28,6 +28,8 @@
 
 #include "Python.h"
 #include "pctype.h"
+#include "pobject.h"
+#include "pclient.h"
 #include "event.h"
 
 class PEventBase;
@@ -86,7 +88,7 @@ class PEvent : public PEventBase
 {
 private:
 #ifndef _MSC_VER
-  Event<T..> inner_event;
+  Event<T...> inner_event;
 #else
   Event<T1, T2, T3, T4, T5> inner_event;
 #endif
@@ -100,7 +102,7 @@ public:
   }
 
 #ifndef _MSC_VER
-  PEvent(Event<T.. event, EventCallback callback)
+  PEvent(Event<T...> event, EventCallback callback)
 #else
   PEvent(Event<T1, T2, T3, T4, T5> event, EventCallback callback)
 #endif
@@ -117,7 +119,7 @@ public:
   {
     PyObject *obj = args[0];
     PClient *client = static_cast<PClient *>(obj);
-    PString str = args[1];
+    PString str = static_cast<PString>(args[1]);
     PBool ret(inner_event(*client, str.c_str()));
 
     return ret;
