@@ -30,8 +30,6 @@
 #include "python/pythonwrap.h"
 #include "python/eventwrap.h"
 
-template<> PyTypeObject PythonWrap<EventWrap, EventCallback>::type_object = {};
-
 enum Property
 {
   Listeners = 1,
@@ -98,9 +96,12 @@ void EventWrap::set_handler(PyObject *value)
 
 void EventWrap::init(PyObject *module)
 {
-  PythonWrap<EventWrap, EventCallback>::type_object.tp_methods = event_methods;
-  PythonWrap<EventWrap, EventCallback>::type_object.tp_getset = event_getsetters;
-  PythonWrap<EventWrap, EventCallback>::init(module, "Event");
+  PyTypeObject& type = type_object();
+
+  type.tp_methods = event_methods;
+  type.tp_getset = event_getsetters;
+  type.tp_name = "Event";
+  PythonWrap::init(module);
 }
 
 EventWrap *EventWrap::register_event(EventCallback callback)

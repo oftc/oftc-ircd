@@ -31,10 +31,6 @@
 #include "python/pythonwrap.h"
 #include "nuhmask.h"
 
-template<> PyTypeObject PythonWrap<NuhMaskWrap, NuhMask>::type_object = {};
-template<> PyTypeObject PythonWrap<MaskListWrap, NuhMaskList>::type_object = {};
-template<> PyTypeObject PythonWrap<NuhMaskWrap, NuhMaskList>::type_object = {};
-
 static PyMethodDef mask_methods[] =
 {
   PY_METHOD_END
@@ -69,9 +65,12 @@ NuhMaskWrap::~NuhMaskWrap()
 
 void NuhMaskWrap::init(PyObject *module)
 {
-  PythonWrap<NuhMaskWrap, NuhMask>::type_object.tp_methods = mask_methods;
-  PythonWrap<NuhMaskWrap, NuhMask>::type_object.tp_getset = mask_getsetters;
-  PythonWrap<NuhMaskWrap, NuhMask>::init(module, "Channel");
+  PyTypeObject& type = type_object();
+
+  type.tp_methods = mask_methods;
+  type.tp_getset = mask_getsetters;
+  type.tp_name = "Channel";
+  PythonWrap::init(module);
 }
 
 PyObject *NuhMaskWrap::get_wrap(NuhMaskWrap *self, void *closure)

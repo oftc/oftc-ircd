@@ -25,10 +25,17 @@
 
 #ifndef PYTHONWRAP_H_INC
 #define PYTHONWRAP_H_INC
-
+ /*
 #include "Python.h"
 #include "python/pythonbase.h"
 #include "python/pythonutil.h"
+
+#define PY_METHOD(name, func, flags, doc) { name, reinterpret_cast<PyCFunction>(func), flags, doc }
+#define PY_METHOD_END { NULL, NULL, 0, NULL }
+
+#define PY_GETSET(name, type, doc, flags) { const_cast<char *>(name), reinterpret_cast<getter>(type::get_wrap), \
+  reinterpret_cast<setter>(type::set_wrap), const_cast<char *>(doc), reinterpret_cast<void *>(flags) }
+#define PY_GETSET_END { NULL, NULL, NULL, NULL, NULL }
 
 template <class Outer, class Inner> class PythonWrap : public PythonBase
 {
@@ -60,17 +67,75 @@ public:
     return wrapped;
   }
 
+  static PyTypeObject& type_object()
+  {
+    type_object.ob_refcnt = 1;
+    static PyTypeObject type;
+
+    return type;
+  }
+
+  static void init(PyObject *module)
+  {
+    PyTypeObject& type = type_object();
+
+    type.ob_refcnt = 1;
+    type.tp_alloc = alloc;
+    if(type.tp_free == NULL)
+      type.tp_free = free;
+    type.tp_new = create;
+    type.tp_dealloc = dealloc;
+    type.tp_basicsize = sizeof(Outer);
+    if(type.tp_name == NULL)
+      type.tp_name = typeid(Inner).name();
+    type.tp_flags |= Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
+
+    if(PyType_Ready(&type) < 0)
+    {
+      PythonUtil::log_error();
+      throw runtime_error("Unable to create type");
+    }
+
+    Py_INCREF(&type);
+    PyModule_AddObject(module, type.tp_name, reinterpret_cast<PyObject *>(&type));
+  }
+
+  static PyObject *alloc(PyTypeObject *type, Py_ssize_t items)
+  {
+    char *ret;
+    PyObject *obj;
+
+    ret = new char[_PyObject_VAR_SIZE(type, items)]();
+
+    obj = reinterpret_cast<PyObject *>(ret);
+    static_cast<void>(PyObject_INIT(obj, type));
+
+    Logging::trace << "Created Python object: " << type->tp_name << " at: " << static_cast<void*>(obj) << Logging::endl;
+
+    return obj;
+  }
+
+  static Outer *call(PyObject *args)
+  {
+    return reinterpret_cast<Outer *>(PyObject_CallObject(reinterpret_cast<PyObject *>(&type_object()), args));
+  }
+
+  static bool check(PyObject *arg)
+  {
+    return Py_TYPE(arg) == &type_object();  
+  }
+
   static PyObject *create(PyTypeObject *type, PyObject *args, PyObject *kwds)
   {
     PyObject *ptr = type->tp_alloc(type, 0);
     Outer *obj = new(ptr) Outer(args, kwds);
 
-    return reinterpret_cast<PyObject*>(obj);
+    return reinterpret_cast<PyObject *>(obj);
   }
 
   static void dealloc(PyObject *obj)
   {
-    Outer *ptr = reinterpret_cast<Outer *>(obj);
+    Outer *ptr = static_cast<Outer *>(obj);
     ptr->~Outer();
     obj->ob_type->tp_free(obj);
   }
@@ -86,22 +151,20 @@ public:
     PythonBase::init();
   }
 
-/*  static Wrap *wrap(void *arg)
+  static Outer *wrap(const Inner *arg)
   {
     PyObject *obj, *args;
-    Wrap *wrapped;
+    Outer *wrapped;
 
-    obj = PyCObject_FromVoidPtr(arg, NULL);
+    obj = PyCObject_FromVoidPtr(const_cast<Inner *>(arg), NULL);
 
     args = Py_BuildValue("(O)", obj);
 
     wrapped = call(args);
     Py_DECREF(obj);
-    if(wrapped == NULL)
-      return NULL;
 
     return wrapped;
-  }*/
-};
+  }
+};*/
 
 #endif

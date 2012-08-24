@@ -23,38 +23,77 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef NUHMASKWRAP_H_INC
-#define NUHMASKWRAP_H_INC
+#ifndef MAPWRAP_H_INC
+#define MAPWRAP_H_INC
 
 #include "Python.h"
 #include "python/pythonwrap.h"
 #include "python/collectionwrap.h"
-#include "nuhmask.h"
 
-class NuhMaskWrap;
-
-class NuhMaskWrap : public PythonWrap<NuhMaskWrap, NuhMask>
+template<class Map, class WrappedKey, class WrappedValue>
+class MapWrap : public CollectionWrap
 {
 private:
+  typedef MapWrap<Map, WrappedKey, WrappedValue> MapWrapType;
+  Map inner_map;
+  typename Map::const_iterator current;
 public:
-  // Non Python methods
-  static void init(PyObject *);
+  MapWrap()
+  {
+  }
 
-  // Event callbacks
+  MapWrap(PyObject *args, PyObject *kwargs)
+  {
+  }
 
-  // Event fires
+  ~MapWrap()
+  {
+  }
 
-  // Get/Setters
-  static PyObject *get_wrap(NuhMaskWrap *, void *);
-  static int set_wrap(NuhMaskWrap *, PyObject *, void *);
+  void set_map(const Map& m)
+  {
+    inner_map = m;
+  }
 
-  // Python methods
+  PyObject *append(PyObject *args)
+  {
+   /* PyObject *key, *value;
+    Wrapped *wrapped;
 
-  // ctor/dtor
-  NuhMaskWrap(PyObject *, PyObject *);
-  ~NuhMaskWrap();
+    PyArg_ParseTuple(args, "OO", &item);
 
-  // members
+    wrapped = item;
+*/
+    Py_RETURN_NONE;
+  }
+
+  PyObject *iter()
+  {
+    current = inner_map.begin();
+    Py_INCREF(this);
+    return this;
+  }
+
+  PyObject *next()
+  {
+    if(current == inner_map.end())
+      return NULL;
+
+    WrappedValue *value = WrappedValue::wrap(&current->second);
+    current++;
+
+    return value;
+  }
+
+  static PyObject *wrap(const Map& map)
+  {
+    MapWrapType *wrapped = new MapWrapType();
+    wrapped = PyObject_INIT(wrapped, &type_object());
+
+    wrapped->set_map(map);
+
+    return wrapped;
+  }
 };
 
 #endif

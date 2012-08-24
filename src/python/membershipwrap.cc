@@ -33,10 +33,6 @@
 #include "channel.h"
 #include "client.h"
 
-template<> PyTypeObject PythonWrap<MembershipWrap, Membership>::type_object = {};
-template<> PyTypeObject PythonWrap<MembershipWrap, ChannelMemberList>::type_object = {};
-template<> PyTypeObject PythonWrap<MembershipWrap, ClientMemberList>::type_object = {};
-
 static PyMethodDef membership_methods[] =
 {
   PY_METHOD_END
@@ -77,9 +73,12 @@ MembershipWrap::~MembershipWrap()
 
 void MembershipWrap::init(PyObject *module)
 {
-  PythonWrap<MembershipWrap, Membership>::type_object.tp_methods = membership_methods;
-  PythonWrap<MembershipWrap, Membership>::type_object.tp_getset = membership_getsetters;
-  PythonWrap<MembershipWrap, Membership>::init(module, "Membership");
+  PyTypeObject& type = type_object();
+
+  type.tp_methods = membership_methods;
+  type.tp_getset = membership_getsetters;
+  type.tp_name = "Membership";
+  PythonWrap::init(module);
 }
 
 PyObject *MembershipWrap::get_wrap(MembershipWrap *self, void *closure)

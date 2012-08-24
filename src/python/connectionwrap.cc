@@ -32,8 +32,6 @@
 #include "python/connectionwrap.h"
 #include "python/pythonloader.h"
 
-template<> PyTypeObject PythonWrap<ConnectionWrap, ConnectionPtr>::type_object = {};
-
 PyObject *ConnectionWrap::ip_connecting;
 PyObject *ConnectionWrap::dns_finished;
 
@@ -59,15 +57,18 @@ ConnectionWrap::~ConnectionWrap()
 
 void ConnectionWrap::init(PyObject *module)
 {
-  PythonWrap<ConnectionWrap, ConnectionPtr>::type_object.tp_methods = connection_methods;
-  PythonWrap<ConnectionWrap, ConnectionPtr>::type_object.tp_getset = connection_getsetters;
-  PythonWrap<ConnectionWrap, ConnectionPtr>::init(module, "Connection");
+  PyTypeObject& type = type_object();
+
+  type.tp_methods = connection_methods;
+  type.tp_getset = connection_getsetters;
+  type.tp_name = "Connection";
+  PythonWrap::init(module);
 
   ip_connecting = EventWrap::register_event(fire_ip_connecting);
   dns_finished = EventWrap::register_event(fire_dns_finished);
 
-  PyDict_SetItemString(type_object.tp_dict, "ip_connecting", ip_connecting);
-  PyDict_SetItemString(type_object.tp_dict, "dns_finished", dns_finished);
+  PyDict_SetItemString(type.tp_dict, "ip_connecting", ip_connecting);
+  PyDict_SetItemString(type.tp_dict, "dns_finished", dns_finished);
 
   Connection::ip_connecting += function<bool(ConnectionPtr)>(on_ip_connecting);
   Connection::dns_finished += function<bool(ConnectionPtr)>(on_dns_finished);

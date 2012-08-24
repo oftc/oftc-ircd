@@ -28,15 +28,15 @@
 
 #include "stdinc.h"
 #include <string>
-#include <map>
+#include <list>
 #include "ircstring.h"
 
 using std::string;
-using std::map;
+using std::list;
 
 class NuhMask;
 
-typedef map<string, NuhMask> NuhMaskList;
+typedef list<NuhMask> NuhMaskList;
 
 class NuhMask
 {

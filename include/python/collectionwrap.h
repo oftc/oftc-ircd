@@ -23,99 +23,132 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if 0
 #ifndef COLLECTIONWRAP_H_INC
 #define COLLECTIONWRAP_H_INC
 
 #include "Python.h"
-#include <iterator>
-#include <list>
+#include "event.h"
 #include "python/pythonwrap.h"
 
 using std::list;
 
-template <class T, class W> class CollectionWrap : public PythonWrap<CollectionWrap<T, W>, T>
+class CollectionWrap : public PythonWrap<CollectionWrap, NullArg>
 {
-private:
-  typename T::const_iterator curr;
 public:
-  // Non Python methods
+  CollectionWrap()
+  {
+    Logging::trace << "Created Collection: " << this << Logging::endl;
+  }
+
+  CollectionWrap(PyObject *args, PyObject *kwargs)
+  {
+    Logging::trace << "Created Collection(from py): " << this << Logging::endl;
+  }
+
+  virtual ~CollectionWrap()
+  {
+  }
+
+  virtual Py_ssize_t get_length()
+  {
+    return 0;
+  }
+
+  virtual PyObject *append(PyObject *args) 
+  {
+    Py_RETURN_NONE;
+  }
+
+  virtual PyObject *iter()
+  {
+    Py_RETURN_NONE;
+  }
+
+  virtual PyObject *next() 
+  {
+    Py_RETURN_NONE;
+  }
+
   static Py_ssize_t get_length(PyObject *self)
   {
-    return reinterpret_cast<CollectionWrap<T, W> *>(self)->length();
+    return 0;
+  }
+
+  static PyObject *collection_append(PyObject *self, PyObject *args)
+  {
+    CollectionWrap *collection = static_cast<CollectionWrap *>(self);
+
+    return collection->append(args);
+  }
+
+  static PyObject *collection_iter(PyObject *self)
+  {
+    CollectionWrap *collection = static_cast<CollectionWrap *>(self);
+
+    return collection->iter();
+  }
+
+  static PyObject *collection_iter_next(PyObject *self)
+  {
+    CollectionWrap *collection = static_cast<CollectionWrap *>(self);
+
+    return collection->next();
+  }
+
+  static void free(void *ptr)
+  {
+    PyObject *tmp = static_cast<PyObject *>(ptr);
+    CollectionWrap *obj = static_cast<CollectionWrap *>(tmp);
+
+    Logging::trace << "Destroyed python collection object: " << obj << Logging::endl;
+
+    delete obj;
+  }
+
+  static PyObject *get_item(PyObject *, PyObject *)
+  {
+    Py_RETURN_NONE;
+  }
+
+  static int set_item(PyObject *, PyObject *, PyObject *)
+  {
+    return 0;
   }
 
   static void init(PyObject *module)
   {
-    static PySequenceMethods seq_methods = 
+    static PySequenceMethods seq_methods =
     {
       get_length
     };
 
-    static PyMethodDef methods[] =
+    static PyMappingMethods map_methods =
     {
-      PY_METHOD("append", append, METH_OLDARGS, "Add an item to the collection"),
-      PY_METHOD_END
+      get_length,
+      get_item,
+      set_item
     };
 
-    CollectionWrap<T, W>::type_object.tp_iter = reinterpret_cast<getiterfunc>(iter);
-    CollectionWrap<T, W>::type_object.tp_iternext = reinterpret_cast<iternextfunc>(iter_next);
-    CollectionWrap<T, W>::type_object.tp_as_sequence = &seq_methods;
-    CollectionWrap<T, W>::type_object.tp_flags |= Py_TPFLAGS_HAVE_ITER;
-    PythonWrap<CollectionWrap<T, W>, T>::init(module, (string("Collection ") + typeid(T).name()).c_str());
-  }
+    static PyMethodDef methods[] =
+    {
+      PY_METHOD("append", collection_append, METH_OLDARGS, "Add an item to the collection"),
+      PY_METHOD_END
+    }; 
 
-  static CollectionWrap<T, W> *iter(CollectionWrap<T, W> *self)
-  {
-    self->reset();
-    Py_INCREF(self);
-    return self;
-  }
+    PyTypeObject& type = type_object();
 
-  static W *iter_next(CollectionWrap<T, W> *iterator)
-  {
-    return iterator->next();
-  }
-
-  static PyObject *append(CollectionWrap<T, W> *self, W *item)
-  {
-    return NULL;
-  }
-
-  // Ctor/dtors
-  CollectionWrap(PyObject *args, PyObject *kwargs) 
-  {
-  }
-
-  // methods
-  Py_ssize_t length() const
-  {
-    return this->wrapped.size();
-  }
-
-  void reset()
-  {
-    curr = this->wrapped.begin();
-  }
-
-  W *next()
-  {
-    typename T::mapped_type item;
-
-    if(curr == this->wrapped.end())
-      return NULL;
-
-    item = curr->second;
-    curr++;
-
-    W *wrapped;
-
-    wrapped = W::wrap(&item);
-
-    if(wrapped == NULL)
-      return NULL;
-
-    return wrapped;
+    type.tp_free = free;
+    type.tp_iter = reinterpret_cast<getiterfunc>(collection_iter);
+    type.tp_iternext = reinterpret_cast<iternextfunc>(collection_iter_next);    
+    type.tp_as_sequence = &seq_methods;
+    type.tp_as_mapping = &map_methods;
+    type.tp_methods = methods;
+    type.tp_flags |= Py_TPFLAGS_HAVE_ITER;
+    type.tp_name = "Collection";
+    PythonWrap::init(module);
   }
 };
 
+#endif
 #endif
