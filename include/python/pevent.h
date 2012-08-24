@@ -71,17 +71,25 @@ public:
 
     type.tp_name = "Event";
 
-    add_method("fire", "Fire the event", VarArgsMethod(&fire));
+    add_method("fire", "Fire the event", VarArgsMethod(&PEventBase::fire));
 
     PCType::init(module);
   }
 };
 
+#ifndef _MSC_VER
+template<typename... T>
+#else
 template<class T1=NullArg, class T2=NullArg, class T3=NullArg, class T4=NullArg, class T5=NullArg>
+#endif
 class PEvent : public PEventBase
 {
 private:
+#ifndef _MSC_VER
+  Event<T..> inner_event;
+#else
   Event<T1, T2, T3, T4, T5> inner_event;
+#endif
 public:
   PEvent()
   {
@@ -91,7 +99,11 @@ public:
   {
   }
 
+#ifndef _MSC_VER
+  PEvent(Event<T.. event, EventCallback callback)
+#else
   PEvent(Event<T1, T2, T3, T4, T5> event, EventCallback callback)
+#endif
   {
     inner_event = event;
     inner = callback;
