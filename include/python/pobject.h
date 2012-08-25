@@ -49,6 +49,7 @@ public:
   virtual PObject& operator=(const PObject& right)
   {
     object = right;
+    Py_XINCREF(object);
     return *this;
   }
 
