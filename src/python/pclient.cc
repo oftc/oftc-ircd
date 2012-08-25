@@ -26,6 +26,10 @@
 #include "python/pclient.h"
 #include "stdinc.h"
 #include "python/pevent.h"
+#include <functional>
+
+using std::bind;
+using namespace std::placeholders;
 
 PClient::PClient()
 {
@@ -56,10 +60,20 @@ void PClient::init(const PObject& module)
 
   PCType::init(module);
 
-  PyDict_SetItemString(type.tp_dict, "closing", 
-    new PEvent<ClientPtr, string>(Client::closing, &PEventBase::client_string_callback));
-  PyDict_SetItemString(type.tp_dict, "nick_changing", 
-    new PEvent<ClientPtr, irc_string>(Client::nick_changing, &PEventBase::client_string_callback));
+  PEvent *event = new PEvent();
+  auto func = std::bind(&PEvent::client_string_callback, event, Client::closing, _1);
+  event->set_func(func);
+  PyDict_SetItemString(type.tp_dict, "closing", event);
+
+  event = new PEvent();
+  auto func2 = std::bind(&PEvent::client_ircstring_callback, event, Client::nick_changing, _1);
+  event->set_func(func2);
+  PyDict_SetItemString(type.tp_dict, "nick_changing", event);
+
+  event = new PEvent();
+  auto func3 = std::bind(&PEvent::client_string_callback, event, Client::nick_changed, _1);
+  event->set_func(func3);
+  PyDict_SetItemString(type.tp_dict, "nick_changed", event);
 }
 
 PyObject *PClient::find_by_name(PyObject *self, PyObject *varargs)

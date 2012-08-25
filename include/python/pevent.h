@@ -30,6 +30,7 @@
 #include "pctype.h"
 #include "pobject.h"
 #include "pclient.h"
+#include "pchannel.h"
 #include "event.h"
 
 class PEventBase;
@@ -42,93 +43,20 @@ enum EventProperties
   Handler
 };
 
-class PEventBase : public PCType<PEventBase, EventCallback>
-{
-public:
-  PEventBase()
-  {
-  }
-
-  PEventBase(PTuple, PDict)
-  {
-  }
-
-  PEventBase(EventCallback event)
-  {
-    inner = event;
-  }
-
-  ~PEventBase()
-  {
-  }
-
-  virtual PObject fire(PTuple args)
-  {
-    return inner(this, args);
-  }
-
-  virtual PObject string_callback(PTuple args)
-  {
-    Py_RETURN_NONE;
-  }
-
-  virtual PObject client_string_callback(PTuple args)
-  {
-    // This shouldn't get called, we don't want to create events from python
-    Py_RETURN_NONE;
-  }
-
-  static void init(const PObject& module)
-  {
-    PyTypeObject& type = type_object();
-
-    type.tp_name = "Event";
-
-    add_method("fire", "Fire the event", VarArgsMethod(&PEventBase::fire));
-    add_property("listeners", "Functions listening to this event", Listeners, static_cast<PropertyFlag>(0));
-    add_property("handler", "handler for the event", Handler, static_cast<PropertyFlag>(0));
-
-    PCType::init(module);
-  }
-};
-
-#ifndef _MSC_VER
-template<typename... T>
-#else
-template<class T1=NullArg, class T2=NullArg, class T3=NullArg, class T4=NullArg, class T5=NullArg>
-#endif
-class PEvent : public PEventBase
+class PEvent : public PCType<PEvent, EventCallback>
 {
 private:
   PObject listeners;
   PObject handler;
-#ifndef _MSC_VER
-  Event<T...> inner_event;
-#else
-  Event<T1, T2, T3, T4, T5> inner_event;
-#endif
+  function<bool(PTuple)> callback;
 public:
-  PEvent()
+  PEvent() : listeners(Py_None), handler(Py_None)
   {
   }
 
-  PEvent(PTuple, PDict)
+  PEvent(PTuple, PDict) : listeners(Py_None), handler(Py_None)
   {
   }
-
-#ifndef _MSC_VER
-  PEvent(Event<T...> event, EventCallback callback)
-  {
-    inner_event = event;
-    inner = callback;
-  }
-#else
-  PEvent(Event<T1, T2, T3, T4, T5> event, EventCallback callback) : listeners(Py_None), handler(Py_None)
-  {
-    inner_event = event;
-    inner = callback;
-  }
-#endif
 
   ~PEvent()
   {
@@ -166,22 +94,64 @@ public:
     return 0;
   }
 
-/*  PObject string_callback(PTuple args)
+  void set_func(function<bool(PTuple)> func)
   {
-    PString str = static_cast<PString>(args[0]);
-    PBool ret(inner_event(str.c_str()));
+    callback = func;
+  }
+
+  PObject fire(PTuple args)
+  {
+    return callback(args);
+  }
+
+  PObject channel_client_callback(Event<ChannelPtr, ClientPtr> event, PTuple args)
+  {
+    PyObject *arg0, *arg1;
+
+    arg0 = args[0];
+    arg1 = args[1];
+
+    PChannel *channel = static_cast<PChannel *>(arg0);
+    PClient *client = static_cast<PClient *>(arg1);
+
+    PBool ret;
+
+    ret = event(*channel, *client);
 
     return ret;
-  }*/
+  }
 
-  PObject client_string_callback(PTuple args)
+  PObject client_string_callback(Event<ClientPtr, string> event, PTuple args)
   {
     PyObject *obj = args[0];
     PClient *client = static_cast<PClient *>(obj);
     PString str = static_cast<PString>(args[1]);
-    PBool ret(inner_event(*client, str.c_str()));
+    PBool ret(event(*client, str.c_str()));
 
     return ret;
+  }
+
+  PObject client_ircstring_callback(Event<ClientPtr, irc_string> event, PTuple args)
+  {
+    PyObject *obj = args[0];
+    PClient *client = static_cast<PClient *>(obj);
+    PString str = static_cast<PString>(args[1]);
+    PBool ret(event(*client, str.c_str()));
+
+    return ret;
+  }
+
+  static void init(const PObject& module)
+  {
+    PyTypeObject& type = type_object();
+
+    type.tp_name = "Event";
+
+    add_method("fire", "Fire the event", VarArgsMethod(&fire));
+    add_property("listeners", "Functions listening to this event", Listeners, static_cast<PropertyFlag>(0));
+    add_property("handler", "handler for the event", Handler, static_cast<PropertyFlag>(0));
+
+    PCType::init(module);
   }
 };
 

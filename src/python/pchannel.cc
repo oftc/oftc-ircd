@@ -24,7 +24,12 @@
 */
 
 #include "python/pchannel.h"
+#include "python/pevent.h"
 #include "stdinc.h"
+#include <functional>
+
+using std::bind;
+using namespace std::placeholders;
 
 PChannel::PChannel()
 {
@@ -47,4 +52,9 @@ void PChannel::init(const PObject& module)
   type.tp_name = "Channel";
 
   PCType::init(module);
+
+  PEvent *event = new PEvent();
+  auto func = std::bind(&PEvent::channel_client_callback, event, Channel::joined, _1);
+  event->set_func(func);
+  PyDict_SetItemString(type.tp_dict, "joined", event);
 }

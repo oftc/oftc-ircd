@@ -30,7 +30,7 @@
 #include "pctype.h"
 #include "channel.h"
 
-class PChannel : public PCType<PChannel, Channel>
+class PChannel : public PCType<PChannel, ChannelPtr>
 {
 public:
   PChannel();
