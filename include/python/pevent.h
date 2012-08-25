@@ -114,10 +114,8 @@ public:
     PChannel *channel = static_cast<PChannel *>(arg0);
     PClient *client = static_cast<PClient *>(arg1);
 
-    PBool ret;
-
-    ret = event(*channel, *client);
-
+    PBool ret(event(*channel, *client));
+    
     return ret;
   }
 
@@ -147,7 +145,7 @@ public:
 
     type.tp_name = "Event";
 
-    add_method("fire", "Fire the event", VarArgsMethod(&fire));
+    add_method("fire", "Fire the event", VarArgsMethod(&PEvent::fire));
     add_property("listeners", "Functions listening to this event", Listeners, static_cast<PropertyFlag>(0));
     add_property("handler", "handler for the event", Handler, static_cast<PropertyFlag>(0));
 
