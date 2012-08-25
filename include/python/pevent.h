@@ -36,6 +36,12 @@ class PEventBase;
 
 typedef function<PObject(PEventBase *, PTuple args)> EventCallback;
 
+enum EventProperties
+{
+  Listeners,
+  Handler
+};
+
 class PEventBase : public PCType<PEventBase, EventCallback>
 {
 public:
@@ -79,6 +85,8 @@ public:
     type.tp_name = "Event";
 
     add_method("fire", "Fire the event", VarArgsMethod(&PEventBase::fire));
+    add_property("listeners", "Functions listening to this event", Listeners, static_cast<PropertyFlag>(0));
+    add_property("handler", "handler for the event", Handler, static_cast<PropertyFlag>(0));
 
     PCType::init(module);
   }
@@ -92,6 +100,8 @@ template<class T1=NullArg, class T2=NullArg, class T3=NullArg, class T4=NullArg,
 class PEvent : public PEventBase
 {
 private:
+  PObject listeners;
+  PObject handler;
 #ifndef _MSC_VER
   Event<T...> inner_event;
 #else
@@ -113,7 +123,7 @@ public:
     inner = callback;
   }
 #else
-  PEvent(Event<T1, T2, T3, T4, T5> event, EventCallback callback)
+  PEvent(Event<T1, T2, T3, T4, T5> event, EventCallback callback) : listeners(Py_None), handler(Py_None)
   {
     inner_event = event;
     inner = callback;
@@ -122,6 +132,38 @@ public:
 
   ~PEvent()
   {
+  }
+
+  PObject get(Property prop)
+  {
+    PObject value;
+
+    switch(prop.number)
+    {
+    case Listeners:
+      value = listeners;
+      break;
+    case Handler:
+      value = handler;
+      break;
+    }
+
+    return value;
+  }
+
+  int set(Property prop, PObject value)
+  {
+    switch(prop.number)
+    {
+    case Listeners:
+      listeners = value;
+      break;
+    case Handler:
+      handler = value;
+      break;
+    }
+
+    return 0;
   }
 
 /*  PObject string_callback(PTuple args)

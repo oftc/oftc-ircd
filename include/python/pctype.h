@@ -38,6 +38,22 @@
 using std::map;
 using std::string;
 
+enum PropertyFlag
+{
+  BoolArg = 0x1,
+  IntArg = 0x2,
+  StringArg = 0x4,
+  ClientArg = 0x8,
+  ChannelArg = 0x10,
+  ServerArg = 0x20
+};
+
+struct Property : public PyGetSetDef 
+{
+  int number;
+  PropertyFlag flags;
+};
+
 template<class Outer, class Inner>
 class PCType : public PyObject
 {
@@ -50,6 +66,7 @@ public:
   typedef function<PObject(Outer *, const PTuple)> VarArgsMethod;
   typedef function<PObject(Outer *, const PTuple, const PDict)> KeywordArgsMethod;
   typedef map<string, PMethod<Outer> > MethodMap;
+  typedef map<string, Property> PropertyMap;
 
   PCType() : heap(false)
   {
@@ -93,13 +110,30 @@ public:
     ss << "(" << type_object().tp_name << " object at " << std::hex << std::showbase << this << ")";
     return PString(ss.str());
   }
+  
+  virtual PObject get(Property prop)
+  {
+    Py_RETURN_NONE;
+  }
+
+  virtual int set(Property prop, PObject value)
+  {
+    return 0;
+  }
 
   virtual PObject getattro(PString name)
   {
     auto it = methods().find(name);
 
     if(it == methods().end())
-      return PyObject_GenericGetAttr(this, name);
+    {
+      auto pit = properties().find(name);
+
+      if(pit == properties().end())
+        return PyObject_GenericGetAttr(this, name);
+
+      return get(pit->second);
+    }
 
     PTuple args(2);
 
@@ -107,6 +141,16 @@ public:
     args.set_item(1, PyCObject_FromVoidPtr(it->second, NULL));
 
     return PyCFunction_NewEx(it->second, args, NULL);
+  }
+
+  virtual int setattro(PString name, PObject value)
+  {
+    auto it = properties().find(name);
+
+    if(it == properties().end())
+      return PyObject_GenericSetAttr(this, name, value);
+
+    return set(it->second, value);
   }
 
   inline bool is_heap() const { return heap; }
@@ -176,11 +220,33 @@ public:
     methods()[name] = PMethod<Outer>(name, METH_VARARGS | METH_STATIC | METH_KEYWORDS, reinterpret_cast<PyCFunction>(method), doc);
   }
 
+  static void add_property(const char *name, const char *doc, int number, PropertyFlag flags)
+  {
+    Property prop;
+
+    prop.name = const_cast<char *>(name);
+    prop.doc = const_cast<char *>(doc);
+    prop.flags = flags;
+    prop.number = number;
+    prop.set = NULL;
+    prop.closure = NULL;
+    prop.get = NULL;
+
+    properties()[name] = prop;
+  }
+
   static PyObject *getattro_callback(PyObject *self, PyObject *name)
   {
     PCType<Outer, Inner> *base = static_cast<PCType<Outer, Inner> *>(self);
 
     return base->getattro(name);
+  }
+
+  static int setattro_callback(PyObject *self, PyObject *name, PyObject *value)
+  {
+    PCType<Outer, Inner> *base = static_cast<PCType<Outer, Inner> *>(self);
+
+    return base->setattro(name, value);
   }
 
   static PyObject *noargs_callback(PyObject *self)
@@ -220,6 +286,7 @@ public:
     type.tp_new = create;
     type.tp_dealloc = dealloc;
     type.tp_getattro = getattro_callback;
+    type.tp_setattro = setattro_callback;
     type.tp_flags |= Py_TPFLAGS_DEFAULT;
     if(type.tp_name == NULL)
       type.tp_name = (string(typeid(Outer).name()) + string("Wrap")).c_str();
@@ -229,7 +296,7 @@ public:
 
     int i = 0;
 
-    for(auto it = methods().begin(); it != methods().end(); it++, i++)
+    for(auto it = methods().cbegin(); it != methods().cend(); it++, i++)
     {
       PyMethodDef *def = &pymeth[i];
       
@@ -242,6 +309,25 @@ public:
     pymeth[i].ml_name = NULL;
 
     type.tp_methods = pymeth;
+
+    i = 0;
+    int propertylen = properties().size() + 1;
+    PyGetSetDef *pyprop = new PyGetSetDef[propertylen];
+
+    for(auto it = properties().cbegin(); it != properties().cend(); it++, i++)
+    {
+      PyGetSetDef *def = &pyprop[i];
+
+      *def = it->second;
+    }
+
+    pyprop[i].doc = NULL;
+    pyprop[i].closure = NULL;
+    pyprop[i].get = NULL;
+    pyprop[i].set = NULL;
+    pyprop[i].name = NULL;
+
+    type.tp_getset = pyprop;
 
     if(PyType_Ready(&type) != 0)
     {
@@ -264,6 +350,13 @@ public:
     static MethodMap method_map;
 
     return method_map;
+  }
+
+  static PropertyMap& properties()
+  {
+    static PropertyMap property_map;
+    
+    return property_map;
   }
 };
 
