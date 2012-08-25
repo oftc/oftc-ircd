@@ -29,7 +29,7 @@
 
 PString::PString() : PObject(0)
 {
-  object = PyObject_New(PyObject, &PyString_Type);
+  object = PyObject_CallObject(reinterpret_cast<PyObject *>(&PyString_Type), NULL);
 }
 
 PString::PString(PyObject *str) : PObject(str)

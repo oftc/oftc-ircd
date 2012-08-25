@@ -29,23 +29,27 @@
 
 PObject::PObject()
 {
-  object = PyObject_New(PyObject, &PyBaseObject_Type);
+  object = PyObject_CallObject(reinterpret_cast<PyObject *>(&PyBaseObject_Type), NULL);
+  Logging::trace << "python object new " << object << Logging::endl;
 }
 
 PObject::PObject(PyObject *ptr)
 {
   object = ptr;
   Py_XINCREF(object);
+  Logging::trace << "python object incref(new ptr) " << object << Logging::endl;
 }
 
 PObject::PObject(const PObject& copy)
 {
   object = copy.object;
   Py_XINCREF(object);
+  Logging::trace << "python object incref(copyctor) " << object << Logging::endl;
 }
 
 PObject::~PObject()
 {
+  Logging::trace << "python object decref(dtor) " << object << Logging::endl;
   Py_XDECREF(object);
 }
 

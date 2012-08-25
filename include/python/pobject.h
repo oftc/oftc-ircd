@@ -27,6 +27,7 @@
 #define POBJECT_H_INC
 
 #include "Python.h"
+#include "stdinc.h"
 
 class PString;
 
@@ -48,8 +49,11 @@ public:
 
   virtual PObject& operator=(const PObject& right)
   {
+    Logging::trace << "python object defref(assign) " << object << Logging::endl;
+    Py_XDECREF(object);
     object = right;
     Py_XINCREF(object);
+    Logging::trace << "python object incref(assign) " << object << Logging::endl;
     return *this;
   }
 
