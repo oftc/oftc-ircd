@@ -28,6 +28,7 @@
 
 #include "Python.h"
 #include "python/pobject.h"
+#include "ircstring.h"
 
 class PString : public PObject
 {
@@ -36,6 +37,7 @@ public:
   PString(PyObject *);
   PString(const char *);
   PString(string);
+  PString(irc_string);
 
   operator string() const
   {

@@ -42,6 +42,12 @@ PString::PString(string str)
   Py_INCREF(object);
 }
 
+PString::PString(irc_string str)
+{
+  object = PyString_FromString(str.c_str());
+  Py_INCREF(object);
+}
+
 const char *PString::c_str() const
 {
   return PyString_AsString(object);
