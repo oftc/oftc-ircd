@@ -35,7 +35,7 @@
 
 class PEventBase;
 
-typedef function<PObject(PEventBase *, PTuple args)> EventCallback;
+typedef function<PObject(PTuple)> EventCallback;
 
 enum EventProperties
 {
@@ -48,7 +48,7 @@ class PEvent : public PCType<PEvent, EventCallback>
 private:
   PObject listeners;
   PObject handler;
-  function<bool(PTuple)> callback;
+  EventCallback callback;
 public:
   PEvent() : listeners(Py_None), handler(Py_None)
   {
@@ -94,7 +94,7 @@ public:
     return 0;
   }
 
-  void set_func(function<bool(PTuple)> func)
+  void set_func(EventCallback func)
   {
     callback = func;
   }
