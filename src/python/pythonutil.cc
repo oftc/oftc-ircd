@@ -135,7 +135,7 @@ PString PythonUtil::send_format(PObject source, PTuple args, PDict kwargs)
 
   fdict.set_item("me", PClient::get_me());
 
-  if (kwargs != NULL)
+  if (kwargs)
     fdict.update(kwargs);
 
   method = format.getattr("format");

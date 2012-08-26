@@ -34,6 +34,8 @@ class PDict : public PSequence<PObject>
 public:
   PDict();
   PDict(PyObject *);
+
+  using PSequence<PObject>::set_item;
   
   int set_item(const char *key, const PObject value)
   {

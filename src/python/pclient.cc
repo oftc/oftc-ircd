@@ -86,7 +86,7 @@ PObject PClient::numeric(PTuple args)
   if(!Client::is_client(inner))
   {
     PyErr_SetString(PyExc_RuntimeError, "Cannot send a numeric to a non-client");
-    return NULL;
+    return static_cast<PyObject *>(NULL);
   }
 
   ptr = dynamic_pointer_cast<Client>(inner);
@@ -101,10 +101,10 @@ PObject PClient::numeric(PTuple args)
     {
       i++;
       item = args[index++];
-      if(item == NULL)
+      if(!item)
       {
         PyErr_SetString(PyExc_TypeError, "Not enough arguments for numeric format");
-        return NULL;
+        return static_cast<PyObject *>(NULL);
       }
       switch(*i)
       {
@@ -157,7 +157,7 @@ PObject PClient::send(PTuple args, PDict kwargs)
   PString str = PythonUtil::send_format(this, args, kwargs);
 
   if(!str)
-    return NULL;
+    return static_cast<PyObject *>(NULL);
 
   inner->send(str);
 
@@ -169,7 +169,7 @@ PObject PClient::send_channels_common(PTuple args, PDict kwargs)
   PString str = PythonUtil::send_format(this, args, kwargs);
 
   if(!str)
-    return NULL;
+    return static_cast<PyObject *>(NULL);
 
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(inner);
   ptr->send_channels_common(str);
@@ -187,7 +187,7 @@ PObject PClient::remove_channel(PTuple args)
   if(!PChannel::check(channel))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Channel");
-    return NULL;
+    return static_cast<PyObject *>(NULL);
   }
 
   ptr->remove_channel(*channel);

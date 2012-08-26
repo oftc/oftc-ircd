@@ -74,7 +74,7 @@ PObject PChannel::add_member(PTuple args)
   if(!PClient::check(client) || !BaseClient::is_client(*client))
   {
     PyErr_SetString(PyExc_TypeError, "Argument must be a Client type");
-    return NULL;
+    return static_cast<PyObject *>(NULL);
   }
 
   inner->add_member(*client);
@@ -92,7 +92,7 @@ PObject PChannel::is_member(PTuple args)
   if(!PClient::check(client) || !BaseClient::is_client(*client))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
-    return static_cast<PyObject *>(PObject(NULL));
+    return static_cast<PyObject *>(NULL);
   }
 
   ret = PBool(inner->is_member(*client));
@@ -109,7 +109,7 @@ PObject PChannel::remove_member(PTuple args)
   if(!PClient::check(client) || !BaseClient::is_client(*client))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
-    return NULL;
+    return static_cast<PyObject *>(NULL);
   }
 
   inner->remove_member(*client);
@@ -126,7 +126,7 @@ PObject PChannel::send_names(PTuple args)
   if(!PClient::check(client) || !BaseClient::is_client(*client))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
-    return NULL;
+    return static_cast<PyObject *>(NULL);
   }
   
   inner->send_names(*client);
@@ -147,11 +147,11 @@ PObject PChannel::send(PTuple args, PDict kwargs)
   if(!PClient::check(client) || !BaseClient::is_client(*client))
   {
     PyErr_SetString(PyExc_TypeError, "client argument must be a Client type");
-    return NULL;
+    return static_cast<PyObject *>(NULL);
   }
 
-  if(result == NULL)
-    return NULL;
+  if(!result)
+    return static_cast<PyObject *>(NULL);
 
   inner->send(*client, result);
 
