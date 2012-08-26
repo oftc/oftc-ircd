@@ -68,7 +68,7 @@ PClient::~PClient()
 
 PObject PClient::close(PTuple args)
 {
-  PString reason = args[0];
+  PString reason = static_cast<PString>(args[0]);
   inner->close(reason);
 
   Py_RETURN_NONE;
@@ -131,7 +131,7 @@ PObject PClient::numeric(PTuple args)
           return NULL;
         }*/
 
-        output << item.str();
+        output << item.str().c_str();
         break;
       default:
         throw runtime_error("format specifier not implemented yet");

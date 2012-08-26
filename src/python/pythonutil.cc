@@ -115,9 +115,9 @@ PyObject *PythonUtil::get_motd(PyObject *self, PyObject *arg)
   return ret;
 }
 
-PObject PythonUtil::send_format(PObject source, PTuple args, PDict kwargs)
+PString PythonUtil::send_format(PObject source, PTuple args, PDict kwargs)
 {
-  PString format = args[0];
+  PString format = static_cast<PString>(args[0]);
   PDict fdict;
   PObject method;
   PTuple fargs(0);
@@ -139,5 +139,5 @@ PObject PythonUtil::send_format(PObject source, PTuple args, PDict kwargs)
     fdict.update(kwargs);
 
   method = format.getattr("format");
-  return method(fargs, fdict);
+  return PString(method(fargs, fdict));
 }
