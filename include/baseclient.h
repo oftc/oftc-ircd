@@ -43,7 +43,7 @@ using std::map;
 class Connection;
 class BaseClient;
 
-typedef unordered_map<irc_string, ClientPtr> NameHash;
+typedef unordered_map<irc_string, ClientPtr, irc_hash> NameHash;
 typedef map<BaseClient *, ClientPtr> ClientList;
 
 class BaseClient

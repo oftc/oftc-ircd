@@ -56,7 +56,7 @@ struct Membership
   MembershipFlags flags;
 };
 
-typedef unordered_map<irc_string, ChannelPtr> ChannelNameHash;
+typedef unordered_map<irc_string, ChannelPtr, irc_hash> ChannelNameHash;
 typedef map<Channel *, ChannelPtr> ChannelList;
 typedef map<ClientPtr, Membership> ChannelMemberList;
 
