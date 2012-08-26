@@ -33,16 +33,38 @@
 
 class PClient : public PCType<PClient, ClientPtr>
 {
+private:
+  static PClient *me;
 public:
   PClient();
   PClient(PTuple, PDict);
   PClient(ClientPtr);
   ~PClient();
 
+  PObject get(Property);
+  int set(Property, PObject);
+
+  PString str()
+  {
+    return inner->str();
+  }
+
   inline PBool is_registered() const { return inner->is_registered(); }
+  inline PBool is_ssl() const { return inner->is_ssl(); }
+
+  PObject close(PTuple);
+  PObject numeric(PTuple);
+  PObject send(PTuple, PDict);
+  PObject send_channels_common(PTuple, PDict);
+  PObject remove_channel(PTuple);
 
   static PyObject *find_by_name(PyObject *, PyObject *);
+  static PyObject *del_name(PyObject *, PyObject *);
+  static PyObject *add_name(PyObject *, PyObject *);
+  static PyObject *add(PyObject *, PyObject *);
   static void init(const PObject&);
+
+  inline static PClient *get_me() { return me; }
 };
 
 #endif
