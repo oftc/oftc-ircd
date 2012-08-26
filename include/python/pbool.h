@@ -33,7 +33,6 @@ class PBool : public PObject
 public:
   PBool();
   PBool(bool);
-  PBool(PyObject *);
   ~PBool();
 
   using PObject::operator=;

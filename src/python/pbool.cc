@@ -31,11 +31,7 @@ PBool::PBool()
   object = PyObject_New(PyObject, &PyBool_Type);
 }
 
-PBool::PBool(PyObject *ptr) : PObject(ptr)
-{
-}
-
-PBool::PBool(bool arg)
+PBool::PBool(bool arg) : PObject(0)
 {
   object = PyBool_FromLong(arg);
 }
