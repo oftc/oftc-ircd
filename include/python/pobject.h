@@ -38,13 +38,18 @@ protected:
 public:
   PObject();
   PObject(PyObject *);
-  PObject(int a) { }; // empty constructor only for use in derived classes
+  PObject(int a) : object(NULL) { }; // empty constructor only for use in derived classes
   PObject(const PObject &);
   ~PObject();
 
   virtual operator PyObject *() const
   {
     return object;
+  }
+
+  virtual operator bool() const
+  {
+    return object != NULL;
   }
 
   virtual PObject& operator=(const PObject& right)
@@ -70,7 +75,20 @@ public:
     return PyObject_CallObject(object, args);
   }
 
+  virtual PObject operator()(const PObject& args, const PObject& kwargs)
+  {
+    if(!PyCallable_Check(object))
+      Py_RETURN_NONE;
+
+    return PyObject_Call(object, args, kwargs);
+  }
+
   virtual PString str();
+
+  virtual PObject getattr(const char *attr)
+  {
+    return PyObject_GetAttrString(object, attr);
+  }
 };
 
 #endif
