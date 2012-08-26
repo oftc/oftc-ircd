@@ -115,44 +115,29 @@ PyObject *PythonUtil::get_motd(PyObject *self, PyObject *arg)
   return ret;
 }
 
-#if 0
-PyObject *PythonUtil::send_format(PyObject *source, PyObject *args, PyObject *kwargs)
+PObject PythonUtil::send_format(PObject source, PTuple args, PDict kwargs)
 {
-  PyObject *fmt, *result, *meth, *fargs, *fdict;
+  PString format = args[0];
+  PDict fdict;
+  PObject method;
+  PTuple fargs(0);
 
-  fmt = PyTuple_GetItem(args, 0);
-
-  if(!PyString_Check(fmt))
+/*  if(!PyString_Check(fmt))
   {
     PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
     return NULL;
-  }
+  }*/
 
-  fdict = PyDict_New();
-  if(!ChannelWrap::check(source))
-    PyDict_SetItemString(fdict, "client", source);
+  if(!PChannel::check(source))
+    fdict.set_item("client", source);
   else
-    PyDict_SetItemString(fdict, "channel", source);
+    fdict.set_item("channel", source);
 
-  PyDict_SetItemString(fdict, "me", ClientWrap::get_me());
+  fdict.set_item("me", PClient::get_me());
 
   if (kwargs != NULL)
-    PyDict_Update(fdict, kwargs);
+    fdict.update(kwargs);
 
-  meth = PyObject_GetAttrString(fmt, "format");
-
-  fargs = PyTuple_New(0);
-  result = PyObject_Call(meth, fargs, fdict);
-
-  Py_DECREF(meth);
-  Py_DECREF(fdict);
-  Py_DECREF(fargs);
-
-  if(result == NULL)
-  {
-    return NULL;
-  }
-
-  return result;
+  method = format.getattr("format");
+  return method(fargs, fdict);
 }
-#endif

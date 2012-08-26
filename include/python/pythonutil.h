@@ -27,11 +27,15 @@
 #define PYTHONUTIL_H_INC
 
 #include "Python.h"
+#include "python/pobject.h"
 #include <string>
 #include <vector>
 
 using std::string;
 using std::vector;
+
+class PTuple;
+class PDict;
 
 class PythonUtil
 {
@@ -41,7 +45,7 @@ public:
   static void init_python();
   static void log_error();
   static void register_type(PyObject *, PyTypeObject&);
-  static PyObject *send_format(PyObject *, PyObject *, PyObject *);
+  static PObject send_format(PObject, PTuple, PDict);
 };
 
 #endif
