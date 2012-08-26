@@ -26,6 +26,11 @@
 #include "python/pdict.h"
 #include "stdinc.h"
 
+PDict::PDict()
+{
+  object = PyDict_New();
+}
+
 PDict::PDict(PyObject *ptr) : PSequence<PObject>(ptr)
 {
 }

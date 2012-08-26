@@ -32,7 +32,18 @@
 class PDict : public PSequence<PObject>
 {
 public:
+  PDict();
   PDict(PyObject *);
+  
+  int set_item(const char *key, const PObject value)
+  {
+    return PyDict_SetItemString(object, key, value);
+  }
+
+  int update(const PDict dict)
+  {
+    return PyDict_Update(object, dict);
+  }
 
   PObject operator [](const char *key)
   {
