@@ -27,17 +27,34 @@
 #define PCHANNEL_H_INC
 
 #include "Python.h"
-#include "pctype.h"
+#include "python/pctype.h"
 #include "channel.h"
+#include "python/pbool.h"
 
 class PChannel : public PCType<PChannel, ChannelPtr>
 {
 public:
   PChannel();
   PChannel(PTuple, PDict);
+  PChannel(ChannelPtr);
   ~PChannel();
 
+  PObject add_member(PTuple);
+  PObject is_member(PTuple);
+  PObject remove_member(PTuple);
+  PObject send_names(PTuple);
+  PObject send(PTuple, PDict);
+  PObject set_mode_char(PTuple);
+
+  PString str();
+  PObject get(Property);
+  int set(Property, PObject);
+
   static void init(const PObject&);
+  static PyObject *add(PyObject *, PyObject *);
+  static PyObject *del(PyObject *, PyObject *);
+  static PyObject *find(PyObject *, PyObject *);
+  static PyObject *supported_modes(PyObject *, PyObject *);
 };
 
 #endif
