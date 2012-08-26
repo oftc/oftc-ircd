@@ -165,6 +165,7 @@ public:
   {
     PyObject *ptr = type->tp_alloc(type, 0);
     Outer *obj = new(ptr) Outer(PTuple(args), PDict(kwds));
+    static_cast<void>(PyObject_INIT(obj, type));
 
     return static_cast<PyObject *>(obj);
   }
@@ -172,16 +173,12 @@ public:
   static PyObject *alloc(PyTypeObject *type, Py_ssize_t items)
   {
     char *ret;
-    PyObject *obj;
 
     ret = new char[_PyObject_VAR_SIZE(type, items)]();
 
-    obj = reinterpret_cast<PyObject *>(ret);
-    static_cast<void>(PyObject_INIT(obj, type));
+    Logging::trace << "Created Python object: " << type->tp_name << " at: " << static_cast<void *>(ret) << Logging::endl;
 
-    Logging::trace << "Created Python object: " << type->tp_name << " at: " << static_cast<void *>(obj) << Logging::endl;
-
-    return obj;
+    return reinterpret_cast<PyObject *>(ret);
   }
 
   static void free(void *ptr)
