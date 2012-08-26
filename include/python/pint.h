@@ -29,10 +29,11 @@
 #include "python/pobject.h"
 #include "command.h"
 
-class PInt : PObject
+class PInt : public PObject
 {
 public:
   PInt();
+  PInt(int);
   PInt(PyObject *);
   ~PInt();
 
