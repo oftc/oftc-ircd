@@ -36,7 +36,7 @@ PString::PString(PyObject *str) : PObject(str)
 {
 }
 
-PString::PString(string str)
+PString::PString(string str) : PObject(0)
 {
   object = PyString_FromString(str.c_str());
   Py_INCREF(object);

@@ -30,7 +30,7 @@ PTuple::PTuple(PyObject *ptr) : PSequence<PObject>(ptr)
 {
 }
 
-PTuple::PTuple(int size)
+PTuple::PTuple(int size) : PSequence<PObject>(0)
 {
   object = PyTuple_New(size);
 }

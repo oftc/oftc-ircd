@@ -41,6 +41,10 @@ public:
   {
   }
 
+  PSequence(int) : PObject(0)
+  {
+  }
+
   using PObject::operator=;
 
   const T operator[] (int index) const
