@@ -40,6 +40,7 @@ using std::string;
 
 enum PropertyFlag
 {
+  NoFlags = 0x0,
   BoolArg = 0x1,
   IntArg = 0x2,
   StringArg = 0x4,
@@ -154,6 +155,11 @@ public:
   }
 
   inline bool is_heap() const { return heap; }
+
+  static bool check(PyObject *obj)
+  {
+    return Py_TYPE(obj) == &type_object();
+  }
 
   static PyObject *create(PyTypeObject *type, PyObject *args, PyObject *kwds)
   {
@@ -273,7 +279,20 @@ public:
 
   static PyObject *kwargs_callback(PyObject *self, PyObject *args, PyObject *kwargs)
   {
-    Py_RETURN_NONE;
+    PTuple data(self);
+
+    PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(data[1]));
+    PyObject *tmp = data[0];
+    Outer *ptr = static_cast<Outer *>(tmp);
+
+    return method(ptr, args, kwargs);
+  }
+
+  static PyObject *str_callback(PyObject *self)
+  {
+    PCType<Outer, Inner> *base = static_cast<PCType<Outer, Inner> *>(self);
+
+    return base->str();
   }
   
   static void init(const PObject& module)
@@ -287,6 +306,7 @@ public:
     type.tp_dealloc = dealloc;
     type.tp_getattro = getattro_callback;
     type.tp_setattro = setattro_callback;
+    type.tp_str = str_callback;
     type.tp_flags |= Py_TPFLAGS_DEFAULT;
     if(type.tp_name == NULL)
       type.tp_name = (string(typeid(Outer).name()) + string("Wrap")).c_str();

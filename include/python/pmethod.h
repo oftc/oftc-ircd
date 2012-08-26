@@ -88,6 +88,11 @@ public:
     return varargs(self, args);
   }
 
+  PObject operator ()(T* self, PTuple args, PDict kwds)
+  {
+    return kwargs(self, args, kwds);
+  }
+
   operator PyMethodDef *()
   {
     return this;
