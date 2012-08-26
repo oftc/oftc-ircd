@@ -241,17 +241,6 @@ public:
     properties()[name] = prop;
   }
   
-  template<class T1, class T2, class T3, class T4, class T5>
-  static void add_event(const char *name, Event<T1, T2, T3, T4, T5> event, PObject(PEvent::*callback)(Event<T1, T2, T3, T4, T5>, PTuple))
-  {
-    PEvent *e = new PEvent();
-
-    auto func = std::bind(callback, e, event, _1);
-    e->set_func(func);
-
-    PyDict_SetItemString(type_object().tp_dict, name, e);
-  }
-
   static PyObject *getattro_callback(PyObject *self, PyObject *name)
   {
     PCType<Outer, Inner> *base = static_cast<PCType<Outer, Inner> *>(self);

@@ -251,8 +251,8 @@ void PChannel::init(const PObject& module)
 
   PCType::init(module);
 
-  add_event("joining", Channel::joining, &PEvent::channel_client_callback);
-  add_event("joined", Channel::joined, &PEvent::channel_client_callback);
+  PEvent::add_event(type.tp_dict, "joining", Channel::joining, &PEvent::channel_client_callback);
+  PEvent::add_event(type.tp_dict, "joined", Channel::joined, &PEvent::channel_client_callback);
 }
 
 PyObject *PChannel::add(PyObject *self, PyObject *vargs)

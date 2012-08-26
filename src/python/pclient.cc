@@ -287,9 +287,9 @@ void PClient::init(const PObject& module)
 
   me = new PClient(Server::get_me());
 
-  add_event("closing", Client::closing, &PEvent::client_string_callback);
-  add_event("nick_changing", Client::nick_changing, &PEvent::client_ircstring_callback);
-  add_event("nick_changed", Client::nick_changed, &PEvent::client_string_callback);
+  PEvent::add_event(type.tp_dict, "closing", Client::closing, &PEvent::client_string_callback);
+  PEvent::add_event(type.tp_dict, "nick_changing", Client::nick_changing, &PEvent::client_ircstring_callback);
+  PEvent::add_event(type.tp_dict, "nick_changed", Client::nick_changed, &PEvent::client_string_callback);
 
   PyDict_SetItemString(type.tp_dict, "Me", me);
 }

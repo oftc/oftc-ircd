@@ -33,8 +33,6 @@
 #include "pchannel.h"
 #include "event.h"
 
-class PEventBase;
-
 typedef function<PObject(PTuple)> EventCallback;
 
 enum EventProperties
@@ -137,6 +135,17 @@ public:
     PBool ret(event(*client, str.c_str()));
 
     return ret;
+  }
+
+  template<class T1, class T2, class T3, class T4, class T5>
+  static void add_event(PyObject *dict, const char *name, Event<T1, T2, T3, T4, T5> event, PObject(PEvent::*callback)(Event<T1, T2, T3, T4, T5>, PTuple))
+  {
+    PEvent *e = new PEvent();
+
+    auto func = std::bind(callback, e, event, _1);
+    e->set_func(func);
+
+    PyDict_SetItemString(dict, name, e);
   }
 
   static void init(const PObject& module)
