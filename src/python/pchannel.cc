@@ -251,15 +251,8 @@ void PChannel::init(const PObject& module)
 
   PCType::init(module);
 
-  PEvent *event = new PEvent();
-  auto func = std::bind(&PEvent::channel_client_callback, event, Channel::joined, _1);
-  event->set_func(func);
-  PyDict_SetItemString(type.tp_dict, "joined", event);
-
-  event = new PEvent();
-  auto func2 = std::bind(&PEvent::channel_client_callback, event, Channel::joining, _1);
-  event->set_func(func2);
-  PyDict_SetItemString(type.tp_dict, "joining", event);
+  add_event("joining", Channel::joining, &PEvent::channel_client_callback);
+  add_event("joined", Channel::joined, &PEvent::channel_client_callback);
 }
 
 PyObject *PChannel::add(PyObject *self, PyObject *vargs)

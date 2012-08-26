@@ -287,20 +287,9 @@ void PClient::init(const PObject& module)
 
   me = new PClient(Server::get_me());
 
-  PEvent *event = new PEvent();
-  auto func = std::bind(&PEvent::client_string_callback, event, Client::closing, _1);
-  event->set_func(func);
-  PyDict_SetItemString(type.tp_dict, "closing", event);
-
-  event = new PEvent();
-  auto func2 = std::bind(&PEvent::client_ircstring_callback, event, Client::nick_changing, _1);
-  event->set_func(func2);
-  PyDict_SetItemString(type.tp_dict, "nick_changing", event);
-
-  event = new PEvent();
-  auto func3 = std::bind(&PEvent::client_string_callback, event, Client::nick_changed, _1);
-  event->set_func(func3);
-  PyDict_SetItemString(type.tp_dict, "nick_changed", event);
+  add_event("closing", Client::closing, &PEvent::client_string_callback);
+  add_event("nick_changing", Client::nick_changing, &PEvent::client_ircstring_callback);
+  add_event("nick_changed", Client::nick_changed, &PEvent::client_string_callback);
 
   PyDict_SetItemString(type.tp_dict, "Me", me);
 }

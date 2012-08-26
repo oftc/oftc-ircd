@@ -34,6 +34,7 @@
 #include "python/pdict.h"
 #include "python/ptuple.h"
 #include "python/pmethod.h"
+#include "event.h"
 
 using std::map;
 using std::string;
@@ -54,6 +55,8 @@ struct Property : public PyGetSetDef
   int number;
   PropertyFlag flags;
 };
+
+class PEvent;
 
 template<class Outer, class Inner>
 class PCType : public PyObject
@@ -236,6 +239,17 @@ public:
     prop.get = NULL;
 
     properties()[name] = prop;
+  }
+  
+  template<class T1, class T2, class T3, class T4, class T5>
+  static void add_event(const char *name, Event<T1, T2, T3, T4, T5> event, PObject(PEvent::*callback)(Event<T1, T2, T3, T4, T5>, PTuple))
+  {
+    PEvent *e = new PEvent();
+
+    auto func = std::bind(callback, e, event, _1);
+    e->set_func(func);
+
+    PyDict_SetItemString(type_object().tp_dict, name, e);
   }
 
   static PyObject *getattro_callback(PyObject *self, PyObject *name)
