@@ -139,7 +139,7 @@ public:
     return ret;
   }
 
-#ifdef MSC_VER
+#ifdef _MSC_VER
   template<class T1, class T2, class T3, class T4, class T5>
   static void add_event(PyObject *dict, const char *name, Event<T1, T2, T3, T4, T5> event, PObject(PEvent::*callback)(Event<T1, T2, T3, T4, T5>, PTuple))
 #else
