@@ -90,6 +90,17 @@ public:
   {
     return PyObject_GetAttrString(object, attr);
   }
+
+  virtual const PObject& incref()
+  {
+    Py_XINCREF(object);
+    return *this;
+  }
+
+  virtual void decref()
+  {
+    Py_XDECREF(object);
+  }
 };
 
 #endif
