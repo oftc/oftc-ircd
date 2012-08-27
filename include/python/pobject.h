@@ -39,6 +39,7 @@ public:
   PObject();
   PObject(PyObject *);
   PObject(int a) : object(NULL) { }; // empty constructor only for use in derived classes
+  PObject(long) : object(NULL) { }; // for NULL on 64 bit
   PObject(const PObject &);
   ~PObject();
 
