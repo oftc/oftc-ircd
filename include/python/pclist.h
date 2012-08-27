@@ -23,30 +23,34 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef LISTWRAP_H_INC
-#define LISTWRAP_H_INC
+#ifndef PList_H_INC
+#define PList_H_INC
 
 #include "Python.h"
-#include "python/pythonwrap.h"
-#include "python/collectionwrap.h"
+#include "python/pctype.h"
+#include "python/pcollection.h"
 
 template<class List, class WrappedValue>
-class ListWrap : public CollectionWrap
+class PList : public PCollection
 {
 private:
-  typedef ListWrap<List, WrappedValue> ListWrapType;
+  typedef PList<List, WrappedValue> PListType;
   List inner_list;
   typename List::const_iterator current;
 public:
-  ListWrap()
+  PList()
   {
   }
 
-  ListWrap(PyObject *args, PyObject *kwargs)
+  PList(List ptr) : PCollection(PTuple(), PDict()), inner_list(ptr)
   {
   }
 
-  ~ListWrap()
+  PList(PTuple args, PDict kwargs)
+  {
+  }
+
+  ~PList()
   {
   }
 
@@ -55,7 +59,7 @@ public:
     inner_list = l;
   }
 
-  PyObject *append(PyObject *args)
+  PObject append(PTuple args)
   {
    /* PyObject *key, *value;
     Wrapped *wrapped;
@@ -67,32 +71,22 @@ public:
     Py_RETURN_NONE;
   }
 
-  PyObject *iter()
+  PObject iter()
   {
     current = inner_list.begin();
     Py_INCREF(this);
     return this;
   }
 
-  PyObject *next()
+  PObject next()
   {
     if(current == inner_list.end())
       return NULL;
 
-    WrappedValue *value = WrappedValue::wrap(&(*current));
+    WrappedValue *value = new WrappedValue(&(*current));
     current++;
 
     return value;
-  }
-
-  static PyObject *wrap(const List& list)
-  {
-    ListWrapType *wrapped = new ListWrapType();
-    wrapped = PyObject_INIT(wrapped, &type_object());
-
-    wrapped->set_list(list);
-
-    return wrapped;
   }
 };
 

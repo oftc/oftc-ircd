@@ -197,6 +197,10 @@ PObject PChannel::get(Property prop)
     return PBool(inner->is_topic_op_only());
   case Secure:
     return PBool(inner->is_secure());
+  case Members:
+    return new PChannelMemberList(inner->get_members());
+  case Bans:
+    return new PCollection();
   }
 
   Py_RETURN_NONE;
@@ -247,7 +251,7 @@ void PChannel::init(const PObject& module)
   add_property("Invexes", "channel invex list", Invexes, NoFlags);
   add_property("Quiets", "channel quiet list", Quiets, NoFlags);
   add_property("Excepts", "channel except list", Excepts, NoFlags);
-  add_property("Members", "channel except list", Excepts, NoFlags);
+  add_property("Members", "channel member list", Members, NoFlags);
 
   PCType::init(module);
 

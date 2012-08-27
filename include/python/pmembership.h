@@ -23,39 +23,26 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef MEMBERSHIPWRAP_H_INC
-#define MEMBERSHIPWRAP_H_INC
+#ifndef PMEMBERSHIP_H_INC
+#define PMEMBERSHIP_H_INC
 
 #include "Python.h"
-#include "python/pythonwrap.h"
-#include "python/clientwrap.h"
-#include "python/eventwrap.h"
+#include "python/pctype.h"
+
 #include "channel.h"
 
-class MembershipWrap : public PythonWrap<MembershipWrap, Membership>
+class PMembership : public PCType<PMembership, Membership>
 {
 private:
-  static PyObject *joining;
-  static PyObject *joined;
 public:
-  // Non Python methods
   static void init(PyObject *);
 
-  // Event callbacks
+  PMembership(PTuple, PDict);
+  PMembership(Membership ptr);
+  ~PMembership();
 
-  // Event fires
-
-  // Get/Setters
-  static PyObject *get_wrap(MembershipWrap *, void *);
-  static int set_wrap(MembershipWrap *, PyObject *, void *);
-
-  // Python methods
-
-  // ctor/dtor
-  MembershipWrap(PyObject *, PyObject *);
-  ~MembershipWrap();
-
-  // members
+  PObject get(Property);
+  int set(Property, PObject);
 };
 
 #endif

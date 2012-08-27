@@ -23,31 +23,64 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PTUPLE_H_INC
-#define PTUPLE_H_INC
-
-#include "Python.h"
+#include <Python.h>
+#include <structmember.h>
 #include "stdinc.h"
-#include "psequence.h"
+#include "python/pmembership.h"
+#include "python/pythonutil.h"
+#include "python/pchannel.h"
+#include "python/pclient.h"
+#include "python/pint.h"
 
-class PTuple : public PSequence<PObject>
+enum MembershipProperty
 {
-public:
-  PTuple();
-  PTuple(int);
-  PTuple(PyObject *);
-
-  using PSequence<PObject>::operator=;
-
-  virtual void set_item(int index, const PObject& item)
-  {
-    if(PyTuple_SetItem(object, index, item) == -1)
-    {
-      PythonUtil::log_error();
-      throw runtime_error("Error setting tuple item");
-    }
-  }
-
+  Channel,
+  Client,
+  Flags,
 };
 
-#endif
+PMembership::PMembership(PTuple args, PDict kwds) : PCType(args, kwds)
+{
+}
+
+PMembership::PMembership(Membership ptr) : PCType(ptr)
+{
+}
+
+PMembership::~PMembership()
+{
+}
+
+PObject PMembership::get(Property prop)
+{
+  switch(prop.number)
+  {
+  case Channel:
+    return new PChannel(inner.channel);
+  case Client:
+    return new PClient(inner.client);
+  case Flags:
+    return PInt(inner.flags);
+  }
+}
+
+int PMembership::set(Property prop, PObject value)
+{
+  return 0;
+}
+
+// Statics
+
+void PMembership::init(PyObject *module)
+{
+  PyTypeObject& type = type_object();
+
+  add_property("Channel", "Channel link", Channel, NoFlags);
+  add_property("Client", "Client link", Client, NoFlags);
+  add_property("Flags", "Flags for this membership link", Flags, NoFlags);
+
+  type.tp_name = "Membership";
+
+  PCType::init(module);
+}
+

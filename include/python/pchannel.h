@@ -30,6 +30,12 @@
 #include "python/pctype.h"
 #include "channel.h"
 #include "python/pbool.h"
+#include "python/pmembership.h"
+#include "python/pclient.h"
+#include "python/pcmap.h"
+
+class PClient;
+typedef PCMap<ChannelMemberList, PClient, PMembership> PChannelMemberList;
 
 class PChannel : public PCType<PChannel, ChannelPtr>
 {

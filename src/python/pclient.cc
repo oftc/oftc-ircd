@@ -27,6 +27,8 @@
 #include "python/pint.h"
 #include "stdinc.h"
 #include "python/pevent.h"
+#include "python/pcmap.h"
+#include "Python/pmembership.h"
 #include "server.h"
 #include "numeric.h"
 #include <functional>
@@ -218,6 +220,8 @@ PObject PClient::get(Property prop)
     return new PClient(client->get_server());
   case Info:
     return PString(server->get_info());
+  case Channels:
+    return new PClientMemberList(client->get_channels());
   }
 
   Py_RETURN_NONE;

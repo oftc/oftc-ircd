@@ -29,7 +29,13 @@
 #include "Python.h"
 #include "python/pctype.h"
 #include "python/pbool.h"
+#include "python/pcmap.h"
+#include "python/pmembership.h"
+#include "python/pchannel.h"
 #include "client.h"
+
+class PChannel;
+typedef PCMap<ClientMemberList, PChannel, PMembership> PClientMemberList;
 
 class PClient : public PCType<PClient, ClientPtr>
 {

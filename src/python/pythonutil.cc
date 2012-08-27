@@ -35,6 +35,8 @@
 #include "python/pchannel.h"
 #include "python/pclient.h"
 #include "python/pevent.h"
+#include "python/pcollection.h"
+#include "python/pmembership.h"
 #include "module.h"
 #include "system.h"
 
@@ -67,6 +69,8 @@ void PythonUtil::init_python()
   PChannel::init(module);
   PClient::init(module);
   PEvent::init(module);
+  PMembership::init(module);
+  PCollection::init(module);
 }
   
 void PythonUtil::log_error()

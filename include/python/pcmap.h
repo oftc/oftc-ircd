@@ -23,36 +23,35 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef MAPWRAP_H_INC
-#define MAPWRAP_H_INC
+#ifndef PCMAP_H_INC
+#define PCMAP_H_INC
 
 #include "Python.h"
-#include "python/pythonwrap.h"
-#include "python/collectionwrap.h"
+#include "python/pctype.h"
+#include "python/pcollection.h"
 
 template<class Map, class WrappedKey, class WrappedValue>
-class MapWrap : public CollectionWrap
+class PCMap : public PCollection
 {
 private:
-  typedef MapWrap<Map, WrappedKey, WrappedValue> MapWrapType;
+  typedef PCMap<Map, WrappedKey, WrappedValue> PCMapType;
   Map inner_map;
   typename Map::const_iterator current;
 public:
-  MapWrap()
+  PCMap()
   {
   }
 
-  MapWrap(PyObject *args, PyObject *kwargs)
+  PCMap(Map ptr) : PCollection(PTuple(), PDict()), inner_map(ptr)
   {
   }
 
-  ~MapWrap()
+  PCMap(PTuple args, PDict kwargs) : PCollection(args, kwargs)
   {
   }
 
-  void set_map(const Map& m)
+  ~PCMap()
   {
-    inner_map = m;
   }
 
   PyObject *append(PyObject *args)
@@ -67,32 +66,27 @@ public:
     Py_RETURN_NONE;
   }
 
-  PyObject *iter()
+  Py_ssize_t get_length()
+  {
+    return inner_map.size();
+  }
+
+  PObject iter()
   {
     current = inner_map.begin();
     Py_INCREF(this);
     return this;
   }
 
-  PyObject *next()
+  PObject next()
   {
     if(current == inner_map.end())
       return NULL;
 
-    WrappedValue *value = WrappedValue::wrap(&current->second);
+    WrappedValue *value = new WrappedValue(current->second);
     current++;
 
     return value;
-  }
-
-  static PyObject *wrap(const Map& map)
-  {
-    MapWrapType *wrapped = new MapWrapType();
-    wrapped = PyObject_INIT(wrapped, &type_object());
-
-    wrapped->set_map(map);
-
-    return wrapped;
   }
 };
 

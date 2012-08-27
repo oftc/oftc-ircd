@@ -23,30 +23,27 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#if 0
-#ifndef COLLECTIONWRAP_H_INC
-#define COLLECTIONWRAP_H_INC
+#ifndef PCOLLECTION_H_INC
+#define PCOLLECTION_H_INC
 
 #include "Python.h"
 #include "event.h"
-#include "python/pythonwrap.h"
+#include "python/pctype.h"
 
-using std::list;
-
-class CollectionWrap : public PythonWrap<CollectionWrap, NullArg>
+class PCollection : public PCType<PCollection, NullArg>
 {
 public:
-  CollectionWrap()
+  PCollection()
   {
     Logging::trace << "Created Collection: " << this << Logging::endl;
   }
 
-  CollectionWrap(PyObject *args, PyObject *kwargs)
+  PCollection(PyObject *args, PyObject *kwargs)
   {
     Logging::trace << "Created Collection(from py): " << this << Logging::endl;
   }
 
-  virtual ~CollectionWrap()
+  virtual ~PCollection()
   {
   }
 
@@ -55,43 +52,46 @@ public:
     return 0;
   }
 
-  virtual PyObject *append(PyObject *args) 
+  virtual PObject append(PTuple args) 
   {
     Py_RETURN_NONE;
   }
 
-  virtual PyObject *iter()
+  virtual PObject iter()
   {
-    Py_RETURN_NONE;
+    Py_INCREF(this);
+    return this;
   }
 
-  virtual PyObject *next() 
+  virtual PObject next() 
   {
-    Py_RETURN_NONE;
+    return NULL;
   }
 
   static Py_ssize_t get_length(PyObject *self)
   {
-    return 0;
+    PCollection *collection = static_cast<PCollection *>(self);
+
+    return collection->get_length();
   }
 
   static PyObject *collection_append(PyObject *self, PyObject *args)
   {
-    CollectionWrap *collection = static_cast<CollectionWrap *>(self);
+    PCollection *collection = static_cast<PCollection *>(self);
 
     return collection->append(args);
   }
 
   static PyObject *collection_iter(PyObject *self)
   {
-    CollectionWrap *collection = static_cast<CollectionWrap *>(self);
+    PCollection *collection = static_cast<PCollection *>(self);
 
     return collection->iter();
   }
 
   static PyObject *collection_iter_next(PyObject *self)
   {
-    CollectionWrap *collection = static_cast<CollectionWrap *>(self);
+    PCollection *collection = static_cast<PCollection *>(self);
 
     return collection->next();
   }
@@ -99,7 +99,7 @@ public:
   static void free(void *ptr)
   {
     PyObject *tmp = static_cast<PyObject *>(ptr);
-    CollectionWrap *obj = static_cast<CollectionWrap *>(tmp);
+    PCollection *obj = static_cast<PCollection *>(tmp);
 
     Logging::trace << "Destroyed python collection object: " << obj << Logging::endl;
 
@@ -130,11 +130,7 @@ public:
       set_item
     };
 
-    static PyMethodDef methods[] =
-    {
-      PY_METHOD("append", collection_append, METH_OLDARGS, "Add an item to the collection"),
-      PY_METHOD_END
-    }; 
+    add_method("append", "Add an item to the collection", VarArgsMethod(&collection_append));
 
     PyTypeObject& type = type_object();
 
@@ -143,12 +139,11 @@ public:
     type.tp_iternext = reinterpret_cast<iternextfunc>(collection_iter_next);    
     type.tp_as_sequence = &seq_methods;
     type.tp_as_mapping = &map_methods;
-    type.tp_methods = methods;
+
     type.tp_flags |= Py_TPFLAGS_HAVE_ITER;
     type.tp_name = "Collection";
-    PythonWrap::init(module);
+    PCType::init(module);
   }
 };
 
-#endif
 #endif
