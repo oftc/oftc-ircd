@@ -28,7 +28,7 @@
 #include "stdinc.h"
 #include "python/pevent.h"
 #include "python/pcmap.h"
-#include "Python/pmembership.h"
+#include "python/pmembership.h"
 #include "server.h"
 #include "numeric.h"
 #include <functional>
@@ -88,7 +88,7 @@ PObject PClient::numeric(PTuple args)
   if(!Client::is_client(inner))
   {
     PyErr_SetString(PyExc_RuntimeError, "Cannot send a numeric to a non-client");
-    return static_cast<PyObject *>(NULL);
+    return NULL;
   }
 
   ptr = dynamic_pointer_cast<Client>(inner);
@@ -106,7 +106,7 @@ PObject PClient::numeric(PTuple args)
       if(!item)
       {
         PyErr_SetString(PyExc_TypeError, "Not enough arguments for numeric format");
-        return static_cast<PyObject *>(NULL);
+        return NULL;
       }
       switch(*i)
       {
@@ -159,7 +159,7 @@ PObject PClient::send(PTuple args, PDict kwargs)
   PString str = PythonUtil::send_format(this, args, kwargs);
 
   if(!str)
-    return static_cast<PyObject *>(NULL);
+    return NULL;
 
   inner->send(str);
 
@@ -171,7 +171,7 @@ PObject PClient::send_channels_common(PTuple args, PDict kwargs)
   PString str = PythonUtil::send_format(this, args, kwargs);
 
   if(!str)
-    return static_cast<PyObject *>(NULL);
+    return NULL;
 
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(inner);
   ptr->send_channels_common(str);
@@ -189,7 +189,7 @@ PObject PClient::remove_channel(PTuple args)
   if(!PChannel::check(channel))
   {
     PyErr_SetString(PyExc_TypeError, "argument must be a Channel");
-    return static_cast<PyObject *>(NULL);
+    return NULL;
   }
 
   ptr->remove_channel(*channel);
