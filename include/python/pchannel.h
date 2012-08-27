@@ -33,9 +33,12 @@
 #include "python/pmembership.h"
 #include "python/pclient.h"
 #include "python/pcmap.h"
+#include "python/pclist.h"
+#include "python/pnuhmask.h"
 
 class PClient;
 typedef PCMap<ChannelMemberList, PClient, PMembership> PChannelMemberList;
+typedef PCList<NuhMaskList, PNuhMask> PNuhMaskList;
 
 class PChannel : public PCType<PChannel, ChannelPtr>
 {

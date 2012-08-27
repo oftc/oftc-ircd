@@ -23,38 +23,24 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef NUHMASKWRAP_H_INC
-#define NUHMASKWRAP_H_INC
+#ifndef PNUHMASK_H_INC
+#define PNUHMASK_H_INC
 
 #include "Python.h"
-#include "python/pythonwrap.h"
-#include "python/collectionwrap.h"
+#include "python/pctype.h"
 #include "nuhmask.h"
 
-class NuhMaskWrap;
-
-class NuhMaskWrap : public PythonWrap<NuhMaskWrap, NuhMask>
+class PNuhMask : public PCType<PNuhMask, NuhMask>
 {
 private:
 public:
-  // Non Python methods
-  static void init(PyObject *);
+  static void init(const PObject&);
 
-  // Event callbacks
-
-  // Event fires
-
-  // Get/Setters
-  static PyObject *get_wrap(NuhMaskWrap *, void *);
-  static int set_wrap(NuhMaskWrap *, PyObject *, void *);
-
-  // Python methods
-
-  // ctor/dtor
-  NuhMaskWrap(PyObject *, PyObject *);
-  ~NuhMaskWrap();
-
-  // members
+  PNuhMask(PTuple, PDict);
+  PNuhMask(NuhMask ptr) : PCType(ptr)
+  {
+  }
+  ~PNuhMask();
 };
 
 #endif

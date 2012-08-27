@@ -23,66 +23,27 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PCLIST_H_INC
-#define PCLIST_H_INC
-
-#include "Python.h"
+#include <Python.h>
+#include <structmember.h>
+#include "stdinc.h"
+#include "python/pnuhmask.h"
 #include "python/pctype.h"
-#include "python/pcollection.h"
+#include "nuhmask.h"
 
-template<class List, class WrappedValue>
-class PCList : public PCollection
+PNuhMask::PNuhMask(PTuple args, PDict kwds) : PCType(args, kwds)
 {
-private:
-  typedef PCList<List, WrappedValue> PListType;
-  List inner_list;
-  typename List::const_iterator current;
-public:
-  PCList()
-  {
-  }
+}
 
-  PCList(List ptr) : PCollection(PTuple(), PDict()), inner_list(ptr)
-  {
-  }
+PNuhMask::~PNuhMask()
+{
+}
 
-  PCList(PTuple args, PDict kwargs)
-  {
-  }
+// Statics
 
-  ~PCList()
-  {
-  }
+void PNuhMask::init(const PObject& module)
+{
+  PyTypeObject& type = type_object();
 
-  PObject append(PTuple args)
-  {
-   /* PyObject *key, *value;
-    Wrapped *wrapped;
-
-    PyArg_ParseTuple(args, "OO", &item);
-
-    wrapped = item;
-*/
-    Py_RETURN_NONE;
-  }
-
-  PObject iter()
-  {
-    current = inner_list.begin();
-    Py_INCREF(this);
-    return this;
-  }
-
-  PObject next()
-  {
-    if(current == inner_list.end())
-      return NULL;
-
-    WrappedValue *value = new WrappedValue(*current);
-    current++;
-
-    return value;
-  }
-};
-
-#endif
+  type.tp_name = "NuhMask";
+  PCType::init(module);
+}

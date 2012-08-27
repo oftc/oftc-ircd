@@ -70,6 +70,7 @@ void PythonUtil::init_python()
   PClient::init(module);
   PEvent::init(module);
   PMembership::init(module);
+  PNuhMask::init(module);
   PCollection::init(module);
 }
   

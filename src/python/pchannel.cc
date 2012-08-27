@@ -200,7 +200,7 @@ PObject PChannel::get(Property prop)
   case Members:
     return new PChannelMemberList(inner->get_members());
   case Bans:
-    return new PCollection();
+    return new PNuhMaskList(inner->get_bans());
   }
 
   Py_RETURN_NONE;
