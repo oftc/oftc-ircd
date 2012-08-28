@@ -37,6 +37,12 @@ public:
 
   using PObject::operator=;
 
+  const PBool& incref()
+  {
+    PObject::incref();
+    return *this;
+  }
+
   operator bool() const
   {
     return PyObject_IsTrue(object) != 0;
