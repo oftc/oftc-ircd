@@ -34,7 +34,6 @@ class PInt : public PObject
 public:
   PInt();
   PInt(int);
-  PInt(PyObject *);
   ~PInt();
 
   using PObject::operator=;

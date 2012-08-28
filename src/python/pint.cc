@@ -31,12 +31,6 @@ PInt::PInt()
   object = PyObject_New(PyObject, &PyInt_Type);
 }
 
-PInt::PInt(PyObject *ptr) : PObject(ptr)
-{
-  object = ptr;
-  Py_XINCREF(object);
-}
-
 PInt::PInt(int num)
 {
   object = PyInt_FromLong(num);
