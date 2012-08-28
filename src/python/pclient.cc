@@ -81,7 +81,6 @@ PObject PClient::close(PTuple args)
 PObject PClient::numeric(PTuple args)
 {
   PObject item;
-  PInt num;
   string format;
   stringstream output;
   int index = 1;
@@ -95,7 +94,7 @@ PObject PClient::numeric(PTuple args)
 
   ptr = dynamic_pointer_cast<Client>(inner);
 
-  num = args[0];
+  PInt num(args[0]);
   format = Numeric::raw_format(num);
   for(auto i = format.begin(); i != format.end(); i++)
   {
