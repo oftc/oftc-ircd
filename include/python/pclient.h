@@ -55,8 +55,8 @@ public:
     return inner->str();
   }
 
-  inline PBool is_registered() const { return inner->is_registered(); }
-  inline PBool is_ssl() const { return inner->is_ssl(); }
+  inline PBool is_registered() const { return PBool(inner->is_registered()).incref(); }
+  inline PBool is_ssl() const { return PBool(inner->is_ssl()).incref(); }
 
   PObject close(PTuple);
   PObject numeric(PTuple);

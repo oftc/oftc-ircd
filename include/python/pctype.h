@@ -136,7 +136,7 @@ public:
       if(pit == properties().end())
         return PyObject_GenericGetAttr(this, name);
 
-      return get(pit->second);
+      return get(pit->second).incref();
     }
 
     PTuple args(2);
@@ -144,7 +144,7 @@ public:
     args.set_item(0, this);
     args.set_item(1, PyCObject_FromVoidPtr(it->second, NULL));
 
-    return PyCFunction_NewEx(it->second, args, NULL);
+    return PObject(PyCFunction_NewEx(it->second, args, NULL)).incref();
   }
 
   virtual int setattro(PString name, PObject value)
