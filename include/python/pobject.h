@@ -97,6 +97,11 @@ public:
     Py_XDECREF(object);
   }
 
+  virtual bool is_true()
+  {
+    return PyObject_IsTrue(object) != 0;
+  }
+
   static const PObject None()
   {
     Py_INCREF(Py_None);

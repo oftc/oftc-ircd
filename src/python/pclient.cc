@@ -215,9 +215,9 @@ PObject PClient::get(Property prop)
   case Host:
     return PString(inner->get_host());
   case Invisible:
-    return client->is_invisible();
+    return PBool(client->is_invisible());
   case Idletime:
-    return PInt(client->get_idletime());
+    return PInt(static_cast<int>(client->get_idletime()));
   case ServerProp:
     return new PClient(client->get_server());
   case Info:
@@ -248,7 +248,7 @@ int PClient::set(Property prop, PObject value)
     inner->set_host(value.str());
     break;
   case Invisible:
-    client->set_invisible(value);
+    client->set_invisible(value.is_true());
     break;
   case LastMessage:
     client->set_last_message(PInt(value));

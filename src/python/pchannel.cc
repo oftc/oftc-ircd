@@ -167,7 +167,7 @@ PObject PChannel::set_mode_char(PTuple args)
   c = ch.str().c_str()[0];
   set = args[1];
 
-  inner->set_mode_char(c, set);
+  inner->set_mode_char(c, set.is_true());
 
   return PObject::None();
 }
