@@ -156,8 +156,6 @@ public:
     return set(it->second, value);
   }
 
-  inline bool is_heap() const { return heap; }
-
   static bool check(PyObject *obj)
   {
     return Py_TYPE(obj) == &type_object();
