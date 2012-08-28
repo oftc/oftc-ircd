@@ -62,7 +62,6 @@ template<class Outer, class Inner>
 class PCType : public PyObject
 {
 private:
-  bool heap;
 protected:
   Inner inner;
 public:
@@ -72,21 +71,21 @@ public:
   typedef map<string, PMethod<Outer> > MethodMap;
   typedef map<string, Property> PropertyMap;
 
-  PCType() : heap(false)
+  PCType()
   {
     PyObject_Init(this, &type_object());
   }
 
-  PCType(const Inner ptr) : heap(false), inner(ptr)
+  PCType(const Inner ptr) : inner(ptr)
   {
     PyObject_Init(this, &type_object());
   }
 
-  PCType(PObject ptr) : heap(false)
+  PCType(PObject ptr)
   {
   }
 
-  PCType(PTuple args, PDict kwargs) : heap(true)
+  PCType(PTuple args, PDict kwargs)
   {
   }
 
@@ -166,39 +165,32 @@ public:
 
   static PyObject *create(PyTypeObject *type, PyObject *args, PyObject *kwds)
   {
-    PyObject *ptr = type->tp_alloc(type, 0);
-    Outer *obj = new(ptr) Outer(PTuple(args), PDict(kwds));
-    static_cast<void>(PyObject_INIT(obj, type));
+    Outer *obj = new Outer(PTuple(args), PDict(kwds));
+    PyObject_Init(obj, type);
+
+    Logging::trace << "Created Python object: " << type->tp_name << " at: " << static_cast<void *>(obj) << Logging::endl;
 
     return static_cast<PyObject *>(obj);
   }
 
   static PyObject *alloc(PyTypeObject *type, Py_ssize_t items)
   {
-    char *ret;
-
-    ret = new char[_PyObject_VAR_SIZE(type, items)]();
-
-    Logging::trace << "Created Python object: " << type->tp_name << " at: " << static_cast<void *>(ret) << Logging::endl;
-
-    return reinterpret_cast<PyObject *>(ret);
+    return NULL;
   }
 
   static void free(void *ptr)
   {
-    char *obj = static_cast<char *>(ptr);
+    PyObject *tmp = static_cast<PyObject *>(ptr);
+    Outer *pobj = static_cast<Outer *>(tmp);
 
     Logging::trace << "Destroyed python object: " << ptr << Logging::endl;
 
-    delete[] obj;
+    delete pobj;
   }
 
   static void dealloc(PyObject *obj)
   {
-    Outer *ptr = static_cast<Outer *>(obj);
-    ptr->~Outer();
-    if(ptr->is_heap())
-      obj->ob_type->tp_free(obj);
+    obj->ob_type->tp_free(obj);
   }
 
   static void add_method(const char *name, const char *doc, NoArgsMethod method)
