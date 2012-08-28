@@ -297,14 +297,12 @@ PyObject *PChannel::del(PyObject *self, PyObject *vargs)
 
 PyObject *PChannel::find(PyObject *self, PyObject *vargs)
 {
-  Logging::trace << "find" << Logging::endl;
   PTuple args(vargs);
   PString name = static_cast<PString>(args[0]);
   ChannelPtr channel;
 
   channel = Channel::find(name.c_str());
 
-  Logging::trace << "end find" << Logging::endl;
   if(!channel)
     return PObject::None();
 

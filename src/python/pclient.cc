@@ -95,6 +95,7 @@ PObject PClient::numeric(PTuple args)
   ptr = dynamic_pointer_cast<Client>(inner);
 
   PInt num(args[0]);
+
   format = Numeric::raw_format(num);
   for(auto i = format.begin(); i != format.end(); i++)
   {
@@ -250,7 +251,7 @@ int PClient::set(Property prop, PObject value)
     client->set_invisible(value);
     break;
   case LastMessage:
-    client->set_last_message(value);
+    client->set_last_message(PInt(value));
     break;
   }
 

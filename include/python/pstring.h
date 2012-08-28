@@ -49,6 +49,11 @@ public:
     return c_str();
   }
 
+  operator bool() const
+  {
+    return object != NULL;
+  }
+
   using PObject::operator=;
 
   const char *c_str() const;

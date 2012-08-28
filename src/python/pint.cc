@@ -31,6 +31,12 @@ PInt::PInt()
   object = PyObject_New(PyObject, &PyInt_Type);
 }
 
+PInt::PInt(PyObject *o)
+{
+  object = o;
+  Py_XINCREF(object);
+}
+
 PInt::PInt(int num)
 {
   object = PyInt_FromLong(num);
@@ -38,5 +44,4 @@ PInt::PInt(int num)
 
 PInt::~PInt()
 {
-  Py_XDECREF(object);
 }

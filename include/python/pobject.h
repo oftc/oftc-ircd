@@ -48,11 +48,6 @@ public:
     return object;
   }
 
-  virtual operator bool() const
-  {
-    return object != NULL;
-  }
-
   virtual PObject& operator=(const PObject& right)
   {
     Logging::trace << "python object defref(assign) " << object << Logging::endl;

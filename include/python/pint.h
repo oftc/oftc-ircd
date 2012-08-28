@@ -33,6 +33,7 @@ class PInt : public PObject
 {
 public:
   PInt();
+  PInt(PyObject *);
   PInt(int);
   ~PInt();
 
@@ -44,6 +45,11 @@ public:
   }
 
   operator unsigned int() const
+  {
+    return operator int();
+  }
+
+  operator time_t() const
   {
     return operator int();
   }

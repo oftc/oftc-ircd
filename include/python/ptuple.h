@@ -39,7 +39,7 @@ public:
 
   using PSequence<PObject>::operator=;
 
-  const PTuple operator[] (int index) const
+  const PObject operator[] (int index) const
   {
     return PyTuple_GetItem(object, index);
   }
