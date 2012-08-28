@@ -62,6 +62,8 @@ PObject PMembership::get(Property prop)
   case Flags:
     return PInt(inner.flags);
   }
+
+  Py_RETURN_NONE;
 }
 
 int PMembership::set(Property prop, PObject value)

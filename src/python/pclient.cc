@@ -58,6 +58,7 @@ PClient::PClient()
 
 PClient::PClient(ClientPtr ptr) : PCType(ptr)
 {
+  Logging::trace << "Created PClient: " << this << Logging::endl;
 }
 
 PClient::PClient(PTuple args, PDict kwargs)
@@ -66,6 +67,7 @@ PClient::PClient(PTuple args, PDict kwargs)
 
 PClient::~PClient()
 {
+  Logging::trace << "Destroyed PClient: " << this << Logging::endl;
 }
 
 PObject PClient::close(PTuple args)
