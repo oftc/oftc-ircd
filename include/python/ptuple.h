@@ -39,6 +39,11 @@ public:
 
   using PSequence<PObject>::operator=;
 
+  const PTuple operator[] (int index) const
+  {
+    return PyTuple_GetItem(object, index);
+  }
+
   virtual void set_item(int index, const PObject& item)
   {
     if(PyTuple_SetItem(object, index, item) == -1)
