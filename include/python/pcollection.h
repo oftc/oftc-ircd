@@ -54,7 +54,7 @@ public:
 
   virtual PObject append(PTuple args) 
   {
-    Py_RETURN_NONE;
+    return PObject::None();
   }
 
   virtual PObject iter()
@@ -108,7 +108,7 @@ public:
 
   static PyObject *get_item(PyObject *, PyObject *)
   {
-    Py_RETURN_NONE;
+    return PObject::None();
   }
 
   static int set_item(PyObject *, PyObject *, PyObject *)

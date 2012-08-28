@@ -71,7 +71,7 @@ public:
   virtual PObject operator()(const PObject& args)
   {
     if(!PyCallable_Check(object))
-      Py_RETURN_NONE;
+      return PObject::None();
 
     return PyObject_CallObject(object, args);
   }
@@ -79,7 +79,7 @@ public:
   virtual PObject operator()(const PObject& args, const PObject& kwargs)
   {
     if(!PyCallable_Check(object))
-      Py_RETURN_NONE;
+      return PObject::None();
 
     return PyObject_Call(object, args, kwargs);
   }
@@ -100,6 +100,12 @@ public:
   virtual void decref()
   {
     Py_XDECREF(object);
+  }
+
+  static const PObject None()
+  {
+    Py_INCREF(Py_None);
+    return Py_None;
   }
 };
 

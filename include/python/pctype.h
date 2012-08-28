@@ -117,7 +117,7 @@ public:
   
   virtual PObject get(Property prop)
   {
-    Py_RETURN_NONE;
+    return PObject::None();
   }
 
   virtual int set(Property prop, PObject value)

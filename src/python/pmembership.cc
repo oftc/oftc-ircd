@@ -63,7 +63,7 @@ PObject PMembership::get(Property prop)
     return PInt(inner.flags);
   }
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 int PMembership::set(Property prop, PObject value)

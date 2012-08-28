@@ -75,7 +75,7 @@ PObject PClient::close(PTuple args)
   PString reason = static_cast<PString>(args[0]);
   inner->close(reason);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PObject PClient::numeric(PTuple args)
@@ -153,7 +153,7 @@ PObject PClient::numeric(PTuple args)
 
   ptr->send(output.str(), num);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PObject PClient::send(PTuple args, PDict kwargs)
@@ -165,7 +165,7 @@ PObject PClient::send(PTuple args, PDict kwargs)
 
   inner->send(str);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PObject PClient::send_channels_common(PTuple args, PDict kwargs)
@@ -178,7 +178,7 @@ PObject PClient::send_channels_common(PTuple args, PDict kwargs)
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(inner);
   ptr->send_channels_common(str);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PObject PClient::remove_channel(PTuple args)
@@ -196,7 +196,7 @@ PObject PClient::remove_channel(PTuple args)
 
   ptr->remove_channel(*channel);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PObject PClient::get(Property prop)
@@ -226,7 +226,7 @@ PObject PClient::get(Property prop)
     return new PClientMemberList(client->get_channels());
   }
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 int PClient::set(Property prop, PObject value)
@@ -309,7 +309,7 @@ PyObject *PClient::find_by_name(PyObject *self, PyObject *varargs)
   if(ptr)
     return new PClient(ptr);
   else
-    Py_RETURN_NONE;
+    return PObject::None();
 }
 
 PyObject *PClient::del_name(PyObject *self, PyObject *varargs)
@@ -320,7 +320,7 @@ PyObject *PClient::del_name(PyObject *self, PyObject *varargs)
   
   Client::del_name(*client);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PyObject *PClient::add_name(PyObject *self, PyObject *varargs)
@@ -330,7 +330,7 @@ PyObject *PClient::add_name(PyObject *self, PyObject *varargs)
   PClient *client = static_cast<PClient *>(arg);
 
   Client::add_name(*client);
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PyObject *PClient::add(PyObject *self, PyObject *varargs)
@@ -340,5 +340,5 @@ PyObject *PClient::add(PyObject *self, PyObject *varargs)
   PClient *client = static_cast<PClient *>(arg);
 
   Client::add(*client);
-  Py_RETURN_NONE;
+  return PObject::None();
 }

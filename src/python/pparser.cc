@@ -70,7 +70,7 @@ PyObject *PParser::register_command(PyObject *self, PyObject *arg, PyObject *kwa
 
   Parser::get_default().register_command(command);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 // Statics

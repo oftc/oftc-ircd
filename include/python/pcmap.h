@@ -63,7 +63,7 @@ public:
 
     wrapped = item;
 */
-    Py_RETURN_NONE;
+    return PObject::None();
   }
 
   Py_ssize_t get_length()

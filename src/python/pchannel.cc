@@ -79,7 +79,7 @@ PObject PChannel::add_member(PTuple args)
 
   inner->add_member(*client);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PObject PChannel::is_member(PTuple args)
@@ -114,7 +114,7 @@ PObject PChannel::remove_member(PTuple args)
 
   inner->remove_member(*client);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PObject PChannel::send_names(PTuple args)
@@ -131,7 +131,7 @@ PObject PChannel::send_names(PTuple args)
   
   inner->send_names(*client);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PObject PChannel::send(PTuple args, PDict kwargs)
@@ -155,7 +155,7 @@ PObject PChannel::send(PTuple args, PDict kwargs)
 
   inner->send(*client, result);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PObject PChannel::set_mode_char(PTuple args)
@@ -169,7 +169,7 @@ PObject PChannel::set_mode_char(PTuple args)
 
   inner->set_mode_char(c, set);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PString PChannel::str()
@@ -203,7 +203,7 @@ PObject PChannel::get(Property prop)
     return new PNuhMaskList(inner->get_bans());
   }
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 int PChannel::set(Property prop, PObject value)
@@ -274,7 +274,7 @@ PyObject *PChannel::add(PyObject *self, PyObject *vargs)
 
   Channel::add(*channel);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PyObject *PChannel::del(PyObject *self, PyObject *vargs)
@@ -292,7 +292,7 @@ PyObject *PChannel::del(PyObject *self, PyObject *vargs)
 
   Channel::del(*channel);
 
-  Py_RETURN_NONE;
+  return PObject::None();
 }
 
 PyObject *PChannel::find(PyObject *self, PyObject *vargs)
@@ -306,7 +306,7 @@ PyObject *PChannel::find(PyObject *self, PyObject *vargs)
 
   Logging::trace << "end find" << Logging::endl;
   if(!channel)
-    Py_RETURN_NONE;
+    return PObject::None();
 
   return new PChannel(channel);
 }
