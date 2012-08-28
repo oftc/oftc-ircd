@@ -55,6 +55,23 @@ public:
     return inner->str();
   }
 
+  int compare(const PObject right)
+  {
+    if(!PClient::check(right))
+      return PCType::compare(right);
+
+    PyObject *tmp = right;
+    PClient *rptr = static_cast<PClient *>(tmp);
+
+    if(inner == rptr->inner)
+      return 0;
+
+    if(inner->get_name() > rptr->inner->get_name())
+      return 1;
+    else
+      return -1;
+  }
+
   inline PBool is_registered() const { return PBool(inner->is_registered()).incref(); }
   inline PBool is_ssl() const { return PBool(inner->is_ssl()).incref(); }
 

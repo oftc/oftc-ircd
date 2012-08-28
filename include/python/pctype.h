@@ -156,6 +156,11 @@ public:
     return set(it->second, value);
   }
 
+  virtual int compare(const PObject right)
+  {
+    return PyObject_Compare(this, right);
+  }
+
   static bool check(PyObject *obj)
   {
     return Py_TYPE(obj) == &type_object();
@@ -284,6 +289,13 @@ public:
 
     return base->str();
   }
+
+  static int compare_callback(PyObject *left, PyObject *right)
+  {
+    PCType<Outer, Inner> *base = static_cast<PCType<Outer, Inner> *>(left);
+
+    return base->compare(right);
+  }
   
   static void init(const PObject& module)
   {
@@ -298,6 +310,7 @@ public:
     type.tp_setattro = setattro_callback;
     type.tp_str = str_callback;
     type.tp_flags |= Py_TPFLAGS_DEFAULT;
+    type.tp_compare = compare_callback;
     if(type.tp_name == NULL)
       type.tp_name = (string(typeid(Outer).name()) + string("Wrap")).c_str();
 
