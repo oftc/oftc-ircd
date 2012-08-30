@@ -66,8 +66,8 @@ protected:
   Inner inner;
 public:
   typedef function<PObject(Outer *)> NoArgsMethod;
-  typedef function<PObject(Outer *, const PTuple)> VarArgsMethod;
-  typedef function<PObject(Outer *, const PTuple, const PDict)> KeywordArgsMethod;
+  typedef function<PObject(Outer *, const PTuple&)> VarArgsMethod;
+  typedef function<PObject(Outer *, const PTuple&, const PDict&)> KeywordArgsMethod;
   typedef map<string, PMethod<Outer> > MethodMap;
   typedef map<string, Property> PropertyMap;
 
@@ -85,7 +85,7 @@ public:
   {
   }
 
-  PCType(PTuple args, PDict kwargs)
+  PCType(const PTuple& args, const PDict& kwargs)
   {
   }
 
@@ -113,18 +113,24 @@ public:
     ss << "(" << type_object().tp_name << " object at " << std::hex << std::showbase << this << ")";
     return PString(ss.str());
   }
+
+  virtual PCType<Outer, Inner>* incref()
+  {
+    Py_INCREF(this);
+    return this;
+  }
   
-  virtual PObject get(Property prop)
+  virtual PObject get(const Property prop)
   {
     return PObject::None();
   }
 
-  virtual int set(Property prop, PObject value)
+  virtual int set(const Property prop, const PObject& value)
   {
     return 0;
   }
 
-  virtual PObject getattro(PString name)
+  virtual PObject getattro(const PString& name)
   {
     auto it = methods().find(name);
 
@@ -140,13 +146,13 @@ public:
 
     PTuple args(2);
 
-    args.set_item(0, this);
+    args.set_item(0, this->incref());
     args.set_item(1, PyCObject_FromVoidPtr(it->second, NULL));
 
     return PObject(PyCFunction_NewEx(it->second, args, NULL)).incref();
   }
 
-  virtual int setattro(PString name, PObject value)
+  virtual int setattro(const PString& name, const PObject& value)
   {
     auto it = properties().find(name);
 
@@ -156,7 +162,7 @@ public:
     return set(it->second, value);
   }
 
-  virtual int compare(const PObject right)
+  virtual int compare(const PObject& right)
   {
     return PyObject_Compare(this, right);
   }
@@ -168,7 +174,7 @@ public:
 
   static PyObject *create(PyTypeObject *type, PyObject *args, PyObject *kwds)
   {
-    Outer *obj = new Outer(PTuple(args), PDict(kwds));
+    Outer *obj = new Outer(args, kwds);
     PyObject_Init(obj, type);
 
     Logging::trace << "Created Python object: " << type->tp_name << " at: " << static_cast<void *>(obj) << Logging::endl;
@@ -240,7 +246,9 @@ public:
   {
     PCType<Outer, Inner> *base = static_cast<PCType<Outer, Inner> *>(self);
 
-    return base->getattro(name);
+    PyObject *tmp = base->getattro(name);
+
+    return tmp;
   }
 
   static int setattro_callback(PyObject *self, PyObject *name, PyObject *value)
@@ -253,34 +261,50 @@ public:
   static PyObject *noargs_callback(PyObject *self)
   {
     PTuple data(self);
+    PyObject *ret;
 
     PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(data[1]));
     PyObject *tmp = data[0];
     Outer *ptr = static_cast<Outer *>(tmp);
 
-    return method(ptr);
+    ret = method(ptr);
+
+    //data.decref();
+
+    return ret;
   }
 
   static PyObject *varargs_callback(PyObject *self, PyObject *args)
   {
     PTuple data(self);
+    PyObject *ret;
 
     PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(data[1]));
     PyObject *tmp = data[0];
     Outer *ptr = static_cast<Outer *>(tmp);
 
-    return method(ptr, args);
+    ret = method(ptr, args);
+
+    //data.decref();
+
+    return ret;
   }
 
   static PyObject *kwargs_callback(PyObject *self, PyObject *args, PyObject *kwargs)
   {
     PTuple data(self);
+    PyObject *ret;
+
 
     PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(data[1]));
     PyObject *tmp = data[0];
     Outer *ptr = static_cast<Outer *>(tmp);
 
-    return method(ptr, args, kwargs);
+    ret = method(ptr, args, kwargs);
+
+    //data.decref();
+
+    return ret;
   }
 
   static PyObject *str_callback(PyObject *self)

@@ -206,7 +206,7 @@ PObject PChannel::get(Property prop)
   return PObject::None();
 }
 
-int PChannel::set(Property prop, PObject value)
+int PChannel::set(const Property prop, const PObject& value)
 {
 
   switch(prop.number)

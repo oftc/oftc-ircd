@@ -62,7 +62,7 @@ public:
   {
   }
 
-  PObject get(Property prop)
+  PObject get(const Property prop)
   {
     PObject value;
 
@@ -79,7 +79,7 @@ public:
     return value;
   }
 
-  int set(Property prop, PObject value)
+  int set(const Property prop, const PObject& value)
   {
     switch(prop.number)
     {
@@ -116,7 +116,7 @@ public:
 
     PBool ret(event(*channel, *client));
     
-    return ret;
+    return ret.incref();
   }
 
   PObject client_string_callback(Event<ClientPtr, string> event, PTuple args)
@@ -126,7 +126,7 @@ public:
     PString str = static_cast<PString>(args[1]);
     PBool ret(event(*client, str.c_str()));
 
-    return ret;
+    return ret.incref();
   }
 
   PObject client_ircstring_callback(Event<ClientPtr, irc_string> event, PTuple args)
@@ -136,7 +136,7 @@ public:
     PString str = static_cast<PString>(args[1]);
     PBool ret(event(*client, str.c_str()));
 
-    return ret;
+    return ret.incref();
   }
 
 #ifdef _MSC_VER

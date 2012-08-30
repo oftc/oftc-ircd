@@ -56,8 +56,8 @@ public:
   PObject set_mode_char(PTuple);
 
   PString str();
-  PObject get(Property);
-  int set(Property, PObject);
+  PObject get(const Property);
+  int set(const Property, const PObject&);
 
   static void init(const PObject&);
   static PyObject *add(PyObject *, PyObject *);

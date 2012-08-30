@@ -27,7 +27,7 @@
 #include "stdinc.h"
 #include "python/pstring.h"
 
-PObject::PObject()
+PObject::PObject() : object(NULL)
 {
   object = PyObject_CallObject(reinterpret_cast<PyObject *>(&PyBaseObject_Type), NULL);
   Logging::trace << "python object new " << object << Logging::endl;
@@ -53,7 +53,7 @@ PObject::~PObject()
   Py_XDECREF(object);
 }
 
-PString PObject::str()
+PString PObject::str() const
 {
   PyObject *str = PyObject_Str(object);
   return PString(str);

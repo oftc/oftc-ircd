@@ -229,7 +229,7 @@ PObject PClient::get(Property prop)
   return PObject::None();
 }
 
-int PClient::set(Property prop, PObject value)
+int PClient::set(const Property prop, const PObject& value)
 {
   shared_ptr<Client> client = dynamic_pointer_cast<Client>(inner);
 

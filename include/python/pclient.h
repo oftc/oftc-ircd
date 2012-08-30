@@ -47,15 +47,15 @@ public:
   PClient(ClientPtr);
   ~PClient();
 
-  PObject get(Property);
-  int set(Property, PObject);
+  PObject get(const Property);
+  int set(const Property, const PObject&);
 
   PString str()
   {
     return inner->str();
   }
 
-  int compare(const PObject right)
+  int compare(const PObject& right)
   {
     if(!PClient::check(right))
       return PCType::compare(right);

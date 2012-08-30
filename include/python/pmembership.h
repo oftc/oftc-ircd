@@ -41,8 +41,8 @@ public:
   PMembership(Membership ptr);
   ~PMembership();
 
-  PObject get(Property);
-  int set(Property, PObject);
+  PObject get(const Property);
+  int set(const Property, const PObject&);
 };
 
 #endif

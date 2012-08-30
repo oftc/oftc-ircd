@@ -66,7 +66,7 @@ PObject PMembership::get(Property prop)
   return PObject::None();
 }
 
-int PMembership::set(Property prop, PObject value)
+int PMembership::set(const Property prop, const PObject& value)
 {
   return 0;
 }

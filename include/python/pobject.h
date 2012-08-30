@@ -41,7 +41,7 @@ public:
   PObject(int a) : object(NULL) { }; // empty constructor only for use in derived classes
   PObject(long) : object(NULL) { }; // for NULL on 64 bit
   PObject(const PObject &);
-  ~PObject();
+  virtual ~PObject();
 
   virtual operator PyObject *() const
   {
@@ -79,7 +79,7 @@ public:
     return PyObject_Call(object, args, kwargs);
   }
 
-  virtual PString str();
+  virtual PString str() const;
 
   virtual PObject getattr(const char *attr)
   {
@@ -97,7 +97,7 @@ public:
     Py_XDECREF(object);
   }
 
-  virtual bool is_true()
+  virtual bool is_true() const
   {
     return PyObject_IsTrue(object) != 0;
   }

@@ -45,6 +45,10 @@ public:
   {
   }
 
+  PSequence(PSequence<PObject>& copy) : PObject(copy)
+  {
+  }
+
   using PObject::operator=;
 
   const T operator[] (int index) const

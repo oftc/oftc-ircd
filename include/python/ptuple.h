@@ -36,6 +36,14 @@ public:
   PTuple();
   PTuple(int);
   PTuple(PyObject *);
+  PTuple(PTuple& copy) : PSequence<PObject>(copy)
+  {
+    Logging::debug << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+  }
+  ~PTuple()
+  {
+    Logging::debug << "tuple: " << object << " [---] (" << object->ob_refcnt - 1 << ")" << Logging::endl;
+  }
 
   using PSequence<PObject>::operator=;
 
