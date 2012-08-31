@@ -54,6 +54,8 @@ public:
   {
   }
 
+  using PCollection::append;
+
   PyObject *append(PyObject *args)
   {
    /* PyObject *key, *value;
