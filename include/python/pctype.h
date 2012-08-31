@@ -145,11 +145,14 @@ public:
     }
 
     PTuple args(2);
+    PObject ret;
 
     args.set_item(0, this->incref());
     args.set_item(1, PyCObject_FromVoidPtr(it->second, NULL));
 
-    return PObject(PyCFunction_NewEx(it->second, args, NULL)).incref();
+    ret = PyCFunction_NewEx(it->second, args, NULL);
+
+    return ret;
   }
 
   virtual int setattro(const PString& name, const PObject& value)
@@ -269,8 +272,6 @@ public:
 
     ret = method(ptr);
 
-    //data.decref();
-
     return ret;
   }
 
@@ -284,8 +285,6 @@ public:
     Outer *ptr = static_cast<Outer *>(tmp);
 
     ret = method(ptr, args);
-
-    //data.decref();
 
     return ret;
   }
@@ -301,8 +300,6 @@ public:
     Outer *ptr = static_cast<Outer *>(tmp);
 
     ret = method(ptr, args, kwargs);
-
-    //data.decref();
 
     return ret;
   }

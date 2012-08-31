@@ -60,6 +60,9 @@ public:
 
   virtual PObject& operator=(const PyObject *right)
   {
+    Py_XDECREF(object);
+    object = const_cast<PyObject *>(right);
+    Py_XINCREF(object);
     return *this;
   }
 
