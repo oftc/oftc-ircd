@@ -29,16 +29,16 @@
 PTuple::PTuple() : PSequence<PObject>()
 {
   object = PyTuple_New(0);
-  Logging::debug << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+  Logging::trace << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
 PTuple::PTuple(PyObject *ptr) : PSequence<PObject>(ptr)
 {
-  Logging::debug << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+  Logging::trace << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
 PTuple::PTuple(int size) : PSequence<PObject>(0)
 {
   object = PyTuple_New(size);
-  Logging::debug << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+  Logging::trace << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
