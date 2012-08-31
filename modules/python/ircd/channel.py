@@ -60,23 +60,33 @@ def set_channel_mode(client, channel, args):
   modes = set(Channel.supported_modes())
 
   mode = args[0]
+  ret_args = []
+  curr_arg = 1
 
   for c in mode:
     if c == '+':
       plus = True
+      continue
     elif c == '-':
       plus = False
-    elif c in 'bqeI':
-      process_list(client, channel, plus, c, args)
       continue
+    elif c in 'bqeI':
+      ret = process_list(client, channel, plus, c, args)
+      if ret == 0:
+        continue
+
+      for i in range(ret):
+        ret_args.append(args[curr_arg])
+        ++curr_arg
     elif c in modes:
       channel.set_mode_char(c, plus)
-      if plus and not c in set_after:
-        set_after.add(c)
-      elif not plus and c in set_after:
-        set_after.remove(c)
     else:
       client.numeric(numerics.ERR_UNKNOWNMODE, c, channel.Name)
+      continue
+    if plus and not c in set_after:
+      set_after.add(c)
+    elif not plus and c in set_after:
+      set_after.remove(c)
 
   mode = ""
   added = set_after - set_before
@@ -87,9 +97,13 @@ def set_channel_mode(client, channel, args):
   if len(removed) > 0:
     mode += '-' + ''.join(removed)
 
+  argstr = ''
+  for s in ret_args:
+    argstr += ' ' + s
+
   if len(mode) > 0:
-    client.send(":{client} MODE {channel} :{mode}", channel=channel, mode=mode)
-    channel.send(":{client} MODE {channel} :{mode}", client=client, channel=channel, mode=mode)
+    client.send(":{client} MODE {channel} :{mode}{args}", channel=channel, mode=mode, args=argstr)
+    channel.send(":{client} MODE {channel} :{mode}{args}", client=client, channel=channel, mode=mode, args=argstr)
 
 def process_list(client, channel, plus, mode, args):
   if mode == 'b':
@@ -109,3 +123,7 @@ def process_list(client, channel, plus, mode, args):
     for element in list:
       print element
     client.numeric(end, channel.Name)
+    return 0
+  else:
+    list.append(args[1])
+    return 1

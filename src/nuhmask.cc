@@ -31,6 +31,10 @@ NuhMask::NuhMask()
   Logging::trace << "Created NuhMask: " << this << Logging::endl;
 }
 
+NuhMask::NuhMask(const string)
+{
+}
+
 NuhMask::~NuhMask()
 {
   Logging::trace << "Destroyed NuhMask: " << this << Logging::endl;

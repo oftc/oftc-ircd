@@ -47,6 +47,7 @@ private:
 public:  
   // ctor/dtor
   NuhMask();
+  NuhMask(const string);
   ~NuhMask();
 
   // members
