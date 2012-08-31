@@ -31,11 +31,41 @@ NuhMask::NuhMask()
   Logging::trace << "Created NuhMask: " << this << Logging::endl;
 }
 
-NuhMask::NuhMask(const string)
+NuhMask::NuhMask(const string& mask)
 {
+  parse_mask(mask);
 }
 
 NuhMask::~NuhMask()
 {
   Logging::trace << "Destroyed NuhMask: " << this << Logging::endl;
+}
+
+void NuhMask::parse_mask(const string& mask)
+{
+  full_mask = mask;
+  size_t pos, last;
+
+  last = pos = mask.find_first_of('!');
+  if(pos == string::npos || pos == 0)
+    name = "*";
+  else
+    name = mask.substr(0, pos).c_str();
+
+  if(last == string::npos)
+    last = 0;
+
+  pos = mask.find_first_of('@', last);
+  if(pos == string::npos || pos == last)
+    username = "*";
+  else
+    username = mask.substr(last, pos - last).c_str();
+
+  last = pos;
+  if(last == string::npos)
+    last = 0;
+
+  host = mask.substr(last, pos - last);
+  if(host.empty())
+    host = "*";
 }

@@ -44,22 +44,13 @@ private:
   irc_string name;
   irc_string username;
   string host;
+  string full_mask;
+
+  void parse_mask(const string&);
 public:  
-  // ctor/dtor
   NuhMask();
-  NuhMask(const string);
+  NuhMask(const string&);
   ~NuhMask();
-
-  // members
- 
-  // tests
-
-  // clears
-
-  // getters
-
-  // setters
-  void set_mask(const string);
  };
 
 #endif
