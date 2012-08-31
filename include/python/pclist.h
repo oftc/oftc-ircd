@@ -56,7 +56,7 @@ public:
 
   PObject append(PTuple args)
   {
-    PString mask = args[0];
+    PString mask = static_cast<PString>(args[0]);
     Value new_entry(mask.c_str());
 
     inner_list.push_back(new_entry);
