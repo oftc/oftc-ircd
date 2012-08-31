@@ -45,7 +45,7 @@ public:
   {
   }
 
-  PSequence(PSequence<PObject>& copy) : PObject(copy)
+  PSequence(const PSequence<PObject>& copy) : PObject(copy)
   {
   }
 
