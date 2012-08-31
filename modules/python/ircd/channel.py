@@ -77,7 +77,7 @@ def set_channel_mode(client, channel, args):
 
       for i in range(ret):
         ret_args.append(args[curr_arg])
-        ++curr_arg
+        curr_arg += 1
     elif c in modes:
       channel.set_mode_char(c, plus)
     else:
