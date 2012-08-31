@@ -70,7 +70,7 @@ private:
   NuhMaskList bans;
   NuhMaskList invexes;
   NuhMaskList quiets;
-  NuhMaskList exceptions;
+  NuhMaskList excepts;
   irc_string name;
   bool moderated;
   bool invite_only;
@@ -107,6 +107,9 @@ public:
 
   // getters
   NuhMaskList get_bans() const;
+  NuhMaskList get_quiets() const;
+  NuhMaskList get_excepts() const;
+  NuhMaskList get_invexes() const;
   irc_string get_name() const;
   ChannelMemberList get_members() const;
 

@@ -201,6 +201,12 @@ PObject PChannel::get(Property prop)
     return new PChannelMemberList(inner->get_members());
   case Bans:
     return new PNuhMaskList(inner->get_bans());
+  case Excepts:
+    return new PNuhMaskList(inner->get_excepts());
+  case Quiets:
+    return new PNuhMaskList(inner->get_quiets());
+  case Invexes:
+    return new PNuhMaskList(inner->get_invexes());
   }
 
   return PObject::None();

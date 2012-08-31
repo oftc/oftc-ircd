@@ -89,6 +89,21 @@ NuhMaskList Channel::get_bans() const
   return bans;
 }
 
+NuhMaskList Channel::get_invexes() const
+{
+  return invexes;
+}
+
+NuhMaskList Channel::get_quiets() const
+{
+  return quiets;
+}
+
+NuhMaskList Channel::get_excepts() const
+{
+  return excepts;
+}
+
 void Channel::set_name(const irc_string _name)
 {
   name = _name;

@@ -67,7 +67,7 @@ def set_channel_mode(client, channel, args):
     elif c == '-':
       plus = False
     elif c in 'bqeI':
-      process_list(client, channel, c, args)
+      process_list(client, channel, plus, c, args)
       continue
     elif c in modes:
       channel.set_mode_char(c, plus)
@@ -91,14 +91,21 @@ def set_channel_mode(client, channel, args):
     client.send(":{client} MODE {channel} :{mode}", channel=channel, mode=mode)
     channel.send(":{client} MODE {channel} :{mode}", client=client, channel=channel, mode=mode)
 
-def process_list(client, channel, mode, args):
-  if len(args) == 1:
-    if mode == 'b':
-      list = channel.Bans
-      end = numerics.RPL_ENDOFBANLIST
-    else:
-      return
+def process_list(client, channel, plus, mode, args):
+  if mode == 'b':
+    list = channel.Bans
+    end = numerics.RPL_ENDOFBANLIST
+  elif mode == 'e':
+    list = channel.Excepts
+    end = numerics.RPL_ENDOFEXCEPTLIST
+  elif mode == 'I':
+    list = channel.Invexes
+    end = numerics.RPL_ENDOFINVEXLIST
+  elif mode == 'q':
+    list = channel.Quiets
+    end = numerics.RPL_ENDOFQUIETLIST
 
+  if len(args) == 1:
     for element in list:
       print element
     client.numeric(end, channel.Name)
