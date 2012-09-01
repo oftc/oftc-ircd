@@ -25,28 +25,7 @@ from pythonwrap import Channel, NuhMask
 import numerics
 
 def set_channel_mode(client, channel, args):
-  set_before = set()
-  
-  if channel.InviteOnly:
-    set_before.add('i')
-
-  if channel.Moderated:
-    set_before.add('m')
-
-  if channel.NoExternal:
-    set_before.add('n')
-
-  if channel.Private:
-    set_before.add('p')
-
-  if channel.Secret:
-    set_before.add('s')
-
-  if channel.TopicOpsOnly:
-    set_before.add('t')
-
-  if channel.Secure:
-    set_before.add('S')
+  set_before = get_channel_modes(channel)
 
   if len(args) == 0:
     mode = "+" + ''.join(set_before)
@@ -105,6 +84,32 @@ def set_channel_mode(client, channel, args):
   if len(mode) > 0:
     client.send(":{client} MODE {channel} :{mode}{args}", channel=channel, mode=mode, args=argstr)
     channel.send(":{client} MODE {channel} :{mode}{args}", client=client, channel=channel, mode=mode, args=argstr)
+
+def get_channel_modes(channel):
+  set_modes = set()
+
+  if channel.InviteOnly:
+    set_modes.add('i')
+
+  if channel.Moderated:
+    set_modes.add('m')
+
+  if channel.NoExternal:
+    set_modes.add('n')
+
+  if channel.Private:
+    set_modes.add('p')
+
+  if channel.Secret:
+    set_modes.add('s')
+
+  if channel.TopicOpsOnly:
+    set_modes.add('t')
+
+  if channel.Secure:
+    set_modes.add('S')
+
+  return set_modes
 
 def process_list(client, channel, plus, mode, args):
   if mode == 'b':
