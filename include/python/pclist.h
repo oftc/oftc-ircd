@@ -35,14 +35,14 @@ class PCList : public PCollection
 {
 private:
   typedef PCList<List, WrappedValue> PListType;
-  List inner_list;
+  List& inner_list;
   typename List::const_iterator current;
 public:
   PCList()
   {
   }
 
-  PCList(List ptr) : PCollection(PTuple(), PDict()), inner_list(ptr)
+  PCList(List& ptr) : PCollection(PTuple(), PDict()), inner_list(ptr)
   {
   }
 

@@ -84,22 +84,22 @@ ChannelMemberList Channel::get_members() const
   return members;
 }
 
-NuhMaskList Channel::get_bans() const
+NuhMaskList& Channel::get_bans()
 {
   return bans;
 }
 
-NuhMaskList Channel::get_invexes() const
+NuhMaskList& Channel::get_invexes()
 {
   return invexes;
 }
 
-NuhMaskList Channel::get_quiets() const
+NuhMaskList& Channel::get_quiets()
 {
   return quiets;
 }
 
-NuhMaskList Channel::get_excepts() const
+NuhMaskList& Channel::get_excepts()
 {
   return excepts;
 }

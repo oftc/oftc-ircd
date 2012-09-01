@@ -106,10 +106,10 @@ public:
   inline bool is_secure() const { return secure; }
 
   // getters
-  NuhMaskList get_bans() const;
-  NuhMaskList get_quiets() const;
-  NuhMaskList get_excepts() const;
-  NuhMaskList get_invexes() const;
+  NuhMaskList& get_bans();
+  NuhMaskList& get_quiets();
+  NuhMaskList& get_excepts();
+  NuhMaskList& get_invexes();
   irc_string get_name() const;
   ChannelMemberList get_members() const;
 

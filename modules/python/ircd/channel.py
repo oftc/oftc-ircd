@@ -110,6 +110,7 @@ def process_list(client, channel, plus, mode, args):
   if mode == 'b':
     list = channel.Bans
     end = numerics.RPL_ENDOFBANLIST
+    numeric = numerics.RPL_BANLIST
   elif mode == 'e':
     list = channel.Excepts
     end = numerics.RPL_ENDOFEXCEPTLIST
@@ -122,7 +123,7 @@ def process_list(client, channel, plus, mode, args):
 
   if len(args) == 1:
     for element in list:
-      print element
+      client.numeric(numeric, channel.Name, str(element))
     client.numeric(end, channel.Name)
     return 0
   else:
