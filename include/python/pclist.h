@@ -57,9 +57,9 @@ public:
   PObject append(PTuple args)
   {
     PyObject *tmp = args[0];
-    PNuhMask *mask = static_cast<PNuhMask *>(tmp);
+    WrappedValue *value = static_cast<WrappedValue *>(tmp);
 
-    inner_list.push_back(*mask);
+    inner_list.push_back(*value);
     
     return PObject::None();
   }

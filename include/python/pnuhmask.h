@@ -42,8 +42,8 @@ public:
   }
   ~PNuhMask();
 
-  PObject get(const Property&);
-  int set(const Property&, const PObject& value);
+  PObject get(const Property);
+  int set(const Property, const PObject& value);
 
   inline PString str() { return inner.str(); }
 };

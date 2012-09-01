@@ -48,7 +48,7 @@ PNuhMask::~PNuhMask()
 {
 }
 
-PObject PNuhMask::get(const Property& prop)
+PObject PNuhMask::get(const Property prop)
 {
   switch(prop.number)
   {
@@ -62,7 +62,7 @@ PObject PNuhMask::get(const Property& prop)
   return PObject::None();
 }
 
-int PNuhMask::set(const Property& prop, const PObject& value)
+int PNuhMask::set(const Property prop, const PObject& value)
 {
   return 0;
 }
