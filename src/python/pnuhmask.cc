@@ -30,12 +30,41 @@
 #include "python/pctype.h"
 #include "nuhmask.h"
 
+enum NukMaskProperties
+{
+  Name,
+  Username,
+  Host
+};
+
 PNuhMask::PNuhMask(PTuple args, PDict kwds) : PCType(args, kwds)
 {
+  PString mask = static_cast<PString>(args[0]);
+
+  inner = NuhMask(mask.c_str());
 }
 
 PNuhMask::~PNuhMask()
 {
+}
+
+PObject PNuhMask::get(const Property& prop)
+{
+  switch(prop.number)
+  {
+  case Name:
+    return PString(inner.get_name());
+  case Username:
+    return PString(inner.get_username());
+  case Host:
+    return PString(inner.get_host());
+  }
+  return PObject::None();
+}
+
+int PNuhMask::set(const Property& prop, const PObject& value)
+{
+  return 0;
 }
 
 // Statics
@@ -45,5 +74,10 @@ void PNuhMask::init(const PObject& module)
   PyTypeObject& type = type_object();
 
   type.tp_name = "NuhMask";
+
+  add_property("Name", "Nickname part of the mask", Name, StringArg);
+  add_property("Username", "Username part of the mask", Username, StringArg);
+  add_property("Host", "Host part of the mask", Host, StringArg);
+
   PCType::init(module);
 }

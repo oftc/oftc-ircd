@@ -38,7 +38,7 @@
 
 class PClient;
 typedef PCMap<ChannelMemberList, PClient, PMembership> PChannelMemberList;
-typedef PCList<NuhMaskList, NuhMask, PNuhMask> PNuhMaskList;
+typedef PCList<NuhMaskList, PNuhMask> PNuhMaskList;
 
 class PChannel : public PCType<PChannel, ChannelPtr>
 {

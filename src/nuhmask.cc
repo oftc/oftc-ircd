@@ -54,6 +54,8 @@ void NuhMask::parse_mask(const string& mask)
 
   if(last == string::npos)
     last = 0;
+  else
+    last++;
 
   pos = mask.find_first_of('@', last);
   if(pos == string::npos || pos == last)
@@ -64,8 +66,19 @@ void NuhMask::parse_mask(const string& mask)
   last = pos;
   if(last == string::npos)
     last = 0;
+  else
+    last++;
 
   host = mask.substr(last, pos - last);
   if(host.empty())
     host = "*";
+}
+
+string NuhMask::str() const
+{
+  stringstream ss;
+
+  ss << name << "!" << username << "@" << host;
+
+  return ss.str();
 }

@@ -51,6 +51,12 @@ public:
   NuhMask();
   NuhMask(const string&);
   ~NuhMask();
+
+  inline irc_string get_name() const { return name; }
+  inline irc_string get_username() const { return username; }
+  inline string get_host() const { return host; }
+
+  string str() const;
  };
 
 #endif

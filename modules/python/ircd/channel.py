@@ -21,7 +21,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #  OTHER DEALINGS IN THE SOFTWARE.
 
-from pythonwrap import Channel
+from pythonwrap import Channel, NuhMask
 import numerics
 
 def set_channel_mode(client, channel, args):
@@ -62,6 +62,7 @@ def set_channel_mode(client, channel, args):
   mode = args[0]
   ret_args = []
   curr_arg = 1
+  largs = list(args)
 
   for c in mode:
     if c == '+':
@@ -71,12 +72,12 @@ def set_channel_mode(client, channel, args):
       plus = False
       continue
     elif c in 'bqeI':
-      ret = process_list(client, channel, plus, c, args)
+      ret = process_list(client, channel, plus, c, largs)
       if ret == 0:
         continue
 
       for i in range(ret):
-        ret_args.append(args[curr_arg])
+        ret_args.append(largs[curr_arg])
         curr_arg += 1
     elif c in modes:
       channel.set_mode_char(c, plus)
@@ -125,5 +126,7 @@ def process_list(client, channel, plus, mode, args):
     client.numeric(end, channel.Name)
     return 0
   else:
-    list.append(args[1])
+    mask = NuhMask(args[1])
+    list.append(mask)
+    args[1] = str(mask)
     return 1

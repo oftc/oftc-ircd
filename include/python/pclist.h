@@ -30,11 +30,11 @@
 #include "python/pctype.h"
 #include "python/pcollection.h"
 
-template<class List, class Value, class WrappedValue>
+template<class List, class WrappedValue>
 class PCList : public PCollection
 {
 private:
-  typedef PCList<List, Value, WrappedValue> PListType;
+  typedef PCList<List, WrappedValue> PListType;
   List inner_list;
   typename List::const_iterator current;
 public:
@@ -56,10 +56,10 @@ public:
 
   PObject append(PTuple args)
   {
-    PString mask = static_cast<PString>(args[0]);
-    Value new_entry(mask.c_str());
+    PyObject *tmp = args[0];
+    PNuhMask *mask = static_cast<PNuhMask *>(tmp);
 
-    inner_list.push_back(new_entry);
+    inner_list.push_back(*mask);
     
     return PObject::None();
   }
