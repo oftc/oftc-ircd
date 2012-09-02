@@ -54,10 +54,12 @@ def set_channel_mode(client, channel, args):
       ret = process_list(client, channel, plus, c, largs)
       if ret == 0:
         continue
-
       for i in range(ret):
         ret_args.append(largs[curr_arg])
         curr_arg += 1
+
+      if not plus and not c in set_before:
+        set_before.add(c)
     elif c in modes:
       channel.set_mode_char(c, plus)
     else:
@@ -133,6 +135,10 @@ def process_list(client, channel, plus, mode, args):
     return 0
   else:
     mask = NuhMask(args[1])
-    list.append(mask)
+    if plus:
+      list.append(mask)
+    else:
+      list.remove(mask)
+
     args[1] = str(mask)
     return 1

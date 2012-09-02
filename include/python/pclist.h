@@ -64,6 +64,16 @@ public:
     return PObject::None();
   }
 
+  PObject remove(PTuple args)
+  {
+    PyObject *tmp = args[0];
+    WrappedValue *value = static_cast<WrappedValue *>(tmp);
+
+    inner_list.remove(*value);
+
+    return PObject::None();
+  }
+
   PObject iter()
   {
     current = inner_list.begin();

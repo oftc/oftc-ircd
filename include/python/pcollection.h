@@ -57,6 +57,11 @@ public:
     return PObject::None();
   }
 
+  virtual PObject remove(PTuple args)
+  {
+    return PObject::None();
+  }
+
   virtual PObject iter()
   {
     Py_INCREF(this);
@@ -80,6 +85,13 @@ public:
     PCollection *collection = static_cast<PCollection *>(self);
 
     return collection->append(args);
+  }
+
+  static PyObject *collection_remove(PyObject *self, PyObject *args)
+  {
+    PCollection *collection = static_cast<PCollection *>(self);
+
+    return collection->remove(args);
   }
 
   static PyObject *collection_iter(PyObject *self)
@@ -131,6 +143,7 @@ public:
     };
 
     add_method("append", "Add an item to the collection", VarArgsMethod(&collection_append));
+    add_method("remove", "Remove an item from the collection", VarArgsMethod(&collection_remove));
 
     PyTypeObject& type = type_object();
 

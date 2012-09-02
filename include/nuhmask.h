@@ -52,9 +52,15 @@ public:
   NuhMask(const string&);
   ~NuhMask();
 
+  bool operator==(const NuhMask& right)
+  {
+    return full_mask == right.get_mask();
+  }
+
   inline irc_string get_name() const { return name; }
   inline irc_string get_username() const { return username; }
   inline string get_host() const { return host; }
+  inline string get_mask() const { return full_mask; }
 
   string str() const;
  };

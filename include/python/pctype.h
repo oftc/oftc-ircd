@@ -170,6 +170,8 @@ public:
     return PyObject_Compare(this, right);
   }
 
+  inline Inner get_inner() const { return inner; }
+
   static bool check(PyObject *obj)
   {
     return Py_TYPE(obj) == &type_object();
