@@ -38,8 +38,7 @@ protected:
 public:
   PObject();
   PObject(PyObject *);
-  PObject(int a) : object(NULL) { }; // empty constructor only for use in derived classes
-  PObject(long) : object(NULL) { }; // for NULL on 64 bit
+  PObject(int, int, int) : object(NULL) { }; // empty constructor only for use in derived classes
   PObject(const PObject &);
   virtual ~PObject();
 
@@ -69,7 +68,10 @@ public:
   virtual PObject operator()(const PObject& args)
   {
     if(!PyCallable_Check(object))
-      return PObject::None();
+    {
+      PyErr_SetString(PyExc_TypeError, "object is not callable");
+      return NULL;
+    }
 
     return PyObject_CallObject(object, args);
   }
@@ -77,7 +79,10 @@ public:
   virtual PObject operator()(const PObject& args, const PObject& kwargs)
   {
     if(!PyCallable_Check(object))
-      return PObject::None();
+    {
+      PyErr_SetString(PyExc_TypeError, "object is not callable");
+      return NULL;
+    }
 
     return PyObject_Call(object, args, kwargs);
   }
@@ -109,6 +114,11 @@ public:
   {
     Py_INCREF(Py_None);
     return Py_None;
+  }
+
+  static bool check(const PObject& item)
+  {
+    return Py_TYPE(item.object) == &PyBaseObject_Type;
   }
 };
 

@@ -72,10 +72,7 @@ PObject PChannel::add_member(PTuple args)
   PClient *client = static_cast<PClient *>(arg);
 
   if(!PClient::check(client) || !BaseClient::is_client(*client))
-  {
-    PyErr_SetString(PyExc_TypeError, "Argument must be a Client type");
-    return NULL;
-  }
+    return PException(PyExc_TypeError, "Argument must be a Client type");
 
   inner->add_member(*client);
 
@@ -90,10 +87,7 @@ PObject PChannel::is_member(PTuple args)
   PClient *client = static_cast<PClient *>(arg);
   
   if(!PClient::check(client) || !BaseClient::is_client(*client))
-  {
-    PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
-    return NULL;
-  }
+    return PException(PyExc_TypeError, "Argument must be a Client type");
 
   ret = PBool(inner->is_member(*client));
 
@@ -107,10 +101,7 @@ PObject PChannel::remove_member(PTuple args)
   PClient *client = static_cast<PClient *>(arg);
   
   if(!PClient::check(client) || !BaseClient::is_client(*client))
-  {
-    PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
-    return NULL;
-  }
+    return PException(PyExc_TypeError, "Argument must be a Client type");
 
   inner->remove_member(*client);
 
@@ -124,10 +115,7 @@ PObject PChannel::send_names(PTuple args)
   PClient *client = static_cast<PClient *>(arg);
   
   if(!PClient::check(client) || !BaseClient::is_client(*client))
-  {
-    PyErr_SetString(PyExc_TypeError, "argument must be a Client type");
-    return NULL;
-  }
+    return PException(PyExc_TypeError, "Argument must be a Client type");
   
   inner->send_names(*client);
 
@@ -145,10 +133,7 @@ PObject PChannel::send(PTuple args, PDict kwargs)
   client = static_cast<PClient *>(obj);
 
   if(!PClient::check(client) || !BaseClient::is_client(*client))
-  {
-    PyErr_SetString(PyExc_TypeError, "client argument must be a Client type");
-    return NULL;
-  }
+    return PException(PyExc_TypeError, "Argument must be a Client type");
 
   if(!result)
     return NULL;
@@ -273,10 +258,7 @@ PyObject *PChannel::add(PyObject *self, PyObject *vargs)
   PChannel *channel = static_cast<PChannel *>(obj);
 
   if(!PChannel::check(channel))
-  {
-    PyErr_SetString(PyExc_TypeError, "argument must be a Channel object");
-    return NULL;
-  }
+    return PException(PyExc_TypeError, "Argument must be a Channel object");
 
   Channel::add(*channel);
 
@@ -291,10 +273,7 @@ PyObject *PChannel::del(PyObject *self, PyObject *vargs)
   PChannel *channel = static_cast<PChannel *>(obj);
 
   if(!PChannel::check(channel))
-  {
-    PyErr_SetString(PyExc_TypeError, "argument must be a Channel object");
-    return NULL;
-  }
+    return PException(PyExc_TypeError, "Argument must be a Channel object");
 
   Channel::del(*channel);
 

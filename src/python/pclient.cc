@@ -87,10 +87,7 @@ PObject PClient::numeric(PTuple args)
   shared_ptr<Client> ptr;
 
   if(!Client::is_client(inner))
-  {
-    PyErr_SetString(PyExc_RuntimeError, "Cannot send a numeric to a non-client");
-    return NULL;
-  }
+    return PException(PyExc_RuntimeError, "Cannot send a numeric to a non-client");
 
   ptr = dynamic_pointer_cast<Client>(inner);
 
@@ -106,34 +103,30 @@ PObject PClient::numeric(PTuple args)
       i++;
       item = args[index++];
       if(!item)
-      {
-        PyErr_SetString(PyExc_TypeError, "Not enough arguments for numeric format");
-        return NULL;
-      }
+        return PException(PyExc_TypeError, "Not enough arguments for numeric format");
+
       switch(*i)
       {
       case 's':
       case 'c':
-     /*   if(!PyString_Check(item))
+        if(!PString::check(item))
         {
           stringstream ss;
           ss << "expected string argument for argument " << index;
-          PyErr_SetString(PyExc_TypeError, ss.str().c_str());
-          return NULL;
-        }*/
+          return PException(PyExc_TypeError, ss.str().c_str());
+        }
         if(*i == 's')
-          output << PyString_AsString(item);
+          output << item.str();
         else
-          output << PyString_AsString(item)[0];
+          output << item.str().c_str()[0];
         break;
       case 'd':
-        /*if(!PyInt_Check(item))
+        if(!PInt::check(item))
         {
           stringstream ss;
           ss << "expected int argument for argument " << index;
-          PyErr_SetString(PyExc_TypeError, ss.str().c_str());
-          return NULL;
-        }*/
+          return PException(PyExc_TypeError, ss.str().c_str());
+        }
 
         output << item.str().c_str();
         break;
@@ -189,10 +182,7 @@ PObject PClient::remove_channel(PTuple args)
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(inner);
 
   if(!PChannel::check(channel))
-  {
-    PyErr_SetString(PyExc_TypeError, "argument must be a Channel");
-    return NULL;
-  }
+    return PException(PyExc_TypeError, "argument must be a Channel");
 
   ptr->remove_channel(*channel);
 

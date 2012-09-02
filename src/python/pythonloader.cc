@@ -30,15 +30,7 @@
 #include <iostream>
 #include "python/pythonbase.h"
 #include "python/pythonloader.h"
-/*#include "python/pythonwrap.h"
-#include "python/parserwrap.h"
-#include "python/clientwrap.h"
-#include "python/eventwrap.h"
-#include "python/channelwrap.h"*/
 #include "python/pythonutil.h"
-/*#include "python/collectionwrap.h"
-#include "python/membershipwrap.h"
-#include "python/nuhmaskwrap.h"*/
 #include "channel.h"
 #include "module.h"
 #include "system.h"

@@ -57,6 +57,11 @@ public:
   using PObject::operator=;
 
   const char *c_str() const;
+
+  static bool check(const PObject& item)
+  {
+    return PyString_Check(item) != 0;
+  }
 };
 
 #endif

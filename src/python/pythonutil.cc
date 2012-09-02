@@ -127,11 +127,8 @@ PString PythonUtil::send_format(PObject source, PTuple args, PDict kwargs)
   PObject method;
   PTuple fargs(0);
 
-/*  if(!PyString_Check(fmt))
-  {
-    PyErr_SetString(PyExc_TypeError, "you must pass a string as the first parameter");
-    return NULL;
-  }*/
+  if(!PString::check(format))
+    return PException(PyExc_TypeError, "you must pass a string as the first parameter");
 
   if(!PChannel::check(source))
     fdict.set_item("client", source);

@@ -23,35 +23,14 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PBOOL_H_INC
-#define PBOOL_H_INC
+#include "python/pexception.h"
+#include "stdinc.h"
 
-#include "python/pobject.h"
-
-class PBool : public PObject
+PException::PException() : PObject(NULL)
 {
-public:
-  PBool();
-  PBool(bool);
-  ~PBool();
+}
 
-  using PObject::operator=;
-
-  const PBool& incref()
-  {
-    PObject::incref();
-    return *this;
-  }
-
-  operator bool() const
-  {
-    return PyObject_IsTrue(object) != 0;
-  }
-
-  static bool check(const PObject& item)
-  {
-    return PyBool_Check(item) != 0;
-  }
-};
-
-#endif
+PException::PException(const PObject& type, const char *message) : PObject(NULL)
+{
+  PyErr_SetString(type, message);
+}

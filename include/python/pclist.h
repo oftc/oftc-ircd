@@ -29,6 +29,7 @@
 #include "Python.h"
 #include "python/pctype.h"
 #include "python/pcollection.h"
+#include "python/pexception.h"
 
 template<class List, class WrappedValue>
 class PCList : public PCollection
@@ -59,6 +60,9 @@ public:
     PyObject *tmp = args[0];
     WrappedValue *value = static_cast<WrappedValue *>(tmp);
 
+    if(!WrappedValue::check(value))
+      return PException(PyExc_TypeError, "cannot append this item, wrong type");
+
     inner_list.push_back(*value);
     
     return PObject::None();
@@ -69,6 +73,9 @@ public:
     PyObject *tmp = args[0];
     WrappedValue *value = static_cast<WrappedValue *>(tmp);
 
+    if(!WrappedValue::check(value))
+      return PException(PyExc_TypeError, "cannot remove this item, wrong type");
+
     inner_list.remove(*value);
 
     return PObject::None();
@@ -77,7 +84,7 @@ public:
   PObject iter()
   {
     current = inner_list.begin();
-    Py_INCREF(this);
+    incref();
     return this;
   }
 
