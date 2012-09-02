@@ -125,7 +125,7 @@ PObject PChannel::send_names(PTuple args)
 PObject PChannel::send(PTuple args, PDict kwargs)
 {
   PClient *client;
-  PString result = PythonUtil::send_format(this, args, kwargs);
+  PObject result = PythonUtil::send_format(this, args, kwargs);
   PyObject *obj;
 
   obj = kwargs["client"];
@@ -138,7 +138,7 @@ PObject PChannel::send(PTuple args, PDict kwargs)
   if(!result)
     return NULL;
 
-  inner->send(*client, result);
+  inner->send(*client, static_cast<PString>(result));
 
   return PObject::None();
 }

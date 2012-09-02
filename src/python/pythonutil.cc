@@ -120,7 +120,7 @@ PyObject *PythonUtil::get_motd(PyObject *self, PyObject *arg)
   return ret;
 }
 
-PString PythonUtil::send_format(PObject source, PTuple args, PDict kwargs)
+PObject PythonUtil::send_format(PObject source, PTuple args, PDict kwargs)
 {
   PString format = static_cast<PString>(args[0]);
   PDict fdict;

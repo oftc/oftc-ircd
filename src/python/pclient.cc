@@ -116,7 +116,7 @@ PObject PClient::numeric(PTuple args)
           return PException(PyExc_TypeError, ss.str().c_str());
         }
         if(*i == 's')
-          output << item.str();
+          output << item.str().c_str();
         else
           output << item.str().c_str()[0];
         break;
@@ -151,25 +151,25 @@ PObject PClient::numeric(PTuple args)
 
 PObject PClient::send(PTuple args, PDict kwargs)
 {
-  PString str = PythonUtil::send_format(this, args, kwargs);
+  PObject str = PythonUtil::send_format(this, args, kwargs);
 
   if(!str)
     return NULL;
 
-  inner->send(str);
+  inner->send(static_cast<PString>(str));
 
   return PObject::None();
 }
 
 PObject PClient::send_channels_common(PTuple args, PDict kwargs)
 {
-  PString str = PythonUtil::send_format(this, args, kwargs);
+  PObject str = PythonUtil::send_format(this, args, kwargs);
 
   if(!str)
     return NULL;
 
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(inner);
-  ptr->send_channels_common(str);
+  ptr->send_channels_common(static_cast<PString>(str));
 
   return PObject::None();
 }
