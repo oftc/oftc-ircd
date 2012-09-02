@@ -30,6 +30,7 @@
 #include <string>
 #include <list>
 #include "ircstring.h"
+#include "baseclient.h"
 
 using std::string;
 using std::list;
@@ -61,6 +62,9 @@ public:
   inline irc_string get_username() const { return username; }
   inline string get_host() const { return host; }
   inline string get_mask() const { return full_mask; }
+
+  bool match(const NuhMask&);
+  bool match(const ClientPtr);
 
   string str() const;
  };

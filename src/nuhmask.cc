@@ -23,6 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include <fnmatch.h>
+
 #include "stdinc.h"
 #include "nuhmask.h"
 
@@ -81,4 +83,19 @@ string NuhMask::str() const
   ss << name << "!" << username << "@" << host;
 
   return ss.str();
+}
+
+bool NuhMask::match(const NuhMask& right)
+{
+  const char *pat = this->str().c_str();
+  const char *det = right.str().c_str();
+  int ret = fnmatch(pat, det, FNM_NOESCAPE);
+  Logging::debug << "NuhMask Match: " << pat << " " << det << Logging::endl;
+  return ret == 0 ? true : false;
+}
+
+bool NuhMask::match(const ClientPtr right)
+{
+  NuhMask r(right->str().c_str());
+  return this->match(r);
 }

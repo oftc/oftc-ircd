@@ -212,3 +212,14 @@ def client_nick_changed(client, old_source):
 def channel_joined(channel, client):
   client.send(":{client} JOIN :{channel}", channel=channel)
   channel.send(":{client} JOIN :{channel}", client=client, channel=channel)
+
+@event(Channel.joining)
+def channel_joining(channel, client):
+  print "joining %s, %s" % (channel, client)
+  for m in channel.Bans:
+    if m.match(client):
+      for me in channel.Excepts:
+        if me.match(client):
+          return True
+      return False
+  return True

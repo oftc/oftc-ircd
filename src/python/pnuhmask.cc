@@ -28,6 +28,7 @@
 #include "stdinc.h"
 #include "python/pnuhmask.h"
 #include "python/pctype.h"
+#include "python/pclient.h"
 #include "nuhmask.h"
 
 enum NukMaskProperties
@@ -67,6 +68,30 @@ int PNuhMask::set(const Property prop, const PObject& value)
   return 0;
 }
 
+PObject PNuhMask::match(PTuple args)
+{
+  PyObject *arg = args[0];
+  PNuhMask *right_mask;
+  PClient *right_client;
+  PBool ret;
+
+  right_mask  = static_cast<PNuhMask *>(arg);
+
+  if(PNuhMask::check(right_mask))
+    ret = PBool(inner.match(right_mask->inner));
+  else
+  {
+    right_client = static_cast<PClient *>(arg);
+    if(!PNuhMask::check(right_client)) {
+      PyErr_SetString(PyExc_TypeError, "argument must be NuhMask or Client");
+      return NULL;
+    }
+    ret = PBool(inner.match(*right_client));
+  }
+
+  return ret;
+}
+
 // Statics
 
 void PNuhMask::init(const PObject& module)
@@ -74,6 +99,8 @@ void PNuhMask::init(const PObject& module)
   PyTypeObject& type = type_object();
 
   type.tp_name = "NuhMask";
+
+  add_method("match", "Match another nuhmask against this", VarArgsMethod(&PNuhMask::match));
 
   add_property("Name", "Nickname part of the mask", Name, StringArg);
   add_property("Username", "Username part of the mask", Username, StringArg);

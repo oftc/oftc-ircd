@@ -28,6 +28,7 @@
 
 #include "Python.h"
 #include "python/pctype.h"
+#include "python/pbool.h"
 #include "nuhmask.h"
 
 class PNuhMask : public PCType<PNuhMask, NuhMask>
@@ -44,6 +45,8 @@ public:
 
   PObject get(const Property);
   int set(const Property, const PObject& value);
+
+  PObject match(PTuple);
 
   inline PString str() { return inner.str(); }
 };
