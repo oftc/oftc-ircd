@@ -283,11 +283,41 @@ void PClient::init(const PObject& module)
 
   me = new PClient(Server::get_me());
 
-  PEvent::add_event(type.tp_dict, "closing", Client::closing, &PEvent::client_string_callback);
-  PEvent::add_event(type.tp_dict, "nick_changing", Client::nick_changing, &PEvent::client_ircstring_callback);
-  PEvent::add_event(type.tp_dict, "nick_changed", Client::nick_changed, &PEvent::client_string_callback);
+  PEvent::add_event<ClientPtr, string>(type.tp_dict, "closing", Client::closing, &PEvent::client_string_callback, on_closing);
+  PEvent::add_event<ClientPtr, irc_string>(type.tp_dict, "nick_changing", Client::nick_changing, &PEvent::client_ircstring_callback, on_nick_changing);
+  PEvent::add_event<ClientPtr, string>(type.tp_dict, "nick_changed", Client::nick_changed, &PEvent::client_string_callback, on_nick_changed);
 
   PyDict_SetItemString(type.tp_dict, "Me", me);
+}
+
+bool PClient::on_closing(ClientPtr client, string reason)
+{
+  PTuple args(2);
+
+  args.set_item(0, new PClient(client));
+  args.set_item(1, PString(reason));
+
+  return PEvent::handle(PyDict_GetItemString(type_object().tp_dict, "closing"), args);
+}
+
+bool PClient::on_nick_changing(ClientPtr client, irc_string new_nick)
+{
+  PTuple args(2);
+
+  args.set_item(0, new PClient(client));
+  args.set_item(1, PString(new_nick));
+
+  return PEvent::handle(PyDict_GetItemString(type_object().tp_dict, "nick_changing"), args);
+}
+
+bool PClient::on_nick_changed(ClientPtr client, string old_mask)
+{
+  PTuple args(2);
+
+  args.set_item(0, new PClient(client));
+  args.set_item(1, PString(old_mask));
+
+  return PEvent::handle(PyDict_GetItemString(type_object().tp_dict, "nick_changed"), args);
 }
 
 PyObject *PClient::find_by_name(PyObject *self, PyObject *varargs)

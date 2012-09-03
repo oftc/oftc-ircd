@@ -87,6 +87,10 @@ public:
   static PyObject *add(PyObject *, PyObject *);
   static void init(const PObject&);
 
+  static bool on_closing(ClientPtr, string);
+  static bool on_nick_changing(ClientPtr, irc_string);
+  static bool on_nick_changed(ClientPtr, string);
+
   inline static PClient *get_me() { return me; }
 };
 

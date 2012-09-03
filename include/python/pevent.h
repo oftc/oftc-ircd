@@ -104,7 +104,7 @@ public:
     return callback(args);
   }
 
-  PObject channel_client_callback(Event<ChannelPtr, ClientPtr> event, PTuple args)
+  PObject channel_client_callback(Event<ChannelPtr, ClientPtr>& event, PTuple args)
   {
     PyObject *arg0, *arg1;
 
@@ -119,7 +119,7 @@ public:
     return ret.incref();
   }
 
-  PObject client_string_callback(Event<ClientPtr, string> event, PTuple args)
+  PObject client_string_callback(Event<ClientPtr, string>& event, PTuple args)
   {
     PyObject *obj = args[0];
     PClient *client = static_cast<PClient *>(obj);
@@ -129,7 +129,7 @@ public:
     return ret.incref();
   }
 
-  PObject client_ircstring_callback(Event<ClientPtr, irc_string> event, PTuple args)
+  PObject client_ircstring_callback(Event<ClientPtr, irc_string>& event, PTuple args)
   {
     PyObject *obj = args[0];
     PClient *client = static_cast<PClient *>(obj);
@@ -140,12 +140,34 @@ public:
   }
 
 #ifdef _MSC_VER
-  template<class T1, class T2, class T3, class T4, class T5>
-  static void add_event(PyObject *dict, const char *name, Event<T1, T2, T3, T4, T5> event, PObject(PEvent::*callback)(Event<T1, T2, T3, T4, T5>, PTuple))
+  template<class T1>
+  static void add_event(PyObject *dict, const char *name, Event<T1>& event, PObject(PEvent::*callback)(Event<T1>, PTuple), function<bool(T1)> handler)
+  {
+    PEvent *e = new PEvent();
+
+    auto func = std::bind(callback, e, std::ref(event), _1);
+    e->set_func(func);
+
+    PyDict_SetItemString(dict, name, e);
+
+    event += handler;
+  }
+
+  template<class T1, class T2>
+  static void add_event(PyObject *dict, const char *name, Event<T1, T2>& event, PObject(PEvent::*callback)(Event<T1, T2>&, PTuple), function<bool(T1, T2)> handler)
+  {
+    PEvent *e = new PEvent();
+
+    auto func = std::bind(callback, e, std::ref(event), _1);
+    e->set_func(func);
+
+    PyDict_SetItemString(dict, name, e);
+
+    event += handler;
+  }
 #else
   template<typename... T>
   static void add_event(PyObject *dict, const char *name, Event<T...> event, PObject(PEvent::*callback)(Event<T...>, PTuple))
-#endif
   {
     PEvent *e = new PEvent();
 
@@ -154,6 +176,7 @@ public:
 
     PyDict_SetItemString(dict, name, e);
   }
+#endif
 
   static void init(const PObject& module)
   {
@@ -166,6 +189,17 @@ public:
     add_property("handler", "handler for the event", Handler, static_cast<PropertyFlag>(0));
 
     PCType::init(module);
+  }
+
+  static bool handle(PObject ev, const PTuple& args)
+  {
+    PyObject *tmp = ev;
+    PEvent *event = static_cast<PEvent *>(tmp);
+
+    if(!PyCallable_Check(event->handler))
+      return true;
+
+    return PBool(event->handler(args));
   }
 };
 

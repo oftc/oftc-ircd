@@ -64,6 +64,10 @@ public:
   static PyObject *del(PyObject *, PyObject *);
   static PyObject *find(PyObject *, PyObject *);
   static PyObject *supported_modes(PyObject *, PyObject *);
+
+  static bool on_joining(ChannelPtr, ClientPtr);
+  static bool on_joined(ChannelPtr, ClientPtr);
+
 };
 
 #endif
