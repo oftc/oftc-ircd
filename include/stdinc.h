@@ -27,10 +27,17 @@
 #define STDINC_H_INC
 
 #if defined(_MSC_VER)
+#if __clang__
+#define HAS_VARTEMPLATES 1
+#else
+#undef HAS_VARTEMPLATES
+#endif
 #ifndef _CRT_SECURE_NO_DEPRECATE
 #define _CRT_SECURE_NO_DEPRECATE (1)
 #endif
 #pragma warning(disable : 4996)
+#else
+#define HAS_VARTEMPLATES 1
 #endif
 
 #include <memory>

@@ -32,7 +32,7 @@ using std::list;
 
 struct NullArg {};
 
-#ifndef _MSC_VER
+#ifdef HAS_VARTEMPLATES
 template<typename... T>
 class Event
 {

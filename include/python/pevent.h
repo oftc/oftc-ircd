@@ -139,7 +139,8 @@ public:
     return ret.incref();
   }
 
-#ifdef _MSC_VER
+//#ifndef HAS_VARTEMPLATES
+#if 1
   template<class T1>
   static void add_event(PyObject *dict, const char *name, Event<T1>& event, PObject(PEvent::*callback)(Event<T1>, PTuple), function<bool(T1)> handler)
   {
@@ -201,7 +202,7 @@ public:
     if(!PyCallable_Check(event->handler))
       return true;
 
-    return PBool(event->handler(args));
+    return event->handler(args).is_true();
   }
 };
 
