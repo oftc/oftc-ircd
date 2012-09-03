@@ -167,14 +167,16 @@ public:
   }
 #else
   template<typename... T>
-  static void add_event(PyObject *dict, const char *name, Event<T...> event, PObject(PEvent::*callback)(Event<T...>, PTuple))
+  static void add_event(PyObject *dict, const char *name, Event<T...> event, PObject(PEvent::*callback)(Event<T...>, PTuple), function<bool(T...)> handler)
   {
     PEvent *e = new PEvent();
 
-    auto func = std::bind(callback, e, event, _1);
+    auto func = std::bind(callback, e, std::ref(event), _1);
     e->set_func(func);
 
     PyDict_SetItemString(dict, name, e);
+
+    event += handler;
   }
 #endif
 
