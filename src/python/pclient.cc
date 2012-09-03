@@ -124,7 +124,7 @@ PObject PClient::numeric(PTuple args)
         if(!PInt::check(item))
         {
           stringstream ss;
-          ss << "expected int argument for argument " << index;
+          ss << "expected int argument for argument " << index << " " << item.str().c_str();
           return PException(PyExc_TypeError, ss.str().c_str());
         }
 

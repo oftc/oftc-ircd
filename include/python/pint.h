@@ -58,6 +58,11 @@ public:
   {
     return static_cast<AccessLevel>(operator int());
   }
+
+  static bool check(const PObject& item)
+  {
+    return PyNumber_Check(item) != 0;
+  }
 };
 
 #endif
