@@ -23,10 +23,14 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <fnmatch.h>
-
 #include "stdinc.h"
 #include "nuhmask.h"
+#ifndef _WIN32
+#include <fnmatch.h>
+#else
+#include <shlwapi.h>
+#pragma comment(lib,"shlwapi.lib");
+#endif
 
 NuhMask::NuhMask() 
 {
@@ -95,7 +99,11 @@ bool NuhMask::match(const NuhMask& right)
   std::transform(sdet.begin(), sdet.end(), sdet.begin(), to_upper);
   const char *det = sdet.c_str();
 
+#ifndef _WIN32
   int ret = fnmatch(pat, det, FNM_NOESCAPE | FNM_CASEFOLD);
+#else
+  int ret = !PathMatchSpec(det, pat);
+#endif
   bool ismatch = ret == 0 ? true : false;
 
   Logging::debug << "NuhMask " << det << " ";
