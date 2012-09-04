@@ -82,7 +82,7 @@ PObject PNuhMask::match(PTuple args)
   else
   {
     right_client = static_cast<PClient *>(arg);
-    if(!PNuhMask::check(right_client)) {
+    if(!PClient::check(right_client)) {
       PyErr_SetString(PyExc_TypeError, "argument must be NuhMask or Client");
       return NULL;
     }
