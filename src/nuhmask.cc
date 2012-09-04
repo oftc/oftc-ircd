@@ -87,11 +87,27 @@ string NuhMask::str() const
 
 bool NuhMask::match(const NuhMask& right)
 {
-  const char *pat = this->str().c_str();
-  const char *det = right.str().c_str();
-  int ret = fnmatch(pat, det, FNM_NOESCAPE);
-  Logging::debug << "NuhMask Match: " << pat << " " << det << Logging::endl;
-  return ret == 0 ? true : false;
+  std::string spat(this->str());
+  std::transform(spat.begin(), spat.end(), spat.begin(), to_upper);
+  const char *pat = spat.c_str();
+
+  std::string sdet(right.str());
+  std::transform(sdet.begin(), sdet.end(), sdet.begin(), to_upper);
+  const char *det = sdet.c_str();
+
+  int ret = fnmatch(pat, det, FNM_NOESCAPE | FNM_CASEFOLD);
+  bool ismatch = ret == 0 ? true : false;
+
+  Logging::debug << "NuhMask " << det << " ";
+
+  if(ismatch)
+    Logging::debug << "Matched";
+  else
+    Logging::debug << "No Match";
+
+  Logging::debug << " " << pat << Logging::endl;
+
+  return ismatch;
 }
 
 bool NuhMask::match(const ClientPtr right)
