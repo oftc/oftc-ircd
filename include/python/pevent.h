@@ -198,11 +198,20 @@ public:
   {
     PyObject *tmp = ev;
     PEvent *event = static_cast<PEvent *>(tmp);
+    PObject ret;
 
     if(!PyCallable_Check(event->handler))
       return true;
 
-    return event->handler(args).is_true();
+    ret = event->handler(args);
+
+    if(!ret)
+    {
+      PythonUtil::log_error();
+      return true;
+    }
+
+    return ret.is_true();
   }
 };
 
