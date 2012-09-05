@@ -199,6 +199,12 @@ PObject PChannel::get(Property prop)
 
 int PChannel::set(const Property prop, const PObject& value)
 {
+  int ret;
+
+  ret = PCType::set(prop, value);
+
+  if(ret != 0)
+    return -1;
 
   switch(prop.number)
   {
@@ -207,7 +213,7 @@ int PChannel::set(const Property prop, const PObject& value)
     break;
   }
 
-  return 0;
+  return ret;
 }
 
 // Statics

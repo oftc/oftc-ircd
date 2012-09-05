@@ -69,7 +69,14 @@ PObject PNuhMask::get(const Property prop)
 
 int PNuhMask::set(const Property prop, const PObject& value)
 {
-  return 0;
+  int ret;
+
+  ret = PCType::set(prop, value);
+
+  if(ret != 0)
+    return -1;
+
+  return ret;
 }
 
 PObject PNuhMask::match(const PTuple& args)

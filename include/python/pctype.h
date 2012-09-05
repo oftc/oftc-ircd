@@ -34,6 +34,7 @@
 #include "python/pdict.h"
 #include "python/ptuple.h"
 #include "python/pmethod.h"
+#include "python/pint.h"
 #include "event.h"
 
 using std::map;
@@ -81,10 +82,6 @@ public:
     PyObject_Init(this, &type_object());
   }
 
-/*  PCType(PObject ptr)
-  {
-  }*/
-
   PCType(const PTuple& args, const PDict& kwargs)
   {
   }
@@ -127,6 +124,36 @@ public:
 
   virtual int set(const Property prop, const PObject& value)
   {
+    if(prop.flags & BoolArg && !PBool::check(value))
+    {
+      PyErr_SetString(PyExc_TypeError, "Value must be a bool");
+      return -1;
+    }
+
+    if(prop.flags & IntArg && !PInt::check(value))
+    {
+      PyErr_SetString(PyExc_TypeError, "Value must be an integer");
+      return -1;
+    }
+
+    if(prop.flags & StringArg && !PString::check(value))
+    {
+      PyErr_SetString(PyExc_TypeError, "Value must be a string");
+      return -1;
+    }
+
+    if((prop.flags & ClientArg || prop.flags & ServerArg) && !PClient::check(value))
+    {
+      PyErr_SetString(PyExc_TypeError, "Value must be a client");
+      return -1;
+    }
+
+    if(prop.flags & ChannelArg && !PChannel::check(value))
+    {
+      PyErr_SetString(PyExc_TypeError, "Value must be a channel");
+      return -1;
+    }
+
     return 0;
   }
 

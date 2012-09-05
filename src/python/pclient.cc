@@ -240,6 +240,13 @@ int PClient::set(const Property prop, const PObject& value)
 {
   shared_ptr<Client> client = dynamic_pointer_cast<Client>(inner);
 
+  int ret;
+
+  ret = PCType::set(prop, value);
+
+  if(ret != 0)
+    return -1;
+
   switch(prop.number)
   {
   case Name:
@@ -262,7 +269,7 @@ int PClient::set(const Property prop, const PObject& value)
     break;
   }
 
-  return 0;
+  return ret;
 }
 
 // Statics
