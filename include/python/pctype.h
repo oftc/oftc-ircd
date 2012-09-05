@@ -142,18 +142,6 @@ public:
       return -1;
     }
 
-    if((prop.flags & ClientArg || prop.flags & ServerArg) && !PClient::check(value))
-    {
-      PyErr_SetString(PyExc_TypeError, "Value must be a client");
-      return -1;
-    }
-
-    if(prop.flags & ChannelArg && !PChannel::check(value))
-    {
-      PyErr_SetString(PyExc_TypeError, "Value must be a channel");
-      return -1;
-    }
-
     return 0;
   }
 
