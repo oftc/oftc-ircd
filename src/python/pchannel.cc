@@ -169,19 +169,19 @@ PObject PChannel::get(Property prop)
   case Name:
     return PString(inner->get_name());
   case InviteOnly:
-    return PBool(inner->is_invite_only()).incref();
+    return PBool(inner->is_invite_only());
   case Moderated:
-    return PBool(inner->is_moderated()).incref();
+    return PBool(inner->is_moderated());
   case NoExternal:
-    return PBool(inner->is_no_external_msgs()).incref();
+    return PBool(inner->is_no_external_msgs());
   case Private:
-    return PBool(inner->is_private()).incref();
+    return PBool(inner->is_private());
   case Secret:
-    return PBool(inner->is_secret()).incref();
+    return PBool(inner->is_secret());
   case TopicOpsOnly:
-    return PBool(inner->is_topic_op_only()).incref();
+    return PBool(inner->is_topic_op_only());
   case Secure:
-    return PBool(inner->is_secure()).incref();
+    return PBool(inner->is_secure());
   case Members:
     return new PChannelMemberList(inner->get_members());
   case Bans:
