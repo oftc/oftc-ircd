@@ -27,27 +27,26 @@
 #define PDICT_H_INC
 
 #include "Python.h"
-#include "psequence.h"
+#include "pobject.h"
 
-class PDict : public PSequence<PObject>
+class PDict : public PObject
 {
 public:
   PDict();
   PDict(PyObject *);
-
-  using PSequence<PObject>::set_item;
+  ~PDict();
   
-  int set_item(const char *key, const PObject value)
+  inline int set_item(const char *key, const PObject& value)
   {
     return PyDict_SetItemString(object, key, value);
   }
 
-  int update(const PDict dict)
+  inline int update(const PDict dict)
   {
     return PyDict_Update(object, dict);
   }
 
-  PObject operator [](const char *key)
+  inline PObject operator [](const char *key) const
   {
     return PyDict_GetItemString(object, key);
   }

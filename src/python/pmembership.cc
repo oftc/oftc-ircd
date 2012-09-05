@@ -39,7 +39,7 @@ enum MembershipProperty
   Flags,
 };
 
-PMembership::PMembership(PTuple args, PDict kwds) : PCType(args, kwds)
+PMembership::PMembership(const PTuple& args, const PDict& kwds) : PCType(args, kwds)
 {
 }
 

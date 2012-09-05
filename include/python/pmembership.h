@@ -35,14 +35,14 @@ class PMembership : public PCType<PMembership, Membership>
 {
 private:
 public:
-  static void init(PyObject *);
-
-  PMembership(PTuple, PDict);
-  PMembership(Membership ptr);
+  PMembership(const PTuple&, const PDict&);
+  PMembership(const Membership ptr);
   ~PMembership();
 
   PObject get(const Property);
   int set(const Property, const PObject&);
+
+  static void init(PyObject *);
 };
 
 #endif

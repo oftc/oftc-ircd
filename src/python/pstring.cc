@@ -27,25 +27,35 @@
 #include "stdinc.h"
 #include "python/pstring.h"
 
-PString::PString() : PObject(0)
+PString::PString() : PObject(0, 0, 0)
 {
   object = PyObject_CallObject(reinterpret_cast<PyObject *>(&PyString_Type), NULL);
+  Logging::trace << "string: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
 PString::PString(PyObject *str) : PObject(str)
 {
+  Logging::trace << "string: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
-PString::PString(string str) : PObject(0)
+PString::PString(string str) : PObject(0, 0, 0)
 {
   object = PyString_FromString(str.c_str());
   Py_INCREF(object);
+  Logging::trace << "string: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+
 }
 
-PString::PString(irc_string str)
+PString::PString(irc_string str) : PObject(0, 0, 0)
 {
   object = PyString_FromString(str.c_str());
   Py_INCREF(object);
+  Logging::trace << "string: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+}
+
+PString::~PString()
+{
+  Logging::trace << "string: " << object << " [---] (" << (object->ob_refcnt - 1) << ")" << Logging::endl;
 }
 
 const char *PString::c_str() const

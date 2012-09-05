@@ -43,43 +43,24 @@ private:
   static PClient *me;
 public:
   PClient();
-  PClient(PTuple, PDict);
+  PClient(const PTuple&, const PDict&);
   PClient(ClientPtr);
   ~PClient();
 
   PObject get(const Property);
   int set(const Property, const PObject&);
+  int compare(const PObject&);
 
-  PString str()
-  {
-    return inner->str();
-  }
-
-  int compare(const PObject& right)
-  {
-    if(!PClient::check(right))
-      return PCType::compare(right);
-
-    PyObject *tmp = right;
-    PClient *rptr = static_cast<PClient *>(tmp);
-
-    if(inner == rptr->inner)
-      return 0;
-
-    if(inner->get_name() > rptr->inner->get_name())
-      return 1;
-    else
-      return -1;
-  }
+  inline PString str() const { return inner->str(); }
 
   inline PBool is_registered() const { return PBool(inner->is_registered()).incref(); }
   inline PBool is_ssl() const { return PBool(inner->is_ssl()).incref(); }
 
-  PObject close(PTuple);
-  PObject numeric(PTuple);
-  PObject send(PTuple, PDict);
-  PObject send_channels_common(PTuple, PDict);
-  PObject remove_channel(PTuple);
+  PObject close(const PTuple&);
+  PObject numeric(const PTuple&);
+  PObject send(const PTuple&, const PDict&);
+  PObject send_channels_common(const PTuple&, const PDict&);
+  PObject remove_channel(const PTuple&);
 
   static PyObject *find_by_name(PyObject *, PyObject *);
   static PyObject *del_name(PyObject *, PyObject *);

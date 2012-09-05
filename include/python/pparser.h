@@ -35,7 +35,7 @@ class PParser : public PCType<PParser, Parser>
 {
 public:
   PParser();
-  PParser(PTuple, PDict);
+  PParser(const PTuple&, const PDict&);
   ~PParser();
 
   static PyObject *register_command(PyObject *, PyObject *, PyObject *);

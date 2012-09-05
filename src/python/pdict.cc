@@ -26,11 +26,20 @@
 #include "python/pdict.h"
 #include "stdinc.h"
 
-PDict::PDict()
+PDict::PDict() : PObject(0, 0, 0)
 {
   object = PyDict_New();
+  Logging::trace << "dict: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
-PDict::PDict(PyObject *ptr) : PSequence<PObject>(ptr)
+PDict::PDict(PyObject *ptr) : PObject(ptr)
 {
+  if(ptr != NULL)
+    Logging::trace << "dict: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+}
+
+PDict::~PDict()
+{
+  if(object != NULL)
+    Logging::trace << "dict: " << object << " [---] (" << object->ob_refcnt << ")" << Logging::endl;
 }

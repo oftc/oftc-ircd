@@ -56,7 +56,7 @@ PChannel::PChannel(ChannelPtr ptr) : PCType(ptr)
 {
 }
 
-PChannel::PChannel(PTuple args, PDict kwargs) : PCType(args, kwargs)
+PChannel::PChannel(const PTuple& args, const PDict& kwargs) : PCType(args, kwargs)
 {
   inner = ChannelPtr(new Channel());
 }
@@ -65,7 +65,7 @@ PChannel::~PChannel()
 {
 }
 
-PObject PChannel::add_member(PTuple args)
+PObject PChannel::add_member(const PTuple& args)
 {
   PyObject *arg = args[0];
 
@@ -79,7 +79,7 @@ PObject PChannel::add_member(PTuple args)
   return PObject::None();
 }
 
-PObject PChannel::is_member(PTuple args)
+PObject PChannel::is_member(const PTuple& args)
 {
   PyObject *arg = args[0];
   PBool ret;
@@ -94,7 +94,7 @@ PObject PChannel::is_member(PTuple args)
   return ret;
 }
 
-PObject PChannel::remove_member(PTuple args)
+PObject PChannel::remove_member(const PTuple& args)
 {
   PyObject *arg = args[0];
 
@@ -108,7 +108,7 @@ PObject PChannel::remove_member(PTuple args)
   return PObject::None();
 }
 
-PObject PChannel::send_names(PTuple args)
+PObject PChannel::send_names(const PTuple& args)
 {
   PyObject *arg = args[0];
 
@@ -122,7 +122,7 @@ PObject PChannel::send_names(PTuple args)
   return PObject::None();
 }
 
-PObject PChannel::send(PTuple args, PDict kwargs)
+PObject PChannel::send(const PTuple& args, const PDict& kwargs)
 {
   PClient *client;
   PObject result = PythonUtil::send_format(this, args, kwargs);
@@ -143,7 +143,7 @@ PObject PChannel::send(PTuple args, PDict kwargs)
   return PObject::None();
 }
 
-PObject PChannel::set_mode_char(PTuple args)
+PObject PChannel::set_mode_char(const PTuple& args)
 {
   char c;
   PObject set, ch;
@@ -157,7 +157,7 @@ PObject PChannel::set_mode_char(PTuple args)
   return PObject::None();
 }
 
-PString PChannel::str()
+PString PChannel::str() const
 {
   return inner->str();
 }

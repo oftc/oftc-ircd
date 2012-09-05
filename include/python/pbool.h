@@ -36,22 +36,11 @@ public:
   ~PBool();
 
   using PObject::operator=;
+  operator bool() const;
 
-  const PBool& incref()
-  {
-    PObject::incref();
-    return *this;
-  }
+  const PBool& incref();
 
-  operator bool() const
-  {
-    return PyObject_IsTrue(object) != 0;
-  }
-
-  static bool check(const PObject& item)
-  {
-    return PyBool_Check(item) != 0;
-  }
+  static bool check(const PObject&);
 };
 
 #endif

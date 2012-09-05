@@ -38,30 +38,17 @@ public:
   PString(const char *);
   PString(string);
   PString(irc_string);
+  ~PString();
 
-  operator string() const
-  {
-    return string(c_str());
-  }
-
-  operator const char *() const
-  {
-    return c_str();
-  }
-
-  operator bool() const
-  {
-    return object != NULL;
-  }
+  inline operator string() const { return string(c_str()); }
+  inline operator const char *() const { return c_str(); }
+  inline operator bool() const { return object != NULL; }
 
   using PObject::operator=;
 
   const char *c_str() const;
 
-  static bool check(const PObject& item)
-  {
-    return PyString_Check(item) != 0;
-  }
+  inline static bool check(const PObject& item) { return PyString_Check(item) != 0; }
 };
 
 #endif

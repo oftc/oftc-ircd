@@ -28,40 +28,22 @@
 
 #include "Python.h"
 #include "stdinc.h"
-#include "psequence.h"
+#include "pobject.h"
 
-class PTuple : public PSequence<PObject>
+class PTuple : public PObject
 {
 public:
   PTuple();
   PTuple(int);
   PTuple(PyObject *);
-  PTuple(const PTuple& copy) : PSequence<PObject>(copy)
-  {
-    Logging::trace << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
-  }
+  PTuple(const PTuple&);
+  ~PTuple();
 
-  ~PTuple()
-  {
-    Logging::trace << "tuple: " << object << " [---] (" << object->ob_refcnt - 1 << ")" << Logging::endl;
-  }
+  using PObject::operator=;
 
-  using PSequence<PObject>::operator=;
+  inline const PObject operator[] (int index) const { return PyTuple_GetItem(object, index); }
 
-  const PObject operator[] (int index) const
-  {
-    return PyTuple_GetItem(object, index);
-  }
-
-  virtual void set_item(int index, const PObject& item)
-  {
-    if(PyTuple_SetItem(object, index, item) == -1)
-    {
-      PythonUtil::log_error();
-      throw runtime_error("Error setting tuple item");
-    }
-  }
-
+  virtual void set_item(int, const PObject&);
 };
 
 #endif

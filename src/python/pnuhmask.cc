@@ -38,11 +38,15 @@ enum NukMaskProperties
   Host
 };
 
-PNuhMask::PNuhMask(PTuple args, PDict kwds) : PCType(args, kwds)
+PNuhMask::PNuhMask(const PTuple& args, const PDict& kwds) : PCType(args, kwds)
 {
   PString mask = static_cast<PString>(args[0]);
 
   inner = NuhMask(mask.c_str());
+}
+
+PNuhMask::PNuhMask(NuhMask ptr) : PCType(ptr)
+{
 }
 
 PNuhMask::~PNuhMask()
@@ -68,7 +72,7 @@ int PNuhMask::set(const Property prop, const PObject& value)
   return 0;
 }
 
-PObject PNuhMask::match(PTuple args)
+PObject PNuhMask::match(const PTuple& args)
 {
   PyObject *arg = args[0];
   PNuhMask *right_mask;

@@ -37,7 +37,6 @@ PObject::PObject(PyObject *ptr)
 {
   object = ptr;
   Py_XINCREF(object);
-  Logging::trace << "python object incref(new ptr) " << object << Logging::endl;
 }
 
 PObject::PObject(const PObject& copy)
@@ -49,12 +48,71 @@ PObject::PObject(const PObject& copy)
 
 PObject::~PObject()
 {
-  Logging::trace << "python object decref(dtor) " << object << Logging::endl;
   Py_XDECREF(object);
+}
+
+PObject& PObject::operator=(const PObject& right)
+{
+  Logging::trace << "python object defref(assign) " << object << Logging::endl;
+  Py_XDECREF(object);
+  object = right;
+  Py_XINCREF(object);
+  Logging::trace << "python object incref(assign) " << object << Logging::endl;
+  return *this;
+}
+
+PObject& PObject::operator=(const PyObject *right)
+{
+  Py_XDECREF(object);
+  object = const_cast<PyObject *>(right);
+  Py_XINCREF(object);
+  return *this;
+}
+
+PObject PObject::operator()(const PObject& args)
+{
+  if(!PyCallable_Check(object))
+  {
+    PyErr_SetString(PyExc_TypeError, "object is not callable");
+    return NULL;
+  }
+
+  return PyObject_CallObject(object, args);
+}
+
+PObject PObject::operator()(const PObject& args, const PObject& kwargs)
+{
+  if(!PyCallable_Check(object))
+  {
+    PyErr_SetString(PyExc_TypeError, "object is not callable");
+    return NULL;
+  }
+
+  return PyObject_Call(object, args, kwargs);
 }
 
 PString PObject::str() const
 {
   PyObject *str = PyObject_Str(object);
   return PString(str);
+}
+
+const PObject& PObject::incref()
+{
+  Py_XINCREF(object);
+  return *this;
+}
+
+void PObject::decref()
+{
+  Py_XDECREF(object);
+}
+
+
+// statics
+
+const PObject PObject::None()
+{
+  Py_INCREF(Py_None);
+  return Py_None;
 }

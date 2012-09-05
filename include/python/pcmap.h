@@ -42,11 +42,11 @@ public:
   {
   }
 
-  PCMap(Map ptr) : PCollection(PTuple(), PDict()), inner_map(ptr)
+  PCMap(const Map& ptr) : PCollection(PTuple(), PDict()), inner_map(ptr)
   {
   }
 
-  PCMap(PTuple args, PDict kwargs) : PCollection(args, kwargs)
+  PCMap(const PTuple& args, const PDict& kwargs) : PCollection(args, kwargs)
   {
   }
 

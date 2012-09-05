@@ -61,7 +61,7 @@ PClient::PClient(ClientPtr ptr) : PCType(ptr)
   Logging::trace << "Created PClient: " << this << Logging::endl;
 }
 
-PClient::PClient(PTuple args, PDict kwargs)
+PClient::PClient(const PTuple& args, const PDict& kwargs)
 {
 }
 
@@ -70,7 +70,24 @@ PClient::~PClient()
   Logging::trace << "Destroyed PClient: " << this << Logging::endl;
 }
 
-PObject PClient::close(PTuple args)
+int PClient::compare(const PObject& right)
+{
+  if(!PClient::check(right))
+    return PCType::compare(right);
+
+  PyObject *tmp = right;
+  PClient *rptr = static_cast<PClient *>(tmp);
+
+  if(inner == rptr->inner)
+    return 0;
+
+  if(inner->get_name() > rptr->inner->get_name())
+    return 1;
+  else
+    return -1;
+}
+
+PObject PClient::close(const PTuple& args)
 {
   PString reason = static_cast<PString>(args[0]);
   inner->close(reason);
@@ -78,7 +95,7 @@ PObject PClient::close(PTuple args)
   return PObject::None();
 }
 
-PObject PClient::numeric(PTuple args)
+PObject PClient::numeric(const PTuple& args)
 {
   PObject item;
   string format;
@@ -149,7 +166,7 @@ PObject PClient::numeric(PTuple args)
   return PObject::None();
 }
 
-PObject PClient::send(PTuple args, PDict kwargs)
+PObject PClient::send(const PTuple& args, const PDict& kwargs)
 {
   PObject str = PythonUtil::send_format(this, args, kwargs);
 
@@ -161,7 +178,7 @@ PObject PClient::send(PTuple args, PDict kwargs)
   return PObject::None();
 }
 
-PObject PClient::send_channels_common(PTuple args, PDict kwargs)
+PObject PClient::send_channels_common(const PTuple& args, const PDict& kwargs)
 {
   PObject str = PythonUtil::send_format(this, args, kwargs);
 
@@ -174,7 +191,7 @@ PObject PClient::send_channels_common(PTuple args, PDict kwargs)
   return PObject::None();
 }
 
-PObject PClient::remove_channel(PTuple args)
+PObject PClient::remove_channel(const PTuple& args)
 {
   PyObject *arg = args[0];
   PChannel *channel = static_cast<PChannel *>(arg);

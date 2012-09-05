@@ -45,7 +45,7 @@ public:
   static void init_python();
   static void log_error();
   static void register_type(PyObject *, PyTypeObject&);
-  static PObject send_format(PObject, PTuple, PDict);
+  static PObject send_format(const PObject&, const PTuple&, const PDict&);
 };
 
 #endif

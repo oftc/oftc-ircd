@@ -37,18 +37,16 @@ private:
 public:
   static void init(const PObject&);
 
-  PNuhMask(PTuple, PDict);
-  PNuhMask(NuhMask ptr) : PCType(ptr)
-  {
-  }
+  PNuhMask(const PTuple&, const PDict&);
+  PNuhMask(NuhMask ptr);
   ~PNuhMask();
 
   PObject get(const Property);
   int set(const Property, const PObject& value);
 
-  PObject match(PTuple);
+  PObject match(const PTuple&);
 
-  inline PString str() { return inner.str(); }
+  inline PString str() const { return inner.str(); }
 };
 
 #endif

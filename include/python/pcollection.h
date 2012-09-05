@@ -35,12 +35,12 @@ class PCollection : public PCType<PCollection, NullArg>
 public:
   PCollection()
   {
-    Logging::trace << "Created Collection: " << this << Logging::endl;
+    Logging::trace << "PCollection: " << this << "[***]" << Logging::endl;
   }
 
-  PCollection(PyObject *args, PyObject *kwargs)
+  PCollection(const PTuple& args, const PDict& kwargs)
   {
-    Logging::trace << "Created Collection(from py): " << this << Logging::endl;
+    Logging::trace << "PCollection: " << this << "[***]" << Logging::endl;
   }
 
   virtual ~PCollection()
@@ -52,19 +52,19 @@ public:
     return 0;
   }
 
-  virtual PObject append(PTuple args) 
+  virtual PObject append(const PTuple& args) 
   {
     return PObject::None();
   }
 
-  virtual PObject remove(PTuple args)
+  virtual PObject remove(const PTuple& args)
   {
     return PObject::None();
   }
 
   virtual PObject iter()
   {
-    Py_INCREF(this);
+    incref();
     return this;
   }
 
@@ -113,7 +113,7 @@ public:
     PyObject *tmp = static_cast<PyObject *>(ptr);
     PCollection *obj = static_cast<PCollection *>(tmp);
 
-    Logging::trace << "Destroyed python collection object: " << obj << Logging::endl;
+    Logging::trace << "PCollection: " << obj << "[___]" << Logging::endl;
 
     delete obj;
   }

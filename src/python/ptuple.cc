@@ -24,21 +24,41 @@
 */
 
 #include "python/ptuple.h"
+#include "python/pythonutil.h"
 #include "stdinc.h"
 
-PTuple::PTuple() : PSequence<PObject>()
+PTuple::PTuple() : PObject(0, 0, 0)
 {
   object = PyTuple_New(0);
   Logging::trace << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
-PTuple::PTuple(PyObject *ptr) : PSequence<PObject>(ptr)
+PTuple::PTuple(PyObject *ptr) : PObject(ptr)
 {
   Logging::trace << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
-PTuple::PTuple(int size) : PSequence<PObject>(0)
+PTuple::PTuple(int size) : PObject(0, 0, 0)
 {
   object = PyTuple_New(size);
   Logging::trace << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+}
+
+PTuple::PTuple(const PTuple& copy) : PObject(copy)
+{
+  Logging::trace << "tuple: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+}
+
+PTuple::~PTuple()
+{
+  Logging::trace << "tuple: " << object << " [---] (" << object->ob_refcnt - 1 << ")" << Logging::endl;
+}
+
+void PTuple::set_item(int index, const PObject& item)
+{
+  if(PyTuple_SetItem(object, index, item) == -1)
+  {
+    PythonUtil::log_error();
+    throw runtime_error("Error setting tuple item");
+  }
 }

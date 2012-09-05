@@ -32,7 +32,7 @@ PParser::PParser()
 {
 }
 
-PParser::PParser(PTuple args, PDict kwargs)
+PParser::PParser(const PTuple& args, const PDict& kwargs)
 {
 }
 

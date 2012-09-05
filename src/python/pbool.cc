@@ -26,16 +26,35 @@
 #include "python/pbool.h"
 #include "stdinc.h"
 
-PBool::PBool()
+PBool::PBool() : PObject(0, 0, 0)
 {
   object = PyObject_New(PyObject, &PyBool_Type);
+  Logging::trace << "bool: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
-PBool::PBool(bool arg) : PObject(0)
+PBool::PBool(bool arg) : PObject(0, 0, 0)
 {
   object = PyBool_FromLong(arg);
+  Logging::trace << "bool: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
 PBool::~PBool()
 {
+  Logging::trace << "bool: " << object << " [---] (" << (object->ob_refcnt - 1) << ")" << Logging::endl;
+}
+
+const PBool& PBool::incref()
+{
+  PObject::incref();
+  return *this;
+}
+
+PBool::operator bool() const
+{
+  return PyObject_IsTrue(object) != 0;
+}
+
+bool PBool::check(const PObject& item)
+{
+  return PyBool_Check(item) != 0;
 }

@@ -36,18 +36,18 @@ class PCList : public PCollection
 {
 private:
   typedef PCList<List, WrappedValue> PListType;
-  List& inner_list;
+  List inner_list;
   typename List::const_iterator current;
 public:
   PCList()
   {
   }
 
-  PCList(List& ptr) : PCollection(PTuple(), PDict()), inner_list(ptr)
+  PCList(const List& ptr) : PCollection(PTuple(), PDict()), inner_list(ptr)
   {
   }
 
-  PCList(PTuple args, PDict kwargs)
+  PCList(const PTuple& args, const PDict& kwargs)
   {
   }
 
@@ -55,7 +55,7 @@ public:
   {
   }
 
-  PObject append(PTuple args)
+  PObject append(const PTuple& args)
   {
     PyObject *tmp = args[0];
     WrappedValue *value = static_cast<WrappedValue *>(tmp);
@@ -68,7 +68,7 @@ public:
     return PObject::None();
   }
 
-  PObject remove(PTuple args)
+  PObject remove(const PTuple& args)
   {
     PyObject *tmp = args[0];
     WrappedValue *value = static_cast<WrappedValue *>(tmp);

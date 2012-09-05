@@ -44,18 +44,18 @@ class PChannel : public PCType<PChannel, ChannelPtr>
 {
 public:
   PChannel();
-  PChannel(PTuple, PDict);
+  PChannel(const PTuple&, const PDict&);
   PChannel(ChannelPtr);
   ~PChannel();
 
-  PObject add_member(PTuple);
-  PObject is_member(PTuple);
-  PObject remove_member(PTuple);
-  PObject send_names(PTuple);
-  PObject send(PTuple, PDict);
-  PObject set_mode_char(PTuple);
+  PObject add_member(const PTuple&);
+  PObject is_member(const PTuple&);
+  PObject remove_member(const PTuple&);
+  PObject send_names(const PTuple&);
+  PObject send(const PTuple&, const PDict&);
+  PObject set_mode_char(const PTuple&);
 
-  PString str();
+  PString str() const;
   PObject get(const Property);
   int set(const Property, const PObject&);
 

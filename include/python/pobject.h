@@ -42,84 +42,22 @@ public:
   PObject(const PObject &);
   virtual ~PObject();
 
-  virtual operator PyObject *() const
-  {
-    return object;
-  }
+  inline virtual operator PyObject *() const { return object; }
 
-  virtual PObject& operator=(const PObject& right)
-  {
-    Logging::trace << "python object defref(assign) " << object << Logging::endl;
-    Py_XDECREF(object);
-    object = right;
-    Py_XINCREF(object);
-    Logging::trace << "python object incref(assign) " << object << Logging::endl;
-    return *this;
-  }
+  virtual PObject& operator=(const PObject&);
+  virtual PObject& operator=(const PyObject *);
 
-  virtual PObject& operator=(const PyObject *right)
-  {
-    Py_XDECREF(object);
-    object = const_cast<PyObject *>(right);
-    Py_XINCREF(object);
-    return *this;
-  }
-
-  virtual PObject operator()(const PObject& args)
-  {
-    if(!PyCallable_Check(object))
-    {
-      PyErr_SetString(PyExc_TypeError, "object is not callable");
-      return NULL;
-    }
-
-    return PyObject_CallObject(object, args);
-  }
-
-  virtual PObject operator()(const PObject& args, const PObject& kwargs)
-  {
-    if(!PyCallable_Check(object))
-    {
-      PyErr_SetString(PyExc_TypeError, "object is not callable");
-      return NULL;
-    }
-
-    return PyObject_Call(object, args, kwargs);
-  }
-
+  virtual PObject operator()(const PObject& );
+  virtual PObject operator()(const PObject&, const PObject&);
+  
+  inline virtual PObject getattr(const char *attr) { return PyObject_GetAttrString(object, attr); }
+  inline virtual bool is_true() const { return PyObject_IsTrue(object) != 0; }
+  virtual const PObject& incref();
+  virtual void decref();
   virtual PString str() const;
 
-  virtual PObject getattr(const char *attr)
-  {
-    return PyObject_GetAttrString(object, attr);
-  }
-
-  virtual const PObject& incref()
-  {
-    Py_XINCREF(object);
-    return *this;
-  }
-
-  virtual void decref()
-  {
-    Py_XDECREF(object);
-  }
-
-  virtual bool is_true() const
-  {
-    return PyObject_IsTrue(object) != 0;
-  }
-
-  static const PObject None()
-  {
-    Py_INCREF(Py_None);
-    return Py_None;
-  }
-
-  static bool check(const PObject& item)
-  {
-    return Py_TYPE(item.object) == &PyBaseObject_Type;
-  }
+  static const PObject None();
+  inline static bool check(const PObject& item) { return Py_TYPE(item.object) == &PyBaseObject_Type; }
 };
 
 #endif

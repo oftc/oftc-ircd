@@ -26,22 +26,26 @@
 #include "python/pint.h"
 #include "stdinc.h"
 
-PInt::PInt()
+PInt::PInt() : PObject(0, 0, 0)
 {
   object = PyObject_New(PyObject, &PyInt_Type);
+  Logging::trace << "int: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
-PInt::PInt(PyObject *o)
+PInt::PInt(PyObject *o) : PObject(o)
 {
   object = o;
   Py_XINCREF(object);
+  Logging::trace << "int: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
-PInt::PInt(int num)
+PInt::PInt(int num) : PObject(0, 0, 0)
 {
   object = PyInt_FromLong(num);
+  Logging::trace << "int: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
 PInt::~PInt()
 {
+  Logging::trace << "int: " << object << " [---] (" << (object->ob_refcnt - 1) << ")" << Logging::endl;
 }

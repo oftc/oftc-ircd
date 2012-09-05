@@ -81,9 +81,9 @@ public:
     PyObject_Init(this, &type_object());
   }
 
-  PCType(PObject ptr)
+/*  PCType(PObject ptr)
   {
-  }
+  }*/
 
   PCType(const PTuple& args, const PDict& kwargs)
   {
@@ -106,7 +106,7 @@ public:
     return PObject(this);
   }
 
-  virtual PString str()
+  virtual PString str() const
   {
     stringstream ss;
 
@@ -171,6 +171,8 @@ public:
   }
 
   inline Inner get_inner() const { return inner; }
+
+  // Statics
 
   static bool check(PyObject *obj)
   {

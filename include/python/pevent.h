@@ -35,7 +35,7 @@
 
 using namespace std::placeholders;
 
-typedef function<PObject(PTuple)> EventCallback;
+typedef function<PObject(const PTuple&)> EventCallback;
 
 enum EventProperties
 {
@@ -54,7 +54,7 @@ public:
   {
   }
 
-  PEvent(PTuple, PDict) : listeners(Py_None), handler(Py_None)
+  PEvent(const PTuple&, const PDict&) : listeners(Py_None), handler(Py_None)
   {
   }
 
@@ -99,12 +99,12 @@ public:
     callback = func;
   }
 
-  PObject fire(PTuple args)
+  PObject fire(const PTuple& args)
   {
     return callback(args);
   }
 
-  PObject channel_client_callback(Event<ChannelPtr, ClientPtr>& event, PTuple args)
+  PObject channel_client_callback(Event<ChannelPtr, ClientPtr>& event, const PTuple& args)
   {
     PyObject *arg0, *arg1;
 
@@ -119,7 +119,7 @@ public:
     return ret.incref();
   }
 
-  PObject client_string_callback(Event<ClientPtr, string>& event, PTuple args)
+  PObject client_string_callback(Event<ClientPtr, string>& event, const PTuple& args)
   {
     PyObject *obj = args[0];
     PClient *client = static_cast<PClient *>(obj);
@@ -129,7 +129,7 @@ public:
     return ret.incref();
   }
 
-  PObject client_ircstring_callback(Event<ClientPtr, irc_string>& event, PTuple args)
+  PObject client_ircstring_callback(Event<ClientPtr, irc_string>& event, const PTuple& args)
   {
     PyObject *obj = args[0];
     PClient *client = static_cast<PClient *>(obj);
@@ -142,7 +142,7 @@ public:
 //#ifndef HAS_VARTEMPLATES
 #if 1
   template<class T1>
-  static void add_event(PyObject *dict, const char *name, Event<T1>& event, PObject(PEvent::*callback)(Event<T1>, PTuple), function<bool(T1)> handler)
+  static void add_event(PyObject *dict, const char *name, Event<T1>& event, PObject(PEvent::*callback)(Event<T1>, const PTuple&), function<bool(T1)> handler)
   {
     PEvent *e = new PEvent();
 
@@ -155,7 +155,7 @@ public:
   }
 
   template<class T1, class T2>
-  static void add_event(PyObject *dict, const char *name, Event<T1, T2>& event, PObject(PEvent::*callback)(Event<T1, T2>&, PTuple), function<bool(T1, T2)> handler)
+  static void add_event(PyObject *dict, const char *name, Event<T1, T2>& event, PObject(PEvent::*callback)(Event<T1, T2>&, const PTuple&), function<bool(T1, T2)> handler)
   {
     PEvent *e = new PEvent();
 
@@ -168,7 +168,7 @@ public:
   }
 #else
   template<typename... T>
-  static void add_event(PyObject *dict, const char *name, Event<T...> event, PObject(PEvent::*callback)(Event<T...>, PTuple), function<bool(T...)> handler)
+  static void add_event(PyObject *dict, const char *name, Event<T...> event, PObject(PEvent::*callback)(Event<T...>, const PTuple&), function<bool(T...)> handler)
   {
     PEvent *e = new PEvent();
 
@@ -194,7 +194,7 @@ public:
     PCType::init(module);
   }
 
-  static bool handle(PObject ev, const PTuple& args)
+  static bool handle(const PObject& ev, const PTuple& args)
   {
     PyObject *tmp = ev;
     PEvent *event = static_cast<PEvent *>(tmp);
