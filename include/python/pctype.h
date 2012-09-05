@@ -35,6 +35,7 @@
 #include "python/ptuple.h"
 #include "python/pmethod.h"
 #include "python/pint.h"
+#include "python/pbool.h"
 #include "event.h"
 
 using std::map;
