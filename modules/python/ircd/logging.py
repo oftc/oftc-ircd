@@ -9,11 +9,14 @@ ERROR = 4
 CRITICAL = 5
 
 class Logging(object):
+  def __init__(self, section):
+    self.section = section;
+
   def log(self, level, fmt, *args):
     if (level < log_level()):
       return
 
-    clog(level, fmt % args)
+    clog(level, self.section, fmt % args)
 
   def trace(self, fmt, *args):
     self.log(TRACE, fmt, *args)
@@ -33,4 +36,4 @@ class Logging(object):
   def critical(self, level, *args):
     self.log(CRITICAL, fmt, *args)
 
-logger = Logging()
+logger = Logging('python')

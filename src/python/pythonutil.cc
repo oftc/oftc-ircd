@@ -125,9 +125,9 @@ PyObject *PythonUtil::get_motd(PyObject *self, PyObject *arg)
 PyObject *PythonUtil::logger(PyObject *self, PyObject *args)
 {
   int level;
-  char *msg;
+  char *msg, *section;
 
-  int ret = PyArg_ParseTuple(args, "is", &level, &msg);
+  int ret = PyArg_ParseTuple(args, "iss", &level, &section, &msg);
 
   if (ret != 1)
   {
@@ -135,7 +135,7 @@ PyObject *PythonUtil::logger(PyObject *self, PyObject *args)
     return NULL;
   }
 
-  Logging::logger(true, true, static_cast<LogLevel>(level), msg);
+  Logging::logger(true, true, static_cast<LogLevel>(level), section, msg);
 
   return PObject::None();
 }

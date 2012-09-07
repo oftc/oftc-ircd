@@ -69,7 +69,7 @@ public:
   static string level_to_string(const LogLevel);
   inline static LogLevel get_min_loglevel() { return config.get_min_loglevel(); }
 
-  inline static void logger(bool oneline, bool ts, LogLevel l, string msg)
+  inline static void logger(bool oneline, bool ts, LogLevel l, string section, string msg)
   {
     if(l < Logging::get_min_loglevel())
       return;
@@ -86,7 +86,8 @@ public:
 
       strftime(datestr, sizeof(datestr)+10, "%Y-%m-%d %H:%M:%S%z", tptr);
 
-      stream << datestr << " - (core) [" << level_to_string(l) << "] - ";
+      stream << datestr << " - (" << section;
+      stream << ") [" << level_to_string(l) << "] - ";
     }
 
     stream << msg;
@@ -109,7 +110,7 @@ public:
     stringstream msg;
     msg << param;
 
-    logger(false, dostamp, log_level, msg.str());
+    logger(false, dostamp, log_level, "core", msg.str());
 
     if(dostamp)
       dostamp = false;
