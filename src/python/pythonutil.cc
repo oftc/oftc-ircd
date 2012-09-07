@@ -129,12 +129,13 @@ PyObject *PythonUtil::logger(PyObject *self, PyObject *args)
 
   int ret = PyArg_ParseTuple(args, "is", &level, &msg);
 
-  if (ret != 1) {
+  if (ret != 1)
+  {
     log_error();
     return NULL;
   }
 
-  Logging::logger(true, true, (LogLevel)level, msg);
+  Logging::logger(true, true, static_cast<LogLevel>(level), msg);
 
   return PObject::None();
 }
