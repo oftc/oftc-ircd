@@ -16,7 +16,11 @@ class Logging(object):
     if (level < log_level()):
       return
 
-    clog(level, self.section, fmt % args)
+    msg = fmt
+    if args and len(args):
+      msg = fmt % args
+
+    clog(level, self.section, str(msg))
 
   def trace(self, fmt, *args):
     self.log(TRACE, fmt, *args)

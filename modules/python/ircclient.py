@@ -24,6 +24,7 @@
 from ircd import register, event, Target, have_target, numerics, msflags
 from ircd.user import *
 from ircd.channel import *
+from ircd.logging import logger
 from pythonwrap import Client, Channel
 import time
 
@@ -215,11 +216,15 @@ def channel_joined(channel, client):
 
 @event(Channel.joining)
 def channel_joining(channel, client):
-  print "joining %s, %s" % (channel, client)
+  logger.trace("%s joining %s", client, channel)
   for m in channel.Bans:
     if m.match(client):
       for me in channel.Excepts:
         if me.match(client):
+          logger.trace("%s excepted in %s by %s", client, channel, me)
           return True
+      logger.trace("%s banned from %s by %s", client, channel, m)
+      client.numeric(numerics.ERR_CANNOTJOIN, client.Name,
+        channel.Name, 'b')
       return False
   return True

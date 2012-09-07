@@ -69,6 +69,7 @@ public:
   static const int Err_NeedMoreParams = 461;
   static const int Err_AlreadyRegistered = 462;
   static const int Err_UnknownMode = 472;
+  static const int Err_CannotJoin = 474;
   static const int Err_BadChannelName = 479;
   static const int Err_UmodeUnknownFlag = 501;
   static const int Err_UsersDontMatch = 502;
