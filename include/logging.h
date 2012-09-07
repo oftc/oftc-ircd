@@ -49,7 +49,6 @@ private:
   static LoggingSection config;
   static const int MAX_DATE_LEN = 40;
   static ofstream log_stream;
-  static bool flush;
   static bool dostamp;
   static stringstream stream;
 
@@ -65,20 +64,17 @@ public:
 
   static void init();
   static void start();
+  static void flush();
   static LogLevel string_to_level(const string);
   static string level_to_string(const LogLevel);
   inline static LogLevel get_min_loglevel() { return config.get_min_loglevel(); }
 
-  template<typename T>
-  inline Logging& operator <<(T param)
+  inline static void logger(bool oneline, bool ts, LogLevel l, string msg)
   {
-    if(log_level < Logging::get_min_loglevel())
-      return *this;
+    if(l < Logging::get_min_loglevel())
+      return;
 
-    if(!log_stream.is_open())
-      return *this;
-
-    if(dostamp)
+    if(ts)
     {
       tm *tptr;
       char datestr[Logging::MAX_DATE_LEN];
@@ -90,12 +86,33 @@ public:
 
       strftime(datestr, sizeof(datestr)+10, "%Y-%m-%d %H:%M:%S%z", tptr);
 
-      stream << datestr << " - (core) [" << level_to_string(log_level) << "] - ";
-
-      dostamp = false;
+      stream << datestr << " - (core) [" << level_to_string(l) << "] - ";
     }
 
-    stream << param;
+    stream << msg;
+
+    if (oneline) {
+      stream << "\n";
+      Logging::flush();
+    }
+  }
+
+  template<typename T>
+  inline Logging& operator <<(T param)
+  {
+    if(log_level < Logging::get_min_loglevel())
+      return *this;
+
+    if(!log_stream.is_open())
+      return *this;
+
+    stringstream msg;
+    msg << param;
+
+    logger(false, dostamp, log_level, msg.str());
+
+    if(dostamp)
+      dostamp = false;
 
     return *this;
   }  

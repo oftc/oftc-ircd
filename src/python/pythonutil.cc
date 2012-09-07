@@ -48,6 +48,8 @@ using std::endl;
 static PyMethodDef module_methods[] =
 {
   { "get_motd", PythonUtil::get_motd, METH_VARARGS, "Return the MOTD for the server" },
+  { "logger", PythonUtil::logger, METH_VARARGS, "Generic logging routine for python" },
+  { "log_level", PythonUtil::log_level, METH_NOARGS, "Current log level" },
   { NULL, NULL, 0, NULL }
 };
 
@@ -118,6 +120,28 @@ PyObject *PythonUtil::get_motd(PyObject *self, PyObject *arg)
   PyObject *ret = PyString_FromString(System::get_motd().c_str());
 
   return ret;
+}
+
+PyObject *PythonUtil::logger(PyObject *self, PyObject *args)
+{
+  int level;
+  char *msg;
+
+  int ret = PyArg_ParseTuple(args, "is", &level, &msg);
+
+  if (ret != 1) {
+    log_error();
+    return NULL;
+  }
+
+  Logging::logger(true, true, (LogLevel)level, msg);
+
+  return PObject::None();
+}
+
+PyObject *PythonUtil::log_level(PyObject *self, PyObject *args)
+{
+  return PInt(Logging::get_min_loglevel());
 }
 
 PObject PythonUtil::send_format(const PObject& source, const PTuple& args, const PDict& kwargs)

@@ -50,7 +50,6 @@ Logging Logging::info(INFO);
 Logging Logging::warning(WARNING);
 Logging Logging::error(ERRORL);
 Logging Logging::critical(CRITICAL);
-bool Logging::flush(false);
 bool Logging::dostamp(true);
 stringstream Logging::stream;
 
@@ -93,6 +92,15 @@ void Logging::start()
   log_stream.open(config.get_log_path(), ios::out | ios::app);
 }
 
+void Logging::flush()
+{
+  log_stream << stream.str();
+  log_stream.flush();
+  dostamp = true;
+  stream.str(string());
+  stream.clear();
+}
+
 Logging& Logging::endl(Logging &log)
 {
   Logging& tmp = log << "\n";
@@ -100,12 +108,7 @@ Logging& Logging::endl(Logging &log)
   if(!log_stream.is_open())
     return tmp;
 
-  log_stream << stream.str();
-  log_stream.flush();
-  flush = false;
-  dostamp = true;
-  stream.str(string());
-  stream.clear();
+  Logging::flush();
 
   return tmp;
 }

@@ -42,6 +42,8 @@ class PythonUtil
 private:
 public:
   static PyObject *get_motd(PyObject *, PyObject *);
+  static PyObject *logger(PyObject *, PyObject *);
+  static PyObject *log_level(PyObject *, PyObject *);
   static void init_python();
   static void log_error();
   static void register_type(PyObject *, PyTypeObject&);
