@@ -49,6 +49,15 @@ public:
 
   virtual PObject operator()(const PObject& );
   virtual PObject operator()(const PObject&, const PObject&);
+
+  template<typename T>
+  T As()
+  {
+    if(!T::check(*this))
+      return static_cast<T>(None());
+
+    return static_cast<T>(*this);
+  }
   
   inline virtual PObject getattr(const char *attr) { return PyObject_GetAttrString(object, attr); }
   inline virtual bool is_true() const { return PyObject_IsTrue(object) != 0; }

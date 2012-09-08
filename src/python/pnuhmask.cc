@@ -40,7 +40,7 @@ enum NukMaskProperties
 
 PNuhMask::PNuhMask(const PTuple& args, const PDict& kwds) : PCType(args, kwds)
 {
-  PString mask = static_cast<PString>(args[0]);
+  PString mask = args[0].As<PString>();
 
   inner = NuhMask(mask.c_str());
 }

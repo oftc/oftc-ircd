@@ -89,7 +89,7 @@ int PClient::compare(const PObject& right)
 
 PObject PClient::close(const PTuple& args)
 {
-  PString reason = static_cast<PString>(args[0]);
+  PString reason = args[0].As<PString>();
   inner->close(reason);
 
   return PObject::None();
@@ -173,7 +173,7 @@ PObject PClient::send(const PTuple& args, const PDict& kwargs)
   if(!str)
     return NULL;
 
-  inner->send(static_cast<PString>(str));
+  inner->send(str.As<PString>());
 
   return PObject::None();
 }
@@ -186,7 +186,7 @@ PObject PClient::send_channels_common(const PTuple& args, const PDict& kwargs)
     return NULL;
 
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(inner);
-  ptr->send_channels_common(static_cast<PString>(str));
+  ptr->send_channels_common(str.As<PString>());
 
   return PObject::None();
 }
@@ -347,7 +347,7 @@ bool PClient::on_nick_changed(ClientPtr client, string old_mask)
 PyObject *PClient::find_by_name(PyObject *self, PyObject *varargs)
 {
   PTuple args(varargs);
-  PString name = static_cast<PString>(args[0]);
+  PString name = args[0].As<PString>();
   ClientPtr ptr = Client::find_by_name(name.c_str());
 
   if(ptr)

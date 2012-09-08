@@ -129,7 +129,7 @@ public:
   {
     PyObject *obj = args[0];
     PClient *client = static_cast<PClient *>(obj);
-    PString str = static_cast<PString>(args[1]);
+    PString str = args[1].As<PString>();
     PBool ret(event(*client, str.c_str()));
 
     return ret.incref();
@@ -139,7 +139,7 @@ public:
   {
     PyObject *obj = args[0];
     PClient *client = static_cast<PClient *>(obj);
-    PString str = static_cast<PString>(args[1]);
+    PString str = args[1].As<PString>();
     PBool ret(event(*client, str.c_str()));
 
     return ret.incref();

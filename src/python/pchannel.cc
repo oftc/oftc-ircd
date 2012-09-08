@@ -138,7 +138,7 @@ PObject PChannel::send(const PTuple& args, const PDict& kwargs)
   if(!result)
     return NULL;
 
-  inner->send(*client, static_cast<PString>(result));
+  inner->send(*client, result.As<PString>());
 
   return PObject::None();
 }
@@ -309,7 +309,7 @@ PyObject *PChannel::del(PyObject *self, PyObject *vargs)
 PyObject *PChannel::find(PyObject *self, PyObject *vargs)
 {
   PTuple args(vargs);
-  PString name = static_cast<PString>(args[0]);
+  PString name = args[0].As<PString>();
   ChannelPtr channel;
 
   channel = Channel::find(name.c_str());

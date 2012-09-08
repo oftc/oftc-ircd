@@ -147,7 +147,7 @@ PyObject *PythonUtil::log_level(PyObject *self, PyObject *args)
 
 PObject PythonUtil::send_format(const PObject& source, const PTuple& args, const PDict& kwargs)
 {
-  PString format = static_cast<PString>(args[0]);
+  PString format = args[0].As<PString>();
   PDict fdict;
   PObject method;
   PTuple fargs(0);
