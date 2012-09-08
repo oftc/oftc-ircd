@@ -112,13 +112,8 @@ public:
 
   PObject channel_client_callback(Event<ChannelPtr, ClientPtr>& event, const PTuple& args)
   {
-    PyObject *arg0, *arg1;
-
-    arg0 = args[0];
-    arg1 = args[1];
-
-    PChannel *channel = static_cast<PChannel *>(arg0);
-    PClient *client = static_cast<PClient *>(arg1);
+    PChannel *channel = args[0].AsPtr<PChannel>();
+    PClient *client = args[1].AsPtr<PClient>();
 
     PBool ret(event(*channel, *client));
     
@@ -127,8 +122,7 @@ public:
 
   PObject client_string_callback(Event<ClientPtr, string>& event, const PTuple& args)
   {
-    PyObject *obj = args[0];
-    PClient *client = static_cast<PClient *>(obj);
+    PClient *client = args[0].AsPtr<PClient>();
     PString str = args[1].As<PString>();
     PBool ret(event(*client, str.c_str()));
 
@@ -137,8 +131,7 @@ public:
 
   PObject client_ircstring_callback(Event<ClientPtr, irc_string>& event, const PTuple& args)
   {
-    PyObject *obj = args[0];
-    PClient *client = static_cast<PClient *>(obj);
+    PClient *client = args[0].AsPtr<PClient>();
     PString str = args[1].As<PString>();
     PBool ret(event(*client, str.c_str()));
 
@@ -202,8 +195,7 @@ public:
 
   static bool handle(const PObject& ev, const PTuple& args)
   {
-    PyObject *tmp = ev;
-    PEvent *event = static_cast<PEvent *>(tmp);
+    PEvent *event = ev.AsPtr<PEvent>();
     PObject ret;
 
     if(!PyCallable_Check(event->handler))

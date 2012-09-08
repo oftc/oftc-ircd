@@ -51,12 +51,26 @@ public:
   virtual PObject operator()(const PObject&, const PObject&);
 
   template<typename T>
-  T As()
+  T As() const
   {
     if(!T::check(*this))
       return static_cast<T>(None());
 
     return static_cast<T>(*this);
+  }
+
+  template<typename T>
+  T *AsPtr() const
+  {
+    PyObject *tmp = *this;
+
+    if(!T::check(*this))
+    {
+      Py_INCREF(Py_None);
+      return static_cast<T *>(Py_None);
+    }
+
+    return static_cast<T *>(tmp);
   }
   
   inline virtual PObject getattr(const char *attr) { return PyObject_GetAttrString(object, attr); }

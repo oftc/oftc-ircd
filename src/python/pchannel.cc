@@ -67,9 +67,7 @@ PChannel::~PChannel()
 
 PObject PChannel::add_member(const PTuple& args)
 {
-  PyObject *arg = args[0];
-
-  PClient *client = static_cast<PClient *>(arg);
+  PClient *client = args[0].AsPtr<PClient>();
 
   if(!PClient::check(client) || !BaseClient::is_client(*client))
     return PException(PyExc_TypeError, "Argument must be a Client type");
@@ -81,10 +79,9 @@ PObject PChannel::add_member(const PTuple& args)
 
 PObject PChannel::is_member(const PTuple& args)
 {
-  PyObject *arg = args[0];
   PBool ret;
 
-  PClient *client = static_cast<PClient *>(arg);
+  PClient *client = args[0].AsPtr<PClient>();
   
   if(!PClient::check(client) || !BaseClient::is_client(*client))
     return PException(PyExc_TypeError, "Argument must be a Client type");
@@ -96,9 +93,7 @@ PObject PChannel::is_member(const PTuple& args)
 
 PObject PChannel::remove_member(const PTuple& args)
 {
-  PyObject *arg = args[0];
-
-  PClient *client = static_cast<PClient *>(arg);
+  PClient *client = args[0].AsPtr<PClient>();
   
   if(!PClient::check(client) || !BaseClient::is_client(*client))
     return PException(PyExc_TypeError, "Argument must be a Client type");
@@ -110,9 +105,7 @@ PObject PChannel::remove_member(const PTuple& args)
 
 PObject PChannel::send_names(const PTuple& args)
 {
-  PyObject *arg = args[0];
-
-  PClient *client = static_cast<PClient *>(arg);
+  PClient *client = args[0].AsPtr<PClient>();
   
   if(!PClient::check(client) || !BaseClient::is_client(*client))
     return PException(PyExc_TypeError, "Argument must be a Client type");
@@ -126,11 +119,8 @@ PObject PChannel::send(const PTuple& args, const PDict& kwargs)
 {
   PClient *client;
   PObject result = PythonUtil::send_format(this, args, kwargs);
-  PyObject *obj;
 
-  obj = kwargs["client"];
-
-  client = static_cast<PClient *>(obj);
+  client = kwargs["client"].AsPtr<PClient>();
 
   if(!PClient::check(client) || !BaseClient::is_client(*client))
     return PException(PyExc_TypeError, "Argument must be a Client type");
@@ -279,9 +269,8 @@ bool PChannel::on_joined(ChannelPtr channel, ClientPtr client)
 PyObject *PChannel::add(PyObject *self, PyObject *vargs)
 {
   PTuple args(vargs);
-  PyObject *obj = args[0];
 
-  PChannel *channel = static_cast<PChannel *>(obj);
+  PChannel *channel = args[0].AsPtr<PChannel>();
 
   if(!PChannel::check(channel))
     return PException(PyExc_TypeError, "Argument must be a Channel object");
@@ -294,9 +283,8 @@ PyObject *PChannel::add(PyObject *self, PyObject *vargs)
 PyObject *PChannel::del(PyObject *self, PyObject *vargs)
 {
   PTuple args(vargs);
-  PyObject *obj = args[0];
 
-  PChannel *channel = static_cast<PChannel *>(obj);
+  PChannel *channel = args[0].AsPtr<PChannel>();
 
   if(!PChannel::check(channel))
     return PException(PyExc_TypeError, "Argument must be a Channel object");

@@ -75,8 +75,7 @@ int PClient::compare(const PObject& right)
   if(!PClient::check(right))
     return PCType::compare(right);
 
-  PyObject *tmp = right;
-  PClient *rptr = static_cast<PClient *>(tmp);
+  PClient *rptr = right.AsPtr<PClient>();
 
   if(inner == rptr->inner)
     return 0;
@@ -193,8 +192,7 @@ PObject PClient::send_channels_common(const PTuple& args, const PDict& kwargs)
 
 PObject PClient::remove_channel(const PTuple& args)
 {
-  PyObject *arg = args[0];
-  PChannel *channel = static_cast<PChannel *>(arg);
+  PChannel *channel = args[0].AsPtr<PChannel>();
 
   shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(inner);
 
@@ -359,8 +357,7 @@ PyObject *PClient::find_by_name(PyObject *self, PyObject *varargs)
 PyObject *PClient::del_name(PyObject *self, PyObject *varargs)
 {
   PTuple args(varargs);
-  PyObject *arg = args[0];
-  PClient *client = static_cast<PClient *>(arg);
+  PClient *client = args[0].AsPtr<PClient>();
   
   Client::del_name(*client);
 
@@ -370,8 +367,7 @@ PyObject *PClient::del_name(PyObject *self, PyObject *varargs)
 PyObject *PClient::add_name(PyObject *self, PyObject *varargs)
 {
   PTuple args(varargs);
-  PyObject *arg = args[0];
-  PClient *client = static_cast<PClient *>(arg);
+  PClient *client = args[0].AsPtr<PClient>();
 
   Client::add_name(*client);
   return PObject::None();
@@ -380,8 +376,7 @@ PyObject *PClient::add_name(PyObject *self, PyObject *varargs)
 PyObject *PClient::add(PyObject *self, PyObject *varargs)
 {
   PTuple args(varargs);
-  PyObject *arg = args[0];
-  PClient *client = static_cast<PClient *>(arg);
+  PClient *client = args[0].AsPtr<PClient>();
 
   Client::add(*client);
   return PObject::None();

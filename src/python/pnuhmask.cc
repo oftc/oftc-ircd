@@ -81,19 +81,19 @@ int PNuhMask::set(const Property prop, const PObject& value)
 
 PObject PNuhMask::match(const PTuple& args)
 {
-  PyObject *arg = args[0];
   PNuhMask *right_mask;
   PClient *right_client;
   PBool ret;
 
-  right_mask  = static_cast<PNuhMask *>(arg);
+  right_mask = args[0].AsPtr<PNuhMask>();
 
   if(PNuhMask::check(right_mask))
     ret = PBool(inner.match(right_mask->inner));
   else
   {
-    right_client = static_cast<PClient *>(arg);
-    if(!PClient::check(right_client)) {
+    right_client = args[0].AsPtr<PClient>();
+    if(!PClient::check(right_client)) 
+    {
       PyErr_SetString(PyExc_TypeError, "argument must be NuhMask or Client");
       return NULL;
     }

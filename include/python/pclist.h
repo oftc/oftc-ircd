@@ -57,8 +57,7 @@ public:
 
   PObject append(const PTuple& args)
   {
-    PyObject *tmp = args[0];
-    WrappedValue *value = static_cast<WrappedValue *>(tmp);
+    WrappedValue *value = args[0].AsPtr<WrappedValue>();
 
     if(!WrappedValue::check(value))
       return PException(PyExc_TypeError, "cannot append this item, wrong type");
@@ -70,8 +69,7 @@ public:
 
   PObject remove(const PTuple& args)
   {
-    PyObject *tmp = args[0];
-    WrappedValue *value = static_cast<WrappedValue *>(tmp);
+    WrappedValue *value = args[0].AsPtr<WrappedValue>();
 
     if(!WrappedValue::check(value))
       return PException(PyExc_TypeError, "cannot remove this item, wrong type");

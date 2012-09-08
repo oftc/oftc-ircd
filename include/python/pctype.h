@@ -287,8 +287,7 @@ public:
     PyObject *ret;
 
     PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(data[1]));
-    PyObject *tmp = data[0];
-    Outer *ptr = static_cast<Outer *>(tmp);
+    Outer *ptr = data[0].AsPtr<Outer>();
 
     ret = method(ptr);
 
@@ -301,8 +300,7 @@ public:
     PyObject *ret;
 
     PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(data[1]));
-    PyObject *tmp = data[0];
-    Outer *ptr = static_cast<Outer *>(tmp);
+    Outer *ptr = data[0].AsPtr<Outer>();
 
     ret = method(ptr, args);
 
@@ -316,8 +314,7 @@ public:
 
 
     PMethod<Outer> method = *static_cast<PMethod<Outer>*>(PyCObject_AsVoidPtr(data[1]));
-    PyObject *tmp = data[0];
-    Outer *ptr = static_cast<Outer *>(tmp);
+    Outer *ptr = data[0].AsPtr<Outer>();
 
     ret = method(ptr, args, kwargs);
 
