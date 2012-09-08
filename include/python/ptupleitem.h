@@ -23,27 +23,24 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PTUPLE_H_INC
-#define PTUPLE_H_INC
+#ifndef PTUPLEITEM_H_INC
+#define PTUPLEITEM_H_INC
 
 #include "Python.h"
 #include "stdinc.h"
-#include "python/pobject.h"
-#include "python/ptupleitem.h"
+#include "pobject.h"
 
-class PTuple : public PObject
+class PTupleItem : public PObject
 {
+private: 
+  int index;
+  PyObject *tuple;
 public:
-  PTuple();
-  PTuple(int);
-  PTuple(PyObject *);
-  PTuple(const PTuple&);
-  ~PTuple();
+  PTupleItem();
+  PTupleItem(int, PyObject *);
+  ~PTupleItem();
 
-  using PObject::operator=;
-
-  inline const PObject operator[] (int index) const { return PyTuple_GetItem(object, index); }
-  PTupleItem operator[] (int);
+  void operator =(PObject);
 };
 
 #endif

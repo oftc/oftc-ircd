@@ -23,27 +23,31 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef PTUPLE_H_INC
-#define PTUPLE_H_INC
-
-#include "Python.h"
-#include "stdinc.h"
-#include "python/pobject.h"
 #include "python/ptupleitem.h"
+#include "python/pythonutil.h"
+#include "stdinc.h"
 
-class PTuple : public PObject
+PTupleItem::PTupleItem() : PObject(0, 0, 0)
 {
-public:
-  PTuple();
-  PTuple(int);
-  PTuple(PyObject *);
-  PTuple(const PTuple&);
-  ~PTuple();
+}
 
-  using PObject::operator=;
+PTupleItem::PTupleItem(int i, PyObject *obj) : PObject(0, 0, 0), index(i), tuple(obj) 
+{
+  object = PyTuple_GetItem(tuple, index);
+  Py_XINCREF(object);
+  Logging::trace << "tupleitem: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+}
 
-  inline const PObject operator[] (int index) const { return PyTuple_GetItem(object, index); }
-  PTupleItem operator[] (int);
-};
+PTupleItem::~PTupleItem()
+{
+  if(object != NULL)
+    Logging::trace << "tupleitem: " << object << " [---] (" << object->ob_refcnt - 1 << ")" << Logging::endl;
+}
 
-#endif
+void PTupleItem::operator =(PObject foo)
+{
+  PyTuple_SetItem(tuple, index, foo);
+  Py_XDECREF(object);
+  object = PyTuple_GetItem(tuple, index);
+  Py_XINCREF(object);
+}

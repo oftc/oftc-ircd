@@ -54,11 +54,7 @@ PTuple::~PTuple()
   Logging::trace << "tuple: " << object << " [---] (" << object->ob_refcnt - 1 << ")" << Logging::endl;
 }
 
-void PTuple::set_item(int index, const PObject& item)
+PTupleItem PTuple::operator[](int index)
 {
-  if(PyTuple_SetItem(object, index, item) == -1)
-  {
-    PythonUtil::log_error();
-    throw runtime_error("Error setting tuple item");
-  }
+  return PTupleItem(index, object);
 }

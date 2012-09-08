@@ -318,8 +318,8 @@ bool PClient::on_closing(ClientPtr client, string reason)
 {
   PTuple args(2);
 
-  args.set_item(0, new PClient(client));
-  args.set_item(1, PString(reason));
+  args[0] = new PClient(client);
+  args[1] = PString(reason);
 
   return PEvent::handle(PyDict_GetItemString(type_object().tp_dict, "closing"), args);
 }
@@ -328,8 +328,8 @@ bool PClient::on_nick_changing(ClientPtr client, irc_string new_nick)
 {
   PTuple args(2);
 
-  args.set_item(0, new PClient(client));
-  args.set_item(1, PString(new_nick));
+  args[0] = new PClient(client);
+  args[1] = PString(new_nick);
 
   return PEvent::handle(PyDict_GetItemString(type_object().tp_dict, "nick_changing"), args);
 }
@@ -338,8 +338,8 @@ bool PClient::on_nick_changed(ClientPtr client, string old_mask)
 {
   PTuple args(2);
 
-  args.set_item(0, new PClient(client));
-  args.set_item(1, PString(old_mask));
+  args[0] = new PClient(client);
+  args[1] = PString(old_mask);
 
   return PEvent::handle(PyDict_GetItemString(type_object().tp_dict, "nick_changed"), args);
 }

@@ -163,8 +163,8 @@ public:
     PTuple args(2);
     PObject ret;
 
-    args.set_item(0, this->incref());
-    args.set_item(1, PyCObject_FromVoidPtr(it->second, NULL));
+    args[0] = this->incref();
+    args[1] = PyCObject_FromVoidPtr(it->second, NULL);
 
     ret = PyCFunction_NewEx(it->second, args, NULL);
 

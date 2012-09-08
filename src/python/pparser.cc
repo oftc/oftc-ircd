@@ -94,11 +94,11 @@ void PParser::handle_command(const ClientPtr client, const Command& command, con
 
   tmp = new PClient(client);
 
-  args.set_item(0, tmp);
+  args[0] = new PClient(client);
 
   for(unsigned int i = 1; i < params.size() + 1; i++)
   {
-    args.set_item(i, PString(params[i-1]));
+    args[i] = PString(params[i - 1]);
   }
 
   PObject ret = callback(args);
