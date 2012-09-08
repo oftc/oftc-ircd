@@ -42,8 +42,7 @@ public:
 
   using PObject::operator=;
 
-  inline const PObject operator[] (int index) const { return PyTuple_GetItem(object, index); }
-  PTupleItem operator[] (int);
+  PTupleItem operator[] (int) const;
 };
 
 #endif

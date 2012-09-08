@@ -54,7 +54,7 @@ PTuple::~PTuple()
   Logging::trace << "tuple: " << object << " [---] (" << object->ob_refcnt - 1 << ")" << Logging::endl;
 }
 
-PTupleItem PTuple::operator[](int index)
+PTupleItem PTuple::operator[](int index) const
 {
   return PTupleItem(index, object);
 }
