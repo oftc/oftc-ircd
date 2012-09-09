@@ -3,8 +3,8 @@
   {
     'python-includes': 'python -c "from distutils import sysconfig; import ntpath; print sysconfig.get_python_inc().replace(ntpath.sep, \'/\')"',
     'python-version': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"VERSION\\")"',
+    'python-binlibdest': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"LIBPL\\")"',
   },
-  
   'targets': 
   [{
     'target_name': 'ircd',
@@ -119,77 +119,83 @@
     ],
     'conditions': 
     [
-    [ 
-    'OS=="win"', 
-    {
-      'variables':
+      [ 'OS=="win"', 
       {
-        'python-binlibdest': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"BINLIBDEST\\")"',
-      },
-      'msvs_settings':
-      {
-        'VCLinkerTool':
+        'msvs_settings':
         {
-          'AdditionalLibraryDirectories': '<!@(<(python-binlibdest))s;c:\openssl\lib',
+          'VCLinkerTool':
+          {
+            'AdditionalLibraryDirectories': '<!@(<(python-binlibdest))s;c:\openssl\lib',
+          },
         },
+        'defines': 
+        [
+          '_WIN32_WINNT=0x0600',
+          '_GNU_SOURCE',
+        ],
+        'include_dirs': 
+        [
+          'c:\openssl\include',
+        ],
+        'libraries': 
+        [ 
+          'python<!@(<(python-version))_d.lib',
+          'libeay32.lib',
+          'ssleay32.lib',
+        ],
       },
-      'defines': 
-      [
-        '_WIN32_WINNT=0x0600',
-        '_GNU_SOURCE',
-      ],
-      'include_dirs': 
-      [
-        'c:\openssl\include',
-      ],
-      'libraries': 
-      [ 
-        'python<!@(<(python-version))_d.lib',
-        'libeay32.lib',
-        'ssleay32.lib',
-      ],
-    },
-    {
-      'xcode_settings': {
-        'WARNING_CFLAGS': [
+      {
+        'xcode_settings': 
+        {
+          'WARNING_CFLAGS': 
+          [
+            '-Wall',
+            '-Wextra',
+            '-Wno-long-long',
+            '-Wno-unused-parameter',
+            '-Wno-deprecated-declarations',
+            '-Wno-newline-eof',
+          ],
+          'OTHER_CFLAGS': 
+          [
+            '-std=c++0x',
+            '-stdlib=libc++',
+          ],
+        },
+        'cflags': 
+        [ 
+          '-std=c++0x',
           '-Wall',
           '-Wextra',
+          '-pedantic',
           '-Wno-long-long',
           '-Wno-unused-parameter',
-          '-Wno-deprecated-declarations',
-          '-Wno-newline-eof',
+          '-Wno-missing-field-initializers',
         ],
-        'OTHER_CFLAGS': [
-          '-std=c++0x',
-          '-stdlib=libc++',
+        'defines': 
+        [ 
+          '_GNU_SOURCE' 
         ],
-      },
-      'cflags': 
-      [ 
-        '-std=c++0x',
-        '-Wall',
-        '-Wextra',
-        '-pedantic',
-        '-Wno-long-long',
-        '-Wno-unused-parameter',
-        '-Wno-missing-field-initializers',
-      ],
-      'defines': 
-      [ 
-        '_GNU_SOURCE' 
-      ],
-      'libraries': 
-      [ 
-        '-lpython<!@(<(python-version))',
-        '-lssl',
-        '-lcrypto',
-      ],
-      'conditions': [
-        ['OS == "mac"', {
-          'libraries': [ '-lc++' ],
-        }],
-      ],
-    }
+        'libraries': 
+        [ 
+          '-lpython<!@(<(python-version))',
+          '-lssl',
+          '-lcrypto',
+        ],
+        'conditions': 
+        [
+          ['OS == "mac"', 
+          {
+            'libraries': [ '-lc++' ],
+          }],
+          ['OS == "freebsd"',
+          {
+            'cflags+': [ '-stdlib=libc++' ],
+            'libraries': [ '-lc++' ],
+            'ldflags': [ '-L<!@(<(python-binlibdest))' ],
+          }],
+        ]
+      }
     ],
   ], 
   }]
