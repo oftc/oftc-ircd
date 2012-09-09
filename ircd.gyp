@@ -3,7 +3,7 @@
   {
     'python-includes': 'python -c "from distutils import sysconfig; import ntpath; print sysconfig.get_python_inc().replace(ntpath.sep, \'/\')"',
     'python-version': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"VERSION\\")"',
-    'python-binlibdest': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"LIBPL\\")"',
+    'python-libpath': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"LIBPL\\")"',
   },
   'targets': 
   [{
@@ -121,6 +121,10 @@
     [
       [ 'OS=="win"', 
       {
+        'variables':
+        {
+          'python-binlibdest': 'python -c "from distutils import sysconfig; print sysconfig.get_config_var(\\"BINLIBDEST\\")"',
+        },
         'msvs_settings':
         {
           'VCLinkerTool':
@@ -192,7 +196,7 @@
           {
             'cflags+': [ '-stdlib=libc++' ],
             'libraries': [ '-lc++' ],
-            'ldflags': [ '-L<!@(<(python-binlibdest))' ],
+            'ldflags': [ '-L<!@(<(python-libpath))' ],
           }],
         ]
       }
