@@ -35,7 +35,8 @@ PTupleItem::PTupleItem(int i, PyObject *obj) : PObject(0, 0, 0), index(i), tuple
 {
   object = PyTuple_GetItem(tuple, index);
   Py_XINCREF(object);
-  Logging::trace << "tupleitem: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
+  if(object != NULL)
+    Logging::trace << "tupleitem: " << object << " [+++] (" << object->ob_refcnt << ")" << Logging::endl;
 }
 
 PTupleItem::~PTupleItem()
