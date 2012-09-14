@@ -196,8 +196,9 @@
           }],
           ['OS == "freebsd"',
           {
-            'cflags+': [ '-stdlib=libc++' ],
-            'libraries': [ '-lc++' ],
+#            'cflags+': [ '-stdlib=libc++' ],
+#            'libraries': [ '-lc++' ],
+            'libraries': [ '-lstdc++' ],
             'ldflags': [ '-L<!@(<(python-libpath))' ],
           }],
         ]
