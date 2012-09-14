@@ -263,7 +263,7 @@ int PClient::set(const Property prop, const PObject& value)
     client->set_invisible(value.is_true());
     break;
   case LastMessage:
-    client->set_last_message(PInt(value));
+    client->set_last_message(static_cast<int>(PInt(value)));
     break;
   }
 
