@@ -245,6 +245,7 @@ void PChannel::init(const PObject& module)
   add_property("Quiets", "channel quiet list", Quiets, NoFlags);
   add_property("Excepts", "channel except list", Excepts, NoFlags);
   add_property("Members", "channel member list", Members, NoFlags);
+  add_property("Topic", "channel topic", Topic, StringArg);
 
   PCType::init(module);
 

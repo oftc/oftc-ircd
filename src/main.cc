@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
     Logging::init();
     Listener::init();
     Module::init();
+    Channel::init();
 
     Config::init(System::get_config_path());
     Logging::start();
@@ -76,7 +77,6 @@ int main(int argc, char *argv[])
     Numeric::load_messages(System::get_messages_file());
     BaseClient::init();
     Client::init();
-    Channel::init();
 
     Ssl::init();
     PythonUtil::init_python();

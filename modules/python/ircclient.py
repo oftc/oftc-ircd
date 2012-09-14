@@ -201,6 +201,21 @@ def handle_part(client, target, *args):
   client.remove_channel(target)
   target.remove_member(client)
 
+@register("TOPIC", min_args=1, max_args=2)
+@have_target(Target.CHANNEL)
+def handle_topic(client, target, *args):
+  if len(args) == 0:
+    if len(target.Topic) == 0:
+      client.numeric(numerics.RPL_NOTOPIC, target.Name)
+      return
+
+    client.numeric(numerics.RPL_TOPIC, target.Name, target.Topic)
+    return
+  
+  target.Topic = args[0]
+  target.send(":{client} TOPIC {channel} :{topic}", client=client, channel=target.Name, topic=target.Topic)
+  client.send(":{client} TOPIC {channel} :{topic}", channel=target.Name, topic=target.Topic)
+ 
 @event(Client.closing)
 def client_closing(client, reason):
   client.send_channels_common(":{client} QUIT :{reason}", reason=reason)
@@ -213,6 +228,8 @@ def client_nick_changed(client, old_source):
 def channel_joined(channel, client):
   client.send(":{client} JOIN :{channel}", channel=channel)
   channel.send(":{client} JOIN :{channel}", client=client, channel=channel)
+  if len(channel.Topic) > 0:
+    client.numeric(numerics.RPL_TOPIC, channel.Name, channel.Topic)
 
 @event(Channel.joining)
 def channel_joining(channel, client):

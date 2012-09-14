@@ -13,6 +13,8 @@
     "319": "%s :%s",
     "318": "%s :End of WHOIS list",
     "324": "%s %s %s",
+    "331": "%s :No topic is set",
+    "332": "%s :%s",
     "345": "%s :End of channel quiet list",
     "347": "%s :End of channel invex list",
     "349": "%s :End of channel except list",
