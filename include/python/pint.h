@@ -41,7 +41,6 @@ public:
 
   inline operator int() const { return PyInt_AsLong(object); }
   inline operator unsigned int() const { return operator int(); }
-  inline operator time_t() const { return operator int(); }
   inline operator AccessLevel() const { return static_cast<AccessLevel>(operator int()); }
 
   inline static bool check(const PObject& item) { return PyNumber_Check(item) != 0; }
