@@ -33,6 +33,7 @@
 #include "ircstring.h"
 #include "baseclient.h"
 #include "nuhmask.h"
+#include "channelsection.h"
 
 using std::list;
 using std::string;
@@ -63,6 +64,7 @@ typedef map<ClientPtr, Membership> ChannelMemberList;
 class Channel
 {
 private:
+  static ChannelSection config;
   static ChannelNameHash names;
   static ChannelList channels;
 
@@ -71,7 +73,10 @@ private:
   NuhMaskList invexes;
   NuhMaskList quiets;
   NuhMaskList excepts;
+
   irc_string name;
+  string topic;
+
   bool moderated;
   bool invite_only;
   bool no_external_msgs;
@@ -89,6 +94,7 @@ public:
   ~Channel();
 
   // statics
+  static void init();
   inline static string supported_modes() { return "imnpstS"; }
 
   // list managers

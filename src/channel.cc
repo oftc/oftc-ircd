@@ -28,11 +28,13 @@
 #include "numeric.h"
 #include "client.h"
 #include "server.h"
+#include "config.h"
 
 Event<ChannelPtr, ClientPtr> Channel::joining;
 Event<ChannelPtr, ClientPtr> Channel::joined;
 ChannelList Channel::channels;
 ChannelNameHash Channel::names;
+ChannelSection Channel::config;
 
 Channel::Channel() : moderated(false), invite_only(false), no_external_msgs(false),
   private_chan(false), secret(false), topic_op_only(false), secure(false)
@@ -195,6 +197,12 @@ irc_string Channel::str() const
 }
 
 // Statics
+
+void Channel::init()
+{
+  Config::add_section("channel", &config);
+}
+
 void Channel::add(const ChannelPtr channel)
 {
   names[channel->name] = channel;
