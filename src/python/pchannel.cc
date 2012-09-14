@@ -45,7 +45,8 @@ enum ChannelProps
   Bans,
   Invexes,
   Quiets,
-  Excepts
+  Excepts,
+  Topic
 };
 
 PChannel::PChannel()
@@ -182,6 +183,8 @@ PObject PChannel::get(Property prop)
     return new PNuhMaskList(inner->get_quiets());
   case Invexes:
     return new PNuhMaskList(inner->get_invexes());
+  case Topic:
+    return PString(inner->get_topic());
   }
 
   return PObject::None();
@@ -200,6 +203,9 @@ int PChannel::set(const Property prop, const PObject& value)
   {
   case Name:
     inner->set_name(value.str().c_str());
+    break;
+  case Topic:
+    inner->set_topic(value.str());
     break;
   }
 

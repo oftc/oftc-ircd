@@ -96,6 +96,7 @@ public:
   // statics
   static void init();
   inline static string supported_modes() { return "imnpstS"; }
+  inline static unsigned int get_topiclen() { return config.get_topiclen(); }
 
   // list managers
   static void add(const ChannelPtr);
@@ -118,10 +119,12 @@ public:
   NuhMaskList& get_invexes();
   irc_string get_name() const;
   ChannelMemberList get_members() const;
+  string get_topic() const;
 
   // setters
   void set_name(const irc_string);
   void set_mode_char(char, bool);
+  void set_topic(const string);
   
   // members
   void add_member(const ClientPtr);

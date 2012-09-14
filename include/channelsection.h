@@ -42,6 +42,7 @@ public:
   void process(const Json::Value);
   void verify() const;
 
+  inline unsigned int get_topiclen() { return topiclen; }
 };
 
 #endif

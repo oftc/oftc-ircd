@@ -106,6 +106,11 @@ NuhMaskList& Channel::get_excepts()
   return excepts;
 }
 
+string Channel::get_topic() const
+{
+  return topic;
+}
+
 void Channel::set_name(const irc_string _name)
 {
   name = _name;
@@ -140,6 +145,13 @@ void Channel::set_mode_char(char mode, bool set)
     Logging::debug << "unknown mode char: " << mode << Logging::endl;
     break;
   }
+}
+
+void Channel::set_topic(const string _topic)
+{
+  topic = _topic;
+  if(topic.length() > Channel::get_topiclen())
+    topic.resize(Channel::get_topiclen());
 }
 
 void Channel::send_names(ClientPtr client)
