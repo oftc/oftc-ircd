@@ -74,7 +74,7 @@ protected:
 private:
   stringstream read_buffer;
   Parser& parser;
-  ClientPtr client;
+  BaseClientPtr client;
   string host;
 
 public:
@@ -111,7 +111,7 @@ public:
   string get_host() const;
 
   // setters
-  void set_client(const ClientPtr);
+  void set_client(const BaseClientPtr);
 };
 
 #endif

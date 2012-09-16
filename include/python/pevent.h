@@ -110,7 +110,7 @@ public:
     return callback(args);
   }
 
-  PObject channel_client_callback(Event<ChannelPtr, ClientPtr>& event, const PTuple& args)
+  PObject channel_client_callback(Event<ChannelPtr, BaseClientPtr>& event, const PTuple& args)
   {
     PChannel *channel = args[0].AsPtr<PChannel>();
     PClient *client = args[1].AsPtr<PClient>();
@@ -120,7 +120,7 @@ public:
     return ret.incref();
   }
 
-  PObject client_string_callback(Event<ClientPtr, string>& event, const PTuple& args)
+  PObject client_string_callback(Event<BaseClientPtr, string>& event, const PTuple& args)
   {
     PClient *client = args[0].AsPtr<PClient>();
     PString str = args[1].As<PString>();
@@ -129,7 +129,7 @@ public:
     return ret.incref();
   }
 
-  PObject client_ircstring_callback(Event<ClientPtr, irc_string>& event, const PTuple& args)
+  PObject client_ircstring_callback(Event<BaseClientPtr, irc_string>& event, const PTuple& args)
   {
     PClient *client = args[0].AsPtr<PClient>();
     PString str = args[1].As<PString>();

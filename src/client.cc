@@ -39,11 +39,11 @@ using std::setw;
 using std::setfill;
 using std::list;
 
-Event<ClientPtr> Client::connected;
-Event<ClientPtr> Client::registering;
-Event<ClientPtr> Client::disconnected;
-Event<ClientPtr, irc_string> Client::nick_changing;
-Event<ClientPtr, string> Client::nick_changed;
+Event<BaseClientPtr> Client::connected;
+Event<BaseClientPtr> Client::registering;
+Event<BaseClientPtr> Client::disconnected;
+Event<BaseClientPtr, irc_string> Client::nick_changing;
+Event<BaseClientPtr, string> Client::nick_changed;
 ClientList Client::unregistered_list;
 ClientList Client::client_list;
 uv_timer_t Client::ping_timer;
@@ -162,7 +162,7 @@ ClientMemberList Client::get_channels() const
   return channels;
 }
 
-ClientPtr Client::get_server() const
+BaseClientPtr Client::get_server() const
 {
   return server;
 }
@@ -187,7 +187,7 @@ void Client::set_last_message(time_t when)
   last_message = when;
 }
 
-void Client::set_server(ClientPtr ptr)
+void Client::set_server(BaseClientPtr ptr)
 {
   server = ptr;
 }
@@ -200,9 +200,9 @@ void Client::init()
   uv_timer_start(&ping_timer, check_pings, 0, 5);
 }
 
-void Client::add(ClientPtr ptr)
+void Client::add(BaseClientPtr ptr)
 {
-  shared_ptr<Client> client = dynamic_pointer_cast<Client>(ptr);
+  ClientPtr client = dynamic_pointer_cast<Client>(ptr);
 
   if(!registering(client))
     return;
@@ -219,12 +219,12 @@ void Client::add(ClientPtr ptr)
   client->send(003, System::get_built_date());
 }
 
-void Client::add_unregistered(ClientPtr client)
+void Client::add_unregistered(BaseClientPtr client)
 {
   unregistered_list[client.get()] = client;
 }
 
-void Client::remove(ClientPtr client)
+void Client::remove(BaseClientPtr client)
 {
   if(client->is_registered())
     client_list.erase(client.get());
@@ -236,7 +236,7 @@ void Client::check_pings(uv_timer_t *handle, int status)
 {
   for(auto it = client_list.cbegin(); it != client_list.cend(); it++)
   {
-    ClientPtr client = it->second;
+    BaseClientPtr client = it->second;
 
     if(!client->check_timeout())
     {
@@ -246,7 +246,7 @@ void Client::check_pings(uv_timer_t *handle, int status)
 
   for(auto it = unregistered_list.cbegin(); it != unregistered_list.cend(); it++)
   {
-    ClientPtr client = it->second;
+    BaseClientPtr client = it->second;
 
     if(!client->check_timeout())
     {

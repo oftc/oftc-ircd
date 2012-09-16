@@ -41,7 +41,7 @@ private:
   
   CommandHash commands;
 public:
-  void parse(const ClientPtr, const string& line);
+  void parse(const BaseClientPtr, const string& line);
   void register_command(const Command command);
   static inline Parser& get_default() { return default_parser; }
 };

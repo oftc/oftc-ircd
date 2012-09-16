@@ -249,11 +249,11 @@ void PChannel::init(const PObject& module)
 
   PCType::init(module);
 
-  PEvent::add_event<ChannelPtr, ClientPtr>(type.tp_dict, "joining", Channel::joining, &PEvent::channel_client_callback, on_joining);
-  PEvent::add_event<ChannelPtr, ClientPtr>(type.tp_dict, "joined", Channel::joined, &PEvent::channel_client_callback, on_joined);
+  PEvent::add_event<ChannelPtr, BaseClientPtr>(type.tp_dict, "joining", Channel::joining, &PEvent::channel_client_callback, on_joining);
+  PEvent::add_event<ChannelPtr, BaseClientPtr>(type.tp_dict, "joined", Channel::joined, &PEvent::channel_client_callback, on_joined);
 }
 
-bool PChannel::on_joining(ChannelPtr channel, ClientPtr client)
+bool PChannel::on_joining(ChannelPtr channel, BaseClientPtr client)
 {
   PTuple args(2);
 
@@ -263,7 +263,7 @@ bool PChannel::on_joining(ChannelPtr channel, ClientPtr client)
   return PEvent::handle(PyDict_GetItemString(type_object().tp_dict, "joining"), args);
 }
 
-bool PChannel::on_joined(ChannelPtr channel, ClientPtr client)
+bool PChannel::on_joined(ChannelPtr channel, BaseClientPtr client)
 {
   PTuple args(2);
 

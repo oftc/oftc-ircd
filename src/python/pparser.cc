@@ -86,7 +86,7 @@ void PParser::init(const PObject& module)
   PCType::init(module);
 }
 
-void PParser::handle_command(const ClientPtr client, const Command& command, const ParamList& params)
+void PParser::handle_command(const BaseClientPtr client, const Command& command, const ParamList& params)
 {
   PObject callback(static_cast<PyObject *>(command.get_data()));
   PTuple args(params.size() + 1);

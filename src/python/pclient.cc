@@ -56,7 +56,7 @@ PClient::PClient()
 {
 }
 
-PClient::PClient(ClientPtr ptr) : PCType(ptr)
+PClient::PClient(BaseClientPtr ptr) : PCType(ptr)
 {
   Logging::trace << "Created PClient: " << this << Logging::endl;
 }
@@ -100,7 +100,7 @@ PObject PClient::numeric(const PTuple& args)
   string format;
   stringstream output;
   int index = 1;
-  shared_ptr<Client> ptr;
+  ClientPtr ptr;
 
   if(!Client::is_client(inner))
     return PException(PyExc_RuntimeError, "Cannot send a numeric to a non-client");
@@ -184,7 +184,7 @@ PObject PClient::send_channels_common(const PTuple& args, const PDict& kwargs)
   if(!str)
     return NULL;
 
-  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(inner);
+  ClientPtr ptr = dynamic_pointer_cast<Client>(inner);
   ptr->send_channels_common(str.As<PString>());
 
   return PObject::None();
@@ -194,7 +194,7 @@ PObject PClient::remove_channel(const PTuple& args)
 {
   PChannel *channel = args[0].AsPtr<PChannel>();
 
-  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(inner);
+  ClientPtr ptr = dynamic_pointer_cast<Client>(inner);
 
   if(!PChannel::check(channel))
     return PException(PyExc_TypeError, "argument must be a Channel");
@@ -206,7 +206,7 @@ PObject PClient::remove_channel(const PTuple& args)
 
 PObject PClient::get(Property prop)
 {
-  shared_ptr<Client> client = dynamic_pointer_cast<Client>(inner);
+  ClientPtr client = dynamic_pointer_cast<Client>(inner);
   ServerPtr server = dynamic_pointer_cast<Server>(inner);
 
   switch(prop.number)
@@ -236,7 +236,7 @@ PObject PClient::get(Property prop)
 
 int PClient::set(const Property prop, const PObject& value)
 {
-  shared_ptr<Client> client = dynamic_pointer_cast<Client>(inner);
+  ClientPtr client = dynamic_pointer_cast<Client>(inner);
 
   int ret;
 
@@ -305,14 +305,14 @@ void PClient::init(const PObject& module)
 
   me = new PClient(Server::get_me());
 
-  PEvent::add_event<ClientPtr, string>(type.tp_dict, "closing", Client::closing, &PEvent::client_string_callback, on_closing);
-  PEvent::add_event<ClientPtr, irc_string>(type.tp_dict, "nick_changing", Client::nick_changing, &PEvent::client_ircstring_callback, on_nick_changing);
-  PEvent::add_event<ClientPtr, string>(type.tp_dict, "nick_changed", Client::nick_changed, &PEvent::client_string_callback, on_nick_changed);
+  PEvent::add_event<BaseClientPtr, string>(type.tp_dict, "closing", Client::closing, &PEvent::client_string_callback, on_closing);
+  PEvent::add_event<BaseClientPtr, irc_string>(type.tp_dict, "nick_changing", Client::nick_changing, &PEvent::client_ircstring_callback, on_nick_changing);
+  PEvent::add_event<BaseClientPtr, string>(type.tp_dict, "nick_changed", Client::nick_changed, &PEvent::client_string_callback, on_nick_changed);
 
   PyDict_SetItemString(type.tp_dict, "Me", me);
 }
 
-bool PClient::on_closing(ClientPtr client, string reason)
+bool PClient::on_closing(BaseClientPtr client, string reason)
 {
   PTuple args(2);
 
@@ -322,7 +322,7 @@ bool PClient::on_closing(ClientPtr client, string reason)
   return PEvent::handle(PyDict_GetItemString(type_object().tp_dict, "closing"), args);
 }
 
-bool PClient::on_nick_changing(ClientPtr client, irc_string new_nick)
+bool PClient::on_nick_changing(BaseClientPtr client, irc_string new_nick)
 {
   PTuple args(2);
 
@@ -332,7 +332,7 @@ bool PClient::on_nick_changing(ClientPtr client, irc_string new_nick)
   return PEvent::handle(PyDict_GetItemString(type_object().tp_dict, "nick_changing"), args);
 }
 
-bool PClient::on_nick_changed(ClientPtr client, string old_mask)
+bool PClient::on_nick_changed(BaseClientPtr client, string old_mask)
 {
   PTuple args(2);
 
@@ -346,7 +346,7 @@ PyObject *PClient::find_by_name(PyObject *self, PyObject *varargs)
 {
   PTuple args(varargs);
   PString name = args[0].As<PString>();
-  ClientPtr ptr = Client::find_by_name(name.c_str());
+  BaseClientPtr ptr = Client::find_by_name(name.c_str());
 
   if(ptr)
     return new PClient(ptr);

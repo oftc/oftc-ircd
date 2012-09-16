@@ -31,7 +31,7 @@
 #include "system.h"
 
 NameHash BaseClient::names;
-Event<ClientPtr, string> BaseClient::closing;
+Event<BaseClientPtr, string> BaseClient::closing;
 
 BaseClient::BaseClient() : level(Unregistered), last_data(0)
 {
@@ -168,7 +168,7 @@ void BaseClient::set_first_seen(time_t when)
 
 void BaseClient::init()
 {
-  ClientPtr me = ClientPtr(new Server);
+  BaseClientPtr me = BaseClientPtr(new Server);
   ServerPtr me_ptr = dynamic_pointer_cast<Server>(me);
 
   me->set_name(System::get_server_name());
@@ -177,28 +177,28 @@ void BaseClient::init()
   Server::set_me(me);
 }
 
-void BaseClient::add_name(const ClientPtr client)
+void BaseClient::add_name(const BaseClientPtr client)
 {
   names[client->name] = client;
 }
 
-ClientPtr BaseClient::find_by_name(const irc_string name)
+BaseClientPtr BaseClient::find_by_name(const irc_string name)
 {
   return names[name];
 }
 
-void BaseClient::del_name(const ClientPtr client)
+void BaseClient::del_name(const BaseClientPtr client)
 {
   if(!client->name.empty())
     names.erase(client->name);
 }
 
-bool BaseClient::is_client(const ClientPtr client)
+bool BaseClient::is_client(const BaseClientPtr client)
 {
   return typeid(*client) == typeid(Client);
 }
 
-bool BaseClient::is_server(const ClientPtr client)
+bool BaseClient::is_server(const BaseClientPtr client)
 {
   return typeid(*client) == typeid(Server);
 }

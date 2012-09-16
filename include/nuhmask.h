@@ -64,7 +64,7 @@ public:
   inline string get_mask() const { return full_mask; }
 
   bool match(const NuhMask&);
-  bool match(const ClientPtr);
+  bool match(const BaseClientPtr);
 
   string str() const;
  };

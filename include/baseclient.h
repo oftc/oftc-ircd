@@ -33,7 +33,7 @@
 #include "ircstring.h"
 #include "event.h"
 
-typedef shared_ptr<BaseClient> ClientPtr;
+typedef shared_ptr<BaseClient> BaseClientPtr;
 
 #include "connection.h"
 
@@ -43,8 +43,8 @@ using std::map;
 class Connection;
 class BaseClient;
 
-typedef unordered_map<irc_string, ClientPtr, irc_hash> NameHash;
-typedef map<BaseClient *, ClientPtr> ClientList;
+typedef unordered_map<irc_string, BaseClientPtr, irc_hash> NameHash;
+typedef map<BaseClient *, BaseClientPtr> ClientList;
 
 class BaseClient
 {
@@ -60,18 +60,18 @@ protected:
   time_t ping_sent;
 public:
   // Events
-  static Event<ClientPtr, string> closing;
+  static Event<BaseClientPtr, string> closing;
 
   static void init();
 
   // list managers
-  static void add_name(const ClientPtr);
-  static ClientPtr find_by_name(const irc_string);
-  static void del_name(const ClientPtr);
+  static void add_name(const BaseClientPtr);
+  static BaseClientPtr find_by_name(const irc_string);
+  static void del_name(const BaseClientPtr);
 
   // static tests
-  static bool is_client(const ClientPtr);
-  static bool is_server(const ClientPtr);
+  static bool is_client(const BaseClientPtr);
+  static bool is_server(const BaseClientPtr);
   
   // ctor/dtor
   BaseClient();

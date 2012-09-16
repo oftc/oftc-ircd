@@ -40,6 +40,7 @@ class Client;
 class Connection;
 
 typedef map<ChannelPtr, Membership> ClientMemberList;
+typedef shared_ptr<Client> ClientPtr;
 
 class Client : public BaseClient
 {
@@ -53,19 +54,19 @@ private:
   bool invisible;
   time_t last_message;
   ClientMemberList channels;
-  ClientPtr server;
+  BaseClientPtr server;
 public:
   // Events
-  static Event<ClientPtr> connected;
-  static Event<ClientPtr> registering;
-  static Event<ClientPtr> disconnected;
-  static Event<ClientPtr, irc_string> nick_changing;
-  static Event<ClientPtr, string> nick_changed;
+  static Event<BaseClientPtr> connected;
+  static Event<BaseClientPtr> registering;
+  static Event<BaseClientPtr> disconnected;
+  static Event<BaseClientPtr, irc_string> nick_changing;
+  static Event<BaseClientPtr, string> nick_changed;
 
   // Client list maniuplators
-  static void add(const ClientPtr);
-  static void add_unregistered(const ClientPtr);
-  static void remove(const ClientPtr);
+  static void add(const BaseClientPtr);
+  static void add_unregistered(const BaseClientPtr);
+  static void remove(const BaseClientPtr);
 
   // Static members
   static void init();
@@ -92,14 +93,14 @@ public:
   string get_realname() const;
   time_t get_idletime() const;
   ClientMemberList get_channels() const;
-  ClientPtr get_server() const;
+  BaseClientPtr get_server() const;
 
   // Setters
   void set_username(const string);
   void set_realname(const string);
   void set_invisible(bool invis);
   void set_last_message(time_t);
-  void set_server(const ClientPtr);
+  void set_server(const BaseClientPtr);
 };
 
 #endif

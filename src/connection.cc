@@ -236,7 +236,7 @@ string Connection::get_host() const
   return host;
 }
 
-void Connection::set_client(const ClientPtr ptr)
+void Connection::set_client(const BaseClientPtr ptr)
 {
   client = ptr;
 }

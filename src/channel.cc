@@ -30,8 +30,8 @@
 #include "server.h"
 #include "config.h"
 
-Event<ChannelPtr, ClientPtr> Channel::joining;
-Event<ChannelPtr, ClientPtr> Channel::joined;
+Event<ChannelPtr, BaseClientPtr> Channel::joining;
+Event<ChannelPtr, BaseClientPtr> Channel::joined;
 ChannelList Channel::channels;
 ChannelNameHash Channel::names;
 ChannelSection Channel::config;
@@ -47,10 +47,10 @@ Channel::~Channel()
   Logging::trace << "Destroyed Channel: " << this << Logging::endl;
 }
 
-void Channel::add_member(const ClientPtr client)
+void Channel::add_member(const BaseClientPtr client)
 {
   Membership member;
-  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
+  ClientPtr ptr = dynamic_pointer_cast<Client>(client);
 
   member.client = client;
   if(members.size() == 0)
@@ -66,12 +66,12 @@ void Channel::add_member(const ClientPtr client)
   joined(member.channel, client);
 }
 
-bool Channel::is_member(const ClientPtr client)
+bool Channel::is_member(const BaseClientPtr client)
 {
   return members.find(client) != members.end();
 }
 
-void Channel::remove_member(const ClientPtr client)
+void Channel::remove_member(const BaseClientPtr client)
 {
   members.erase(client);
 }
@@ -154,9 +154,9 @@ void Channel::set_topic(const string _topic)
     topic.resize(Channel::get_topiclen());
 }
 
-void Channel::send_names(ClientPtr client)
+void Channel::send_names(BaseClientPtr client)
 {
-  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
+  ClientPtr ptr = dynamic_pointer_cast<Client>(client);
   stringstream reply;
   string reply_format;
   bool first = true;
@@ -194,7 +194,7 @@ void Channel::send_names(ClientPtr client)
   ptr->send(Numeric::Rpl_EndOfNames, name.c_str());
 }
 
-void Channel::send(const ClientPtr client, const string str)
+void Channel::send(const BaseClientPtr client, const string str)
 {
   for(auto it = members.cbegin(); it != members.cend(); it++)
   {

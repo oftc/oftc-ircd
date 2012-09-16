@@ -86,13 +86,13 @@ void Listener::connected(uv_stream_t *stream, int status)
     connection = ConnectionPtr(new Connection);
 
   Connection::add(connection);
-  ClientPtr client = ClientPtr(new Client());
+  BaseClientPtr client = BaseClientPtr(new Client());
   connection->set_client(client);
   client->set_connection(connection);
 
   client->set_first_seen(time(NULL));
   
-  shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
+  ClientPtr ptr = dynamic_pointer_cast<Client>(client);
   ptr->set_server(Server::get_me());
 
   Client::add_unregistered(client);

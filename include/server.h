@@ -39,13 +39,13 @@ typedef shared_ptr<Server> ServerPtr;
 class Server : public BaseClient
 {
 private:
-  static ClientPtr me;
+  static BaseClientPtr me;
   static ClientList servers;
 
   string info;
 public:
-  static ClientPtr get_me();
-  static void set_me(const ClientPtr);
+  static BaseClientPtr get_me();
+  static void set_me(const BaseClientPtr);
 
   string get_info() const;
 

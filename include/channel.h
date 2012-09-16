@@ -52,14 +52,14 @@ enum MembershipFlags
 
 struct Membership
 {
-  ClientPtr client;
+  BaseClientPtr client;
   ChannelPtr channel;
   MembershipFlags flags;
 };
 
 typedef unordered_map<irc_string, ChannelPtr, irc_hash> ChannelNameHash;
 typedef map<Channel *, ChannelPtr> ChannelList;
-typedef map<ClientPtr, Membership> ChannelMemberList;
+typedef map<BaseClientPtr, Membership> ChannelMemberList;
 
 class Channel
 {
@@ -86,8 +86,8 @@ private:
   bool secure;
 public:
   // Events
-  static Event<ChannelPtr, ClientPtr> joining;
-  static Event<ChannelPtr, ClientPtr> joined;
+  static Event<ChannelPtr, BaseClientPtr> joining;
+  static Event<ChannelPtr, BaseClientPtr> joined;
 
   // Ctor/dtor
   Channel();
@@ -127,12 +127,12 @@ public:
   void set_topic(const string);
   
   // members
-  void add_member(const ClientPtr);
-  bool is_member(const ClientPtr);
-  void remove_member(const ClientPtr);
-  void send_names(const ClientPtr);
-  void send(const ClientPtr, const string);
-  void send_common(const ClientPtr, const string);
+  void add_member(const BaseClientPtr);
+  bool is_member(const BaseClientPtr);
+  void remove_member(const BaseClientPtr);
+  void send_names(const BaseClientPtr);
+  void send(const BaseClientPtr, const string);
+  void send_common(const BaseClientPtr, const string);
   irc_string str() const;
  };
 

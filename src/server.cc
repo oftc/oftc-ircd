@@ -26,7 +26,7 @@
 #include "stdinc.h"
 #include "server.h"
 
-ClientPtr Server::me;
+BaseClientPtr Server::me;
 ClientList Server::servers;
 
 string Server::get_info() const
@@ -40,12 +40,12 @@ void Server::set_info(const string inf)
 }
 
 // Statics
-ClientPtr Server::get_me()
+BaseClientPtr Server::get_me()
 {
   return me;
 }
 
-void Server::set_me(ClientPtr ptr)
+void Server::set_me(BaseClientPtr ptr)
 {
   if(!me)
   {

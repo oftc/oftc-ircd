@@ -118,7 +118,7 @@ bool NuhMask::match(const NuhMask& right)
   return ismatch;
 }
 
-bool NuhMask::match(const ClientPtr right)
+bool NuhMask::match(const BaseClientPtr right)
 {
   NuhMask r(right->str().c_str());
   return this->match(r);

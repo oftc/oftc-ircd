@@ -44,7 +44,7 @@ void Parser::register_command(Command command)
   commands[command.get_name()] = command;
 }
 
-void Parser::parse(const ClientPtr client, const string& line)
+void Parser::parse(const BaseClientPtr client, const string& line)
 {
   stringstream stream(line);
   vector<string> args;
@@ -73,7 +73,7 @@ void Parser::parse(const ClientPtr client, const string& line)
   {
     if(client->is_registered() && Client::is_client(client))
     {
-      shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
+      ClientPtr ptr = dynamic_pointer_cast<Client>(client);
       ptr->send(Numeric::Err_UnknownCommand, command.c_str());
     }
     return;
@@ -105,7 +105,7 @@ void Parser::parse(const ClientPtr client, const string& line)
   {
     if(Client::is_client(client))
     {
-      shared_ptr<Client> ptr = dynamic_pointer_cast<Client>(client);
+      ClientPtr ptr = dynamic_pointer_cast<Client>(client);
       ptr->send(Numeric::Err_NeedMoreParams, command.c_str(), args.size(), 
         cmd.get_min_args());
     }

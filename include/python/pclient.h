@@ -37,14 +37,14 @@
 class PChannel;
 typedef PCMap<ClientMemberList, PChannel, PMembership> PClientMemberList;
 
-class PClient : public PCType<PClient, ClientPtr>
+class PClient : public PCType<PClient, BaseClientPtr>
 {
 private:
   static PClient *me;
 public:
   PClient();
   PClient(const PTuple&, const PDict&);
-  PClient(ClientPtr);
+  PClient(BaseClientPtr);
   ~PClient();
 
   PObject get(const Property);
@@ -68,9 +68,9 @@ public:
   static PyObject *add(PyObject *, PyObject *);
   static void init(const PObject&);
 
-  static bool on_closing(ClientPtr, string);
-  static bool on_nick_changing(ClientPtr, irc_string);
-  static bool on_nick_changed(ClientPtr, string);
+  static bool on_closing(BaseClientPtr, string);
+  static bool on_nick_changing(BaseClientPtr, irc_string);
+  static bool on_nick_changed(BaseClientPtr, string);
 
   inline static PClient *get_me() { return me; }
 };
