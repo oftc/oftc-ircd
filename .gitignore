@@ -33,3 +33,4 @@ Makefile
 ircd.Makefile
 ircd.target.mk
 core
+*.core
