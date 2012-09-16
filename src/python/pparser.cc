@@ -90,9 +90,6 @@ void PParser::handle_command(const BaseClientPtr client, const Command& command,
 {
   PObject callback(static_cast<PyObject *>(command.get_data()));
   PTuple args(params.size() + 1);
-  PClient *tmp;
-
-  tmp = new PClient(client);
 
   args[0] = new PClient(client);
 
