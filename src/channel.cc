@@ -66,7 +66,7 @@ void Channel::add_member(const BaseClientPtr client)
   joined(member.channel, client);
 }
 
-bool Channel::is_member(const BaseClientPtr client)
+bool Channel::is_member(const BaseClientPtr client) const
 {
   return members.find(client) != members.end();
 }

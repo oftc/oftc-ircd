@@ -26,12 +26,9 @@
 #ifndef GENERALSECTION_H_INC
 #define GENERALSECTION_H_INC
 
-#include <string>
 #include <json/json.h>
 #include "configsection.h"
 #include "ircstring.h"
-
-using std::string;
 
 class GeneralSection : public ConfigSection
 {
@@ -44,6 +41,8 @@ private:
   string server_info;
   unsigned int nicklen;
   string motd;
+
+  static const int DefaultNicklen = 30;
 public:
   void set_defaults();
   void process(const Json::Value);

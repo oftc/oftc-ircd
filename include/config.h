@@ -26,12 +26,7 @@
 #ifndef CONFIG_H_INC
 #define CONFIG_H_INC
 
-#include <string>
 #include "configsection.h"
-
-#define CONFIG_PATH "ircd.conf"
-
-using std::string;
 
 typedef unordered_map<string, ConfigSection *> ConfigSectionHash;
 
@@ -44,6 +39,7 @@ public:
   static void add_section(const string name, ConfigSection* const section);
   static void init(const string);
   static bool check_file_exists(const string);
+  static const string DefaultConfigPath;
 };
 
 class config_error : public runtime_error

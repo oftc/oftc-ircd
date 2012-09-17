@@ -24,13 +24,14 @@
 */
 
 #include "stdinc.h"
-#include <json/json.h>
 #include "loggingsection.h"
+
+const string LoggingSection::DefaultLogPath = "ircd.log";
 
 void LoggingSection::set_defaults()
 {
   min_loglevel = INFO;
-  log_path = LOG_PATH;
+  log_path = DefaultLogPath;
 }
 
 void LoggingSection::process(const Json::Value value)

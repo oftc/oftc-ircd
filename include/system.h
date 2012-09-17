@@ -27,10 +27,7 @@
 #define SYSTEM_H_INC
 
 #include <uv.h>
-#include <string>
 #include "generalsection.h"
-
-using std::string;
 
 class System 
 {

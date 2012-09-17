@@ -25,10 +25,8 @@
 
 #include "stdinc.h"
 #include "command.h"
-#include <string>
 #include <algorithm>
 
-using std::string;
 using std::transform;
 
 Command::Command()

@@ -26,12 +26,7 @@
 #ifndef SERVER_H_INC
 #define SERVER_H_INC
 
-#include <list>
-#include <string>
 #include "baseclient.h"
-
-using std::list;
-using std::string;
 
 class Server;
 typedef shared_ptr<Server> ServerPtr;

@@ -26,13 +26,6 @@
 #ifndef COMMAND_H_INC
 #define COMMAND_H_INC
 
-#include "stdinc.h"
-#include <string>
-#include <vector>
-
-using std::string;
-using std::vector;
-
 class Command; 
 class BaseClient;
 

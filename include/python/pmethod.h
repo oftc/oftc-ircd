@@ -26,7 +26,6 @@
 #ifndef PMETHOD_H_INC
 #define PMETHOD_H_INC
 
-#include "stdinc.h"
 #include "python/pobject.h"
 #include "python/ptuple.h"
 #include "python/pdict.h"

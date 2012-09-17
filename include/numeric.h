@@ -28,9 +28,6 @@
 
 #include "json/json.h"
 #include <stdarg.h>
-#include <string>
-
-using std::string;
 
 class Numeric
 {

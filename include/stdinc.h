@@ -59,10 +59,17 @@ using std::function;
 #endif
 
 #include <stdexcept>
-#include "logging.h"
+#include <string>
+#include <list>
+#include <map>
+#include <vector>
 
 using std::runtime_error;
 using std::exception;
+using std::string;
+using std::map;
+using std::list;
+using std::vector;
 
 #ifdef _WIN32 
 #define strncasecmp strnicmp 
@@ -70,5 +77,7 @@ using std::exception;
 #else
 #include <strings.h>
 #endif 
+
+#include "logging.h"
 
 #endif

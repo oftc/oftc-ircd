@@ -26,10 +26,6 @@
 #ifndef EVENT_H_INC
 #define EVENT_H_INC
 
-#include <list>
-
-using std::list;
-
 struct NullArg {};
 
 #ifdef HAS_VARTEMPLATES

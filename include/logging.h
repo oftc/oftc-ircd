@@ -26,18 +26,14 @@
 #ifndef LOGGING_H_INC
 #define LOGGING_H_INC
 
-#include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <time.h>
 #include "loggingsection.h"
 
-#define LOG_PATH "ircd.log"
-
 using std::ofstream;
 using std::stringstream;
-using std::string;
 
 class Logging;
 
@@ -46,8 +42,8 @@ typedef Logging& (*manip)(Logging&);
 class Logging 
 {
 private:
-  static LoggingSection config;
   static const int MAX_DATE_LEN = 40;
+  static LoggingSection config;
   static ofstream log_stream;
   static bool dostamp;
   static stringstream stream;

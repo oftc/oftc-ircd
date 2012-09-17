@@ -26,11 +26,8 @@
 #ifndef PARSER_H_INC
 #define PARSER_H_INC
 
-#include <string>
 #include "command.h"
 #include "baseclient.h"
-
-using std::string;
 
 typedef unordered_map<string, Command> CommandHash;
 

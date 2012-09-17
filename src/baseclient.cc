@@ -25,7 +25,6 @@
 
 #include "stdinc.h"
 #include "baseclient.h"
-#include "connection.h"
 #include "client.h"
 #include "server.h"
 #include "system.h"

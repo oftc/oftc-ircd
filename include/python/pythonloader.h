@@ -27,11 +27,6 @@
 #define PYTHONLOADER_H_INC
 
 #include "Python.h"
-#include <string>
-#include <vector>
-
-using std::string;
-using std::vector;
 
 typedef vector<PyObject *> PyObjectList;
 

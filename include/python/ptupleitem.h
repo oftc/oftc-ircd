@@ -27,7 +27,6 @@
 #define PTUPLEITEM_H_INC
 
 #include "Python.h"
-#include "stdinc.h"
 #include "pobject.h"
 
 class PTupleItem : public PObject

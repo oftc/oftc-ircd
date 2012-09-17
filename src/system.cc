@@ -52,7 +52,7 @@ ares_channel System::dns_channel;
 void System::init()
 {
   Config::add_section("general", &config);
-  config_path = CONFIG_PATH;
+  config_path = Config::DefaultConfigPath.c_str();
   ares_options options;
 
   memset(&options, 0, sizeof(options));

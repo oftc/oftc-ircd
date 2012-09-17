@@ -24,7 +24,6 @@
 */
 
 #include "stdinc.h"
-#include <json/json.h>
 #include <limits.h>
 #include "listenersection.h"
 #include "listener.h"

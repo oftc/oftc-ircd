@@ -26,18 +26,15 @@
 #include "stdinc.h"
 #include <stdarg.h>
 #include <iomanip>
-#include <list>
 #include "system.h"
 #include "client.h"
 #include "connection.h"
 #include "numeric.h"
 #include "server.h"
-#include "channel.h"
 
 using std::string;
 using std::setw;
 using std::setfill;
-using std::list;
 
 Event<BaseClientPtr> Client::connected;
 Event<BaseClientPtr> Client::registering;

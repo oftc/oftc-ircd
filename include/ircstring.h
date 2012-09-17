@@ -26,7 +26,6 @@
 #ifndef IRCSTRING_H_INC
 #define IRCSTRING_H_INC
 
-#include <string>
 #include <iostream>
 #include <algorithm>
 #include "murmurhash3.h"

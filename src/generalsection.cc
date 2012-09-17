@@ -24,7 +24,6 @@
 */
 
 #include "stdinc.h"
-#include <json/json.h>
 #include <iostream>
 #include <fstream>
 #include "generalsection.h"
@@ -36,7 +35,7 @@ void GeneralSection::set_defaults()
 {
   daemon = true;
   server_info = "IRC Server";
-  nicklen = 30;
+  nicklen = DefaultNicklen;
   motd = "";
 }
 

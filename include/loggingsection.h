@@ -27,10 +27,7 @@
 #define LOGGINGSECTION_H_INC
 
 #include <json/json.h>
-#include <string>
 #include "configsection.h"
-
-using std::string;
 
 enum LogLevel
 {
@@ -48,6 +45,8 @@ class LoggingSection : public ConfigSection
 private:
   LogLevel min_loglevel;
   string log_path;
+
+  static string const DefaultLogPath;
 public:
   void set_defaults();
   void process(const Json::Value);

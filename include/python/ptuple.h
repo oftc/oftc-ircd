@@ -27,7 +27,6 @@
 #define PTUPLE_H_INC
 
 #include "Python.h"
-#include "stdinc.h"
 #include "python/pobject.h"
 #include "python/ptupleitem.h"
 

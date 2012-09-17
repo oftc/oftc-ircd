@@ -24,7 +24,6 @@
 */
 
 #include "stdinc.h"
-#include <json/json.h>
 #include "channelsection.h"
 #include "config.h"
 

@@ -26,16 +26,13 @@
 #ifndef CONNECTION_H_INC
 #define CONNECTION_H_INC
 
-#include <vector>
 #include <sstream>
-
 #include <uv.h>
 
 class Connection;
 typedef shared_ptr<Connection> ConnectionPtr;
 #include "baseclient.h"
 
-using std::vector;
 using std::stringstream;
 
 class Parser;

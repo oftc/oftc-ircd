@@ -26,18 +26,10 @@
 #ifndef CHANNEL_H_INC
 #define CHANNEL_H_INC
 
-#include "stdinc.h"
-#include <string>
-#include <list>
-#include <map>
 #include "ircstring.h"
 #include "baseclient.h"
 #include "nuhmask.h"
 #include "channelsection.h"
-
-using std::list;
-using std::string;
-using std::map;
 
 class Channel;
 
@@ -128,7 +120,7 @@ public:
   
   // members
   void add_member(const BaseClientPtr);
-  bool is_member(const BaseClientPtr);
+  bool is_member(const BaseClientPtr) const;
   void remove_member(const BaseClientPtr);
   void send_names(const BaseClientPtr);
   void send(const BaseClientPtr, const string);

@@ -26,13 +26,8 @@
 #ifndef LISTENER_H_INC
 #define LISTENER_H_INC
 
-#include <string>
-#include <vector>
 #include <uv.h>
 #include "listenersection.h"
-
-using std::vector;
-using std::string;
 
 class Listener;
 

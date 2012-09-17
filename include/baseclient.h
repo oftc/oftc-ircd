@@ -26,9 +26,6 @@
 #ifndef BASECLIENT_H_INC
 #define BASECLIENT_H_INC
 
-#include "stdinc.h"
-#include <string>
-#include <map>
 #include "command.h"
 #include "ircstring.h"
 #include "event.h"
@@ -36,9 +33,6 @@
 typedef shared_ptr<BaseClient> BaseClientPtr;
 
 #include "connection.h"
-
-using std::string;
-using std::map;
 
 class Connection;
 class BaseClient;
@@ -97,7 +91,7 @@ public:
   // setters
   void set_registered();
   void set_name(const irc_string);
-  void set_connection(const shared_ptr<Connection>);
+  void set_connection(const ConnectionPtr);
   void set_host(const string);
   void set_last_data(time_t);
   void set_first_seen(time_t);

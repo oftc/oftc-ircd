@@ -24,7 +24,6 @@
 */
 
 #include "stdinc.h"
-#include <json/json.h>
 #include <iostream>
 #include <fstream>
 #include "config.h"
@@ -36,6 +35,7 @@ using std::endl;
 
 // Initialise the static member
 ConfigSectionHash Config::sections;
+const string Config::DefaultConfigPath = "ircd.conf";
 
 // Statics
 void Config::init(const string path)

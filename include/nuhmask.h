@@ -26,14 +26,8 @@
 #ifndef NUHMASK_H_INC
 #define NUHMASK_H_INC
 
-#include "stdinc.h"
-#include <string>
-#include <list>
 #include "ircstring.h"
 #include "baseclient.h"
-
-using std::string;
-using std::list;
 
 class NuhMask;
 

@@ -28,11 +28,6 @@
 
 #include "Python.h"
 #include "python/pobject.h"
-#include <string>
-#include <vector>
-
-using std::string;
-using std::vector;
 
 class PTuple;
 class PDict;

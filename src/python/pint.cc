@@ -23,8 +23,8 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "python/pint.h"
 #include "stdinc.h"
+#include "python/pint.h"
 
 PInt::PInt() : PObject(0, 0, 0)
 {

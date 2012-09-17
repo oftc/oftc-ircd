@@ -23,9 +23,9 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include "stdinc.h"
 #include "python/pchannel.h"
 #include "python/pevent.h"
-#include "stdinc.h"
 #include <functional>
 
 using std::bind;

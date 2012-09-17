@@ -26,13 +26,8 @@
 #ifndef MODULESECTION_H_INC
 #define MODULESECTION_H_INC
 
-#include <vector>
-#include <string>
 #include <json/json.h>
 #include "configsection.h"
-
-using std::vector;
-using std::string;
 
 typedef vector<string> StringList;
 

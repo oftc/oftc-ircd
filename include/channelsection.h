@@ -26,11 +26,8 @@
 #ifndef CHANNELSECTION_H_INC
 #define CHANNELSECTION_H_INC
 
-#include <string>
 #include <json/json.h>
 #include "configsection.h"
-
-using std::string;
 
 class ChannelSection : public ConfigSection
 {

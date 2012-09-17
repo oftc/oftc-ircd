@@ -27,8 +27,6 @@
 #define PCTYPE_H_INC
 
 #include "Python.h"
-#include <map>
-#include <string>
 #include "python/pythonutil.h"
 #include "python/pstring.h"
 #include "python/pdict.h"
@@ -37,9 +35,6 @@
 #include "python/pint.h"
 #include "python/pbool.h"
 #include "event.h"
-
-using std::map;
-using std::string;
 
 enum PropertyFlag
 {

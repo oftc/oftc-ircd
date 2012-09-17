@@ -24,7 +24,6 @@
 */
 
 #include "stdinc.h"
-#include <json/json.h>
 #include "modulesection.h"
 #include "module.h"
 #include "config.h"

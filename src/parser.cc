@@ -25,16 +25,12 @@
 
 #include "stdinc.h"
 #include <algorithm>
-#include <string>
 #include <sstream>
-#include <vector>
 #include "parser.h"
 #include "client.h"
 #include "numeric.h"
 
-using std::string;
 using std::stringstream;
-using std::vector;
 using std::transform;
 
 Parser Parser::default_parser;

@@ -23,9 +23,9 @@
   OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include "stdinc.h"
 #include "python/pclient.h"
 #include "python/pint.h"
-#include "stdinc.h"
 #include "python/pevent.h"
 #include "python/pcmap.h"
 #include "python/pmembership.h"

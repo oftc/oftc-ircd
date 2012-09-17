@@ -27,7 +27,6 @@
 #define POBJECT_H_INC
 
 #include "Python.h"
-#include "stdinc.h"
 
 class PString;
 

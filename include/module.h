@@ -26,12 +26,7 @@
 #ifndef MODULE_H_INC
 #define MODULE_H_INC
 
-#include <string>
-#include <vector>
 #include "modulesection.h"
-
-using std::string;
-using std::vector;
 
 class Module;
 

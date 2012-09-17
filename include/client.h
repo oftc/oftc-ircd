@@ -26,15 +26,10 @@
 #ifndef CLIENT_H_INC
 #define CLIENT_H_INC
 
-#include <string>
-#include <vector>
 #include <uv.h>
 #include "event.h"
 #include "baseclient.h"
 #include "channel.h"
-
-using std::string;
-using std::vector;
 
 class Client;
 class Connection;
