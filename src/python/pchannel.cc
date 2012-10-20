@@ -92,6 +92,16 @@ PObject PChannel::is_member(const PTuple& args)
   return ret;
 }
 
+PObject PChannel::find_member(const PTuple& args)
+{
+  Membership& ms = inner->find_member(*args[0].AsPtr<PClient>());
+
+  if(&ms == &Channel::NullMember)
+    return PObject::None();
+
+  return new PMembership(ms);
+}
+
 PObject PChannel::remove_member(const PTuple& args)
 {
   PClient *client = args[0].AsPtr<PClient>();
@@ -222,6 +232,7 @@ void PChannel::init(const PObject& module)
 
   add_method("add_member", "add a client to the channel", VarArgsMethod(&PChannel::add_member));
   add_method("is_member", "test if the client is on this channel", VarArgsMethod(&PChannel::is_member));
+  add_method("find_member", "find a client is on this channel", VarArgsMethod(&PChannel::find_member));
   add_method("remove_member", "remove a client from the channel", VarArgsMethod(&PChannel::remove_member));
   add_method("send_names", "send a names reply about this channel", VarArgsMethod(&PChannel::send_names));
   add_method("send", "send to all clients on this channel", KeywordArgsMethod(&PChannel::send));

@@ -81,6 +81,7 @@ public:
   static Event<ChannelPtr, BaseClientPtr> joining;
   static Event<ChannelPtr, BaseClientPtr> joined;
 
+  static Membership NullMember;
   // Ctor/dtor
   Channel();
   ~Channel();
@@ -121,6 +122,7 @@ public:
   // members
   void add_member(const BaseClientPtr);
   bool is_member(const BaseClientPtr) const;
+  Membership& find_member(const BaseClientPtr);
   void remove_member(const BaseClientPtr);
   void send_names(const BaseClientPtr);
   void send(const BaseClientPtr, const string);

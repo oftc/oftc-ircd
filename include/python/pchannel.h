@@ -50,6 +50,7 @@ public:
 
   PObject add_member(const PTuple&);
   PObject is_member(const PTuple&);
+  PObject find_member(const PTuple&);
   PObject remove_member(const PTuple&);
   PObject send_names(const PTuple&);
   PObject send(const PTuple&, const PDict&);

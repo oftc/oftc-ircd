@@ -35,6 +35,7 @@ Event<ChannelPtr, BaseClientPtr> Channel::joined;
 ChannelList Channel::channels;
 ChannelNameHash Channel::names;
 ChannelSection Channel::config;
+Membership Channel::NullMember;
 
 Channel::Channel() : moderated(false), invite_only(false), no_external_msgs(false),
   private_chan(false), secret(false), topic_op_only(false), secure(false)
@@ -69,6 +70,16 @@ void Channel::add_member(const BaseClientPtr client)
 bool Channel::is_member(const BaseClientPtr client) const
 {
   return members.find(client) != members.end();
+}
+
+Membership& Channel::find_member(const BaseClientPtr client)
+{
+  auto member = members.find(client);
+
+  if(member == members.end())
+    return NullMember;
+  else
+    return member->second;
 }
 
 void Channel::remove_member(const BaseClientPtr client)

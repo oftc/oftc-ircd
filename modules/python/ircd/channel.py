@@ -21,7 +21,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #  OTHER DEALINGS IN THE SOFTWARE.
 
-from pythonwrap import Channel, NuhMask
+from pythonwrap import Client, Channel, NuhMask
 import numerics
 
 def set_channel_mode(client, channel, args):
@@ -50,6 +50,8 @@ def set_channel_mode(client, channel, args):
     elif c == '-':
       plus = False
       continue
+    elif c in 'vo':
+      process_membership(client, channel, plus, c, largs)
     elif c in 'bqeI':
       ret = process_list(client, channel, plus, c, largs)
       if ret == 0:
@@ -142,3 +144,20 @@ def process_list(client, channel, plus, mode, args):
 
     args[1] = str(mask)
     return 1
+
+def process_membership(client, channel, plus, mode, name):
+  target = Client.find_by_name(name)
+
+  ms = Channel.find_member(target)
+  
+  flag = 0
+
+  if mode == 'o':
+    flag = msflags.CHANOP
+  elif mode == 'v':
+    flag = msflags.VOICE
+
+  if plus:
+    ms.Flags |= flag
+  else:
+    ms.Flags &= ~flag
