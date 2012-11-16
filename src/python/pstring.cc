@@ -60,5 +60,7 @@ PString::~PString()
 
 const char *PString::c_str() const
 {
+  if(object == Py_None)
+    return "(null)";
   return PyString_AsString(object);
 }
